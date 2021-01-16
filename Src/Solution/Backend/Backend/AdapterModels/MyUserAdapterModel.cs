@@ -2,22 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Models
+namespace Backend.AdapterModels
 {
-    /// <summary>
-    /// 使用者
-    /// </summary>
-    public class MyUser
+    public class MyUserAdapterModel:ICloneable
     {
-        public MyUser()
-        {
-            WorkingLog = new HashSet<WorkingLog>();
-            LeaveForm = new HashSet<LeaveForm>();
-        }
-
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]
         public string Account { get; set; }
@@ -28,8 +18,28 @@ namespace Entities.Models
         public string DepartmentName { get; set; }
         public int ManagerId { get; set; }
         public bool IsManager { get; set; }
-   
-        public virtual ICollection<WorkingLog> WorkingLog { get; set; }
-        public virtual ICollection<LeaveForm> LeaveForm { get; set; }
+        public string ManagerName { get; set; }
+        public string IsManagerString { get; set; }
+
+        public bool IsExist()
+        {
+            if (string.IsNullOrEmpty(Account))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public MyUserAdapterModel Clone()
+        {
+            return ((ICloneable)this).Clone() as MyUserAdapterModel;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

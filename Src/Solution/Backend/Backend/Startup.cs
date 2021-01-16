@@ -145,6 +145,8 @@ namespace Backend
         private static void AddOtherServices(IServiceCollection services)
         {
             #region µù¥UªA°È
+            services.AddTransient<IMyUserService, MyUserService>();
+
             services.AddTransient<IHoluserService, HoluserService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IOrderService, OrderService>();
@@ -152,6 +154,8 @@ namespace Backend
             #endregion
 
             #region µù¥U Razor Model
+            services.AddTransient<MyUserRazorModel>();
+
             services.AddTransient<HoluserRazorModel>();
             services.AddTransient<OrderRazorModel>();
             services.AddTransient<ProductRazorModel>();

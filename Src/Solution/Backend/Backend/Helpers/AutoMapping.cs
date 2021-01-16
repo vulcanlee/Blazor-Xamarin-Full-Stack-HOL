@@ -15,6 +15,9 @@ namespace Backend.Helpers
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<MyUser, MyUserAdapterModel>();
+            CreateMap<MyUserAdapterModel, MyUser>();
+
             CreateMap<Holuser, HoluserAdapterModel>();
             CreateMap<HoluserAdapterModel, Holuser>();
             CreateMap<Product, ProductAdapterModel>();

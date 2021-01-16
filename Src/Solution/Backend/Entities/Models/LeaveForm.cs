@@ -25,7 +25,6 @@ namespace Entities.Models
         public int MyUserId { get; set; }
         public virtual MyUser MyUser { get; set; }
         public int AgentId { get; set; }
-        public virtual MyUser Agent { get; set; }
         public int LeaveCategoryId { get; set; }
         public virtual LeaveCategory LeaveCategory { get; set; }
     }
