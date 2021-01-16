@@ -1,0 +1,934 @@
+{
+	"info": {
+		"_postman_id": "7f31f1c1-7def-431b-8a40-29e8b0d9c0cb",
+		"name": "XamarinHOL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "認證與授權",
+			"item": [
+				{
+					"name": "Login 使用者登入 User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Account\" :\"user1\",\r\n    \"Password\" :\"pw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Login",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login 使用者登入 Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Account\" :\"user9\",\r\n    \"Password\" :\"pw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Login",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken 更新權杖",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{RefreshToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/login/RefreshToken",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"login",
+								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OnlyAdministrator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnlyAdministrator",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnlyAdministrator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OnlyUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnlyUser",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnlyUser"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1909620e-46d4-4a8d-bcc8-3e826c45ba6b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "681d1b98-ac1c-40e3-9d39-69745a45db2d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "使用者",
+			"item": [
+				{
+					"name": "Retrive 所有使用者",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Holuser",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Holuser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定使用者",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Holuser/8",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Holuser",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增使用者",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"HoluserId\":0,\"Name\":\"user99\",\"Account\":\"user99\",\"Password\":\"pw\",\"TokenVersion\":0,\"Level\":0}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Holuser",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Holuser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改使用者",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"HoluserId\":8,\"Name\":\"user8 New\",\"Account\":\"user8\",\"Password\":\"pw\",\"TokenVersion\":0,\"Level\":0}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Holuser/8",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Holuser",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除使用者",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Holuser/11",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Holuser",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "產品",
+			"item": [
+				{
+					"name": "Retrive 所有產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"ProductId\": 0,\r\n            \"Name\": \"cc\",\r\n            \"ModelYear\": 2021,\r\n            \"ListPrice\": 1399.00,\r\n            \"OrderItem\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Product",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"ProductId\": 3,\r\n            \"Name\": \"cc Update\",\r\n            \"ModelYear\": 2029,\r\n            \"ListPrice\": 4399.00,\r\n            \"OrderItem\": []\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Product/3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "訂單",
+			"item": [
+				{
+					"name": "Retrive 所有訂單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Order",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定訂單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Order/5",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Order",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增訂單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"OrderId\": 0,\r\n            \"Name\": \"BB\",\r\n            \"Status\": 1,\r\n            \"OrderDate\": \"2020-01-20T00:00:00\",\r\n            \"RequiredDate\": \"2020-02-06T00:00:00\",\r\n            \"ShippedDate\": null,\r\n            \"OrderItem\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Order",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改訂單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"OrderId\": 0,\r\n            \"Name\": \"CC update\",\r\n            \"Status\": 2,\r\n            \"OrderDate\": \"2020-01-20T00:00:00\",\r\n            \"RequiredDate\": \"2020-02-06T00:00:00\",\r\n            \"ShippedDate\": null,\r\n            \"OrderItem\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Order/5",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Order",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除訂單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Order/4",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Order",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "419b4cb6-bb74-4571-bf2b-08e85ab15c7c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6d1be128-9aa2-4598-85d3-e499d8b3ff17",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "訂單明細",
+			"item": [
+				{
+					"name": "Retrive 所有產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"ProductId\": 0,\r\n            \"Name\": \"cc\",\r\n            \"ModelYear\": 2021,\r\n            \"ListPrice\": 1399.00,\r\n            \"OrderItem\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Product",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"ProductId\": 3,\r\n            \"Name\": \"cc Update\",\r\n            \"ModelYear\": 2029,\r\n            \"ListPrice\": 4399.00,\r\n            \"OrderItem\": []\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Product/3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2d56bbd0-4f1b-4a0d-aee5-ede795f8783b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "97e6214d-11c1-4099-9227-64a52c74a853",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1c978dcb-67c7-4767-9ffa-4b8e1165fb34",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4f9af615-25e3-4728-873e-d6f87e3ee599",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "2c87170f-48e6-45ba-9485-12f0311a07a4",
+			"key": "Token",
+			"value": ""
+		},
+		{
+			"id": "c4453b3d-86f1-4fca-b07b-23504987273f",
+			"key": "RefreshToken",
+			"value": ""
+		},
+		{
+			"id": "25cd3e40-5622-4de2-9261-091886cafc46",
+			"key": "Host",
+			"value": "https://localhost:5001"
+		},
+		{
+			"id": "66fd9f0e-6d91-4df1-b637-6f0033a0d389",
+			"key": "Host",
+			"value": "https://localhost:5001",
+			"disabled": true
+		}
+	],
+	"protocolProfileBehavior": {}
+}

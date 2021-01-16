@@ -1,0 +1,9 @@
+﻿@page "/OnlyAdministrator"
+@using Microsoft.AspNetCore.Authentication.Cookies
+@attribute [Authorize(Roles = "Administrator")]
+
+<h2 class="text-primary">該頁面僅限具有管理者權限才能看到</h2>
+
+@code {
+
+}

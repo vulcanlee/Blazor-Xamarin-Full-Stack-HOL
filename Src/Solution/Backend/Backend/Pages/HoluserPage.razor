@@ -1,0 +1,14 @@
+﻿@page "/User"
+@attribute [Authorize(Roles = "Administrator")]
+@using Backend.Components.Views
+@using ShareBusiness.Helpers
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.使用者帳號管理功能名稱</div>
+    <HoluserView PageSize="@MagicHelper.GridPageSize" />
+</div>
+
+
+
+
+

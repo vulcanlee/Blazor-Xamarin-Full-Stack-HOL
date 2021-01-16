@@ -1,0 +1,19 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <span>
+            <b>你好, @context.User.Identity.Name!</b>
+            <a class="ml-md-auto btn btn-primary"
+               href="/Logout"
+               target="_top"> 登出 </a>
+        </span>
+    </Authorized>
+    <NotAuthorized>
+        <a class="ml-md-auto btn btn-primary"
+           href="/Login"
+           target="_top"> 登入 </a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}
