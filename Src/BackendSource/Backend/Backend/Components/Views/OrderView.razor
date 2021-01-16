@@ -1,0 +1,219 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Calendars
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+
+@inject OrderRazorModel RazorModel
+@implements IRazorPage
+@implements IDataGrid
+
+<SfGrid @ref="Grid" TValue="OrderAdapterModel"
+        AllowPaging="true"
+        Toolbar="RazorModel.Toolbaritems">
+    <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+        <OrderAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></OrderAdapter>
+    </SfDataManager>
+    <SfToolbar>
+        <ToolbarItems>
+            <ToolbarItem Type="ItemType.Input">
+                <Template>
+                    <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                    <SfDropDownList TValue="int" TItem="SortCondition"
+                                    Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
+                        <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                        <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
+                    </SfDropDownList>
+                </Template>
+            </ToolbarItem>
+        </ToolbarItems>
+    </SfToolbar>
+    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OrderAdapterModel"
+                OnToolbarClick="RazorModel.ToolbarClickHandler"
+                RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+    <GridPageSettings PageSize="@PageSize" />
+    <GridColumns>
+        <GridColumn Field=@nameof(OrderAdapterModel.Name) HeaderText="訂單名稱" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(OrderAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd"></GridColumn>
+        <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd"></GridColumn>
+        <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd"></GridColumn>
+        <GridColumn Field=@nameof(OrderAdapterModel.StatusName) HeaderText="狀態"></GridColumn>
+        <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+            <GridCommandColumns>
+                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
+                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
+            </GridCommandColumns>
+        </GridColumn>
+    </GridColumns>
+</SfGrid>
+
+<SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
+          Width="600px" Height="600px">
+    <DialogTemplates>
+        <Header>@RazorModel.EditRecordDialogTitle</Header>
+        <Content>
+            <EditForm Model="@RazorModel.CurrentRecord">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <InputWatcher EditContextActionChanged="@RazorModel.OnEditContestChanged" />
+
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">訂單名稱</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Name"
+                                       Placeholder="請輸訂單名稱" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Name)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">訂單日期</label>
+                            <SfDatePicker TValue="DateTime"
+                                          @bind-Value="RazorModel.CurrentRecord.OrderDate"
+                                          Format="yyyy-MM-dd"
+                                          Placeholder="請選擇一個日期" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.OrderDate)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">需求日期</label>
+                            <SfDatePicker TValue="DateTime"
+                                          @bind-Value="RazorModel.CurrentRecord.RequiredDate"
+                                          Format="yyyy-MM-dd"
+                                          Placeholder="請選擇一個日期" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.RequiredDate)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">出貨日期</label>
+                            <SfDatePicker TValue="DateTime?"
+                                          @bind-Value="RazorModel.CurrentRecord.ShippedDate"
+                                          Format="yyyy-MM-dd"
+                                          Placeholder="請選擇一個日期" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.ShippedDate)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">狀態</label>
+                            <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.Status"
+                                              Placeholder="請輸入大於0的整數數值" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Status)" />
+                        </div>
+                    </div>
+
+                </div>
+            </EditForm>
+        </Content>
+        <FooterTemplate>
+            <div>
+                <button type="submit" class="btn btn-primary" @onclick="RazorModel.OnRecordEditConfirm">儲存</button>
+                <button class="btn btn-secondary" @onclick="RazorModel.OnRecordEditCancel">取消</button>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+@*<DepartmentPicker OpenPicker="RazorModel.ShowAontherRecordPicker" OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />*@
+
+
+<MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
+            IsVisible="@RazorModel.MessageBox.IsVisible"
+            Title="@RazorModel.MessageBox.Title" Message="@RazorModel.MessageBox.Body"
+            Callback="x=>RazorModel.MessageBox.Hidden()" />
+
+<ConfirmBox Height="@RazorModel.ConfirmMessageBox.Height" Width="@RazorModel.ConfirmMessageBox.Width"
+            IsVisible="@RazorModel.ConfirmMessageBox.IsVisible"
+            Title="@RazorModel.ConfirmMessageBox.Title" Message="@RazorModel.ConfirmMessageBox.Body"
+            Callback="x=>RazorModel.RemoveThisRecord(x)" />
+
+<DialogBackground />
+
+@code{
+    SfGrid<OrderAdapterModel> Grid;
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    [Parameter]
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+    [Parameter]
+    public EventCallback<object> OnViewRender { get; set; }
+
+    #region 生命週期事件
+    protected override void OnInitialized()
+    {
+        RazorModel.Setup(this, this);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            RazorModel.Setup(this, this);
+        }
+        if (OnViewRender.HasDelegate)
+        {
+            await OnViewRender.InvokeAsync(null);
+        }
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        StateHasChanged();
+    }
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    public void RefreshGrid()
+    {
+        Grid?.Refresh();
+    }
+    public bool GridIsExist()
+    {
+        return Grid == null ? false : true;
+    }
+    public Task InvokeGridAsync(string actionName)
+    {
+        return Task.CompletedTask;
+    }
+    #endregion
+
+    #region 選取紀錄異動的事件處理
+    public async Task RowSelectHandler(RowSelectEventArgs<OrderAdapterModel> args)
+    {
+        if (OnRecordChanged.HasDelegate)
+        {
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = args.Data.Id,
+                Title = args.Data.Name
+            });
+        }
+    }
+    public async Task RowDeselectHandler(RowDeselectEventArgs<OrderAdapterModel> args)
+    {
+        if (OnRecordChanged.HasDelegate)
+        {
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = -2,
+                Title = "",
+            });
+        }
+    }
+    #endregion
+}

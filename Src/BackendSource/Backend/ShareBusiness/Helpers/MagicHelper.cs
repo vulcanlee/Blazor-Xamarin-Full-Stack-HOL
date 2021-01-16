@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ShareBusiness.Helpers
+{
+    public class MagicHelper
+    {
+        #region 定義神奇字串或者神奇數值
+        #region 系統預設參數
+        public static readonly string AppName = "Bazor Server 動手練習開發專案範例";
+        public static readonly string MenuMainTitle = "Blazor 動手練習專案";
+        public static readonly string DefaultConnectionString = "DefaultConnection";
+        public const string CookieAuthenticationScheme = "HandsOnLabCookieAuthenticationScheme"; // CookieAuthenticationDefaults.AuthenticationScheme
+        public const string JwtBearerAuthenticationScheme = "HandsOnLabJwtBearerAuthenticationScheme"; // JwtBearerDefaults.AuthenticationScheme
+        public static readonly string 未經授權無法存取此頁面 = "抱歉，未經授權無法存取此頁面。";
+        public static readonly string 未能找到您要的網頁 = "對不起，未能找到您要的網頁。";
+        public static readonly string 可能該網頁已被移除或被移到其他的網址 = "可能該網頁已被移除或被移到其他的網址。";
+        public static readonly string 有錯誤發生要重新載入頁面 = "有錯誤發生，該應用程式將不無法提供服務，請重新載入 Reload 頁面。";
+        public static readonly string 有例外異常錯誤發生 = "有例外異常錯誤發生，請使用網頁開發工具 F12 查看更多詳細訊息。";
+        public static readonly int GridPageSize = 12;
+        #endregion
+
+        #region 個別作業會用到的作業名稱宣告
+        public static readonly string 訂單管理功能名稱 = "訂單管理";
+        public static readonly string 商品管理功能名稱 = "商品管理";
+        public static readonly string 使用者帳號管理功能名稱 = "使用者帳號管理";
+        #endregion
+
+        #endregion
+
+        #region 支援方法
+        #endregion
+    }
+}

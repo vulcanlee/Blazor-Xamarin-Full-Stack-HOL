@@ -1,0 +1,55 @@
+﻿@using Backend.AdapterModels
+@using Backend.Components.Views
+@using ShareDomain.DataModels
+@using Syncfusion.Blazor.Navigations
+
+<div>
+    <SfTab @bind-SelectedItem="SelectedTab" HeaderPlacement="@HeaderPosition.Top"
+           LoadOn="ContentLoad.Init">
+        <TabEvents Selected="OnTabSelected" />
+        <TabItems>
+            <TabItem>
+                <ChildContent>
+                    <TabHeader Text="訂單清單" />
+                </ChildContent>
+                <ContentTemplate>
+                    <OrderView OnRecordChanged="RecordChanged" PageSize="PageSize" />
+                </ContentTemplate>
+            </TabItem>
+            <TabItem>
+                <ChildContent>
+                    <TabHeader Text="訂單明細大綱" />
+                </ChildContent>
+                <ContentTemplate>
+                    <OrderItemView @ref="DetailView" CombineWithHeaderMode="true"
+                                   Header="@Header" PageSize="PageSize" />
+                </ContentTemplate>
+            </TabItem>
+        </TabItems>
+    </SfTab>
+</div>
+<div style="height:100px"></div>
+
+@code{
+    public MasterRecord Header { get; set; } = new MasterRecord() { Id = -2 };
+    public string HeaderDescription { get; set; } = "";
+    OrderItemView DetailView;
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    public int SelectedTab = 0;
+    void RecordChanged(MasterRecord header)
+    {
+        Header = header;
+    }
+    public async Task OnTabSelected(SelectEventArgs args)
+    {
+        if (args.IsSwiped)
+        {
+            args.Cancel = true;
+        }
+        if (args.SelectedIndex == 1)
+        {
+            await DetailView?.RefreshNewMasterAsync(Header);
+        }
+    }
+}
