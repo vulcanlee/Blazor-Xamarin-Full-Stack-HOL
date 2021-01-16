@@ -70,6 +70,10 @@ namespace Entities.Models
                 .Property(x => x.Hours)
                 .HasPrecision(4, 1);
 
+            modelBuilder.Entity<LeaveForm>()
+                .Property(x => x.Hours)
+                .HasPrecision(4, 1);
+
             OnModelCreatingPartial(modelBuilder);
         }
 
