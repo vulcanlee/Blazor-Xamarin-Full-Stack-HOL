@@ -31,7 +31,7 @@ namespace Backend.Services
         {
             List<LeaveCategoryAdapterModel> data = new List<LeaveCategoryAdapterModel>();
             DataRequestResult<LeaveCategoryAdapterModel> result = new DataRequestResult<LeaveCategoryAdapterModel>();
-            var DataSource = context.LeaveCategories
+            var DataSource = context.LeaveCategory
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -94,7 +94,7 @@ namespace Backend.Services
         public async Task<LeaveCategoryAdapterModel> GetAsync(int id)
 
         {
-            LeaveCategory item = await context.LeaveCategories
+            LeaveCategory item = await context.LeaveCategory
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             LeaveCategoryAdapterModel result = Mapper.Map<LeaveCategoryAdapterModel>(item);
@@ -105,7 +105,7 @@ namespace Backend.Services
         {
             LeaveCategory itemParameter = Mapper.Map<LeaveCategory>(paraObject);
             CleanTrackingHelper.Clean<LeaveCategory>(context);
-            await context.LeaveCategories
+            await context.LeaveCategory
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<LeaveCategory>(context);
@@ -116,7 +116,7 @@ namespace Backend.Services
         {
             LeaveCategory itemData = Mapper.Map<LeaveCategory>(paraObject);
             CleanTrackingHelper.Clean<LeaveCategory>(context);
-            LeaveCategory item = await context.LeaveCategories
+            LeaveCategory item = await context.LeaveCategory
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -136,7 +136,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<LeaveCategory>(context);
-            LeaveCategory item = await context.LeaveCategories
+            LeaveCategory item = await context.LeaveCategory
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -154,7 +154,7 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(LeaveCategoryAdapterModel paraObject)
         {
-            var searchItem = await context.LeaveCategories
+            var searchItem = await context.LeaveCategory
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name);
             if (searchItem != null)
@@ -166,7 +166,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(LeaveCategoryAdapterModel paraObject)
         {
-            var searchItem = await context.LeaveCategories
+            var searchItem = await context.LeaveCategory
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
                 x.Id != paraObject.Id);
@@ -179,7 +179,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(LeaveCategoryAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<LeaveForm>(context);
-            LeaveForm item = await context.LeaveForms
+            LeaveForm item = await context.LeaveForm
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.LeaveCategoryId == paraObject.Id);
             if (item != null)

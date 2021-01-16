@@ -31,7 +31,7 @@ namespace Backend.Services
         {
             List<MyUserAdapterModel> data = new List<MyUserAdapterModel>();
             DataRequestResult<MyUserAdapterModel> result = new DataRequestResult<MyUserAdapterModel>();
-            var DataSource = context.MyUsers
+            var DataSource = context.MyUser
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -98,7 +98,7 @@ namespace Backend.Services
                     adaptorModelItem.IsManagerString = "否";
                 }
 
-                var user = await context.MyUsers
+                var user = await context.MyUser
                     .FirstOrDefaultAsync(x => x.Id == adaptorModelItem.ManagerId);
                 if (user != null)
                 {
@@ -116,7 +116,7 @@ namespace Backend.Services
         public async Task<MyUserAdapterModel> GetAsync(int id)
 
         {
-            MyUser item = await context.MyUsers
+            MyUser item = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             MyUserAdapterModel result = Mapper.Map<MyUserAdapterModel>(item);
@@ -127,7 +127,7 @@ namespace Backend.Services
         {
             MyUser itemParameter = Mapper.Map<MyUser>(paraObject);
             CleanTrackingHelper.Clean<MyUser>(context);
-            await context.MyUsers
+            await context.MyUser
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<MyUser>(context);
@@ -138,7 +138,7 @@ namespace Backend.Services
         {
             MyUser itemData = Mapper.Map<MyUser>(paraObject);
             CleanTrackingHelper.Clean<MyUser>(context);
-            MyUser item = await context.MyUsers
+            MyUser item = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -158,7 +158,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<MyUser>(context);
-            MyUser item = await context.MyUsers
+            MyUser item = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -176,7 +176,7 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MyUserAdapterModel paraObject)
         {
-            var searchItem = await context.MyUsers
+            var searchItem = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Account == paraObject.Account);
             if (searchItem != null)
@@ -188,7 +188,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MyUserAdapterModel paraObject)
         {
-            var searchItem = await context.MyUsers
+            var searchItem = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Account == paraObject.Account &&
                 x.Id != paraObject.Id);
@@ -202,14 +202,14 @@ namespace Backend.Services
         {
             CleanTrackingHelper.Clean<WorkingLog>(context);
             CleanTrackingHelper.Clean<WorkingLog>(context);
-            WorkingLog item = await context.WorkingLogs
+            WorkingLog item = await context.WorkingLog
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.MyUserId == paraObject.Id);
             if (item != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
-            LeaveForm itemLeaveForm = await context.LeaveForms
+            LeaveForm itemLeaveForm = await context.LeaveForm
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.MyUserId == paraObject.Id);
             if (item != null)

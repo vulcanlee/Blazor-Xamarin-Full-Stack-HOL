@@ -23,15 +23,15 @@ namespace Entities.Models
         public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<Product> Products { get; set; }
 
-        public virtual DbSet<MyUser> MyUsers { get; set; }
-        public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<LeaveCategory> LeaveCategories { get; set; }
-        public virtual DbSet<OnCallPhone> OnCallPhones { get; set; }
-        public virtual DbSet<LeaveForm> LeaveForms { get; set; }
-        public virtual DbSet<WorkingLog> WorkingLogs { get; set; }
-        public virtual DbSet<WorkingLogDetail> WorkingLogDetails { get; set; }
-        public virtual DbSet<TravelExpense> TravelExpenses { get; set; }
-        public virtual DbSet<TravelExpenseDetail> TravelExpenseDetails { get; set; }
+        public virtual DbSet<MyUser> MyUser { get; set; }
+        public virtual DbSet<Project> Project { get; set; }
+        public virtual DbSet<LeaveCategory> LeaveCategory { get; set; }
+        public virtual DbSet<OnCallPhone> OnCallPhone { get; set; }
+        public virtual DbSet<LeaveForm> LeaveForm { get; set; }
+        public virtual DbSet<WorkingLog> WorkingLog { get; set; }
+        public virtual DbSet<WorkingLogDetail> WorkingLogDetail { get; set; }
+        public virtual DbSet<TravelExpense> TravelExpense { get; set; }
+        public virtual DbSet<TravelExpenseDetail> TravelExpenseDetail { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
