@@ -23,6 +23,17 @@ namespace Entities.Models
         public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<Product> Products { get; set; }
 
+        public virtual DbSet<MyUser> MyUsers { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<LeaveCategory> LeaveCategories { get; set; }
+        public virtual DbSet<OnCallPhone> OnCallPhones { get; set; }
+        public virtual DbSet<LeaveForm> LeaveForms { get; set; }
+        public virtual DbSet<WorkingLog> WorkingLogs { get; set; }
+        public virtual DbSet<WorkingLogDetail> WorkingLogDetails { get; set; }
+        public virtual DbSet<TravelExpense> TravelExpenses { get; set; }
+        public virtual DbSet<TravelExpenseDetail> TravelExpenseDetails { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -42,6 +53,23 @@ namespace Entities.Models
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
             #endregion
+
+            modelBuilder.Entity<TravelExpense>()
+                .Property(x => x.TotalExpense)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<TravelExpenseDetail>()
+                .Property(x => x.Expense)
+                .HasPrecision(13, 2);
+
+            modelBuilder.Entity<WorkingLog>()
+                .Property(x => x.TotalHours)
+                .HasPrecision(4, 1);
+
+            modelBuilder.Entity<WorkingLogDetail>()
+                .Property(x => x.Hours)
+                .HasPrecision(4, 1);
+
             OnModelCreatingPartial(modelBuilder);
         }
 
