@@ -147,7 +147,7 @@
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
-    public EventCallback<MyUserAdapterModel> OnRecordChanged { get; set; }
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
 
@@ -198,17 +198,21 @@
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(args.Data);
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = args.Data.Id,
+                Title = args.Data.Name
+            });
         }
     }
     public async Task RowDeselectHandler(RowDeselectEventArgs<MyUserAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(new MyUserAdapterModel()
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
             {
                 Id = -2,
-                Name = "",
+                Title = "",
             });
         }
     }

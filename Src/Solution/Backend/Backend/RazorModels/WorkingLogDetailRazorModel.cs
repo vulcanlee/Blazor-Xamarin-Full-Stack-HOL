@@ -68,7 +68,7 @@ namespace Backend.RazorModels
                 }
                 else
                 {
-                    return $"{Header.Title} 的 訂單清單";
+                    return $"{Header.Title}";
                 }
             }
         }
