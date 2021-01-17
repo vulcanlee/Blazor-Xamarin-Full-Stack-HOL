@@ -15,6 +15,8 @@ namespace Backend.Helpers
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<Project, ProjectAdapterModel>();
+            CreateMap<ProjectAdapterModel, Project>();
             CreateMap<LeaveCategory, LeaveCategoryAdapterModel>();
             CreateMap<LeaveCategoryAdapterModel, LeaveCategory>();
             CreateMap<OnCallPhone, OnCallPhoneAdapterModel>();

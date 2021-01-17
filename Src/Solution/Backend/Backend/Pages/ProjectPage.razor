@@ -1,0 +1,7 @@
+﻿@page "/Project"
+@*@attribute [Authorize(Roles = "User")]*@
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.專案功能名稱</div>
+    <ProjectView PageSize="@MagicHelper.GridPageSize" />
+</div>

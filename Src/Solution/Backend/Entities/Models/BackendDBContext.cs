@@ -22,10 +22,11 @@ namespace Entities.Models
         public virtual DbSet<OrderItem> OrderItem { get; set; }
         public virtual DbSet<Product> Product { get; set; }
 
+
         public virtual DbSet<MyUser> MyUser { get; set; }
-        public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<LeaveCategory> LeaveCategory { get; set; }
         public virtual DbSet<OnCallPhone> OnCallPhone { get; set; }
+        public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<LeaveForm> LeaveForm { get; set; }
         public virtual DbSet<WorkingLog> WorkingLog { get; set; }
         public virtual DbSet<WorkingLogDetail> WorkingLogDetail { get; set; }
