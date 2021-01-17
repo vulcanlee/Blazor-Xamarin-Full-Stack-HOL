@@ -35,7 +35,7 @@
                 RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
     <GridPageSettings PageSize="@PageSize" />
     <GridColumns>
-        <GridColumn Field=@nameof(ProjectAdapterModel.Name) HeaderText="名稱"></GridColumn>
+        <GridColumn Field=@nameof(ProjectAdapterModel.Name) HeaderText="名稱" />
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()

@@ -18,6 +18,7 @@ namespace Entities.Models
         }
 
         public int Id { get; set; }
+        public string Name { get; set; }
         public DateTime LogDate { get; set; }
         public decimal TotalHours { get; set; }
 

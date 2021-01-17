@@ -83,32 +83,32 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<MyUserAdapterModel> adaptorModelObjects =
+            List<MyUserAdapterModel> adapterModelObjects =
                 Mapper.Map<List<MyUserAdapterModel>>(DataSource);
 
-            foreach (var adaptorModelItem in adaptorModelObjects)
+            foreach (var adapterModelItem in adapterModelObjects)
             {
 
-                if (adaptorModelItem.IsManager == true)
+                if (adapterModelItem.IsManager == true)
                 {
-                    adaptorModelItem.IsManagerString = "是";
+                    adapterModelItem.IsManagerString = "是";
                 }
                 else
                 {
-                    adaptorModelItem.IsManagerString = "否";
+                    adapterModelItem.IsManagerString = "否";
                 }
 
                 var user = await context.MyUser
-                    .FirstOrDefaultAsync(x => x.Id == adaptorModelItem.ManagerId);
+                    .FirstOrDefaultAsync(x => x.Id == adapterModelItem.ManagerId);
                 if (user != null)
                 {
-                    adaptorModelItem.ManagerName = user.Name;
+                    adapterModelItem.ManagerName = user.Name;
                 }
 
             }
             #endregion
 
-            result.Result = adaptorModelObjects;
+            result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
         }

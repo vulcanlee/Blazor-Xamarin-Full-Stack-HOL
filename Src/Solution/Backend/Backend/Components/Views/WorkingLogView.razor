@@ -5,16 +5,17 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Calendars
 
-@inject OnCallPhoneRazorModel RazorModel
+@inject WorkingLogRazorModel RazorModel
 @implements IRazorPage
 @implements IDataGrid
 
-<SfGrid @ref="Grid" TValue="OnCallPhoneAdapterModel"
+<SfGrid @ref="Grid" TValue="WorkingLogAdapterModel"
         AllowPaging="true"
         Toolbar="RazorModel.Toolbaritems">
     <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-        <OnCallPhoneAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></OnCallPhoneAdapter>
+        <WorkingLogAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></WorkingLogAdapter>
     </SfDataManager>
     <SfToolbar>
         <ToolbarItems>
@@ -30,14 +31,16 @@
             </ToolbarItem>
         </ToolbarItems>
     </SfToolbar>
-    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OnCallPhoneAdapterModel"
+    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="WorkingLogAdapterModel"
                 OnToolbarClick="RazorModel.ToolbarClickHandler"
                 RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
     <GridPageSettings PageSize="@PageSize" />
     <GridColumns>
-        <GridColumn Field=@nameof(OnCallPhoneAdapterModel.OrderNumber) HeaderText="順序" />
-        <GridColumn Field=@nameof(OnCallPhoneAdapterModel.Title) HeaderText="單位" />
-        <GridColumn Field=@nameof(OnCallPhoneAdapterModel.PhoneNumber) HeaderText="電話號碼" />
+        <GridColumn Field=@nameof(WorkingLogAdapterModel.LogDate) HeaderText="日期"
+                    Format="yyyy-MM-dd" />
+        <GridColumn Field=@nameof(WorkingLogAdapterModel.MyUserName) HeaderText="擁有者" />
+        <GridColumn Field=@nameof(WorkingLogAdapterModel.TotalHours) HeaderText="時數"
+                    Format="N1" TextAlign="TextAlign.Right" />
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -60,31 +63,21 @@
                 <InputWatcher EditContextActionChanged="@RazorModel.OnEditContestChanged" />
 
                 <div>
-
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">順序</label>
-                            <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.OrderNumber"
-                                              Placeholder="請輸入大於0的整數數值" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.OrderNumber)" />
+                            <label class="control-label">日誌日期</label>
+                            <SfDatePicker TValue="DateTime"
+                                          @bind-Value="RazorModel.CurrentRecord.LogDate"
+                                          Format="yyyy-MM-dd"
+                                          Placeholder="請選擇一個日期" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.LogDate)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">單位</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Title"
-                                       Placeholder="請輸入單位名稱" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Title)" />
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="control-label">電話號碼</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.PhoneNumber"
-                                       Placeholder="請輸入電話號碼" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.PhoneNumber)" />
+                            <label class="control-label">擁有者 <span class="mdi mdi-18px mdi-magnify" @onclick="RazorModel.OnOpenPicker"></span></label>
+                            <SfTextBox Value="@RazorModel.CurrentRecord.MyUserName" Enabled="false"></SfTextBox>
                         </div>
                     </div>
 
@@ -101,6 +94,9 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
+<MyUserPicker OpenPicker="RazorModel.ShowAontherRecordPicker"
+               OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />
+
 <MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
             IsVisible="@RazorModel.MessageBox.IsVisible"
             Title="@RazorModel.MessageBox.Title" Message="@RazorModel.MessageBox.Body"
@@ -114,11 +110,11 @@
 <DialogBackground />
 
 @code{
-    SfGrid<OnCallPhoneAdapterModel> Grid;
+    SfGrid<WorkingLogAdapterModel> Grid;
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
-    public EventCallback<OnCallPhoneAdapterModel> OnRecordChanged { get; set; }
+    public EventCallback<WorkingLogAdapterModel> OnRecordChanged { get; set; }
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
 
@@ -165,21 +161,21 @@
 
 
     #region 選取紀錄異動的事件處理
-    public async Task RowSelectHandler(RowSelectEventArgs<OnCallPhoneAdapterModel> args)
+    public async Task RowSelectHandler(RowSelectEventArgs<WorkingLogAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
             await OnRecordChanged.InvokeAsync(args.Data);
         }
     }
-    public async Task RowDeselectHandler(RowDeselectEventArgs<OnCallPhoneAdapterModel> args)
+    public async Task RowDeselectHandler(RowDeselectEventArgs<WorkingLogAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(new OnCallPhoneAdapterModel()
+            await OnRecordChanged.InvokeAsync(new WorkingLogAdapterModel()
             {
                 Id = -2,
-                Title = "",
+                Name = "",
             });
         }
     }

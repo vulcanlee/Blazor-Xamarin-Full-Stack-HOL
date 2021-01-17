@@ -18,17 +18,17 @@ namespace Backend.RazorModels
     using ShareBusiness.Helpers;
     using Syncfusion.Blazor.Navigations;
 
-    public class ProductRazorModel
+    public class WorkingLogRazorModel
     {
         #region Constructor
-        public ProductRazorModel(IProductService CurrentService,
+        public WorkingLogRazorModel(IWorkingLogService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            ProductSort.Initialization(SortConditions);
+            WorkingLogSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -53,8 +53,8 @@ namespace Backend.RazorModels
 
         #region Property
         public bool IsShowEditRecord { get; set; } = false;
-        public ProductAdapterModel CurrentRecord { get; set; } = new ProductAdapterModel();
-        public ProductAdapterModel CurrentNeedDeleteRecord { get; set; } = new ProductAdapterModel();
+        public WorkingLogAdapterModel CurrentRecord { get; set; } = new WorkingLogAdapterModel();
+        public WorkingLogAdapterModel CurrentNeedDeleteRecord { get; set; } = new WorkingLogAdapterModel();
         public EditContext LocalEditContext { get; set; }
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
@@ -70,7 +70,7 @@ namespace Backend.RazorModels
         #region Field
         public bool ShowAontherRecordPicker { get; set; } = false;
         bool isNewRecordMode;
-        private readonly IProductService CurrentService;
+        private readonly IWorkingLogService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
         IRazorPage thisRazorComponent;
@@ -94,8 +94,9 @@ namespace Backend.RazorModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new ProductAdapterModel();
+                CurrentRecord = new WorkingLogAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
+                CurrentRecord.LogDate = DateTime.Now.Date;
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
@@ -109,9 +110,9 @@ namespace Backend.RazorModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除)
-        public async Task OnCommandClicked(CommandClickEventArgs<ProductAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<WorkingLogAdapterModel> args)
         {
-            ProductAdapterModel item = args.RowData as ProductAdapterModel;
+            WorkingLogAdapterModel item = args.RowData as WorkingLogAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 CurrentRecord = item.Clone();
@@ -171,6 +172,7 @@ namespace Backend.RazorModels
             #endregion
 
             #region 檢查資料完整性
+            CurrentRecord.Name = CurrentRecord.LogDate.ToString("yyyyMMdd");
             if (isNewRecordMode == true)
             {
                 var checkedResult = await CurrentService
@@ -213,22 +215,22 @@ namespace Backend.RazorModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
-        //public void OnOpenPicker()
-        //{
-        //    ShowAontherRecordPicker = true;
-        //}
+        public void OnOpenPicker()
+        {
+            ShowAontherRecordPicker = true;
+        }
 
-        //public void OnPickerCompletion(MyUserAdapterModel e)
-        //{
-        //    if (e != null)
-        //    {
-        //        CurrentRecord.Id = e.Id;
-        //        CurrentRecord.Name = e.Name;
-        //    }
-        //    ShowAontherRecordPicker = false;
-        //}
+        public void OnPickerCompletion(MyUserAdapterModel e)
+        {
+            if (e != null)
+            {
+                CurrentRecord.MyUserId = e.Id;
+                CurrentRecord.MyUserName = e.Name;
+            }
+            ShowAontherRecordPicker = false;
+        }
         #endregion
-
+ 
         #region 排序搜尋事件
         public int DefaultSorting { get; set; } = -1;
         public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)

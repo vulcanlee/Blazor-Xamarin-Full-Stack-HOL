@@ -84,16 +84,16 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<OnCallPhoneAdapterModel> adaptorModelObjects =
+            List<OnCallPhoneAdapterModel> adapterModelObjects =
                 Mapper.Map<List<OnCallPhoneAdapterModel>>(DataSource);
 
-            foreach (var adaptorModelItem in adaptorModelObjects)
+            foreach (var adapterModelItem in adapterModelObjects)
             {
                 // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
             }
             #endregion
 
-            result.Result = adaptorModelObjects;
+            result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
         }

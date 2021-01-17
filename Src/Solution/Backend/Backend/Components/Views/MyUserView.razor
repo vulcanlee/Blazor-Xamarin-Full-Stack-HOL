@@ -36,11 +36,11 @@
                 RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
     <GridPageSettings PageSize="@PageSize" />
     <GridColumns>
-        <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號"></GridColumn>
-        <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱"></GridColumn>
-        <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"></GridColumn>
-        <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"></GridColumn>
-        <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"></GridColumn>
+        <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" />
+        <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" />
+        <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管" />
+        <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱" />
+        <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門" />
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
