@@ -82,7 +82,8 @@
                         <div class="form-group col">
                             <label class="control-label">售價</label>
                             <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.ListPrice"
-                                              Placeholder="請輸入大於0的整數數值" />
+                                              Placeholder="請輸入大於0的整數數值"
+                                               Format="#####.##"/>
                             <ValidationMessage For="@(() => RazorModel.CurrentRecord.ListPrice)" />
                         </div>
                     </div>

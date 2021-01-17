@@ -224,13 +224,13 @@ namespace Backend.Services
             if (user == null)
             {
                 return (null, ErrorMessageMappingHelper.Instance
-                    .GetErrorMessage(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中));
+                    .GetErrorMessage(ErrorMessageEnum.使用者帳號不存在));
             }
 
             if (user.Password != password)
             {
                 return (null, ErrorMessageMappingHelper.Instance
-                    .GetErrorMessage(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中));
+                    .GetErrorMessage(ErrorMessageEnum.密碼不正確));
             }
             MyUserAdapterModel userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
             return (userAdapterModel, "");

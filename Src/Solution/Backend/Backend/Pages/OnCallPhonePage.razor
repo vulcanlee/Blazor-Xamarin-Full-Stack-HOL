@@ -1,0 +1,7 @@
+﻿@page "/OnCallPhone"
+@*@attribute [Authorize(Roles = "User")]*@
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.連絡電話本名稱</div>
+    <OnCallPhoneView PageSize="@MagicHelper.GridPageSize" />
+</div>

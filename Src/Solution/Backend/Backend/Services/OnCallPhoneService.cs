@@ -5,40 +5,40 @@ using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    using AutoMapper;
-    using Backend.AdapterModels;
-    using Backend.Helpers;
-    using Backend.SortModels;
+    using ShareBusiness.Helpers;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
-    using ShareBusiness.Factories;
-    using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
+    using Backend.AdapterModels;
+    using Backend.SortModels;
+    using AutoMapper;
+    using ShareBusiness.Factories;
     using ShareDomain.Enums;
 
-    public class OrderService : IOrderService
+    public class OnCallPhoneService : IOnCallPhoneService
     {
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
 
-        public OrderService(BackendDBContext context, IMapper mapper)
+        public OnCallPhoneService(BackendDBContext context, IMapper mapper)
         {
             this.context = context;
             Mapper = mapper;
         }
 
-        public async Task<DataRequestResult<OrderAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<OnCallPhoneAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<OrderAdapterModel> data = new List<OrderAdapterModel>();
-            DataRequestResult<OrderAdapterModel> result = new DataRequestResult<OrderAdapterModel>();
-            var DataSource = context.Order
+            List<OnCallPhoneAdapterModel> data = new List<OnCallPhoneAdapterModel>();
+            DataRequestResult<OnCallPhoneAdapterModel> result = new DataRequestResult<OnCallPhoneAdapterModel>();
+            var DataSource = context.OnCallPhone
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
                 DataSource = DataSource
-                .Where(x => x.Name.Contains(dataRequest.Search));
+                .Where(x => x.Title.Contains(dataRequest.Search) ||
+                 x.PhoneNumber.Contains(dataRequest.Search));
             }
             #endregion
 
@@ -48,11 +48,23 @@ namespace Backend.Services
                 SortCondition CurrentSortCondition = dataRequest.Sorted;
                 switch (CurrentSortCondition.Id)
                 {
-                    case (int)OrderSortEnum.OrderDateDescending:
-                        DataSource = DataSource.OrderByDescending(x => x.OrderDate);
+                    case (int)OnCallPhoneSortEnum.TitleDescending:
+                        DataSource = DataSource.OrderByDescending(x => x.Title);
                         break;
-                    case (int)OrderSortEnum.OrderDateAscending:
-                        DataSource = DataSource.OrderBy(x => x.OrderDate);
+                    case (int)OnCallPhoneSortEnum.TitleAscending:
+                        DataSource = DataSource.OrderBy(x => x.Title);
+                        break;
+                    case (int)OnCallPhoneSortEnum.PhoneNumberDescending:
+                        DataSource = DataSource.OrderByDescending(x => x.PhoneNumber);
+                        break;
+                    case (int)OnCallPhoneSortEnum.PhoneNumberAscending:
+                        DataSource = DataSource.OrderBy(x => x.PhoneNumber);
+                        break;
+                    case (int)OnCallPhoneSortEnum.OrderNumberDescending:
+                        DataSource = DataSource.OrderByDescending(x => x.OrderNumber);
+                        break;
+                    case (int)OnCallPhoneSortEnum.OrderNumberAscending:
+                        DataSource = DataSource.OrderBy(x => x.OrderNumber);
                         break;
                     default:
                         DataSource = DataSource.OrderBy(x => x.Id);
@@ -63,7 +75,7 @@ namespace Backend.Services
 
             #region 進行分頁
             // 取得記錄總數量，將要用於分頁元件面板使用
-            result.Count = DataSource.Cast<Order>().Count();
+            result.Count = DataSource.Cast<OnCallPhone>().Count();
             DataSource = DataSource.Skip(dataRequest.Skip);
             if (dataRequest.Take != 0)
             {
@@ -72,8 +84,8 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<OrderAdapterModel> adaptorModelObjects =
-                Mapper.Map<List<OrderAdapterModel>>(DataSource);
+            List<OnCallPhoneAdapterModel> adaptorModelObjects =
+                Mapper.Map<List<OnCallPhoneAdapterModel>>(DataSource);
 
             foreach (var adaptorModelItem in adaptorModelObjects)
             {
@@ -86,32 +98,32 @@ namespace Backend.Services
             return result;
         }
 
-        public async Task<OrderAdapterModel> GetAsync(int id)
+        public async Task<OnCallPhoneAdapterModel> GetAsync(int id)
+
         {
-            Order item = await context.Order
+            OnCallPhone item = await context.OnCallPhone
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
-            OrderAdapterModel result = Mapper.Map<OrderAdapterModel>(item);
+            OnCallPhoneAdapterModel result = Mapper.Map<OnCallPhoneAdapterModel>(item);
             return result;
         }
 
-        public async Task<VerifyRecordResult> AddAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> AddAsync(OnCallPhoneAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<Order>(context);
-            Order itemParameter = Mapper.Map<Order>(paraObject);
-            CleanTrackingHelper.Clean<Order>(context);
-            await context.Order
+            OnCallPhone itemParameter = Mapper.Map<OnCallPhone>(paraObject);
+            CleanTrackingHelper.Clean<OnCallPhone>(context);
+            await context.OnCallPhone
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<Order>(context);
+            CleanTrackingHelper.Clean<OnCallPhone>(context);
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> UpdateAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> UpdateAsync(OnCallPhoneAdapterModel paraObject)
         {
-            Order itemData = Mapper.Map<Order>(paraObject);
-            CleanTrackingHelper.Clean<Order>(context);
-            Order item = await context.Order
+            OnCallPhone itemData = Mapper.Map<OnCallPhone>(paraObject);
+            CleanTrackingHelper.Clean<OnCallPhone>(context);
+            OnCallPhone item = await context.OnCallPhone
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -120,18 +132,18 @@ namespace Backend.Services
             }
             else
             {
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OnCallPhone>(context);
                 context.Entry(itemData).State = EntityState.Modified;
                 await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OnCallPhone>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<Order>(context);
-            Order item = await context.Order
+            CleanTrackingHelper.Clean<OnCallPhone>(context);
+            OnCallPhone item = await context.OnCallPhone
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -140,18 +152,18 @@ namespace Backend.Services
             }
             else
             {
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OnCallPhone>(context);
                 context.Entry(item).State = EntityState.Deleted;
                 await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OnCallPhone>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
         }
-        public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeAddCheckAsync(OnCallPhoneAdapterModel paraObject)
         {
-            var searchItem = await context.Order
+            var searchItem = await context.OnCallPhone
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Name == paraObject.Name);
+                .FirstOrDefaultAsync(x => x.Title == paraObject.Title);
             if (searchItem != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要新增的紀錄已經存在無法新增);
@@ -159,11 +171,11 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OnCallPhoneAdapterModel paraObject)
         {
-            var searchItem = await context.Order
+            var searchItem = await context.OnCallPhone
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
+                .FirstOrDefaultAsync(x => x.Title == paraObject.Title &&
                 x.Id != paraObject.Id);
             if (searchItem != null)
             {
@@ -171,17 +183,9 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderAdapterModel paraObject)
+        public Task<VerifyRecordResult> BeforeDeleteCheckAsync(OnCallPhoneAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItem
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.OrderId == paraObject.Id);
-            if (item != null)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
-            }
-            return VerifyRecordResultFactory.Build(true);
+            return Task.FromResult(VerifyRecordResultFactory.Build(true));
         }
     }
 }

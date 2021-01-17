@@ -31,7 +31,7 @@ namespace Backend.Services
         {
             List<ProductAdapterModel> data = new List<ProductAdapterModel>();
             DataRequestResult<ProductAdapterModel> result = new DataRequestResult<ProductAdapterModel>();
-            var DataSource = context.Products
+            var DataSource = context.Product
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -88,7 +88,7 @@ namespace Backend.Services
         public async Task<ProductAdapterModel> GetAsync(int id)
 
         {
-            Product item = await context.Products
+            Product item = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             ProductAdapterModel result = Mapper.Map<ProductAdapterModel>(item);
@@ -99,7 +99,7 @@ namespace Backend.Services
         {
             Product itemParameter = Mapper.Map<Product>(paraObject);
             CleanTrackingHelper.Clean<Product>(context);
-            await context.Products
+            await context.Product
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<Product>(context);
@@ -110,7 +110,7 @@ namespace Backend.Services
         {
             Product itemData = Mapper.Map<Product>(paraObject);
             CleanTrackingHelper.Clean<Product>(context);
-            Product item = await context.Products
+            Product item = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -130,7 +130,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<Product>(context);
-            Product item = await context.Products
+            Product item = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -148,7 +148,7 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(ProductAdapterModel paraObject)
         {
-            var searchItem = await context.Products
+            var searchItem = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name);
             if (searchItem != null)
@@ -160,7 +160,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(ProductAdapterModel paraObject)
         {
-            var searchItem = await context.Products
+            var searchItem = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
                 x.Id != paraObject.Id);
@@ -173,7 +173,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(ProductAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ProductId == paraObject.Id);
             if (item != null)

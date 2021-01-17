@@ -18,9 +18,9 @@ namespace Entities.Models
         {
         }
 
-        public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<OrderItem> OrderItems { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<OrderItem> OrderItem { get; set; }
+        public virtual DbSet<Product> Product { get; set; }
 
         public virtual DbSet<MyUser> MyUser { get; set; }
         public virtual DbSet<Project> Project { get; set; }
@@ -52,6 +52,18 @@ namespace Entities.Models
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
             #endregion
+
+            modelBuilder.Entity<Product>()
+                .Property(x => x.ListPrice)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(x => x.ListPrice)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(x => x.Discount)
+                .HasPrecision(5, 2);
 
             modelBuilder.Entity<TravelExpense>()
                 .Property(x => x.TotalExpense)

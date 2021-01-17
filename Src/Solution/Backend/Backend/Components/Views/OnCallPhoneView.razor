@@ -6,15 +6,15 @@
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
 
-@inject LeaveCategoryRazorModel RazorModel
+@inject OnCallPhoneRazorModel RazorModel
 @implements IRazorPage
 @implements IDataGrid
 
-<SfGrid @ref="Grid" TValue="LeaveCategoryAdapterModel"
+<SfGrid @ref="Grid" TValue="OnCallPhoneAdapterModel"
         AllowPaging="true"
         Toolbar="RazorModel.Toolbaritems">
     <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-        <LeaveCategoryAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></LeaveCategoryAdapter>
+        <OnCallPhoneAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></OnCallPhoneAdapter>
     </SfDataManager>
     <SfToolbar>
         <ToolbarItems>
@@ -30,13 +30,14 @@
             </ToolbarItem>
         </ToolbarItems>
     </SfToolbar>
-    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="LeaveCategoryAdapterModel"
+    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OnCallPhoneAdapterModel"
                 OnToolbarClick="RazorModel.ToolbarClickHandler"
                 RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
     <GridPageSettings PageSize="@PageSize" />
     <GridColumns>
-        <GridColumn Field=@nameof(LeaveCategoryAdapterModel.Name) HeaderText="名稱"></GridColumn>
-        <GridColumn Field=@nameof(LeaveCategoryAdapterModel.OrderNumber) HeaderText="順序" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(OnCallPhoneAdapterModel.OrderNumber) HeaderText="順序"></GridColumn>
+        <GridColumn Field=@nameof(OnCallPhoneAdapterModel.Title) HeaderText="單位"></GridColumn>
+        <GridColumn Field=@nameof(OnCallPhoneAdapterModel.PhoneNumber) HeaderText="電話號碼"></GridColumn>
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -59,14 +60,6 @@
                 <InputWatcher EditContextActionChanged="@RazorModel.OnEditContestChanged" />
 
                 <div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="control-label">名稱</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Name"
-                                       Placeholder="請輸入價別名稱" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Name)" />
-                        </div>
-                    </div>
 
                     <div class="form-row">
                         <div class="form-group col">
@@ -74,6 +67,24 @@
                             <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.OrderNumber"
                                               Placeholder="請輸入大於0的整數數值" />
                             <ValidationMessage For="@(() => RazorModel.CurrentRecord.OrderNumber)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">單位</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Title"
+                                       Placeholder="請輸入單位名稱" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Title)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">電話號碼</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.PhoneNumber"
+                                       Placeholder="請輸入電話號碼" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.PhoneNumber)" />
                         </div>
                     </div>
 
@@ -103,11 +114,11 @@
 <DialogBackground />
 
 @code{
-    SfGrid<LeaveCategoryAdapterModel> Grid;
+    SfGrid<OnCallPhoneAdapterModel> Grid;
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
-    public EventCallback<LeaveCategoryAdapterModel> OnRecordChanged { get; set; }
+    public EventCallback<OnCallPhoneAdapterModel> OnRecordChanged { get; set; }
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
 
@@ -154,21 +165,21 @@
 
 
     #region 選取紀錄異動的事件處理
-    public async Task RowSelectHandler(RowSelectEventArgs<LeaveCategoryAdapterModel> args)
+    public async Task RowSelectHandler(RowSelectEventArgs<OnCallPhoneAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
             await OnRecordChanged.InvokeAsync(args.Data);
         }
     }
-    public async Task RowDeselectHandler(RowDeselectEventArgs<LeaveCategoryAdapterModel> args)
+    public async Task RowDeselectHandler(RowDeselectEventArgs<OnCallPhoneAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(new LeaveCategoryAdapterModel()
+            await OnRecordChanged.InvokeAsync(new OnCallPhoneAdapterModel()
             {
                 Id = -2,
-                Name = "",
+                Title = "",
             });
         }
     }

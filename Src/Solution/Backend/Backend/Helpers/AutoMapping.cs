@@ -17,6 +17,8 @@ namespace Backend.Helpers
             #region Blazor AdapterModel
             CreateMap<LeaveCategory, LeaveCategoryAdapterModel>();
             CreateMap<LeaveCategoryAdapterModel, LeaveCategory>();
+            CreateMap<OnCallPhone, OnCallPhoneAdapterModel>();
+            CreateMap<OnCallPhoneAdapterModel, OnCallPhone>();
             CreateMap<MyUser, MyUserAdapterModel>();
             CreateMap<MyUserAdapterModel, MyUser>();
 

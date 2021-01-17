@@ -32,7 +32,7 @@ namespace Backend.Services
         {
             List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
-            var DataSource = context.OrderItems
+            var DataSource = context.OrderItem
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -90,7 +90,7 @@ namespace Backend.Services
         {
             List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
-            var DataSource = context.OrderItems
+            var DataSource = context.OrderItem
                 .AsNoTracking()
                 .Include(x => x.Product)
                 .Where(x => x.OrderId == id);
@@ -149,7 +149,7 @@ namespace Backend.Services
 
         public async Task<OrderItemAdapterModel> GetAsync(int id)
         {
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             OrderItemAdapterModel result = Mapper.Map<OrderItemAdapterModel>(item);
@@ -160,7 +160,7 @@ namespace Backend.Services
         {
             OrderItem itemParameter = Mapper.Map<OrderItem>(paraObject);
             CleanTrackingHelper.Clean<OrderItem>(context);
-            await context.OrderItems
+            await context.OrderItem
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<OrderItem>(context);
@@ -171,7 +171,7 @@ namespace Backend.Services
         {
             OrderItem itemData = Mapper.Map<OrderItem>(paraObject);
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -191,7 +191,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -215,7 +215,7 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.尚未輸入該訂單要用到的產品);
             }
-            var item = await context.OrderItems
+            var item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.OrderId == paraObject.OrderId &&
                 x.ProductId == paraObject.ProductId);
@@ -233,7 +233,7 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.尚未輸入該訂單要用到的產品);
             }
-            var item = await context.OrderItems
+            var item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.OrderId == paraObject.OrderId &&
                 x.ProductId == paraObject.ProductId &&
