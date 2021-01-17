@@ -25,13 +25,13 @@ namespace Backend.Controllers
     public class LoginController : ControllerBase
     {
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
-        private readonly IHoluserService holuserService;
+        private readonly IMyUserService myUserService;
 
         public LoginController(Microsoft.Extensions.Configuration.IConfiguration configuration,
-            IHoluserService holuserService)
+            IMyUserService myUserService)
         {
             this.configuration = configuration;
-            this.holuserService = holuserService;
+            this.myUserService = myUserService;
         }
         [AllowAnonymous]
         [HttpPost]
@@ -46,7 +46,7 @@ namespace Backend.Controllers
                 return Ok(apiResult);
             }
 
-            (HoluserAdapterModel user, string message) = await holuserService.CheckUser(loginRequestDTO.Account, loginRequestDTO.Password);
+            (MyUserAdapterModel user, string message) = await myUserService.CheckUser(loginRequestDTO.Account, loginRequestDTO.Password);
 
             if (user == null)
             {
@@ -87,7 +87,7 @@ namespace Backend.Controllers
                 Account = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value,
             };
 
-            HoluserAdapterModel user = await holuserService.GetAsync(Convert.ToInt32(loginRequestDTO.Account));
+            MyUserAdapterModel user = await myUserService.GetAsync(Convert.ToInt32(loginRequestDTO.Account));
             if (user == null)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status401Unauthorized,
@@ -115,17 +115,17 @@ namespace Backend.Controllers
 
         }
 
-        public string GenerateToken(HoluserAdapterModel user)
+        public string GenerateToken(MyUserAdapterModel user)
         {
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, "User"),
                 new Claim(ClaimTypes.NameIdentifier, user.Account),
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, "User"),
-                new Claim("TokenVersion", user.TokenVersion.ToString()),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                
             };
-            if (user.Level == 4)
+            if (user.IsManager == true)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
             }
@@ -147,13 +147,13 @@ namespace Backend.Controllers
 
         }
 
-        public string GenerateRefreshToken(HoluserAdapterModel user)
+        public string GenerateRefreshToken(MyUserAdapterModel user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Account),
                 new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, $"RefreshToken"),
             };
 

@@ -130,7 +130,7 @@ namespace Backend.RazorModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMapping.Instance.GetErrorMessage(checkedResult.MessageId));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     return;
                 }
                 #endregion
@@ -178,7 +178,7 @@ namespace Backend.RazorModels
                 if (checkedResult.Success == false)
                 {
                     ConfirmMessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMapping.Instance.GetErrorMessage(checkedResult.MessageId));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     return;
                 }
             }
@@ -189,7 +189,7 @@ namespace Backend.RazorModels
                 if (checkedResult.Success == false)
                 {
                     ConfirmMessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMapping.Instance.GetErrorMessage(checkedResult.MessageId));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     return;
                 }
             }

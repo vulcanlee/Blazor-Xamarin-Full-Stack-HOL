@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ShareBusiness.Helpers
 {
-    public class ErrorMessageMapping
+    public class ErrorMessageMappingHelper
     {
         private Dictionary<ErrorMessageEnum, string> ErrorMessages { get; set; }
-        private static ErrorMessageMapping instance;
-        private ErrorMessageMapping()
+        private static ErrorMessageMappingHelper instance;
+        private ErrorMessageMappingHelper()
         {
             BuildErrorMessages();
         }
@@ -47,13 +47,15 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.資料有問題無法新增或者修改, "資料有問題無法新增或者修改");
             ErrorMessages.Add(ErrorMessageEnum.要新增的紀錄已經存在無法新增, "要新增的紀錄已經存在無法新增");
             ErrorMessages.Add(ErrorMessageEnum.要修改的紀錄已經存在無法修改, "要修改的紀錄已經存在無法修改");
+            ErrorMessages.Add(ErrorMessageEnum.使用者帳號不存在, "使用者帳號不存在");
+            ErrorMessages.Add(ErrorMessageEnum.密碼不正確, "密碼不正確");
             ErrorMessages.Add(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中, "該紀錄無法刪除，因為有其他資料表在使用中");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入該訂單要用到的產品, "尚未輸入該訂單要用到的產品");
             ErrorMessages.Add(ErrorMessageEnum.該訂單已經存在該產品_不能重複同樣的商品在一訂單內, "該訂單已經存在該產品，不能重複同樣的商品在一訂單內");
 
         }
 
-        public static ErrorMessageMapping Instance
+        public static ErrorMessageMappingHelper Instance
         {
             get
             {
@@ -61,7 +63,7 @@ namespace ShareBusiness.Helpers
                 // ?? 若這個 單例物件 需要能夠在多執行緒環境下正確執行，又該如何設計呢？
                 if (instance == null)
                 {
-                    instance = new ErrorMessageMapping();
+                    instance = new ErrorMessageMappingHelper();
                 }
                 return instance;
             }

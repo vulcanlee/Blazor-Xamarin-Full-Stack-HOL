@@ -218,5 +218,22 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+        public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
+        {
+            MyUser user = await context.MyUser.AsNoTracking().FirstOrDefaultAsync(x => x.Account == account);
+            if (user == null)
+            {
+                return (null, ErrorMessageMappingHelper.Instance
+                    .GetErrorMessage(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中));
+            }
+
+            if (user.Password != password)
+            {
+                return (null, ErrorMessageMappingHelper.Instance
+                    .GetErrorMessage(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中));
+            }
+            MyUserAdapterModel userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
+            return (userAdapterModel, "");
+        }
     }
 }

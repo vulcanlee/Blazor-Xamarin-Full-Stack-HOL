@@ -7,8 +7,6 @@ namespace Backend.Services
 {
     public interface ILeaveCategoryService
     {
-        IMapper Mapper { get; }
-
         Task<VerifyRecordResult> AddAsync(LeaveCategoryAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeAddCheckAsync(LeaveCategoryAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeDeleteCheckAsync(LeaveCategoryAdapterModel paraObject);

@@ -24,30 +24,30 @@ namespace Backend.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class HoluserController : ControllerBase
+    public class MyUserController : ControllerBase
     {
-        private readonly IHoluserService holuserService;
+        private readonly IMyUserService myUserService;
         private readonly IMapper mapper;
 
         #region 建構式
-        public HoluserController(IHoluserService holuserService,
+        public MyUserController(IMyUserService myUserService,
             IMapper mapper)
         {
-            this.holuserService = holuserService;
+            this.myUserService = myUserService;
             this.mapper = mapper;
         }
         #endregion
 
         #region C 新增
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] HoluserDto data)
+        public async Task<IActionResult> Post([FromBody] MyUserDto data)
         {
             APIResult apiResult;
-            HoluserAdapterModel record = mapper.Map<HoluserAdapterModel>(data);
+            MyUserAdapterModel record = mapper.Map<MyUserAdapterModel>(data);
             if (record != null)
             {
-                var result = mapper.Map<HoluserDto>(record);
-                var verifyRecordResult = await holuserService.AddAsync(record);
+                var result = mapper.Map<MyUserDto>(record);
+                var verifyRecordResult = await myUserService.AddAsync(record);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
@@ -84,8 +84,8 @@ namespace Backend.Controllers
             };
             #endregion
 
-            var records = await holuserService.GetAsync(dataRequest);
-            var result = mapper.Map<List<HoluserDto>>(records);
+            var records = await myUserService.GetAsync(dataRequest);
+            var result = mapper.Map<List<MyUserDto>>(records);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);
@@ -95,8 +95,8 @@ namespace Backend.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             APIResult apiResult;
-            var record = await holuserService.GetAsync(id);
-            var result = mapper.Map<HoluserDto>(record);
+            var record = await myUserService.GetAsync(id);
+            var result = mapper.Map<MyUserDto>(record);
             if (record != null)
             {
                 apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
@@ -113,16 +113,16 @@ namespace Backend.Controllers
 
         #region U 更新
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] HoluserDto data)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] MyUserDto data)
         {
             APIResult apiResult;
-            var record = await holuserService.GetAsync(id);
+            var record = await myUserService.GetAsync(id);
             if (record != null)
             {
-                HoluserAdapterModel recordTarget = mapper.Map<HoluserAdapterModel>(data);
+                MyUserAdapterModel recordTarget = mapper.Map<MyUserAdapterModel>(data);
                 recordTarget.Id = id;
-                var result = mapper.Map<HoluserDto>(recordTarget);
-                var verifyRecordResult = await holuserService.UpdateAsync(recordTarget);
+                var result = mapper.Map<MyUserDto>(recordTarget);
+                var verifyRecordResult = await myUserService.UpdateAsync(recordTarget);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
@@ -148,11 +148,11 @@ namespace Backend.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             APIResult apiResult;
-            var record = await holuserService.GetAsync(id);
-            var result = mapper.Map<HoluserDto>(record);
+            var record = await myUserService.GetAsync(id);
+            var result = mapper.Map<MyUserDto>(record);
             if (record != null)
             {
-                var verifyRecordResult = await holuserService.DeleteAsync(id);
+                var verifyRecordResult = await myUserService.DeleteAsync(id);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,

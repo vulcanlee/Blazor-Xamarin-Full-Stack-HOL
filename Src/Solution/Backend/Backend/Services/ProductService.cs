@@ -175,7 +175,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<OrderItem>(context);
             OrderItem item = await context.OrderItems
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                .FirstOrDefaultAsync(x => x.ProductId == paraObject.Id);
             if (item != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);

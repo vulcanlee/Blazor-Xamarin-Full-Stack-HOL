@@ -148,7 +148,6 @@ namespace Backend
             services.AddTransient<ILeaveCategoryService, LeaveCategoryService>();
             services.AddTransient<IMyUserService, MyUserService>();
 
-            services.AddTransient<IHoluserService, HoluserService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IOrderItemService, OrderItemService>();
@@ -158,7 +157,6 @@ namespace Backend
             services.AddTransient<LeaveCategoryRazorModel>();
             services.AddTransient<MyUserRazorModel>();
 
-            services.AddTransient<HoluserRazorModel>();
             services.AddTransient<OrderRazorModel>();
             services.AddTransient<ProductRazorModel>();
             services.AddTransient<OrderItemRazorModel>();

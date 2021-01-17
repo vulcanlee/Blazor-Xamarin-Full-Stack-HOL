@@ -47,25 +47,23 @@ namespace Initialization
             context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             #region 產生開發用的測試資料
-            await GenerateHOLUserAsync(context, random);
+            await GenerateMyUserAsync(context, random);
             #endregion
         }
 
-        private static async Task GenerateHOLUserAsync(BackendDBContext context, Random random)
+        private static async Task GenerateMyUserAsync(BackendDBContext context, Random random)
         {
-            List<Holuser> users = new List<Holuser>();
+            List<MyUser> users = new List<MyUser>();
             for (int i = 1; i < 30; i++)
             {
-                Holuser holuser = new Holuser()
+                MyUser MyUser = new MyUser()
                 {
                     Account = $"user{i}",
                     Name = $"user{i}",
                     Password = "pw",
-                    Level = 1,
-                    TokenVersion = 0,
                 };
-                if (holuser.Account == "user9") holuser.Level = 4;
-                users.Add(holuser);
+                if (i == 9) MyUser.IsManager = true;
+                users.Add(MyUser);
             }
             await context.BulkInsertAsync(users);
         }

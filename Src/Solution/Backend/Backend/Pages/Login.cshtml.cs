@@ -18,15 +18,15 @@ namespace Backend.Pages
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly IHoluserService holuserService;
+        private readonly IMyUserService myUserService;
 
-        public LoginModel(IHoluserService holuserService)
+        public LoginModel(IMyUserService myUserService)
         {
 #if DEBUG
             Username = "user1";
             Password = "pw";
             PasswordType = "";
-            this.holuserService = holuserService;
+            this.myUserService = myUserService;
 #endif
         }
         [BindProperty]
@@ -50,7 +50,7 @@ namespace Backend.Pages
         public string ReturnUrl { get; set; }
         public async Task<IActionResult> OnPostAsync()
         {
-            (HoluserAdapterModel user, string message) = await holuserService.CheckUser(Username, Password);
+            (MyUserAdapterModel user, string message) = await myUserService.CheckUser(Username, Password);
 
             if (user == null)
             {
@@ -64,10 +64,11 @@ namespace Backend.Pages
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role, "User"),
+                    new Claim(ClaimTypes.NameIdentifier, user.Account),
                     new Claim(ClaimTypes.Name, user.Name),
-                    new Claim("TokenVersion", user.TokenVersion.ToString()),
+                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
                 };
-                if (user.Level == 4)
+                if (user.IsManager == true)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
                 }
