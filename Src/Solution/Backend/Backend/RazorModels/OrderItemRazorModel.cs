@@ -58,20 +58,6 @@ namespace Backend.RazorModels
         public EditContext LocalEditContext { get; set; }
         public bool ShowAontherRecordPicker { get; set; } = false;
         public MasterRecord Header { get; set; } = new MasterRecord();
-        public string HeaderTitle
-        {
-            get
-            {
-                if (Header == null || string.IsNullOrEmpty(Header.Title))
-                {
-                    return "";
-                }
-                else
-                {
-                    return $"{Header.Title}";
-                }
-            }
-        }
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
 

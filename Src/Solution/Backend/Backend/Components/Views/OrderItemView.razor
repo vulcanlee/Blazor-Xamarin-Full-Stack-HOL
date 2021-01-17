@@ -208,7 +208,7 @@
             await OnRecordChanged.InvokeAsync(new MasterRecord()
             {
                 Id = args.Data.OrderId,
-                Title = args.Data.Name
+                Title = MagicHelper.確認有表頭預設文字
             });
         }
     }
