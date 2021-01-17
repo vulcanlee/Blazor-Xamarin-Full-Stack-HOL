@@ -15,6 +15,8 @@ namespace Backend.Helpers
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<WorkingLogDetail, WorkingLogDetailAdapterModel>();
+            CreateMap<WorkingLogDetailAdapterModel, WorkingLogDetail>();
             CreateMap<WorkingLog, WorkingLogAdapterModel>();
             CreateMap<WorkingLogAdapterModel, WorkingLog>();
             CreateMap<Project, ProjectAdapterModel>();

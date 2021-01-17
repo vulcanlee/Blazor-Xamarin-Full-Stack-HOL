@@ -93,6 +93,7 @@ namespace Backend.Services
         {
             WorkingLog item = await context.WorkingLog
                 .AsNoTracking()
+                .Include(x => x.MyUser)
                 .FirstOrDefaultAsync(x => x.Id == id);
             WorkingLogAdapterModel result = Mapper.Map<WorkingLogAdapterModel>(item);
             return result;

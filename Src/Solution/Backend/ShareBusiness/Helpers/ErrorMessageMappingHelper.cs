@@ -52,6 +52,8 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中, "該紀錄無法刪除，因為有其他資料表在使用中");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入該訂單要用到的產品, "尚未輸入該訂單要用到的產品");
             ErrorMessages.Add(ErrorMessageEnum.該訂單已經存在該產品_不能重複同樣的商品在一訂單內, "該訂單已經存在該產品，不能重複同樣的商品在一訂單內");
+            ErrorMessages.Add(ErrorMessageEnum.尚未輸入該工作日誌的歸屬專案, "尚未輸入該工作日誌的歸屬專案");
+            ErrorMessages.Add(ErrorMessageEnum.工作時數必須大於0, "工作時數必須大於 0");
 
         }
 

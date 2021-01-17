@@ -13,9 +13,9 @@ namespace Entities.Models
     public class WorkingLogDetail
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "主題 不可為空白")]
+        [Required(ErrorMessage = "工作項目 不可為空白")]
         public string Title { get; set; }
-        [Required(ErrorMessage = "主題說明 不可為空白")]
+        [Required(ErrorMessage = "工作項目說明 不可為空白")]
         public string Summary { get; set; }
         public decimal Hours { get; set; }
 

@@ -114,7 +114,7 @@
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
-    public EventCallback<WorkingLogAdapterModel> OnRecordChanged { get; set; }
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
 
@@ -165,17 +165,21 @@
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(args.Data);
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = args.Data.Id,
+                Title = "kkkkkk"
+            });
         }
     }
     public async Task RowDeselectHandler(RowDeselectEventArgs<WorkingLogAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(new WorkingLogAdapterModel()
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
             {
                 Id = -2,
-                Name = "",
+                Title = "",
             });
         }
     }

@@ -18,17 +18,17 @@ namespace Backend.RazorModels
     using ShareBusiness.Helpers;
     using Syncfusion.Blazor.Navigations;
 
-    public class OrderItemRazorModel
+    public class WorkingLogDetailRazorModel
     {
         #region Constructor
-        public OrderItemRazorModel(IOrderItemService CurrentService,
+        public WorkingLogDetailRazorModel(IWorkingLogDetailService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            OrderItemSort.Initialization(SortConditions);
+            WorkingLogDetailSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -53,8 +53,8 @@ namespace Backend.RazorModels
 
         #region Property
         public bool IsShowEditRecord { get; set; } = false;
-        public OrderItemAdapterModel CurrentRecord { get; set; } = new OrderItemAdapterModel();
-        public OrderItemAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderItemAdapterModel();
+        public WorkingLogDetailAdapterModel CurrentRecord { get; set; } = new WorkingLogDetailAdapterModel();
+        public WorkingLogDetailAdapterModel CurrentNeedDeleteRecord { get; set; } = new WorkingLogDetailAdapterModel();
         public EditContext LocalEditContext { get; set; }
         public bool ShowAontherRecordPicker { get; set; } = false;
         public MasterRecord Header { get; set; } = new MasterRecord();
@@ -85,7 +85,7 @@ namespace Backend.RazorModels
 
         #region Field
         bool isNewRecordMode;
-        private readonly IOrderItemService CurrentService;
+        private readonly IWorkingLogDetailService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
         IRazorPage thisRazorComponent;
@@ -108,13 +108,13 @@ namespace Backend.RazorModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new OrderItemAdapterModel();
+                CurrentRecord = new WorkingLogDetailAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
                 IsShowEditRecord = true;
-                CurrentRecord.OrderId = Header.Id;
+                CurrentRecord.WorkingLogId = Header.Id;
                 //CurrentRecord.Name = Header.Title;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
@@ -125,9 +125,9 @@ namespace Backend.RazorModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除)
-        public async Task OnCommandClicked(CommandClickEventArgs<OrderItemAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<WorkingLogDetailAdapterModel> args)
         {
-            OrderItemAdapterModel item = args.RowData as OrderItemAdapterModel;
+            WorkingLogDetailAdapterModel item = args.RowData as WorkingLogDetailAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 CurrentRecord = item.Clone();
@@ -234,12 +234,12 @@ namespace Backend.RazorModels
             ShowAontherRecordPicker = true;
         }
 
-        public void OnPickerCompletion(ProductAdapterModel e)
+        public void OnPickerCompletion(ProjectAdapterModel e)
         {
             if (e != null)
             {
-                CurrentRecord.ProductId = e.Id;
-                CurrentRecord.ProductName = e.Name;
+                CurrentRecord.ProjectId = e.Id;
+                CurrentRecord.ProjectName = e.Name;
             }
             ShowAontherRecordPicker = false;
         }

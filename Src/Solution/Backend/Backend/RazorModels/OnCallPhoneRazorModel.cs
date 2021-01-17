@@ -177,7 +177,7 @@ namespace Backend.RazorModels
                     .BeforeAddCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    ConfirmMessageBox.Show("400px", "200px", "警告",
+                    MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     return;
                 }
@@ -188,7 +188,7 @@ namespace Backend.RazorModels
                     .BeforeUpdateCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    ConfirmMessageBox.Show("400px", "200px", "警告",
+                    MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     return;
                 }

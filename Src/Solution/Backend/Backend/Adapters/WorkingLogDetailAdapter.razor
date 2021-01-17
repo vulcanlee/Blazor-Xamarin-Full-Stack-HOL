@@ -8,7 +8,7 @@
 @using Entities.Models
 @using ShareDomain.DataModels
 @using AutoMapper
-@inherits DataAdaptor<IOrderItemService>
+@inherits DataAdaptor<IWorkingLogDetailService>
 @inject IMapper Mapper
 
 <CascadingValue Value="@this">
@@ -45,7 +45,7 @@
         #endregion
 
         #region 發出查詢要求
-        DataRequestResult<OrderItemAdapterModel> adaptorModelObjects;
+        DataRequestResult<WorkingLogDetailAdapterModel> adaptorModelObjects;
         if (HeaderID == -1)
         {
             adaptorModelObjects = await Service.GetAsync(dataRequest);
