@@ -15,6 +15,8 @@ namespace Backend.Helpers
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<LeaveForm, LeaveFormAdapterModel>();
+            CreateMap<LeaveFormAdapterModel, LeaveForm>();
             CreateMap<WorkingLogDetail, WorkingLogDetailAdapterModel>();
             CreateMap<WorkingLogDetailAdapterModel, WorkingLogDetail>();
             CreateMap<WorkingLog, WorkingLogAdapterModel>();

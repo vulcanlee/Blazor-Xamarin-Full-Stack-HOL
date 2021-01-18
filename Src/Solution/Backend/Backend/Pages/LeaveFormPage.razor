@@ -1,0 +1,7 @@
+﻿@page "/LeaveForm"
+@attribute [Authorize(Roles = "User")]
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.請假單功能名稱</div>
+    <LeaveFormView PageSize="@MagicHelper.GridPageSize" />
+</div>

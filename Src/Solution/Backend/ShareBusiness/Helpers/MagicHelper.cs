@@ -19,6 +19,8 @@ namespace ShareBusiness.Helpers
         public static readonly string 有錯誤發生要重新載入頁面 = "有錯誤發生，該應用程式將不無法提供服務，請重新載入 Reload 頁面。";
         public static readonly string 有例外異常錯誤發生 = "有例外異常錯誤發生，請使用網頁開發工具 F12 查看更多詳細訊息。";
         public static readonly string 確認有表頭預設文字 = "確認有表頭預設文字";
+        public static readonly string MyUserUserMode = "MyUser";
+        public static readonly string AgentUserMode = "Agent";
         public static readonly int GridPageSize = 12;
         #endregion
 
@@ -28,6 +30,7 @@ namespace ShareBusiness.Helpers
         public static readonly string 連絡電話本名稱 = "連絡電話本";
         public static readonly string 專案功能名稱 = "專案";
         public static readonly string 工作日誌功能名稱 = "工作日誌";
+        public static readonly string 請假單功能名稱 = "請假單";
 
         public static readonly string 訂單管理功能名稱 = "訂單管理";
         public static readonly string 商品管理功能名稱 = "商品管理";
