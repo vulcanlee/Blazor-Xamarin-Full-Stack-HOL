@@ -86,8 +86,10 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button type="submit" class="btn btn-primary" @onclick="RazorModel.CurrentRecord">儲存</button>
-                <button class="btn btn-secondary" @onclick="RazorModel.OnRecordEditCancel">取消</button>
+                <button type="submit" class="btn btn-primary"
+                        @onclick="RazorModel.OnRecordEditConfirm">儲存</button>
+                <button class="btn btn-secondary"
+                        @onclick="RazorModel.OnRecordEditCancel">取消</button>
             </div>
         </FooterTemplate>
     </DialogTemplates>
