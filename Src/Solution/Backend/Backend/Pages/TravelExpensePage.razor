@@ -1,7 +1,7 @@
-﻿@page "/LeaveForm"
+﻿@page "/TravelExpense"
 @*@attribute [Authorize(Roles = "User")]*@
 
 <div>
     <div class="page-title">@ShareBusiness.Helpers.MagicHelper.差旅費用功能名稱</div>
-    <LeaveFormView PageSize="@MagicHelper.GridPageSize" />
+    <TravelExpenseDetailByTravelExpenseView PageSize="@MagicHelper.GridPageSize" />
 </div>

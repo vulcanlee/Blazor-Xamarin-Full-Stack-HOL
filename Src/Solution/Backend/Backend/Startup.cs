@@ -145,6 +145,8 @@ namespace Backend
         private static void AddOtherServices(IServiceCollection services)
         {
             #region µù¥UªA°È
+            services.AddTransient<ITravelExpenseDetailService, TravelExpenseDetailService>();
+            services.AddTransient<ITravelExpenseService, TravelExpenseService>();
             services.AddTransient<ILeaveFormService, LeaveFormService>();
             services.AddTransient<IWorkingLogDetailService, WorkingLogDetailService>();
             services.AddTransient<IWorkingLogService, WorkingLogService>();
@@ -159,6 +161,8 @@ namespace Backend
             #endregion
 
             #region µù¥U Razor Model
+            services.AddTransient<TravelExpenseDetailRazorModel>();
+            services.AddTransient<TravelExpenseRazorModel>();
             services.AddTransient<LeaveFormRazorModel>();
             services.AddTransient<WorkingLogDetailRazorModel>();
             services.AddTransient<WorkingLogRazorModel>();
