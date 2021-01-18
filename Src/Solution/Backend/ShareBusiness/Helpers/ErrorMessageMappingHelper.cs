@@ -54,6 +54,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.該訂單已經存在該產品_不能重複同樣的商品在一訂單內, "該訂單已經存在該產品，不能重複同樣的商品在一訂單內");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入該工作日誌的歸屬專案, "尚未輸入該工作日誌的歸屬專案");
             ErrorMessages.Add(ErrorMessageEnum.工作時數必須大於0, "工作時數必須大於 0");
+            ErrorMessages.Add(ErrorMessageEnum.需要指定使用者, "需要指定使用者");
 
         }
 

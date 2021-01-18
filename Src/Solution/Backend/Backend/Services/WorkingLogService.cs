@@ -152,6 +152,14 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(WorkingLogAdapterModel paraObject)
         {
+            var searchMyUserItem = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.MyUserId );
+            if (searchMyUserItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定使用者);
+            }
+
             var searchItem = await context.WorkingLog
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
