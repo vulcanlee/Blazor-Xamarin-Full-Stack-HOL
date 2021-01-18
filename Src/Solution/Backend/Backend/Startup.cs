@@ -154,6 +154,7 @@ namespace Backend
             services.AddTransient<IOnCallPhoneService, OnCallPhoneService>();
             services.AddTransient<ILeaveCategoryService, LeaveCategoryService>();
             services.AddTransient<IMyUserService, MyUserService>();
+            services.AddTransient<DatabaseInitService>();
 
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IOrderService, OrderService>();
