@@ -8,8 +8,8 @@ namespace ShareBusiness.Helpers
     {
         #region 定義神奇字串或者神奇數值
         #region 系統預設參數
-        public static readonly string AppName = "Bazor Server 動手練習開發專案範例";
-        public static readonly string MenuMainTitle = "Blazor 動手練習專案";
+        public static readonly string AppName = "Blazor + Xamarin 超全端程式設計 動手練習系列";
+        public static readonly string MenuMainTitle = "Blazor 超全端程式設計";
         public static readonly string DefaultConnectionString = "DefaultConnection";
         public const string CookieAuthenticationScheme = "HandsOnLabCookieAuthenticationScheme"; // CookieAuthenticationDefaults.AuthenticationScheme
         public const string JwtBearerAuthenticationScheme = "HandsOnLabJwtBearerAuthenticationScheme"; // JwtBearerDefaults.AuthenticationScheme
@@ -25,6 +25,7 @@ namespace ShareBusiness.Helpers
         #endregion
 
         #region 個別作業會用到的作業名稱宣告
+        public static readonly string 首頁功能名稱 = "首頁";
         public static readonly string 帳號管理功能名稱 = "帳號管理";
         public static readonly string 請假假別功能名稱 = "請假假別";
         public static readonly string 連絡電話本名稱 = "連絡電話本";
