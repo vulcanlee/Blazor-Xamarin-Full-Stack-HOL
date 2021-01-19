@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public partial class ProjectDto
+    public class ProjectDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "專案名稱 不可為空白")]

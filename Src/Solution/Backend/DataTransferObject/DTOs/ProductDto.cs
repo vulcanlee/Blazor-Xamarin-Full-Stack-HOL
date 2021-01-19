@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public partial class ProductDto
+    public class ProductDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "商品名稱 欄位必須要輸入值")]

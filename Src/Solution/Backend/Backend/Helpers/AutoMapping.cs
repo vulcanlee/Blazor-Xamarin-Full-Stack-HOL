@@ -43,6 +43,34 @@ namespace Backend.Helpers
             #endregion
 
             #region DTO
+            CreateMap<WorkingLogDetail, WorkingLogDetailDto>();
+            CreateMap<WorkingLogDetailDto, WorkingLogDetail>();
+            CreateMap<WorkingLogDetailAdapterModel, WorkingLogDetailDto>();
+            CreateMap<WorkingLogDetailDto, WorkingLogDetailAdapterModel>();
+            CreateMap<WorkingLog, WorkingLogDto>();
+            CreateMap<WorkingLogDto, WorkingLog>();
+            CreateMap<WorkingLogAdapterModel, WorkingLogDto>();
+            CreateMap<WorkingLogDto, WorkingLogAdapterModel>();
+            CreateMap<TravelExpenseDetail, TravelExpenseDetailDto>();
+            CreateMap<TravelExpenseDetailDto, TravelExpenseDetail>();
+            CreateMap<TravelExpenseDetailAdapterModel, TravelExpenseDetailDto>();
+            CreateMap<TravelExpenseDetailDto, TravelExpenseDetailAdapterModel>();
+            CreateMap<TravelExpense, TravelExpenseDto>();
+            CreateMap<TravelExpenseDto, TravelExpense>();
+            CreateMap<TravelExpenseAdapterModel, TravelExpenseDto>();
+            CreateMap<TravelExpenseDto, TravelExpenseAdapterModel>();
+            CreateMap<Project, ProjectDto>();
+            CreateMap<ProjectDto, Project>();
+            CreateMap<ProjectAdapterModel, ProjectDto>();
+            CreateMap<ProjectDto, ProjectAdapterModel>();
+            CreateMap<OnCallPhone, OnCallPhoneDto>();
+            CreateMap<OnCallPhoneDto, OnCallPhone>();
+            CreateMap<OnCallPhoneAdapterModel, OnCallPhoneDto>();
+            CreateMap<OnCallPhoneDto, OnCallPhoneAdapterModel>();
+            CreateMap<LeaveForm, LeaveFormDto>();
+            CreateMap<LeaveFormDto, LeaveForm>();
+            CreateMap<LeaveFormAdapterModel, LeaveFormDto>();
+            CreateMap<LeaveFormDto, LeaveFormAdapterModel>();
             CreateMap<LeaveCategory, LeaveCategoryDto>();
             CreateMap<LeaveCategoryDto, LeaveCategory>();
             CreateMap<LeaveCategoryAdapterModel, LeaveCategoryDto>();

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public partial class MyUserDto
+    public class MyUserDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]

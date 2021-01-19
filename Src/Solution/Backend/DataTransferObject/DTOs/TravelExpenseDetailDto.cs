@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public partial class TravelExpenseDetailDto
+    public class TravelExpenseDetailDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "主題 不可為空白")]

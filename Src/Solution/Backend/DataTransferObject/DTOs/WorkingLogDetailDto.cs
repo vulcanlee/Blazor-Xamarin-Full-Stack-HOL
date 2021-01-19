@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public partial class WorkingLogDetailDto
+    public class WorkingLogDetailDto
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "工作項目 不可為空白")]
