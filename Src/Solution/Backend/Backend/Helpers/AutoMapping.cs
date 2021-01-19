@@ -43,6 +43,10 @@ namespace Backend.Helpers
             #endregion
 
             #region DTO
+            CreateMap<LeaveCategory, LeaveCategoryDto>();
+            CreateMap<LeaveCategoryDto, LeaveCategory>();
+            CreateMap<LeaveCategoryAdapterModel, LeaveCategoryDto>();
+            CreateMap<LeaveCategoryDto, LeaveCategoryAdapterModel>();
             CreateMap<MyUser, MyUserDto>();
             CreateMap<MyUserDto, MyUser>();
             CreateMap<MyUserAdapterModel, MyUserDto>();

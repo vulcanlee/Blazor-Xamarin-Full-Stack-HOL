@@ -73,7 +73,7 @@ namespace Backend.Controllers
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
@@ -170,7 +170,7 @@ namespace Backend.Controllers
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
@@ -212,7 +212,7 @@ namespace Backend.Controllers
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {

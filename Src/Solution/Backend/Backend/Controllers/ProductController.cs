@@ -48,7 +48,7 @@ namespace Backend.Controllers
             if (!ModelState.IsValid)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                      ErrorMessageEnum.傳送過來的資料有問題, payload: data);
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: null);
                 return Ok(apiResult);
             }
             #endregion
@@ -170,7 +170,7 @@ namespace Backend.Controllers
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
@@ -212,7 +212,7 @@ namespace Backend.Controllers
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
