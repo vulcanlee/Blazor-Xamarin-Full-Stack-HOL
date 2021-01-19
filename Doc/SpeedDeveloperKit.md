@@ -21,7 +21,7 @@
     
     (#region 在這裡進行取得資料與與額外屬性初始化)
   * 需要先設計具體類別，再產生相關介面(擷取介面，無須 IMapper)
-  * `需要進行註冊服務 Startup.cs`
+  * `需要進行註冊服務 CustomDependency.cs`
 
 * ProductAdapter
   * 取得紀錄的轉換器
@@ -29,7 +29,7 @@
 * ProductRazorModel
   * Razor Component ViewModel
   * 若有開窗選取紀錄，需要特別修正程式碼
-  * `註冊服務 Startup.cs`
+  * `註冊服務 CustomDependency.cs`
 
 * ProductView
   * Razor Component View
@@ -39,13 +39,13 @@
 
 * ProductPage
   * 需要路由的頁面元件
-  * `註冊功能表選項`
+  * `註冊功能表選項 NavMenu.razor`
 
 * ProductPicker
   * 可以開窗選取其他紀錄的元件
   * 不是每個資料表都會用到這樣的元件
 
 * ProductByOrderView
-  * 具有一對多的多標籤元件
-  * 命名規則為 : (一)By(多)View.razor
+  * 具有一對多的標籤元件
+  * 命名規則為 : (多)By(一)View.razor
 

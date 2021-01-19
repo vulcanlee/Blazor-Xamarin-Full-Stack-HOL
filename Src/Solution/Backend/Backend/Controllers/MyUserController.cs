@@ -107,7 +107,7 @@ namespace Backend.Controllers
             #endregion
 
             var records = await myUserService.GetAsync(dataRequest);
-            var result = mapper.Map<List<MyUserDto>>(records);
+            var result = mapper.Map<List<MyUserDto>>(records.Result);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);

@@ -24,23 +24,23 @@ namespace Backend.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class LeaveCategoryController : ControllerBase
     {
-        private readonly IOrderService OrderService;
+        private readonly ILeaveCategoryService LeaveCategoryService;
         private readonly IMapper mapper;
 
         #region 建構式
-        public OrderController(IOrderService OrderService,
+        public LeaveCategoryController(ILeaveCategoryService LeaveCategoryService,
             IMapper mapper)
         {
-            this.OrderService = OrderService;
+            this.LeaveCategoryService = LeaveCategoryService;
             this.mapper = mapper;
         }
         #endregion
 
         #region C 新增
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] OrderDto data)
+        public async Task<IActionResult> Post([FromBody] LeaveCategoryDto data)
         {
             APIResult apiResult;
 
@@ -53,13 +53,13 @@ namespace Backend.Controllers
             }
             #endregion
 
-            OrderAdapterModel record = mapper.Map<OrderAdapterModel>(data);
+            LeaveCategoryAdapterModel record = mapper.Map<LeaveCategoryAdapterModel>(data);
             if (record != null)
             {
-                var result = mapper.Map<OrderDto>(record);
+                var result = mapper.Map<LeaveCategoryDto>(record);
 
                 #region 新增記錄前的紀錄完整性檢查
-                VerifyRecordResult verify = await OrderService.BeforeAddCheckAsync(record);
+                VerifyRecordResult verify = await LeaveCategoryService.BeforeAddCheckAsync(record);
                 if (verify.Success == false)
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
@@ -69,7 +69,7 @@ namespace Backend.Controllers
                 }
                 #endregion
 
-                var verifyRecordResult = await OrderService.AddAsync(record);
+                var verifyRecordResult = await LeaveCategoryService.AddAsync(record);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status201Created,
@@ -78,7 +78,7 @@ namespace Backend.Controllers
                 else
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        ErrorMessageEnum.無法新增紀錄, payload: record);
+                        ErrorMessageEnum.無法新增紀錄, payload: result);
                 }
             }
             else
@@ -106,8 +106,8 @@ namespace Backend.Controllers
             };
             #endregion
 
-            var records = await OrderService.GetAsync(dataRequest);
-            var result = mapper.Map<List<OrderDto>>(records.Result);
+            var records = await LeaveCategoryService.GetAsync(dataRequest);
+            var result = mapper.Map<List<LeaveCategoryDto>>(records.Result);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);
@@ -117,8 +117,8 @@ namespace Backend.Controllers
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             APIResult apiResult;
-            var record = await OrderService.GetAsync(id);
-            var result = mapper.Map<OrderDto>(record);
+            var record = await LeaveCategoryService.GetAsync(id);
+            var result = mapper.Map<LeaveCategoryDto>(record);
             if (record != null)
             {
                 apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
@@ -135,7 +135,7 @@ namespace Backend.Controllers
 
         #region U 更新
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] OrderDto data)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] LeaveCategoryDto data)
         {
             APIResult apiResult;
 
@@ -148,15 +148,15 @@ namespace Backend.Controllers
             }
             #endregion
 
-            var record = await OrderService.GetAsync(id);
+            var record = await LeaveCategoryService.GetAsync(id);
             if (record != null)
             {
-                OrderAdapterModel recordTarget = mapper.Map<OrderAdapterModel>(data);
+                LeaveCategoryAdapterModel recordTarget = mapper.Map<LeaveCategoryAdapterModel>(data);
                 recordTarget.Id = id;
-                var result = mapper.Map<OrderDto>(recordTarget);
+                var result = mapper.Map<LeaveCategoryDto>(recordTarget);
 
                 #region 修改記錄前的紀錄完整性檢查
-                VerifyRecordResult verify = await OrderService.BeforeUpdateCheckAsync(record);
+                VerifyRecordResult verify = await LeaveCategoryService.BeforeUpdateCheckAsync(record);
                 if (verify.Success == false)
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
@@ -166,7 +166,7 @@ namespace Backend.Controllers
                 }
                 #endregion
 
-                var verifyRecordResult = await OrderService.UpdateAsync(recordTarget);
+                var verifyRecordResult = await LeaveCategoryService.UpdateAsync(recordTarget);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
@@ -192,13 +192,13 @@ namespace Backend.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             APIResult apiResult;
-            var record = await OrderService.GetAsync(id);
-            var result = mapper.Map<OrderDto>(record);
+            var record = await LeaveCategoryService.GetAsync(id);
+            var result = mapper.Map<LeaveCategoryDto>(record);
             if (record != null)
             {
 
                 #region 刪除記錄前的紀錄完整性檢查
-                VerifyRecordResult verify = await OrderService.BeforeDeleteCheckAsync(record);
+                VerifyRecordResult verify = await LeaveCategoryService.BeforeDeleteCheckAsync(record);
                 if (verify.Success == false)
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
@@ -208,7 +208,7 @@ namespace Backend.Controllers
                 }
                 #endregion
 
-                var verifyRecordResult = await OrderService.DeleteAsync(id);
+                var verifyRecordResult = await LeaveCategoryService.DeleteAsync(id);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
