@@ -43,6 +43,16 @@ namespace Backend.Controllers
         public async Task<IActionResult> Post([FromBody] OrderItemDto data)
         {
             APIResult apiResult;
+
+            #region 驗證 DTO 物件的資料一致性
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: data);
+                return Ok(apiResult);
+            }
+            #endregion
+
             OrderItemAdapterModel record = mapper.Map<OrderItemAdapterModel>(data);
             if (record != null)
             {
@@ -116,6 +126,16 @@ namespace Backend.Controllers
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] OrderItemDto data)
         {
             APIResult apiResult;
+
+            #region 驗證 DTO 物件的資料一致性
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: data);
+                return Ok(apiResult);
+            }
+            #endregion
+
             var record = await OrderItemService.GetAsync(id);
             if (record != null)
             {
