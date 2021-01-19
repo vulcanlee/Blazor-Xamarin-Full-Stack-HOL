@@ -57,6 +57,18 @@ namespace Backend.Controllers
             if (record != null)
             {
                 var result = mapper.Map<MyUserDto>(record);
+
+                #region 新增記錄前的紀錄完整性檢查
+                VerifyRecordResult verify= await myUserService.BeforeAddCheckAsync(record);
+                if(verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await myUserService.AddAsync(record);
                 if (verifyRecordResult.Success)
                 {
@@ -142,6 +154,18 @@ namespace Backend.Controllers
                 MyUserAdapterModel recordTarget = mapper.Map<MyUserAdapterModel>(data);
                 recordTarget.Id = id;
                 var result = mapper.Map<MyUserDto>(recordTarget);
+
+                #region 修改記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await myUserService.BeforeUpdateCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await myUserService.UpdateAsync(recordTarget);
                 if (verifyRecordResult.Success)
                 {
@@ -172,6 +196,18 @@ namespace Backend.Controllers
             var result = mapper.Map<MyUserDto>(record);
             if (record != null)
             {
+
+                #region 刪除記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await myUserService.BeforeDeleteCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await myUserService.DeleteAsync(id);
                 if (verifyRecordResult.Success)
                 {

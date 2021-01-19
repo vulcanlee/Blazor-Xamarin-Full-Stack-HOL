@@ -57,6 +57,18 @@ namespace Backend.Controllers
             if (record != null)
             {
                 var result = mapper.Map<OrderDto>(record);
+
+                #region 新增記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await OrderService.BeforeAddCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await OrderService.AddAsync(record);
                 if (verifyRecordResult.Success)
                 {
@@ -142,6 +154,18 @@ namespace Backend.Controllers
                 OrderAdapterModel recordTarget = mapper.Map<OrderAdapterModel>(data);
                 recordTarget.Id = id;
                 var result = mapper.Map<OrderDto>(recordTarget);
+
+                #region 修改記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await OrderService.BeforeUpdateCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await OrderService.UpdateAsync(recordTarget);
                 if (verifyRecordResult.Success)
                 {
@@ -172,6 +196,18 @@ namespace Backend.Controllers
             var result = mapper.Map<OrderDto>(record);
             if (record != null)
             {
+
+                #region 刪除記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await OrderService.BeforeDeleteCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await OrderService.DeleteAsync(id);
                 if (verifyRecordResult.Success)
                 {
