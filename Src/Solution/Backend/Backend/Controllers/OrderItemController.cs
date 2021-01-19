@@ -113,6 +113,28 @@ namespace Backend.Controllers
             return Ok(apiResult);
         }
 
+        [HttpGet("GetByMaster/{id}")]
+        public async Task<IActionResult> GetByMaster([FromRoute] int id)
+        {
+            APIResult apiResult;
+
+            #region 建立查詢物件
+            DataRequest dataRequest = new DataRequest()
+            {
+                Skip = 0,
+                Take = 0,
+                Search = "",
+                Sorted = null,
+            };
+            #endregion
+
+            var records = await OrderItemService.GetByHeaderIDAsync(id,dataRequest);
+            var result = mapper.Map<List<OrderItemDto>>(records.Result);
+            apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
+                ErrorMessageEnum.None, payload: result);
+            return Ok(apiResult);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {

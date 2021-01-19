@@ -153,7 +153,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "1909620e-46d4-4a8d-bcc8-3e826c45ba6b",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -163,15 +162,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "681d1b98-ac1c-40e3-9d39-69745a45db2d",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "使用者",
@@ -192,13 +189,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{Host}}/api/Holuser",
+							"raw": "{{Host}}/api/myuser",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
-								"Holuser"
+								"myuser"
 							]
 						}
 					},
@@ -220,14 +217,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{Host}}/api/Holuser/8",
+							"raw": "{{Host}}/api/myuser/30",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
-								"Holuser",
-								"8"
+								"myuser",
+								"30"
 							]
 						}
 					},
@@ -250,7 +247,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"HoluserId\":0,\"Name\":\"user99\",\"Account\":\"user99\",\"Password\":\"pw\",\"TokenVersion\":0,\"Level\":0}",
+							"raw": "{\r\n            \"Id\": 0,\r\n            \"Account\": \"userXXXX\",\r\n            \"Password\": \"pw\",\r\n            \"Name\": \"userXXXX\",\r\n            \"DepartmentName\": null,\r\n            \"ManagerId\": 1,\r\n            \"IsManager\": false,\r\n            \"ManagerName\": null,\r\n            \"IsManagerString\": \"否\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -258,13 +255,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{Host}}/api/Holuser",
+							"raw": "{{Host}}/api/myuser",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
-								"Holuser"
+								"myuser"
 							]
 						}
 					},
@@ -286,13 +283,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{Host}}/api/Holuser/11",
+							"raw": "{{Host}}/api/myuser/11",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
-								"Holuser",
+								"myuser",
 								"11"
 							]
 						}
@@ -316,7 +313,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"HoluserId\":8,\"Name\":\"user8 New\",\"Account\":\"user8\",\"Password\":\"pw\",\"TokenVersion\":0,\"Level\":0}",
+							"raw": "{\r\n            \"Id\": 30,\r\n            \"Account\": \"userQQQQ\",\r\n            \"Password\": \"pw\",\r\n            \"Name\": \"userQQQQQ\",\r\n            \"DepartmentName\": null,\r\n            \"ManagerId\": 3,\r\n            \"IsManager\": false,\r\n            \"ManagerName\": \"user1\",\r\n            \"IsManagerString\": \"否\"\r\n        }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -324,21 +321,1584 @@
 							}
 						},
 						"url": {
-							"raw": "{{Host}}/api/Holuser/8",
+							"raw": "{{Host}}/api/myuser/30",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
-								"Holuser",
-								"8"
+								"myuser",
+								"30"
 							]
 						}
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
+		},
+		{
+			"name": "請假假別",
+			"item": [
+				{
+					"name": "Retrive 所有請假假別",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/LeaveCategory",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定請假假別",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/LeaveCategory/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveCategory",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增請假假別",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Id\": 0,\r\n        \"OrderNumber\": 10,\r\n        \"Name\": \"111111\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveCategory",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除請假假別",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/LeaveCategory/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveCategory",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改請假假別",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Id\": 18,\r\n        \"OrderNumber\": 10,\r\n        \"Name\": \"sssssssss\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveCategory/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveCategory",
+								"18"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "請假單",
+			"item": [
+				{
+					"name": "Retrive 所有請假單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/LeaveForm",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定請假單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/LeaveForm/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForm",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增請假單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Id\": 0,\r\n        \"OrderNumber\": 10,\r\n        \"Name\": \"111111\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveForm",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除請假單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/LeaveForm/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveForm",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改請假單",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Id\": 18,\r\n        \"OrderNumber\": 10,\r\n        \"Name\": \"sssssssss\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/LeaveCategory/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"LeaveCategory",
+								"18"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "連絡電話本",
+			"item": [
+				{
+					"name": "Retrive 所有連絡電話本",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnCallPhone",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnCallPhone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定連絡電話本",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnCallPhone/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnCallPhone",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增連絡電話本",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"Id\":0,\r\n            \"OrderNumber\": 130,\r\n            \"Title\": \"111111111111\",\r\n            \"PhoneNumber\": \"+88609123462\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/OnCallPhone",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnCallPhone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除連絡電話本",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnCallPhone/18",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnCallPhone",
+								"18"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改連絡電話本",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/OnCallPhone/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnCallPhone",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "專案",
+			"item": [
+				{
+					"name": "Retrive 所有專案",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Project",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定專案",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Project/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Project",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增專案",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Project",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Project"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除專案",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Project/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Project",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改專案",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Project/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Project",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "工作日誌",
+			"item": [
+				{
+					"name": "工作日誌表單",
+					"item": [
+						{
+							"name": "Retrive 所有工作日誌表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLog",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLog"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定工作日誌表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLog/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLog",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post 新增工作日誌表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/WorkingLog",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLog"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除工作日誌表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLog/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLog",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put 修改工作日誌表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/WorkingLog/2",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLog",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "工作日誌明細",
+					"item": [
+						{
+							"name": "Retrive 所有工作日誌明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLogDetail",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLogDetail"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定工作日誌表單內所有工作日誌明細所有差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLogDetail/GetByMaster/2",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLogDetail",
+										"GetByMaster",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定工作日誌明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLogDetail/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLogDetail",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post 新增工作日誌明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/WorkingLogDetail",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLogDetail"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除工作日誌明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/WorkingLogDetail/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLogDetail",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put 修改工作日誌明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/WorkingLogDetail/2",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"WorkingLogDetail",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "差旅費用",
+			"item": [
+				{
+					"name": "差旅費用表單",
+					"item": [
+						{
+							"name": "差旅費用表單",
+							"item": [
+								{
+									"name": "Retrive 所有差旅費用表單",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{Host}}/api/TravelExpense",
+											"host": [
+												"{{Host}}"
+											],
+											"path": [
+												"api",
+												"TravelExpense"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Retrive 特定差旅費用表單",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{Host}}/api/TravelExpense/1",
+											"host": [
+												"{{Host}}"
+											],
+											"path": [
+												"api",
+												"TravelExpense",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Post 新增差旅費用表單",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Host}}/api/TravelExpense",
+											"host": [
+												"{{Host}}"
+											],
+											"path": [
+												"api",
+												"TravelExpense"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete 刪除差旅費用表單",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{Host}}/api/TravelExpense/1",
+											"host": [
+												"{{Host}}"
+											],
+											"path": [
+												"api",
+												"TravelExpense",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Put 修改差旅費用表單",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Host}}/api/TravelExpense/2",
+											"host": [
+												"{{Host}}"
+											],
+											"path": [
+												"api",
+												"TravelExpense",
+												"2"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Retrive 所有差旅費用表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpense",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpense"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定差旅費用表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpense/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpense",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post 新增差旅費用表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/TravelExpense",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpense"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除差旅費用表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpense/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpense",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put 修改差旅費用表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/TravelExpense/2",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpense",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "差旅費用明細",
+					"item": [
+						{
+							"name": "Retrive 所有差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpenseDetail",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpenseDetail"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定差旅費用表單內所有差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpenseDetail/GetByMaster/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpenseDetail",
+										"GetByMaster",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpenseDetail/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpenseDetail",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post 新增差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/TravelExpenseDetail",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpenseDetail"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/TravelExpenseDetail/4",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpenseDetail",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put 修改差旅明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/TravelExpenseDetail/2",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"TravelExpenseDetail",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
 		},
 		{
 			"name": "產品",
@@ -417,7 +1977,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n            \"ProductId\": 0,\r\n            \"Name\": \"cc\",\r\n            \"ModelYear\": 2021,\r\n            \"ListPrice\": 1399.00,\r\n            \"OrderItem\": []\r\n}",
+							"raw": "{\r\n        \"Name\": \"aa1\",\r\n        \"ModelYear\": 1,\r\n        \"ListPrice\": 22.00\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -483,7 +2043,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n            \"ProductId\": 3,\r\n            \"Name\": \"cc Update\",\r\n            \"ModelYear\": 2029,\r\n            \"ListPrice\": 4399.00,\r\n            \"OrderItem\": []\r\n        }",
+							"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -491,406 +2051,433 @@
 							}
 						},
 						"url": {
-							"raw": "{{Host}}/api/Product/3",
+							"raw": "{{Host}}/api/Product/2",
 							"host": [
 								"{{Host}}"
 							],
 							"path": [
 								"api",
 								"Product",
-								"3"
+								"2"
 							]
 						}
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "訂單",
 			"item": [
 				{
-					"name": "Retrive 所有訂單",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
+					"name": "訂單表單",
+					"item": [
+						{
+							"name": "Retrive 所有訂單表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/Order",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"Order"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Order",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Order"
-							]
+						{
+							"name": "Retrive 特定訂單表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/Order/5",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"Order",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除訂單表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/Order/4",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"Order",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post 新增訂單表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n            \"OrderId\": 0,\r\n            \"Name\": \"BB\",\r\n            \"Status\": 1,\r\n            \"OrderDate\": \"2020-01-20T00:00:00\",\r\n            \"RequiredDate\": \"2020-02-06T00:00:00\",\r\n            \"ShippedDate\": null,\r\n            \"OrderItem\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/Order",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"Order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put 修改訂單表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n            \"OrderId\": 0,\r\n            \"Name\": \"CC update\",\r\n            \"Status\": 2,\r\n            \"OrderDate\": \"2020-01-20T00:00:00\",\r\n            \"RequiredDate\": \"2020-02-06T00:00:00\",\r\n            \"ShippedDate\": null,\r\n            \"OrderItem\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/Order/5",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"Order",
+										"5"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Retrive 特定訂單",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Order/5",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Order",
-								"5"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete 刪除訂單",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Order/4",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Order",
-								"4"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post 新增訂單",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n            \"OrderId\": 0,\r\n            \"Name\": \"BB\",\r\n            \"Status\": 1,\r\n            \"OrderDate\": \"2020-01-20T00:00:00\",\r\n            \"RequiredDate\": \"2020-02-06T00:00:00\",\r\n            \"ShippedDate\": null,\r\n            \"OrderItem\": []\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
 							}
 						},
-						"url": {
-							"raw": "{{Host}}/api/Order",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Order"
-							]
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "Put 修改訂單",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
+					"name": "訂單明細",
+					"item": [
+						{
+							"name": "Retrive 所有訂單明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/OrderItem",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"OrderItem"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n            \"OrderId\": 0,\r\n            \"Name\": \"CC update\",\r\n            \"Status\": 2,\r\n            \"OrderDate\": \"2020-01-20T00:00:00\",\r\n            \"RequiredDate\": \"2020-02-06T00:00:00\",\r\n            \"ShippedDate\": null,\r\n            \"OrderItem\": []\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "Retrive 特定訂單內所有訂單明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/OrderItem/GetByMaster/2",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"OrderItem",
+										"GetByMaster",
+										"2"
+									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Retrive 特定訂單明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/OrderItem/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"OrderItem",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除訂單明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/OrderItem/1",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"OrderItem",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post 新增訂單明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n            \"ProductId\": 0,\r\n            \"Name\": \"cc\",\r\n            \"ModelYear\": 2021,\r\n            \"ListPrice\": 1399.00,\r\n            \"OrderItem\": []\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/OrderItem",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"OrderItem"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Put 修改訂單明細",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n            \"ProductId\": 3,\r\n            \"Name\": \"cc Update\",\r\n            \"ModelYear\": 2029,\r\n            \"ListPrice\": 4399.00,\r\n            \"OrderItem\": []\r\n        }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Host}}/api/OrderItem/3",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"OrderItem",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
 							}
 						},
-						"url": {
-							"raw": "{{Host}}/api/Order/5",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Order",
-								"5"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "419b4cb6-bb74-4571-bf2b-08e85ab15c7c",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "6d1be128-9aa2-4598-85d3-e499d8b3ff17",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "訂單明細",
-			"item": [
-				{
-					"name": "Retrive 所有產品",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Product",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Product"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Retrive 特定產品",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Product/1",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Product",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete 刪除產品",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Product/1",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Product",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Post 新增產品",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n            \"ProductId\": 0,\r\n            \"Name\": \"cc\",\r\n            \"ModelYear\": 2021,\r\n            \"ListPrice\": 1399.00,\r\n            \"OrderItem\": []\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
 							}
-						},
-						"url": {
-							"raw": "{{Host}}/api/Product",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Product"
-							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Put 修改產品",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n            \"ProductId\": 3,\r\n            \"Name\": \"cc Update\",\r\n            \"ModelYear\": 2029,\r\n            \"ListPrice\": 4399.00,\r\n            \"OrderItem\": []\r\n        }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{Host}}/api/Product/3",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Product",
-								"3"
-							]
-						}
-					},
-					"response": []
+					]
 				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "2d56bbd0-4f1b-4a0d-aee5-ede795f8783b",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "97e6214d-11c1-4099-9227-64a52c74a853",
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "1c978dcb-67c7-4767-9ffa-4b8e1165fb34",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -900,7 +2487,6 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "4f9af615-25e3-4728-873e-d6f87e3ee599",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -910,26 +2496,21 @@
 	],
 	"variable": [
 		{
-			"id": "67a1eb92-fc7d-4c3e-bba1-3541b8c3aa39",
 			"key": "Token",
 			"value": ""
 		},
 		{
-			"id": "91b8a650-26a5-4e19-ba38-bfbc8910405e",
 			"key": "RefreshToken",
 			"value": ""
 		},
 		{
-			"id": "35aa542a-5784-4a2b-b010-c06900acc0ec",
 			"key": "Host",
 			"value": "https://localhost:5001"
 		},
 		{
-			"id": "19bc335b-09f7-461d-b7a3-305b4e97debd",
 			"key": "Host",
 			"value": "https://localhost:5001",
 			"disabled": true
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
