@@ -53,7 +53,7 @@ namespace Backend
             services.AddDbContext<BackendDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString(
                 MagicHelper.DefaultConnectionString)), ServiceLifetime.Transient);
-            AddOtherServices(services);
+            services.AddCustomServices();
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
             #endregion
 
@@ -139,45 +139,6 @@ namespace Backend
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
             });
-            #endregion
-        }
-
-        private static void AddOtherServices(IServiceCollection services)
-        {
-            #region 註冊服務
-            services.AddTransient<ITravelExpenseDetailService, TravelExpenseDetailService>();
-            services.AddTransient<ITravelExpenseService, TravelExpenseService>();
-            services.AddTransient<ILeaveFormService, LeaveFormService>();
-            services.AddTransient<IWorkingLogDetailService, WorkingLogDetailService>();
-            services.AddTransient<IWorkingLogService, WorkingLogService>();
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IOnCallPhoneService, OnCallPhoneService>();
-            services.AddTransient<ILeaveCategoryService, LeaveCategoryService>();
-            services.AddTransient<IMyUserService, MyUserService>();
-            services.AddTransient<DatabaseInitService>();
-
-            services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient<IOrderItemService, OrderItemService>();
-            #endregion
-
-            #region 註冊 Razor Model
-            services.AddTransient<TravelExpenseDetailRazorModel>();
-            services.AddTransient<TravelExpenseRazorModel>();
-            services.AddTransient<LeaveFormRazorModel>();
-            services.AddTransient<WorkingLogDetailRazorModel>();
-            services.AddTransient<WorkingLogRazorModel>();
-            services.AddTransient<ProjectRazorModel>();
-            services.AddTransient<OnCallPhoneRazorModel>();
-            services.AddTransient<LeaveCategoryRazorModel>();
-            services.AddTransient<MyUserRazorModel>();
-
-            services.AddTransient<OrderRazorModel>();
-            services.AddTransient<ProductRazorModel>();
-            services.AddTransient<OrderItemRazorModel>();
-            #endregion
-
-            #region 其他服務註冊
             #endregion
         }
 
