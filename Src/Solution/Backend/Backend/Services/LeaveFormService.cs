@@ -86,21 +86,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                adapterModelItem.MyUserName = adapterModelItem.MyUser.Name;
-                var myUser = await context.MyUser
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == adapterModelItem.AgentId);
-                if (myUser != null)
-                {
-                    adapterModelItem.AgentName = myUser.Name;
-                }
-                var leaveCategory = await context.LeaveCategory
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == adapterModelItem.LeaveCategoryId);
-                if (leaveCategory != null)
-                {
-                    adapterModelItem.LeaveCategoryName = leaveCategory.Name;
-                }
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -118,6 +104,7 @@ namespace Backend.Services
                 .Include(x => x.LeaveCategory)
                 .FirstOrDefaultAsync(x => x.Id == id);
             LeaveFormAdapterModel result = Mapper.Map<LeaveFormAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -200,6 +187,24 @@ namespace Backend.Services
         {
             await Task.Yield();
             return VerifyRecordResultFactory.Build(true);
+        }
+       async Task OhterDependencyData(LeaveFormAdapterModel data)
+        {
+            data.MyUserName = data.MyUser.Name;
+            var myUser = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == data.AgentId);
+            if (myUser != null)
+            {
+                data.AgentName = myUser.Name;
+            }
+            var leaveCategory = await context.LeaveCategory
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == data.LeaveCategoryId);
+            if (leaveCategory != null)
+            {
+                data.LeaveCategoryName = leaveCategory.Name;
+            }
         }
     }
 }

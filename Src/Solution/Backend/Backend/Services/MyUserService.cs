@@ -33,11 +33,13 @@ namespace Backend.Services
             DataRequestResult<MyUserAdapterModel> result = new DataRequestResult<MyUserAdapterModel>();
             var DataSource = context.MyUser
                 .AsNoTracking();
+
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
                 DataSource = DataSource
-                .Where(x => x.Name.Contains(dataRequest.Search));
+                .Where(x => x.Name.Contains(dataRequest.Search) ||
+                x.Account.Contains(dataRequest.Search));
             }
             #endregion
 
@@ -88,23 +90,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-
-                if (adapterModelItem.IsManager == true)
-                {
-                    adapterModelItem.IsManagerString = "是";
-                }
-                else
-                {
-                    adapterModelItem.IsManagerString = "否";
-                }
-
-                var user = await context.MyUser
-                    .FirstOrDefaultAsync(x => x.Id == adapterModelItem.ManagerId);
-                if (user != null)
-                {
-                    adapterModelItem.ManagerName = user.Name;
-                }
-
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -120,6 +106,7 @@ namespace Backend.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             MyUserAdapterModel result = Mapper.Map<MyUserAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -234,6 +221,25 @@ namespace Backend.Services
             }
             MyUserAdapterModel userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
             return (userAdapterModel, "");
+        }
+
+        async Task OhterDependencyData(MyUserAdapterModel data)
+        {
+            if (data.IsManager == true)
+            {
+                data.IsManagerString = "是";
+            }
+            else
+            {
+                data.IsManagerString = "否";
+            }
+
+            var user = await context.MyUser
+                .FirstOrDefaultAsync(x => x.Id == data.ManagerId);
+            if (user != null)
+            {
+                data.ManagerName = user.Name;
+            }
         }
     }
 }

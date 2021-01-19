@@ -77,7 +77,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -110,6 +110,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -125,6 +126,7 @@ namespace Backend.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             TravelExpenseDetailAdapterModel result = Mapper.Map<TravelExpenseDetailAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -211,7 +213,7 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task CountingExpense(int TravelExpenseId)
+        async Task CountingExpense(int TravelExpenseId)
         {
             CleanTrackingHelper.Clean<TravelExpense>(context);
             var totalHours = await context.TravelExpenseDetail
@@ -228,6 +230,10 @@ namespace Backend.Services
                 await context.SaveChangesAsync();
                 CleanTrackingHelper.Clean<TravelExpense>(context);
             }
+        }
+        Task OhterDependencyData(TravelExpenseDetailAdapterModel data)
+        {
+            return Task.FromResult(0);
         }
     }
 }

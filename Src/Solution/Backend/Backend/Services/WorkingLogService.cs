@@ -79,7 +79,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                adapterModelItem.MyUserName = adapterModelItem.MyUser.Name;
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -96,6 +96,7 @@ namespace Backend.Services
                 .Include(x => x.MyUser)
                 .FirstOrDefaultAsync(x => x.Id == id);
             WorkingLogAdapterModel result = Mapper.Map<WorkingLogAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -154,7 +155,7 @@ namespace Backend.Services
         {
             var searchMyUserItem = await context.MyUser
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.MyUserId );
+                .FirstOrDefaultAsync(x => x.Id == paraObject.MyUserId);
             if (searchMyUserItem == null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定使用者);
@@ -195,6 +196,11 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
             return VerifyRecordResultFactory.Build(true);
+        }
+        Task OhterDependencyData(WorkingLogAdapterModel data)
+        {
+            data.MyUserName = data.MyUser.Name;
+            return Task.FromResult(0);
         }
     }
 }

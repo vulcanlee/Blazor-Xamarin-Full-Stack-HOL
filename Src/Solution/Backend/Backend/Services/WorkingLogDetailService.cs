@@ -34,7 +34,7 @@ namespace Backend.Services
             DataRequestResult<WorkingLogDetailAdapterModel> result = new DataRequestResult<WorkingLogDetailAdapterModel>();
             var DataSource = context.WorkingLogDetail
                 .AsNoTracking()
-                .Include(x=>x.Project)
+                .Include(x => x.Project)
                 .AsQueryable();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -87,7 +87,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                adapterModelItem.ProjectName = adapterModelItem.Project.Name;
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -121,7 +121,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                adapterModelItem.ProjectName = adapterModelItem.Project.Name;
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -137,7 +137,7 @@ namespace Backend.Services
                 .Include(x => x.Project)
                 .FirstOrDefaultAsync(x => x.Id == id);
             WorkingLogDetailAdapterModel result = Mapper.Map<WorkingLogDetailAdapterModel>(item);
-            return result;
+            await OhterDependencyData(result); return result;
         }
 
         public async Task<VerifyRecordResult> AddAsync(WorkingLogDetailAdapterModel paraObject)
@@ -248,23 +248,28 @@ namespace Backend.Services
             return Task.FromResult(VerifyRecordResultFactory.Build(true));
         }
 
-        public async Task CountingWorkingHour(int WorkingLogId)
+        async Task CountingWorkingHour(int WorkingLogId)
         {
             CleanTrackingHelper.Clean<WorkingLog>(context);
             var totalHours = await context.WorkingLogDetail
                 .AsNoTracking()
-                .Where(x=>x.WorkingLogId == WorkingLogId)
+                .Where(x => x.WorkingLogId == WorkingLogId)
                 .SumAsync(x => x.Hours);
             var item = await context.WorkingLog
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == WorkingLogId);
-            if(item!=null)
+            if (item != null)
             {
                 item.TotalHours = totalHours;
                 context.Update(item);
                 await context.SaveChangesAsync();
                 CleanTrackingHelper.Clean<WorkingLog>(context);
             }
+        }
+        Task OhterDependencyData(WorkingLogDetailAdapterModel data)
+        {
+            data.ProjectName = data.Project.Name;
+            return Task.FromResult(0);
         }
     }
 }

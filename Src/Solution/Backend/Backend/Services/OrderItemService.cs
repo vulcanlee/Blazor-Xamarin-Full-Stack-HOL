@@ -77,7 +77,8 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
+                await OhterDependencyData(adapterModelItem);
+
             }
             #endregion
 
@@ -86,7 +87,7 @@ namespace Backend.Services
             return result;
         }
 
-        public async Task<DataRequestResult<OrderItemAdapterModel>> GetByHeaderIDAsync(int id,DataRequest dataRequest)
+        public async Task<DataRequestResult<OrderItemAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
         {
             List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
@@ -138,7 +139,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                adapterModelItem.ProductName = adapterModelItem.Product.Name;
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -153,6 +154,7 @@ namespace Backend.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             OrderItemAdapterModel result = Mapper.Map<OrderItemAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -248,6 +250,11 @@ namespace Backend.Services
         public Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderItemAdapterModel paraObject)
         {
             return Task.FromResult(VerifyRecordResultFactory.Build(true));
+        }
+        Task OhterDependencyData(OrderItemAdapterModel data)
+        {
+            data.ProductName = data.Product.Name;
+            return Task.FromResult(0);
         }
     }
 }

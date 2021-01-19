@@ -82,7 +82,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -98,6 +98,7 @@ namespace Backend.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             LeaveCategoryAdapterModel result = Mapper.Map<LeaveCategoryAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -187,6 +188,10 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
             return VerifyRecordResultFactory.Build(true);
+        }
+        Task OhterDependencyData(LeaveCategoryAdapterModel data)
+        {
+            return Task.FromResult(0);
         }
     }
 }

@@ -78,7 +78,7 @@ namespace Backend.Services
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
-                adapterModelItem.MyUserName = adapterModelItem.MyUser.Name;
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
@@ -95,6 +95,7 @@ namespace Backend.Services
                 .Include(x => x.MyUser)
                 .FirstOrDefaultAsync(x => x.Id == id);
             TravelExpenseAdapterModel result = Mapper.Map<TravelExpenseAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -177,6 +178,11 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
             return VerifyRecordResultFactory.Build(true);
+        }
+        Task OhterDependencyData(TravelExpenseAdapterModel data)
+        {
+            data.MyUserName = data.MyUser.Name;
+            return Task.FromResult(0);
         }
     }
 }
