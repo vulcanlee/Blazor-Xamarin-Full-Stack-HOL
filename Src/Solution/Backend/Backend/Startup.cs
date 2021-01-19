@@ -41,11 +41,32 @@ namespace Backend
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Blazor & Razor Page 用到服務
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            #endregion
 
-            #region Syncfusion 元件使用的宣告
+            #region Syncfusion 元件與多國語言服務
+            // Localization https://github.com/syncfusion/blazor-locale
+            // 各國語言代碼 https://en.wikipedia.org/wiki/Language_localisation
+            // Set the resx file folder path to access
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddSyncfusionBlazor();
+            // Register the Syncfusion locale service to customize the  SyncfusionBlazor component locale culture
+            services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                // Define the list of cultures your app will support
+                var supportedCultures = new List<CultureInfo>()
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("zh-TW"),
+                };
+                // Set the default culture
+                options.DefaultRequestCulture = new RequestCulture("zh-TW");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
             #endregion
 
             #region EF Core & AutoMapper 使用的宣告
@@ -119,27 +140,6 @@ namespace Backend
             });
             #endregion
 
-            #region Localization https://github.com/syncfusion/blazor-locale
-            // 各國語言代碼 https://en.wikipedia.org/wiki/Language_localisation
-            // Set the resx file folder path to access
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-            services.AddSyncfusionBlazor();
-            // Register the Syncfusion locale service to customize the  SyncfusionBlazor component locale culture
-            services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                // Define the list of cultures your app will support
-                var supportedCultures = new List<CultureInfo>()
-                {
-                    new CultureInfo("en-US"),
-                    new CultureInfo("zh-TW"),
-                };
-                // Set the default culture
-                options.DefaultRequestCulture = new RequestCulture("zh-TW");
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
-            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

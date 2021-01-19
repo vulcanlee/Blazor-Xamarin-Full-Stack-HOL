@@ -33,7 +33,9 @@ namespace Backend.Services
             List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
             var DataSource = context.OrderItem
-                .AsNoTracking();
+                .AsNoTracking()
+                .Include(x=>x.Product)
+                .AsQueryable();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
@@ -152,6 +154,7 @@ namespace Backend.Services
         {
             OrderItem item = await context.OrderItem
                 .AsNoTracking()
+                .Include(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);
             OrderItemAdapterModel result = Mapper.Map<OrderItemAdapterModel>(item);
             await OhterDependencyData(result);
