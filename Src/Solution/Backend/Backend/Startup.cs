@@ -140,6 +140,9 @@ namespace Backend
             });
             #endregion
 
+            #region 設定 Swagger 中介軟體
+            services.AddSwaggerDocument();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -166,6 +169,12 @@ namespace Backend
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            #region 啟用 Swagger 中介軟體
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+            #endregion
 
             app.UseRouting();
 

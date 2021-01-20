@@ -115,7 +115,7 @@ namespace Backend.Controllers
 
         }
 
-        public string GenerateToken(MyUserAdapterModel user)
+        string GenerateToken(MyUserAdapterModel user)
         {
             var claims = new List<Claim>()
             {
@@ -147,7 +147,7 @@ namespace Backend.Controllers
 
         }
 
-        public string GenerateRefreshToken(MyUserAdapterModel user)
+        string GenerateRefreshToken(MyUserAdapterModel user)
         {
             var claims = new[]
             {
