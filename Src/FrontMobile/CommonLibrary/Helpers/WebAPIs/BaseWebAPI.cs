@@ -117,7 +117,7 @@ namespace CommonLibrary.Helpers.WebAPIs
         /// <param name="httpMethod">Get Or Post</param>
         /// <returns></returns>
         protected virtual async Task<APIResult> SendAsync(Dictionary<string, string> dic, HttpMethod httpMethod,
-            CancellationToken token = default(CancellationToken))
+            CancellationToken cancellationTokentoken = default(CancellationToken))
         {
             this.managerResult = new APIResult();
             APIResult mr = this.managerResult;
@@ -139,11 +139,11 @@ namespace CommonLibrary.Helpers.WebAPIs
 
             HttpClientHandler handler = new HttpClientHandler();
 
-            using (HttpClient client = new HttpClient(handler))
+            using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    //client.Timeout = TimeSpan.FromMinutes(3);
+                    //client.Timeout = TimeSpan.FromSeconds(5);
                     string fooQueryString = dic.ToQueryString();
                     string fooUrl = $"{host}{url}{routeUrl}" + fooQueryString;
                     UriBuilder ub = new UriBuilder(fooUrl);
@@ -159,7 +159,7 @@ namespace CommonLibrary.Helpers.WebAPIs
                     if (httpMethod == HttpMethod.Get)
                     {
                         // 使用 Get 方式來呼叫
-                        response = await client.GetAsync(ub.Uri, token);
+                        response = await client.GetAsync(ub.Uri, cancellationTokentoken);
                     }
                     else if (httpMethod == HttpMethod.Post)
                     {
@@ -167,12 +167,13 @@ namespace CommonLibrary.Helpers.WebAPIs
                         if (encodingType == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
-                            response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent(), token);
+                            response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent(), cancellationTokentoken);
                         }
                         else if (encodingType == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
-                            response = await client.PostAsync(ub.Uri, new StringContent(jsonPayload, Encoding.UTF8, "application/json"), token);
+                            response = await client.PostAsync(ub.Uri,
+                                new StringContent(jsonPayload, Encoding.UTF8, "application/json"), cancellationTokentoken);
                         }
                     }
                     else if (httpMethod == HttpMethod.Put)
@@ -181,17 +182,19 @@ namespace CommonLibrary.Helpers.WebAPIs
                         if (encodingType == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
-                            response = await client.PutAsync(ub.Uri, dic.ToFormUrlEncodedContent(), token);
+                            response = await client.PutAsync(ub.Uri,
+                                dic.ToFormUrlEncodedContent(), cancellationTokentoken);
                         }
                         else if (encodingType == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
-                            response = await client.PutAsync(ub.Uri, new StringContent(jsonPayload, Encoding.UTF8, "application/json"));
+                            response = await client.PutAsync(ub.Uri,
+                                new StringContent(jsonPayload, Encoding.UTF8, "application/json"), cancellationTokentoken);
                         }
                     }
                     else if (httpMethod == HttpMethod.Delete)
                     {
-                        response = await client.DeleteAsync(ub.Uri, token);
+                        response = await client.DeleteAsync(ub.Uri, cancellationTokentoken);
                     }
                     else
                     {

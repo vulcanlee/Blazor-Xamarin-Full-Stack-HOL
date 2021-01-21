@@ -12,9 +12,11 @@
             Spacing="0"
             >
             <Entry
-                Text="{Binding Account}"/>
+                Text="{Binding Account}"
+                />
             <Entry
-                Text="{Binding Password}"/>
+                Text="{Binding Password}"
+                IsPassword="True"/>
             <Button
                 Text="登入"
                 Command="{Binding LoginCommand}"/>

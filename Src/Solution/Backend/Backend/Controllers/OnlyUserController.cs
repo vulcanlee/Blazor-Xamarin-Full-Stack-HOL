@@ -20,8 +20,9 @@ namespace Backend.Controllers
     public class OnlyUserController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
+            await Task.Delay(TimeSpan.FromSeconds(20));
             return Ok(APIResultFactory.Build(true, StatusCodes.Status201Created,
                         ErrorMessageEnum.None, payload: new OnlyUserDto()
                         { Message = "Hello User~~" }));
