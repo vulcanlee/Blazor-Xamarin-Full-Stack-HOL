@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="FrontMobile.Views.LoginPage">
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0"
+        >
+        <StackLayout
+            Spacing="0"
+            >
+            <Entry
+                Text="{Binding Account}"/>
+            <Entry
+                Text="{Binding Password}"/>
+            <Button
+                Text="登入"
+                Command="{Binding LoginCommand}"/>
+
+            <Button
+                Text="切換為一般使用者"
+                Command="{Binding SwitchUserCommand}"
+                CommandParameter="user1"/>
+            <Button
+                Text="切換為管理者"
+                Command="{Binding SwitchUserCommand}"
+                CommandParameter="user9"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>

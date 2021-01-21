@@ -167,7 +167,10 @@ namespace Backend
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if (!env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseStaticFiles();
 
             #region ±“•Œ Swagger §§§∂≥n≈È
