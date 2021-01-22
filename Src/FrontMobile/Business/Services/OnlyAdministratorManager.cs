@@ -19,8 +19,6 @@ namespace Business.Services
         public OnlyAdministratorManager(AppStatus appStatus)
             : base()
         {
-            //資料檔案名稱 = "SampleRepository.txt";
-            //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/OnlyAdministrator";
             this.host = LOBGlobal.APIEndPointHost;
             isCollection = false;

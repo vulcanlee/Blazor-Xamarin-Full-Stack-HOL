@@ -19,8 +19,6 @@ namespace Business.Services
         public ExceptionRecordsManager(AppStatus appStatus)
             : base()
         {
-            //資料檔案名稱 = "SampleRepository.txt";
-            //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/ExceptionRecords";
             this.host = LOBGlobal.APIEndPointHost;
             this.appStatus = appStatus;

@@ -31,11 +31,13 @@ namespace FrontMobile.ViewModels
         private readonly AppStatus appStatus;
         private readonly ExceptionRecordsManager exceptionRecordsManager;
         private readonly AppExceptionsManager appExceptionsManager;
+        private readonly LeaveCategoryManager leaveCategoryManager;
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             SystemStatusManager systemStatusManager, SystemEnvironmentsManager systemEnvironmentsManager,
             RecordCacheHelper recordCacheHelper, AppStatus appStatus,
-            ExceptionRecordsManager exceptionRecordsManager, AppExceptionsManager appExceptionsManager)
+            ExceptionRecordsManager exceptionRecordsManager, AppExceptionsManager appExceptionsManager,
+            LeaveCategoryManager leaveCategoryManager)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
@@ -45,6 +47,7 @@ namespace FrontMobile.ViewModels
             this.appStatus = appStatus;
             this.exceptionRecordsManager = exceptionRecordsManager;
             this.appExceptionsManager = appExceptionsManager;
+            this.leaveCategoryManager = leaveCategoryManager;
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -76,6 +79,22 @@ namespace FrontMobile.ViewModels
             );
 
             #endregion
+
+            #region 讀取相關定義資料
+            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            {
+                #region 取得請假假別
+                fooIProgressDialog.Title = "請稍後，取得請假假別";
+                    await leaveCategoryManager.ReadFromFileAsync();
+                    var fooResult = await leaveCategoryManager.GetAsync();
+                    if (fooResult.Status == true)
+                    {
+                        await appExceptionsManager.WriteToFileAsync();
+                    }
+                #endregion
+            }
+            #endregion
+
             await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusManager, appStatus);
             await Task.Delay(3000);
             if (appStatus.SystemStatus.IsLogin == false)
@@ -92,25 +111,25 @@ namespace FrontMobile.ViewModels
                 return;
             }
 
-            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
-            {
-                await recordCacheHelper.RefreshAsync(fooIProgressDialog);
+            //using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            //{
+            //    await recordCacheHelper.RefreshAsync(fooIProgressDialog);
 
-                #region 上傳例外異常
-                fooIProgressDialog.Title = "請稍後，上傳例外異常";
-                await appExceptionsManager.ReadFromFileAsync();
-                if (appExceptionsManager.Items.Count > 0)
-                {
-                    await appExceptionsManager.ReadFromFileAsync();
-                    var fooResult = await exceptionRecordsManager.PostAsync(appExceptionsManager.Items);
-                    if (fooResult.Status == true)
-                    {
-                        appExceptionsManager.Items.Clear();
-                        await appExceptionsManager.WriteToFileAsync();
-                    }
-                }
-                #endregion
-            }
+            //    #region 上傳例外異常
+            //    fooIProgressDialog.Title = "請稍後，上傳例外異常";
+            //    await appExceptionsManager.ReadFromFileAsync();
+            //    if (appExceptionsManager.Items.Count > 0)
+            //    {
+            //        await appExceptionsManager.ReadFromFileAsync();
+            //        var fooResult = await exceptionRecordsManager.PostAsync(appExceptionsManager.Items);
+            //        if (fooResult.Status == true)
+            //        {
+            //            appExceptionsManager.Items.Clear();
+            //            await appExceptionsManager.WriteToFileAsync();
+            //        }
+            //    }
+            //    #endregion
+            //}
 
             // 使用者尚已經功登入，切換到首頁頁面
             await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");

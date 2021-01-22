@@ -18,8 +18,6 @@ namespace Business.Services
         public RefreshTokenManager(AppStatus appStatus)
             : base()
         {
-            //資料檔案名稱 = "SampleRepository.txt";
-            //this.url = "/webapplication/ntuhwebadminapi/webadministration/T0/searchDoctor";
             this.url = "/api/Login/RefreshToken";
             this.host = LOBGlobal.APIEndPointHost;
             this.appStatus = appStatus;
