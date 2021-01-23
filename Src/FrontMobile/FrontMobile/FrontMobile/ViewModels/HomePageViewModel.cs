@@ -9,7 +9,7 @@ namespace FrontMobile.ViewModels
     using System.ComponentModel;
     using Acr.UserDialogs;
     using Business.DataModel;
-    using Business.Helpers.ManagerHelps;
+    using Business.Helpers.ServiceHelps;
     using Business.Services;
     using Prism.Events;
     using Prism.Navigation;
@@ -22,43 +22,43 @@ namespace FrontMobile.ViewModels
         public DelegateCommand ThrowExceptionrCommand { get; set; }
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly OnlyAdministratorManager onlyAdministratorManager;
-        private readonly OnlyUserManager onlyUserManager;
-        private readonly RefreshTokenManager refreshTokenManager;
-        private readonly SystemStatusManager systemStatusManager;
+        private readonly OnlyAdministratorService onlyAdministratorService;
+        private readonly OnlyUserService onlyUserService;
+        private readonly RefreshTokenService refreshTokenService;
+        private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
-        private readonly AppExceptionsManager appExceptionsManager;
-        private readonly ExceptionRecordsManager exceptionRecordsManager;
+        private readonly AppExceptionsService appExceptionsService;
+        private readonly ExceptionRecordsService exceptionRecordsService;
 
         public string Message { get; set; }
 
         public HomePageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            OnlyAdministratorManager OnlyAdministratorManager, OnlyUserManager OnlyUserManager,
-            RefreshTokenManager refreshTokenManager,
-            SystemStatusManager systemStatusManager, AppStatus appStatus,
-            AppExceptionsManager appExceptionsManager, ExceptionRecordsManager exceptionRecordsManager)
+            OnlyAdministratorService OnlyAdministratorService, OnlyUserService OnlyUserService,
+            RefreshTokenService refreshTokenService,
+            SystemStatusService systemStatusService, AppStatus appStatus,
+            AppExceptionsService appExceptionsService, ExceptionRecordsService exceptionRecordsService)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            onlyAdministratorManager = OnlyAdministratorManager;
-            onlyUserManager = OnlyUserManager;
-            this.refreshTokenManager = refreshTokenManager;
-            this.systemStatusManager = systemStatusManager;
+            onlyAdministratorService = OnlyAdministratorService;
+            onlyUserService = OnlyUserService;
+            this.refreshTokenService = refreshTokenService;
+            this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
-            this.appExceptionsManager = appExceptionsManager;
-            this.exceptionRecordsManager = exceptionRecordsManager;
+            this.appExceptionsService = appExceptionsService;
+            this.exceptionRecordsService = exceptionRecordsService;
 
             #region OnlyAdministratorCommand
             OnlyAdministratorCommand = new DelegateCommand(async () =>
             {
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，執行中...", null, null, true, MaskType.Black))
                 {
-                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenManager, systemStatusManager, appStatus);
+                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenService, systemStatusService, appStatus);
                     if (fooRefreshTokenResult == false)
                     {
                         return;
                     }
-                    var fooResult = await OnlyAdministratorManager.GetAsync();
+                    var fooResult = await OnlyAdministratorService.GetAsync();
                     if(fooResult.Status ==false)
                     {
                         Message = fooResult.Message;
@@ -75,12 +75,12 @@ namespace FrontMobile.ViewModels
             {
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，執行中...", null, null, true, MaskType.Black))
                 {
-                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenManager, systemStatusManager, appStatus);
+                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenService, systemStatusService, appStatus);
                     if (fooRefreshTokenResult == false)
                     {
                         return;
                     }
-                    var fooResult = await OnlyUserManager.GetAsync();
+                    var fooResult = await OnlyUserService.GetAsync();
                     if (fooResult.Status == false)
                     {
                         Message = fooResult.Message;

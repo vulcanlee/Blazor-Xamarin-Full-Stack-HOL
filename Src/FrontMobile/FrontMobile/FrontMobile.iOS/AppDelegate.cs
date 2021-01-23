@@ -39,8 +39,8 @@ namespace FrontMobile.iOS
         }
         private async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            //ExceptionRecordsManager fooExceptionRecordsManager = new ExceptionRecordsManager();
-            //await fooExceptionRecordsManager.ReadFromFileAsync();
+            //ExceptionRecordsService fooExceptionRecordsService = new ExceptionRecordsService();
+            //await fooExceptionRecordsService.ReadFromFileAsync();
             //ExceptionRecordResponseDTO fooObject = new ExceptionRecordResponseDTO()
             //{
             //    //CallStack = e.

@@ -1,5 +1,7 @@
-﻿using CommonLibrary.Helpers;
+﻿using Business.DataModel;
+using CommonLibrary.Helpers;
 using CommonLibrary.Helpers.WebAPIs;
+using DataTransferObject.DTOs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,22 +9,25 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DataTransferObject.DTOs;
 
 namespace Business.Services
 {
-    public class LoginManager : BaseWebAPI<LoginResponseDto>
+    public class OnlyUserService : BaseWebAPI<OnlyUserDto>
     {
-        public LoginManager()
+        private readonly AppStatus appStatus;
+
+        public OnlyUserService(AppStatus appStatus)
             : base()
         {
-            this.url = "/api/Login";
+            this.url = "/api/OnlyUser";
             this.host = LOBGlobal.APIEndPointHost;
             isCollection = false;
+            this.appStatus = appStatus;
         }
 
-        public async Task<APIResult> PostAsync(LoginRequestDto loginRequestDTO)
+        public async Task<APIResult> GetAsync()
         {
+            token = appStatus.SystemStatus.Token;
             encodingType = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
@@ -33,10 +38,10 @@ namespace Business.Services
             //dic.Add(Global.getName(() => memberSignIn_QS.app), memberSignIn_QS.app);
             //dic.AddItem<string>(() => 查詢資料QueryString.strHospCode);
             //dic.Add("Price", SetMemberSignUpVM.Price.ToString());
-            dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
+            //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
 
             return mr;
         }

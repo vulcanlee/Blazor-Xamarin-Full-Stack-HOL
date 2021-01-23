@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-    public class ExceptionRecordsManager : BaseWebAPI<ExceptionRecordDto>
+    public class ExceptionRecordsService : BaseWebAPI<ExceptionRecordDto>
     {
         private readonly AppStatus appStatus;
 
-        public ExceptionRecordsManager(AppStatus appStatus)
+        public ExceptionRecordsService(AppStatus appStatus)
             : base()
         {
             this.url = "/api/ExceptionRecord";

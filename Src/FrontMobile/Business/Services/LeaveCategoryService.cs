@@ -11,9 +11,9 @@ using DataTransferObject.DTOs;
 
 namespace Business.Services
 {
-    public class LeaveCategoryManager : BaseWebAPI<LeaveCategoryDto>
+    public class LeaveCategoryService : BaseWebAPI<LeaveCategoryDto>
     {
-        public LeaveCategoryManager()
+        public LeaveCategoryService()
             : base()
         {
             this.url = "/api/LeaveCategory";

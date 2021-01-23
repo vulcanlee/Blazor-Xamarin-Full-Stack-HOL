@@ -1,5 +1,5 @@
 using Business.DataModel;
-using Business.Helpers.ManagerHelps;
+using Business.Helpers.ServiceHelps;
 using Business.Services;
 using FrontMobile.ViewModels;
 using FrontMobile.Views;
@@ -44,15 +44,15 @@ namespace FrontMobile
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<LeaveCategoryManager>();
-            containerRegistry.Register<OnlyAdministratorManager>();
-            containerRegistry.Register<OnlyUserManager>();
-            containerRegistry.Register<SystemStatusManager>();
-            containerRegistry.Register<LoginManager>();
-            containerRegistry.Register<ExceptionRecordsManager>();
-            containerRegistry.Register<SystemEnvironmentsManager>();
-            containerRegistry.Register<AppExceptionsManager>();
-            containerRegistry.Register<RefreshTokenManager>();
+            containerRegistry.Register<LeaveCategoryService>();
+            containerRegistry.Register<OnlyAdministratorService>();
+            containerRegistry.Register<OnlyUserService>();
+            containerRegistry.Register<SystemStatusService>();
+            containerRegistry.Register<LoginService>();
+            containerRegistry.Register<ExceptionRecordsService>();
+            containerRegistry.Register<SystemEnvironmentsService>();
+            containerRegistry.Register<AppExceptionsService>();
+            containerRegistry.Register<RefreshTokenService>();
             containerRegistry.Register<RecordCacheHelper>();
             containerRegistry.RegisterSingleton<AppStatus>();
 

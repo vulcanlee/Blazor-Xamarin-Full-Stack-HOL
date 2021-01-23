@@ -15,9 +15,9 @@ namespace DataTransferObject.DTOs
         [Required(ErrorMessage = "名稱 不可為空白")]
         public string Name { get; set; }
         public string DepartmentName { get; set; }
-        public int ManagerId { get; set; }
-        public bool IsManager { get; set; }
-        public string ManagerName { get; set; }
-        public string IsManagerString { get; set; }
+        public int ServiceId { get; set; }
+        public bool IsService { get; set; }
+        public string ServiceName { get; set; }
+        public string IsServiceString { get; set; }
     }
 }

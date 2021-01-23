@@ -10,7 +10,7 @@ namespace FrontMobile.ViewModels
     using System.Threading.Tasks;
     using Acr.UserDialogs;
     using Business.DataModel;
-    using Business.Helpers.ManagerHelps;
+    using Business.Helpers.ServiceHelps;
     using Business.Services;
     using CommonLibrary.Helpers.Utilities;
     using Prism.Events;
@@ -25,29 +25,29 @@ namespace FrontMobile.ViewModels
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly SystemStatusManager systemStatusManager;
-        private readonly SystemEnvironmentsManager systemEnvironmentsManager;
+        private readonly SystemStatusService systemStatusService;
+        private readonly SystemEnvironmentsService systemEnvironmentsService;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly AppStatus appStatus;
-        private readonly ExceptionRecordsManager exceptionRecordsManager;
-        private readonly AppExceptionsManager appExceptionsManager;
-        private readonly LeaveCategoryManager leaveCategoryManager;
+        private readonly ExceptionRecordsService exceptionRecordsService;
+        private readonly AppExceptionsService appExceptionsService;
+        private readonly LeaveCategoryService leaveCategoryService;
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            SystemStatusManager systemStatusManager, SystemEnvironmentsManager systemEnvironmentsManager,
+            SystemStatusService systemStatusService, SystemEnvironmentsService systemEnvironmentsService,
             RecordCacheHelper recordCacheHelper, AppStatus appStatus,
-            ExceptionRecordsManager exceptionRecordsManager, AppExceptionsManager appExceptionsManager,
-            LeaveCategoryManager leaveCategoryManager)
+            ExceptionRecordsService exceptionRecordsService, AppExceptionsService appExceptionsService,
+            LeaveCategoryService leaveCategoryService)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.systemStatusManager = systemStatusManager;
-            this.systemEnvironmentsManager = systemEnvironmentsManager;
+            this.systemStatusService = systemStatusService;
+            this.systemEnvironmentsService = systemEnvironmentsService;
             this.recordCacheHelper = recordCacheHelper;
             this.appStatus = appStatus;
-            this.exceptionRecordsManager = exceptionRecordsManager;
-            this.appExceptionsManager = appExceptionsManager;
-            this.leaveCategoryManager = leaveCategoryManager;
+            this.exceptionRecordsService = exceptionRecordsService;
+            this.appExceptionsService = appExceptionsService;
+            this.leaveCategoryService = leaveCategoryService;
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -91,28 +91,28 @@ namespace FrontMobile.ViewModels
             #region 讀取相關定義資料
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
-                await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusManager, appStatus);
+                await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
                 #region 取得請假假別
                 fooIProgressDialog.Title = "請稍後，取得請假假別";
-                    await leaveCategoryManager.ReadFromFileAsync();
-                    var fooResult = await leaveCategoryManager.GetAsync();
+                    await leaveCategoryService.ReadFromFileAsync();
+                    var fooResult = await leaveCategoryService.GetAsync();
                     if (fooResult.Status == true)
                     {
-                        await leaveCategoryManager.WriteToFileAsync();
+                        await leaveCategoryService.WriteToFileAsync();
                     }
                 #endregion
 
                 #region 上傳例外異常
                 fooIProgressDialog.Title = "請稍後，上傳例外異常";
-                await appExceptionsManager.ReadFromFileAsync();
-                if (appExceptionsManager.Items.Count > 0)
+                await appExceptionsService.ReadFromFileAsync();
+                if (appExceptionsService.Items.Count > 0)
                 {
-                    await appExceptionsManager.ReadFromFileAsync();
-                    fooResult = await exceptionRecordsManager.PostAsync(appExceptionsManager.Items);
+                    await appExceptionsService.ReadFromFileAsync();
+                    fooResult = await exceptionRecordsService.PostAsync(appExceptionsService.Items);
                     if (fooResult.Status == true)
                     {
-                        appExceptionsManager.Items.Clear();
-                        await appExceptionsManager.WriteToFileAsync();
+                        appExceptionsService.Items.Clear();
+                        await appExceptionsService.WriteToFileAsync();
                     }
                 }
                 #endregion

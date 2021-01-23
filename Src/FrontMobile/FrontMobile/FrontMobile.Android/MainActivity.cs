@@ -48,13 +48,13 @@ namespace FrontMobile.Droid
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             IContainerProvider myContainer = (App.Current as PrismApplication).Container;
-            AppExceptionsManager appExceptionsManager = myContainer
-                .Resolve<AppExceptionsManager>();
+            AppExceptionsService appExceptionsService = myContainer
+                .Resolve<AppExceptionsService>();
             AppStatus appStatus = myContainer
                 .Resolve<AppStatus>();
             Task.Run(async () =>
             {
-                await appExceptionsManager.ReadFromFileAsync();
+                await appExceptionsService.ReadFromFileAsync();
                 ExceptionRecordDto fooObject = new ExceptionRecordDto()
                 {
                     CallStack = (e.ExceptionObject as Exception).StackTrace,
@@ -73,8 +73,8 @@ namespace FrontMobile.Droid
                 {
                     fooObject.MyUserId = appStatus.SystemStatus.UserID;
                 }
-                appExceptionsManager.Items.Add(fooObject);
-                await appExceptionsManager.WriteToFileAsync();
+                appExceptionsService.Items.Add(fooObject);
+                await appExceptionsService.WriteToFileAsync();
             }).Wait();
 
         }

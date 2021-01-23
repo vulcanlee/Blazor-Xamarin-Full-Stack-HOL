@@ -1,8 +1,6 @@
-﻿using Business.DataModel;
-using CommonLibrary.Helpers;
+﻿using CommonLibrary.Helpers;
 using CommonLibrary.Helpers.WebAPIs;
 using DataTransferObject.DTOs;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,23 +10,20 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-    public class OnlyUserManager : BaseWebAPI<OnlyUserDto>
+    public class SystemEnvironmentsService : BaseWebAPI<SystemEnvironmentResponseDTO>
     {
-        private readonly AppStatus appStatus;
-
-        public OnlyUserManager(AppStatus appStatus)
+        public SystemEnvironmentsService()
             : base()
         {
-            this.url = "/api/OnlyUser";
+            this.url = "/api/SystemEnvironments";
             this.host = LOBGlobal.APIEndPointHost;
             isCollection = false;
-            this.appStatus = appStatus;
         }
 
-        public async Task<APIResult> GetAsync()
+        public async Task<APIResult> GetAsync(CancellationToken ctoken = default(CancellationToken))
         {
-            token = appStatus.SystemStatus.Token;
             encodingType = EnctypeMethod.JSON;
+            needSave = true;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -41,7 +36,7 @@ namespace Business.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            var mr = await this.SendAsync(dic, HttpMethod.Get, ctoken);
 
             return mr;
         }

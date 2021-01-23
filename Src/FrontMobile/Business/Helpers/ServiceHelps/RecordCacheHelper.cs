@@ -9,45 +9,45 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Helpers.ManagerHelps
+namespace Business.Helpers.ServiceHelps
 {
     public class RecordCacheHelper
     {
         private readonly IPageDialogService dialogService;
-        private readonly SystemEnvironmentsManager systemEnvironmentsManager;
-        private readonly SystemStatusManager systemStatusManager;
+        private readonly SystemEnvironmentsService systemEnvironmentsService;
+        private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
-        private readonly RefreshTokenManager refreshTokenManager;
-        private readonly ExceptionRecordsManager exceptionRecordsManager;
+        private readonly RefreshTokenService refreshTokenService;
+        private readonly ExceptionRecordsService exceptionRecordsService;
 
         public RecordCacheHelper(IPageDialogService dialogService,
-            SystemEnvironmentsManager systemEnvironmentsManager,
-            SystemStatusManager systemStatusManager, AppStatus appStatus, RefreshTokenManager refreshTokenManager,
-            ExceptionRecordsManager exceptionRecordsManager)
+            SystemEnvironmentsService systemEnvironmentsService,
+            SystemStatusService systemStatusService, AppStatus appStatus, RefreshTokenService refreshTokenService,
+            ExceptionRecordsService exceptionRecordsService)
         {
             this.dialogService = dialogService;
-            this.systemEnvironmentsManager = systemEnvironmentsManager;
-            this.systemStatusManager = systemStatusManager;
+            this.systemEnvironmentsService = systemEnvironmentsService;
+            this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
-            this.refreshTokenManager = refreshTokenManager;
-            this.exceptionRecordsManager = exceptionRecordsManager;
+            this.refreshTokenService = refreshTokenService;
+            this.exceptionRecordsService = exceptionRecordsService;
         }
 
         public async Task<bool> RefreshAsync(IProgressDialog progressDialog)
         {
             APIResult fooAPIResult;
             progressDialog.Title = $"檢查與更新存取權杖";
-            bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenManager, systemStatusManager, appStatus);
+            bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenService, systemStatusService, appStatus);
             if (fooRefreshTokenResult == false)
             {
                 return false;
             }
             //progressDialog.Title = $"回報例外異常資料中";
-            //await exceptionRecordsManager.ReadFromFileAsync();
-            //if (exceptionRecordsManager.Items.Count > 0)
+            //await exceptionRecordsService.ReadFromFileAsync();
+            //if (exceptionRecordsService.Items.Count > 0)
             //{
             //    List<ExceptionRecordRequestDTO> fooExceptionRecordRequestDTOList = new List<ExceptionRecordRequestDTO>();
-            //    foreach (var item in exceptionRecordsManager.Items)
+            //    foreach (var item in exceptionRecordsService.Items)
             //    {
             //        ExceptionRecordRequestDTO fooExceptionRecordRequestDTO = new ExceptionRecordRequestDTO()
             //        {
@@ -62,7 +62,7 @@ namespace Business.Helpers.ManagerHelps
             //        };
             //        fooExceptionRecordRequestDTOList.Add(fooExceptionRecordRequestDTO);
             //    }
-            //    fooAPIResult = await exceptionRecordsManager.PostAsync(fooExceptionRecordRequestDTOList);
+            //    fooAPIResult = await exceptionRecordsService.PostAsync(fooExceptionRecordRequestDTOList);
             //    if (fooAPIResult.Status != true)
             //    {
             //        await dialogService.DisplayAlertAsync("回報例外異常資料中 發生錯誤", fooAPIResult.Message, "確定");
@@ -70,7 +70,7 @@ namespace Business.Helpers.ManagerHelps
             //    }
             //}
             //progressDialog.Title = $"更新系統最新狀態資料中";
-            //fooAPIResult = await systemEnvironmentsManager.GetAsync();
+            //fooAPIResult = await systemEnvironmentsService.GetAsync();
             //if (fooAPIResult.Status != true)
             //{
             //    await dialogService.DisplayAlertAsync("更新系統最新狀態資料中 發生錯誤", fooAPIResult.Message, "確定");

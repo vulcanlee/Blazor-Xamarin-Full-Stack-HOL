@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Business.Services
 {
-    public class AppExceptionsManager : BaseWebAPI<ExceptionRecordDto>
+    public class AppExceptionsService : BaseWebAPI<ExceptionRecordDto>
     {
-        public AppExceptionsManager()
+        public AppExceptionsService()
             : base()
         {
         }

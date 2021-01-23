@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Business.Services
 {
-    public class SystemStatusManager : BaseWebAPI<SystemStatus>
+    public class SystemStatusService : BaseWebAPI<SystemStatus>
     {
-        public SystemStatusManager()
+        public SystemStatusService()
             : base()
         {
             isCollection = false;

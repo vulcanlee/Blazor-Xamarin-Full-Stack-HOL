@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-    public class RefreshTokenManager : BaseWebAPI<LoginResponseDto>
+    public class RefreshTokenService : BaseWebAPI<LoginResponseDto>
     {
         private readonly AppStatus appStatus;
 
-        public RefreshTokenManager(AppStatus appStatus)
+        public RefreshTokenService(AppStatus appStatus)
             : base()
         {
             this.url = "/api/Login/RefreshToken";

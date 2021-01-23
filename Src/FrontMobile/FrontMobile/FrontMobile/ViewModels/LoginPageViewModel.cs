@@ -9,7 +9,7 @@ namespace FrontMobile.ViewModels
     using System.ComponentModel;
     using Acr.UserDialogs;
     using Business.DataModel;
-    using Business.Helpers.ManagerHelps;
+    using Business.Helpers.ServiceHelps;
     using Business.Services;
     using DataTransferObject.DTOs;
     using Prism.Events;
@@ -25,19 +25,19 @@ namespace FrontMobile.ViewModels
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly LoginManager loginManager;
-        private readonly SystemStatusManager systemStatusManager;
+        private readonly LoginService loginService;
+        private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
         private readonly RecordCacheHelper recordCacheHelper;
 
         public LoginPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            LoginManager loginManager, SystemStatusManager systemStatusManager,
+            LoginService loginService, SystemStatusService systemStatusService,
             AppStatus appStatus, RecordCacheHelper recordCacheHelper)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.loginManager = loginManager;
-            this.systemStatusManager = systemStatusManager;
+            this.loginService = loginService;
+            this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
             this.recordCacheHelper = recordCacheHelper;
 
@@ -51,7 +51,7 @@ namespace FrontMobile.ViewModels
                         Account = Account,
                         Password = Password,
                     };
-                    var fooResult = await LoginUpdateTokenHelper.UserLoginAsync(dialogService, loginManager, systemStatusManager,
+                    var fooResult = await LoginUpdateTokenHelper.UserLoginAsync(dialogService, loginService, systemStatusService,
                         loginRequestDTO, appStatus);
                     if (fooResult == false)
                     {
@@ -83,7 +83,7 @@ namespace FrontMobile.ViewModels
             Account = "user1";
             Password = "pw";
 #endif
-            await systemStatusManager.ReadFromFileAsync();
+            await systemStatusService.ReadFromFileAsync();
         }
 
     }

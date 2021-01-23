@@ -9,7 +9,7 @@ namespace FrontMobile.ViewModels
     using System.ComponentModel;
     using Acr.UserDialogs;
     using Business.DataModel;
-    using Business.Helpers.ManagerHelps;
+    using Business.Helpers.ServiceHelps;
     using Business.Services;
     using Prism.Events;
     using Prism.Navigation;
@@ -20,8 +20,8 @@ namespace FrontMobile.ViewModels
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly LoginManager loginManager;
-        private readonly SystemStatusManager systemStatusManager;
+        private readonly LoginService loginService;
+        private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly LogoutCleanHelper logoutCleanHelper;
@@ -29,14 +29,14 @@ namespace FrontMobile.ViewModels
         public DelegateCommand LogoutCommand { get; set; }
         public MDPageViewModel(INavigationService navigationService,
             IPageDialogService dialogService,
-            LoginManager loginManager, SystemStatusManager systemStatusManager,
+            LoginService loginService, SystemStatusService systemStatusService,
             AppStatus appStatus, RecordCacheHelper recordCacheHelper, 
             LogoutCleanHelper logoutCleanHelper)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.loginManager = loginManager;
-            this.systemStatusManager = systemStatusManager;
+            this.loginService = loginService;
+            this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
             this.recordCacheHelper = recordCacheHelper;
             this.logoutCleanHelper = logoutCleanHelper;
@@ -51,7 +51,7 @@ namespace FrontMobile.ViewModels
                     using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
                     {
                         await logoutCleanHelper.LogoutCleanAsync(fooIProgressDialog);
-                        var fooResult = await LoginUpdateTokenHelper.UserLogoutAsync(dialogService, loginManager, systemStatusManager, appStatus);
+                        var fooResult = await LoginUpdateTokenHelper.UserLogoutAsync(dialogService, loginService, systemStatusService, appStatus);
                         if (fooResult == true)
                         {
                             await navigationService.NavigateAsync("/LoginPage");

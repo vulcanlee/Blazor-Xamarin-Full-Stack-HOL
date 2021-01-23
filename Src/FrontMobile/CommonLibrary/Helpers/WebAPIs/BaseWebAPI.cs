@@ -72,7 +72,7 @@ namespace CommonLibrary.Helpers.WebAPIs
         /// <summary>
         /// 此次呼叫的處理結果
         /// </summary>
-        public APIResult managerResult { get; set; }
+        public APIResult ServiceResult { get; set; }
 
         public bool 資料加密處理 { get; set; } = false;
 
@@ -107,7 +107,7 @@ namespace CommonLibrary.Helpers.WebAPIs
             this.url = string.Format("{0}{1}", _url, _className);
             this.資料檔案名稱 = _DataFileName;
             this.現在資料夾名稱 = _DataFolderName;
-            this.managerResult = new APIResult();
+            this.ServiceResult = new APIResult();
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace CommonLibrary.Helpers.WebAPIs
         protected virtual async Task<APIResult> SendAsync(Dictionary<string, string> dic, HttpMethod httpMethod,
             CancellationToken cancellationTokentoken = default(CancellationToken))
         {
-            this.managerResult = new APIResult();
-            APIResult mr = this.managerResult;
+            this.ServiceResult = new APIResult();
+            APIResult mr = this.ServiceResult;
             string jsonPayload = "";
 
             //檢查網路狀態
