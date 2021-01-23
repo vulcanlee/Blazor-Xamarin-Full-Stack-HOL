@@ -13,6 +13,7 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<IExceptionRecordService, ExceptionRecordService>();
             services.AddTransient<ITravelExpenseDetailService, TravelExpenseDetailService>();
             services.AddTransient<ITravelExpenseService, TravelExpenseService>();
             services.AddTransient<ILeaveFormService, LeaveFormService>();
@@ -30,6 +31,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 Razor Model
+            services.AddTransient<ExceptionRecordRazorModel>();
             services.AddTransient<TravelExpenseDetailRazorModel>();
             services.AddTransient<TravelExpenseRazorModel>();
             services.AddTransient<LeaveFormRazorModel>();

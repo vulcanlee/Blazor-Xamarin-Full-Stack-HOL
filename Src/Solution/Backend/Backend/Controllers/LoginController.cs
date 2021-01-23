@@ -61,7 +61,7 @@ namespace Backend.Controllers
             LoginResponseDto LoginResponseDTO = new LoginResponseDto()
             {
                 Account = loginRequestDTO.Account,
-                Id = 0,
+                Id = user.Id,
                 Name = loginRequestDTO.Account,
                 Token = token,
                 TokenExpireMinutes = Convert.ToInt32(configuration["Tokens:JwtExpireMinutes"]),

@@ -19,7 +19,7 @@ namespace Business.Services
         public ExceptionRecordsManager(AppStatus appStatus)
             : base()
         {
-            this.url = "/api/ExceptionRecords";
+            this.url = "/api/ExceptionRecord";
             this.host = LOBGlobal.APIEndPointHost;
             this.appStatus = appStatus;
         }
@@ -31,7 +31,7 @@ namespace Business.Services
             encodingType = EnctypeMethod.JSON;
             needSave = false;
             isCollection = true;
-            routeUrl = $"";
+            routeUrl = $"/Collection";
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();

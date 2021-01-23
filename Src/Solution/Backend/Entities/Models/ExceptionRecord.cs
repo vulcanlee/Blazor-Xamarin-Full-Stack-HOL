@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataTransferObject.DTOs
+namespace Entities.Models
 {
-    public class ExceptionRecordRequestDto
+    public class ExceptionRecord
     {
         public int Id { get; set; }
-        public virtual UserDTO User { get; set; }
+        public int? MyUserId { get; set; }
+
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string OSType { get; set; }
@@ -15,5 +16,7 @@ namespace DataTransferObject.DTOs
         public string Message { get; set; }
         public string CallStack { get; set; }
         public DateTime ExceptionTime { get; set; }
+  
+        public virtual MyUser MyUser { get; set; }
     }
 }

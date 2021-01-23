@@ -24,6 +24,7 @@ namespace Entities.Models
 
 
         public virtual DbSet<MyUser> MyUser { get; set; }
+        public virtual DbSet<ExceptionRecord> ExceptionRecord { get; set; }
         public virtual DbSet<LeaveCategory> LeaveCategory { get; set; }
         public virtual DbSet<OnCallPhone> OnCallPhone { get; set; }
         public virtual DbSet<Project> Project { get; set; }

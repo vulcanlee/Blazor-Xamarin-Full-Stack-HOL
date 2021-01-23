@@ -16,5 +16,7 @@ namespace DataTransferObject.DTOs
         public string Message { get; set; }
         public string CallStack { get; set; }
         public DateTime ExceptionTime { get; set; }
+
+        public virtual MyUserDto User { get; set; }
     }
 }

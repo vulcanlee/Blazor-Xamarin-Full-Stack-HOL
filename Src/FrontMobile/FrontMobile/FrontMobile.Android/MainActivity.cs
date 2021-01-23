@@ -60,16 +60,23 @@ namespace FrontMobile.Droid
                     CallStack = (e.ExceptionObject as Exception).StackTrace,
                     ExceptionTime = DateTime.Now,
                     Message = (e.ExceptionObject as Exception).Message,
-                    User = new UserDTO() { Id = appStatus.SystemStatus.UserID },
                     DeviceModel = DeviceInfo.Model,
                     DeviceName = DeviceInfo.Name,
                     OSType = DeviceInfo.Platform.ToString(),
                     OSVersion = DeviceInfo.Version.ToString(),
                 };
+                if(appStatus.SystemStatus.UserID<=0)
+                {
+                    fooObject.MyUserId = null;
+                }
+                else
+                {
+                    fooObject.MyUserId = appStatus.SystemStatus.UserID;
+                }
                 appExceptionsManager.Items.Add(fooObject);
                 await appExceptionsManager.WriteToFileAsync();
             }).Wait();
-            
+
         }
     }
 

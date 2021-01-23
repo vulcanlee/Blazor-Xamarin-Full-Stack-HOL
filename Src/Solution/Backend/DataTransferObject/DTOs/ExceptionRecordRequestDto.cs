@@ -4,11 +4,10 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class ExceptionRecordDto
+    public class ExceptionRecordRequestDto
     {
         public int Id { get; set; }
-        public int? MyUserId { get; set; }
-        public string MyUserName { get; set; }
+        public virtual MyUserDto User { get; set; }
         public string DeviceName { get; set; }
         public string DeviceModel { get; set; }
         public string OSType { get; set; }

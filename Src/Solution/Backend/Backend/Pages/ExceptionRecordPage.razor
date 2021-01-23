@@ -1,0 +1,7 @@
+﻿@page "/ExceptionRecord"
+@*@attribute [Authorize(Roles = "User")]*@
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.App例外異常功能名稱</div>
+    <ExceptionRecordView PageSize="@MagicHelper.GridPageSize" />
+</div>

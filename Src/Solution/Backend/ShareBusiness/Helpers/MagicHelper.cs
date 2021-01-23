@@ -33,6 +33,7 @@ namespace ShareBusiness.Helpers
         public static readonly string 工作日誌功能名稱 = "工作日誌";
         public static readonly string 請假單功能名稱 = "請假單";
         public static readonly string 差旅費用功能名稱 = "差旅費用";
+        public static readonly string App例外異常功能名稱 = "App 例外異常";
 
         public static readonly string 訂單管理功能名稱 = "訂單管理";
         public static readonly string 商品管理功能名稱 = "商品管理";

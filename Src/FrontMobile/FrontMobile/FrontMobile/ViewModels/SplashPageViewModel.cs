@@ -56,6 +56,14 @@ namespace FrontMobile.ViewModels
 
         public async void OnNavigatedTo(INavigationParameters parameters)
         {
+            #region 確認網路已經連線
+            if (UtilityHelper.IsConnected() == false)
+            {
+                await dialogService.DisplayAlertAsync("警告", "無網路連線可用，請檢查網路狀態", "確定");
+                return;
+            }
+            #endregion
+
             #region Toast
             IUserDialogs dialogs = UserDialogs.Instance;
             ToastConfig.DefaultBackgroundColor = System.Drawing.Color.AliceBlue;
@@ -83,19 +91,34 @@ namespace FrontMobile.ViewModels
             #region 讀取相關定義資料
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
+                await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusManager, appStatus);
                 #region 取得請假假別
                 fooIProgressDialog.Title = "請稍後，取得請假假別";
                     await leaveCategoryManager.ReadFromFileAsync();
                     var fooResult = await leaveCategoryManager.GetAsync();
                     if (fooResult.Status == true)
                     {
+                        await leaveCategoryManager.WriteToFileAsync();
+                    }
+                #endregion
+
+                #region 上傳例外異常
+                fooIProgressDialog.Title = "請稍後，上傳例外異常";
+                await appExceptionsManager.ReadFromFileAsync();
+                if (appExceptionsManager.Items.Count > 0)
+                {
+                    await appExceptionsManager.ReadFromFileAsync();
+                    fooResult = await exceptionRecordsManager.PostAsync(appExceptionsManager.Items);
+                    if (fooResult.Status == true)
+                    {
+                        appExceptionsManager.Items.Clear();
                         await appExceptionsManager.WriteToFileAsync();
                     }
+                }
                 #endregion
             }
             #endregion
 
-            await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusManager, appStatus);
             await Task.Delay(3000);
             if (appStatus.SystemStatus.IsLogin == false)
             {
@@ -105,30 +128,10 @@ namespace FrontMobile.ViewModels
             }
 
             #region 使用者已經成功登入了，接下來要更新相關資料
-            if (UtilityHelper.IsConnected() == false)
-            {
-                await dialogService.DisplayAlertAsync("警告", "無網路連線可用，請檢查網路狀態", "確定");
-                return;
-            }
-
-            //using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            //using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，上傳例外異常資料中...", null, null, true, MaskType.Black))
             //{
             //    await recordCacheHelper.RefreshAsync(fooIProgressDialog);
 
-            //    #region 上傳例外異常
-            //    fooIProgressDialog.Title = "請稍後，上傳例外異常";
-            //    await appExceptionsManager.ReadFromFileAsync();
-            //    if (appExceptionsManager.Items.Count > 0)
-            //    {
-            //        await appExceptionsManager.ReadFromFileAsync();
-            //        var fooResult = await exceptionRecordsManager.PostAsync(appExceptionsManager.Items);
-            //        if (fooResult.Status == true)
-            //        {
-            //            appExceptionsManager.Items.Clear();
-            //            await appExceptionsManager.WriteToFileAsync();
-            //        }
-            //    }
-            //    #endregion
             //}
 
             // 使用者尚已經功登入，切換到首頁頁面
