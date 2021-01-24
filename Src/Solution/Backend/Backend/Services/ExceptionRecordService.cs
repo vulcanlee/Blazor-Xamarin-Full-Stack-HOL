@@ -100,6 +100,10 @@ namespace Backend.Services
             ExceptionRecord item = await context.ExceptionRecord
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
+            if(item==null)
+            {
+                return null;
+            }
             ExceptionRecordAdapterModel result = Mapper.Map<ExceptionRecordAdapterModel>(item);
             await OhterDependencyData(result);
             return result;

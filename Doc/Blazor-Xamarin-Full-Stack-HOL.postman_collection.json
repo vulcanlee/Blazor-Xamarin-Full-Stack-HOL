@@ -1901,6 +1901,192 @@
 			]
 		},
 		{
+			"name": "例外異常",
+			"item": [
+				{
+					"name": "Retrive 所有例外異常",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecord",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecord"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrive 特定例外異常",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecord/471",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecord",
+								"471"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post 新增例外異常",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"Id\": 0,\r\n            \"MyUserId\": 1,\r\n            \"MyUserName\": \"user1\",\r\n            \"DeviceName\": \"AOSP on IA Emulator\",\r\n            \"DeviceModel\": \"AOSP on IA Emulator\",\r\n            \"OSType\": \"Android\",\r\n            \"OSVersion\": \"9.0\",\r\n            \"Message\": \"魔鬼藏在細節中\",\r\n            \"CallStack\": \"  at FrontMobile.ViewModels.HomePageViewModel+<>c.<.ctor>b__28_2 () [0x00008] in D:\\\\Vulcan\\\\GitHub\\\\Blazor-Xamarin-Full-Stack-HOL\\\\Src\\\\FrontMobile\\\\FrontMobile\\\\FrontMobile\\\\ViewModels\\\\HomePageViewModel.cs:98 \\n  at (wrapper dynamic-method) Android.Runtime.DynamicMethodNameCounter.1(intptr,intptr)\\n  at (wrapper native-to-managed) Android.Runtime.DynamicMethodNameCounter.1(intptr,intptr)\",\r\n            \"ExceptionTime\": \"2021-01-23T21:16:39.690447\",\r\n            \"User\": null\r\n        }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecord",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecord"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除例外異常",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/ExceptionRecord/48",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"ExceptionRecord",
+								"48"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put 修改例外異常",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\r\n            \"Id\": 2,\r\n            \"Name\": \"aa1\",\r\n            \"ModelYear\": 13,\r\n            \"ListPrice\": 998.00\r\n        }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/api/Project/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Project",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
 			"name": "產品",
 			"item": [
 				{

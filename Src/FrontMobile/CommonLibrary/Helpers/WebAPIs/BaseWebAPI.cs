@@ -135,15 +135,15 @@ namespace CommonLibrary.Helpers.WebAPIs
             CancellationToken cancellationTokentoken = default(CancellationToken))
         {
             this.ServiceResult = new APIResult();
-            APIResult mr = this.ServiceResult;
+            APIResult apiResult = this.ServiceResult;
             string jsonPayload = "";
 
             //檢查網路狀態
             if (UtilityHelper.IsConnected() == false)
             {
-                mr.Status = false;
-                mr.Message = "無網路連線可用，請檢查網路狀態";
-                return mr;
+                apiResult.Status = false;
+                apiResult.Message = "無網路連線可用，請檢查網路狀態";
+                return apiResult;
             }
 
             if (dic.ContainsKey(LOBGlobal.JSONDataKeyName))
@@ -225,10 +225,10 @@ namespace CommonLibrary.Helpers.WebAPIs
                         if (response.IsSuccessStatusCode == true)
                         {
                             #region 回傳成功狀態碼
-                            mr = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                            if (mr.Status == true)
+                            apiResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            if (apiResult.Status == true)
                             {
-                                var fooDataString = mr.Payload.ToString();
+                                var fooDataString = apiResult.Payload.ToString();
                                 if (ApiResultIsCollection == false)
                                 {
                                     SingleItem = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
@@ -254,6 +254,12 @@ namespace CommonLibrary.Helpers.WebAPIs
                                     }
                                 }
                             }
+                            else
+                            {
+                                apiResult.Status = false;
+                                apiResult.HTTPStatus = (int)response.StatusCode;
+                                apiResult.Message = $"{apiResult.Message}";
+                            }
                             #endregion
                         }
                         else
@@ -261,31 +267,31 @@ namespace CommonLibrary.Helpers.WebAPIs
                             APIResult fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
                             if (fooAPIResult != null)
                             {
-                                mr = fooAPIResult;
+                                apiResult = fooAPIResult;
                             }
                             else
                             {
-                                mr.Status = false;
-                                mr.HTTPStatus = (int)response.StatusCode;
-                                mr.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.ReasonPhrase);
+                                apiResult.Status = false;
+                                apiResult.HTTPStatus = (int)response.StatusCode;
+                                apiResult.Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.ReasonPhrase);
                             }
                         }
                     }
                     else
                     {
-                        mr.Status = false;
-                        mr.Message = APIInternalError;
+                        apiResult.Status = false;
+                        apiResult.Message = APIInternalError;
                     }
                     #endregion
                 }
                 catch (Exception ex)
                 {
-                    mr.Status = false;
-                    mr.Message = ex.Message;
+                    apiResult.Status = false;
+                    apiResult.Message = ex.Message;
                 }
             }
 
-            return mr;
+            return apiResult;
         }
 
         /// <summary>

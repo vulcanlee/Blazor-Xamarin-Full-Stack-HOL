@@ -92,7 +92,7 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] List<ExceptionRecordDto> datas)
         {
-            APIResult apiResult=new APIResult();
+            APIResult apiResult = new APIResult();
 
             #region 驗證 DTO 物件的資料一致性
             #endregion
@@ -178,6 +178,7 @@ namespace Backend.Controllers
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
                     ErrorMessageEnum.沒有任何符合資料存在, payload: result);
             }
+
             return Ok(apiResult);
         }
         #endregion
