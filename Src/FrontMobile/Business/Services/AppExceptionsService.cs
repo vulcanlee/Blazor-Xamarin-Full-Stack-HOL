@@ -11,6 +11,13 @@ namespace Business.Services
         public AppExceptionsService()
             : base()
         {
+            SetDefaultPersistentBehavior();
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = true;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
     }
 }

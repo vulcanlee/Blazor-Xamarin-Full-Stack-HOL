@@ -18,17 +18,22 @@ namespace Business.Services
         public RefreshTokenService(AppStatus appStatus)
             : base()
         {
-            this.url = "/api/Login/RefreshToken";
-            this.host = LOBGlobal.APIEndPointHost;
+            this.Url = "/api/Login/RefreshToken";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
             this.appStatus = appStatus;
-            isCollection = false;
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = false;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
 
         public async Task<APIResult> GetAsync()
         {
-            token = appStatus.SystemStatus.RefreshToken;
-            encodingType = EnctypeMethod.JSON;
-            needSave = true;
+            Token = appStatus.SystemStatus.RefreshToken;
+            EnctypeMethod = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -41,9 +46,10 @@ namespace Business.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
     }
 }

@@ -16,24 +16,34 @@ namespace Business.Services
         public LeaveCategoryService()
             : base()
         {
-            this.url = "/api/LeaveCategory";
-            this.host = LOBGlobal.APIEndPointHost;
-            isCollection = true;
+            this.Url = "/api/LeaveCategory";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = true;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
 
         public async Task<APIResult> GetAsync()
         {
-            isCollection = true;
-            needSave = true;
-            encodingType = EnctypeMethod.JSON;
+            #region 指定此次呼叫 Web API 要執行參數
+            Token = "";
+            ApiResultIsCollection = true;
+            EnctypeMethod = EnctypeMethod.JSON;
+            Route = $"";
+            #endregion
 
             #region 要傳遞的參數
             WebQueryDictionary dic = new WebQueryDictionary();
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
     }
 }

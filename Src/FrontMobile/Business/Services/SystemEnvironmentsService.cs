@@ -15,15 +15,20 @@ namespace Business.Services
         public SystemEnvironmentsService()
             : base()
         {
-            this.url = "/api/SystemEnvironments";
-            this.host = LOBGlobal.APIEndPointHost;
-            isCollection = false;
+            this.Url = "/api/SystemEnvironments";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = false;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
 
         public async Task<APIResult> GetAsync(CancellationToken ctoken = default(CancellationToken))
         {
-            encodingType = EnctypeMethod.JSON;
-            needSave = true;
+            EnctypeMethod = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -36,9 +41,10 @@ namespace Business.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, ctoken);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Get, ctoken);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
     }
 }

@@ -19,19 +19,26 @@ namespace Business.Services
         public ExceptionRecordsService(AppStatus appStatus)
             : base()
         {
-            this.url = "/api/ExceptionRecord";
-            this.host = LOBGlobal.APIEndPointHost;
+            this.Url = "/api/ExceptionRecord";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
             this.appStatus = appStatus;
         }
 
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = true;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
+        }
 
         public async Task<APIResult> PostAsync(List<ExceptionRecordDto> exceptionRecordRequestDTO, CancellationToken ctoken = default(CancellationToken))
         {
-            token = appStatus.SystemStatus.Token;
-            encodingType = EnctypeMethod.JSON;
-            needSave = false;
-            isCollection = true;
-            routeUrl = $"/Collection";
+            #region 指定此次呼叫 Web API 要執行參數
+            Token = appStatus.SystemStatus.Token;
+            EnctypeMethod = EnctypeMethod.JSON;
+            ApiResultIsCollection = true;
+            Route = $"Collection";
+            #endregion
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -44,26 +51,10 @@ namespace Business.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(exceptionRecordRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, ctoken);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Post, ctoken);
+            SetDefaultPersistentBehavior();
 
-            return mr;
-        }
-
-        public override async Task ReadFromFileAsync()
-        {
-            needSave = true;
-            isCollection = true;
-            await base.ReadFromFileAsync();
-        }
-
-        /// <summary>
-        /// 將物件資料寫入到檔案中
-        /// </summary>
-        public override async Task WriteToFileAsync()
-        {
-            needSave = true;
-            isCollection = true;
-            await base.WriteToFileAsync();
+            return apiResult;
         }
     }
 }

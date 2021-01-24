@@ -16,14 +16,20 @@ namespace Business.Services
         public LoginService()
             : base()
         {
-            this.url = "/api/Login";
-            this.host = LOBGlobal.APIEndPointHost;
-            isCollection = false;
+            this.Url = "/api/Login";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = false;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
 
         public async Task<APIResult> PostAsync(LoginRequestDto loginRequestDTO)
         {
-            encodingType = EnctypeMethod.JSON;
+            EnctypeMethod = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -36,9 +42,10 @@ namespace Business.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
     }
 }

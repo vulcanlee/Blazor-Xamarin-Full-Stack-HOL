@@ -21,21 +21,36 @@ namespace CommonLibrary.Helpers.WebAPIs
     /// <typeparam name="T"></typeparam>
     public abstract class BaseWebAPI<T>
     {
-        #region Field
+        #region Property
         /// <summary>
         /// WebAPI主機位置
         /// </summary>
-        public string host = LOBGlobal.APIEndPointHost;
+        public string Host { get; set; } = LOBGlobal.APIEndPointHost;
 
         /// <summary>
         /// WebAPI方法網址
         /// </summary>
-        public string url = "";
-        public EnctypeMethod encodingType;
-        public string token = "";
-        public string routeUrl = "";
-        public bool needSave = false;
-        public bool isCollection = true;
+        public string Url { get; set; }="";
+        /// <summary>
+        /// 指定 HTTP 執行的方法
+        /// </summary>
+        public EnctypeMethod EnctypeMethod { get; set; }
+        /// <summary>
+        /// 指定需要有授權限制的存取權杖
+        /// </summary>
+        public string Token { get; set; }="";
+        /// <summary>
+        /// 其他路由參數(可用於標準 CRUD 的修改與刪除)
+        /// </summary>
+        public string Route { get; set; }="";
+        /// <summary>
+        /// 呼叫 API 結果是集合物件或者是單一物件
+        /// </summary>
+        public bool ApiResultIsCollection { get; set; } = true;
+        /// <summary>
+        /// 儲存資料要以集合或者單一形式來儲存
+        /// </summary>
+        public PersistentStorage PersistentStorage { get; set; } = PersistentStorage.Collection;
         /// <summary>
         /// 資料夾名稱
         /// </summary>
@@ -86,9 +101,9 @@ namespace CommonLibrary.Helpers.WebAPIs
         public BaseWebAPI()
         {
             SetWebAccessCondition("/api/", this.GetType().Name, "Datas", this.GetType().Name);
-            encodingType = EnctypeMethod.FORMURLENCODED;
+            EnctypeMethod = EnctypeMethod.FORMURLENCODED;
             現在資料夾名稱 = 最上層資料夾名稱;
-            url = "";
+            Url = "";
             資料檔案名稱 = this.GetType().Name;
             子資料夾名稱 = 資料檔案名稱;
         }
@@ -104,7 +119,7 @@ namespace CommonLibrary.Helpers.WebAPIs
         {
             string className = _className;
 
-            this.url = string.Format("{0}{1}", _url, _className);
+            this.Url = string.Format("{0}{1}", _url, _className);
             this.資料檔案名稱 = _DataFileName;
             this.現在資料夾名稱 = _DataFolderName;
             this.ServiceResult = new APIResult();
@@ -144,15 +159,15 @@ namespace CommonLibrary.Helpers.WebAPIs
                 try
                 {
                     //client.Timeout = TimeSpan.FromSeconds(5);
-                    string fooQueryString = dic.ToQueryString();
-                    string fooUrl = $"{host}{url}{routeUrl}" + fooQueryString;
-                    UriBuilder ub = new UriBuilder(fooUrl);
+                    string queryString = dic.ToQueryString();
+                    string endPoint = $"{Host}{Url}/{Route}" + queryString;
+                    UriBuilder ub = new UriBuilder(endPoint);
                     HttpResponseMessage response = null;
 
-                    if (string.IsNullOrEmpty(this.token) == false)
+                    if (string.IsNullOrEmpty(this.Token) == false)
                     {
                         client.DefaultRequestHeaders.Authorization =
-                            new AuthenticationHeaderValue("Bearer", this.token);
+                            new AuthenticationHeaderValue("Bearer", this.Token);
                     }
 
                     #region  Get Or Post
@@ -164,12 +179,12 @@ namespace CommonLibrary.Helpers.WebAPIs
                     else if (httpMethod == HttpMethod.Post)
                     {
                         // 使用 Post 方式來呼叫
-                        if (encodingType == EnctypeMethod.FORMURLENCODED)
+                        if (EnctypeMethod == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
                             response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent(), cancellationTokentoken);
                         }
-                        else if (encodingType == EnctypeMethod.JSON)
+                        else if (EnctypeMethod == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                             response = await client.PostAsync(ub.Uri,
@@ -179,13 +194,13 @@ namespace CommonLibrary.Helpers.WebAPIs
                     else if (httpMethod == HttpMethod.Put)
                     {
                         // 使用 Post 方式來呼叫
-                        if (encodingType == EnctypeMethod.FORMURLENCODED)
+                        if (EnctypeMethod == EnctypeMethod.FORMURLENCODED)
                         {
                             // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
                             response = await client.PutAsync(ub.Uri,
                                 dic.ToFormUrlEncodedContent(), cancellationTokentoken);
                         }
-                        else if (encodingType == EnctypeMethod.JSON)
+                        else if (EnctypeMethod == EnctypeMethod.JSON)
                         {
                             client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
                             response = await client.PutAsync(ub.Uri,
@@ -214,10 +229,10 @@ namespace CommonLibrary.Helpers.WebAPIs
                             if (mr.Status == true)
                             {
                                 var fooDataString = mr.Payload.ToString();
-                                if (isCollection == false)
+                                if (ApiResultIsCollection == false)
                                 {
                                     SingleItem = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                                    if (needSave == true)
+                                    if (ApiResultIsCollection == false && PersistentStorage == PersistentStorage.Single)
                                     {
                                         if (SingleItem == null)
                                         {
@@ -229,7 +244,7 @@ namespace CommonLibrary.Helpers.WebAPIs
                                 else
                                 {
                                     Items = JsonConvert.DeserializeObject<List<T>>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
-                                    if (needSave == true)
+                                    if (ApiResultIsCollection == true && PersistentStorage == PersistentStorage.Collection)
                                     {
                                         if (Items == null)
                                         {
@@ -278,7 +293,7 @@ namespace CommonLibrary.Helpers.WebAPIs
         /// </summary>
         public virtual async Task ReadFromFileAsync()
         {
-            if (isCollection == false)
+            if (PersistentStorage == PersistentStorage.Single)
             {
                 SingleItem = (T)Activator.CreateInstance(typeof(T));
             }
@@ -296,7 +311,7 @@ namespace CommonLibrary.Helpers.WebAPIs
             {
                 try
                 {
-                    if (isCollection == false)
+                    if (PersistentStorage == PersistentStorage.Single)
                     {
                         this.SingleItem = JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
                     }
@@ -319,7 +334,7 @@ namespace CommonLibrary.Helpers.WebAPIs
         public virtual async Task WriteToFileAsync()
         {
             string data = "";
-            if (isCollection == false)
+            if (PersistentStorage == PersistentStorage.Single)
             {
                 data = JsonConvert.SerializeObject(this.SingleItem);
             }
@@ -332,6 +347,20 @@ namespace CommonLibrary.Helpers.WebAPIs
 
     }
 
+    /// <summary>
+    /// 儲存資料的型態
+    /// </summary>
+    public enum PersistentStorage
+    {
+        /// <summary>
+        /// 集合型態的物件
+        /// </summary>
+        Collection,
+        /// <summary>
+        /// 單一型態的物件
+        /// </summary>
+        Single
+    }
     /// <summary>
     /// POST資料的時候，將要傳遞的參數，使用何種方式來進行編碼
     /// </summary>

@@ -11,7 +11,13 @@ namespace Business.Services
         public SystemStatusService()
             : base()
         {
-            isCollection = false;
+            SetDefaultPersistentBehavior();
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = false;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
     }
 }

@@ -19,16 +19,22 @@ namespace Business.Services
         public OnlyUserService(AppStatus appStatus)
             : base()
         {
-            this.url = "/api/OnlyUser";
-            this.host = LOBGlobal.APIEndPointHost;
-            isCollection = false;
+            this.Url = "/api/OnlyUser";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
             this.appStatus = appStatus;
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = false;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
 
         public async Task<APIResult> GetAsync()
         {
-            token = appStatus.SystemStatus.Token;
-            encodingType = EnctypeMethod.JSON;
+            Token = appStatus.SystemStatus.Token;
+            EnctypeMethod = EnctypeMethod.JSON;
 
             #region 要傳遞的參數
             //Dictionary<string, string> dic = new Dictionary<string, string>();
@@ -41,9 +47,10 @@ namespace Business.Services
             //dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(loginRequestDTO));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
     }
 }

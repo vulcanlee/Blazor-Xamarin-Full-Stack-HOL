@@ -8,41 +8,56 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DataTransferObject.DTOs;
+using Business.DataModel;
 
 namespace Business.Services
 {
     public class LeaveFormService : BaseWebAPI<LeaveFormDto>
     {
-        public LeaveFormService()
+        private readonly AppStatus appStatus;
+
+        public LeaveFormService(AppStatus appStatus)
             : base()
         {
-            this.url = "/api/LeaveForm";
-            this.host = LOBGlobal.APIEndPointHost;
-            isCollection = true;
+            this.Url = "/api/LeaveForm";
+            this.Host = LOBGlobal.APIEndPointHost;
+            SetDefaultPersistentBehavior();
+            this.appStatus = appStatus;
+        }
+
+        void SetDefaultPersistentBehavior()
+        {
+            ApiResultIsCollection = true;
+            PersistentStorage = ApiResultIsCollection ? PersistentStorage.Collection : PersistentStorage.Single;
         }
 
         public async Task<APIResult> GetAsync()
         {
-            isCollection = true;
-            needSave = true;
-            encodingType = EnctypeMethod.JSON;
-            routeUrl = $"";
+            #region 指定此次呼叫 Web API 要執行參數
+            Token = appStatus.SystemStatus.Token;
+            ApiResultIsCollection = true;
+            EnctypeMethod = EnctypeMethod.JSON;
+            Route = $"";
+            #endregion
 
             #region 要傳遞的參數
             WebQueryDictionary dic = new WebQueryDictionary();
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Get, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
 
         public async Task<APIResult> PostAsync(LeaveFormDto item)
         {
-            isCollection = false;
-            needSave = false;
-            encodingType = EnctypeMethod.JSON;
-            routeUrl = $"";
+            #region 指定此次呼叫 Web API 要執行參數
+            Token = appStatus.SystemStatus.Token;
+            ApiResultIsCollection = false;
+            EnctypeMethod = EnctypeMethod.JSON;
+            Route = $"";
+            #endregion
 
             #region 要傳遞的參數
             WebQueryDictionary dic = new WebQueryDictionary();
@@ -50,17 +65,20 @@ namespace Business.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(item));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Post, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
 
         public async Task<APIResult> PutAsync(LeaveFormDto item)
         {
-            isCollection = false;
-            needSave = false;
-            encodingType = EnctypeMethod.JSON;
-            routeUrl = $"/{item.Id}";
+            #region 指定此次呼叫 Web API 要執行參數
+            Token = appStatus.SystemStatus.Token;
+            ApiResultIsCollection = false;
+            EnctypeMethod = EnctypeMethod.JSON;
+            Route = $"{item.Id}";
+            #endregion
 
             #region 要傳遞的參數
             WebQueryDictionary dic = new WebQueryDictionary();
@@ -68,17 +86,20 @@ namespace Business.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(item));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Put, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Put, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
 
         public async Task<APIResult> DeleteAsync(LeaveFormDto item)
         {
-            isCollection = false;
-            needSave = false;
-            encodingType = EnctypeMethod.JSON;
-            routeUrl = $"/{item.Id}";
+            #region 指定此次呼叫 Web API 要執行參數
+            Token = appStatus.SystemStatus.Token;
+            ApiResultIsCollection = false;
+            EnctypeMethod = EnctypeMethod.JSON;
+            Route = $"{item.Id}";
+            #endregion
 
             #region 要傳遞的參數
             WebQueryDictionary dic = new WebQueryDictionary();
@@ -86,9 +107,10 @@ namespace Business.Services
             dic.Add(LOBGlobal.JSONDataKeyName, JsonConvert.SerializeObject(item));
             #endregion
 
-            var mr = await this.SendAsync(dic, HttpMethod.Delete, CancellationToken.None);
+            APIResult apiResult = await this.SendAsync(dic, HttpMethod.Delete, CancellationToken.None);
+            SetDefaultPersistentBehavior();
 
-            return mr;
+            return apiResult;
         }
     }
 }
