@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class OrderItemDto
+    public class OrderItemDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
@@ -21,5 +22,16 @@ namespace DataTransferObject.DTOs
 
         public OrderDto Order { get; set; }
         public ProductDto Product { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public OrderItemDto Clone()
+        {
+            return ((ICloneable)this).Clone() as OrderItemDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

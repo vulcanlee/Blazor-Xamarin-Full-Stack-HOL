@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class ExceptionRecordDto
+    public class ExceptionRecordDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         public int? MyUserId { get; set; }
@@ -16,5 +17,16 @@ namespace DataTransferObject.DTOs
         public string Message { get; set; }
         public string CallStack { get; set; }
         public DateTime ExceptionTime { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ExceptionRecordDto Clone()
+        {
+            return ((ICloneable)this).Clone() as ExceptionRecordDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

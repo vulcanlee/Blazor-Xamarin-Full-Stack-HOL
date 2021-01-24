@@ -25,12 +25,13 @@ namespace FrontMobile.ViewModels
         private readonly AppStatus appStatus;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly LogoutCleanHelper logoutCleanHelper;
+        public DelegateCommand<string> MenuCommand { get; set; }
 
         public DelegateCommand LogoutCommand { get; set; }
         public MDPageViewModel(INavigationService navigationService,
             IPageDialogService dialogService,
             LoginService loginService, SystemStatusService systemStatusService,
-            AppStatus appStatus, RecordCacheHelper recordCacheHelper, 
+            AppStatus appStatus, RecordCacheHelper recordCacheHelper,
             LogoutCleanHelper logoutCleanHelper)
         {
             this.navigationService = navigationService;
@@ -41,12 +42,23 @@ namespace FrontMobile.ViewModels
             this.recordCacheHelper = recordCacheHelper;
             this.logoutCleanHelper = logoutCleanHelper;
 
+            #region 一般命令
+            MenuCommand = new DelegateCommand<string>(async x =>
+            {
+                switch (x)
+                {
+                    case "請假單":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
+                        break;
+                }
+            });
+            #endregion
             #region 登出命令
             LogoutCommand = new DelegateCommand(async () =>
             {
                 var isLogout = await dialogService.DisplayAlertAsync("警告",
                     "你確定要登出嗎？", "確定", "取消");
-                if(isLogout== true)
+                if (isLogout == true)
                 {
                     using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
                     {

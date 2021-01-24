@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class WorkingLogDetailDto
+    public class WorkingLogDetailDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "工作項目 不可為空白")]
@@ -19,5 +20,16 @@ namespace DataTransferObject.DTOs
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
         public virtual ProjectDto Project { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public WorkingLogDetailDto Clone()
+        {
+            return ((ICloneable)this).Clone() as WorkingLogDetailDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

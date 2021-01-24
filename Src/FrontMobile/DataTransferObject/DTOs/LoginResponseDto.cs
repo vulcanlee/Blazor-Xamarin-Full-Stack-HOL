@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class LoginResponseDto
+    public class LoginResponseDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         public string Account { get; set; }
@@ -13,5 +14,16 @@ namespace DataTransferObject.DTOs
         public int TokenExpireMinutes { get; set; }
         public string RefreshToken { get; set; }
         public int RefreshTokenExpireDays { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public LoginResponseDto Clone()
+        {
+            return ((ICloneable)this).Clone() as LoginResponseDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

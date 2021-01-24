@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="FrontMobile.Views.LeaveFormDetailPage"
+             Title="請假單紀錄">
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0"
+        >
+        <ScrollView
+            Orientation="Both"
+            >
+            <StackLayout
+                Spacing="0"
+                >
+                <Label 
+                    Text="開始日期" FontSize="14"/>
+                <DatePicker
+                    Date="{Binding SelectedItem.BeginDay}" 
+                    Format="yyyy-MM-dd"/>
+                <Label 
+                    Text="開始時間" FontSize="14"/>
+                <TimePicker 
+                    Time="{Binding SelectedItem.BeginTimeSpan}"
+                    Format="HH:mm:ss"
+                    />
+            </StackLayout>
+
+        </ScrollView>
+    </Grid>
+  
+</ContentPage>

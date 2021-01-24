@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class MyUserDto
+    public class MyUserDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]
@@ -19,5 +20,16 @@ namespace DataTransferObject.DTOs
         public bool IsService { get; set; }
         public string ServiceName { get; set; }
         public string IsServiceString { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public MyUserDto Clone()
+        {
+            return ((ICloneable)this).Clone() as MyUserDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

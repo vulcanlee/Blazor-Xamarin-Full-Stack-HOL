@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class TravelExpenseDetailDto
+    public class TravelExpenseDetailDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "主題 不可為空白")]
@@ -15,5 +16,16 @@ namespace DataTransferObject.DTOs
 
         public int TravelExpenseId { get; set; }
         public virtual TravelExpenseDto TravelExpense { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public TravelExpenseDetailDto Clone()
+        {
+            return ((ICloneable)this).Clone() as TravelExpenseDetailDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

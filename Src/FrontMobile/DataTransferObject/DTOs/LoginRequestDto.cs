@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public class LoginRequestDto
+    public class LoginRequestDto : ICloneable, INotifyPropertyChanged
     {
         [Required]
         public string Account { get; set; }
         [Required]
         public string Password { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public LoginRequestDto Clone()
+        {
+            return ((ICloneable)this).Clone() as LoginRequestDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

@@ -40,10 +40,13 @@ namespace FrontMobile
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
 
             RegisterOtherTypes(containerRegistry);
+            containerRegistry.RegisterForNavigation<LeaveFormPage, LeaveFormPageViewModel>();
+            containerRegistry.RegisterForNavigation<LeaveFormDetailPage, LeaveFormDetailPageViewModel>();
         }
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<MyUserService>();
             containerRegistry.Register<LeaveCategoryService>();
             containerRegistry.Register<OnlyAdministratorService>();
             containerRegistry.Register<OnlyUserService>();
