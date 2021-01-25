@@ -35,7 +35,7 @@ namespace FrontMobile.ViewModels
         public bool IsRefresh { get; set; }
         public LeaveFormDto SelectedItem { get; set; }
         public DelegateCommand RefreshCommand { get; set; }
-        public DelegateCommand ItemSelectedCommand { get; set; }
+        public DelegateCommand ItemTappedCommand { get; set; }
         public DelegateCommand AddCommand { get; set; }
 
         public LeaveFormPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
@@ -69,7 +69,7 @@ namespace FrontMobile.ViewModels
             #endregion
 
             #region 點選某筆紀錄觸發命令
-            ItemSelectedCommand = new DelegateCommand(async () =>
+            ItemTappedCommand = new DelegateCommand(async () =>
             {
                 NavigationParameters paras = new NavigationParameters();
                 var fooObject = SelectedItem.Clone();

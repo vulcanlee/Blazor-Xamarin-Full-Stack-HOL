@@ -81,7 +81,7 @@ namespace FrontMobile.ViewModels
                 #endregion
 
                 #region 取得請假假別
-                fooIProgressDialog.Title = "請稍後，取得 ";
+                fooIProgressDialog.Title = "請稍後，取得 請假假別";
                 await leaveCategoryService.ReadFromFileAsync();
                 fooResult = await leaveCategoryService.GetAsync();
                 if (fooResult.Status == true)

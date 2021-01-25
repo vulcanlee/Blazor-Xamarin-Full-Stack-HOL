@@ -34,7 +34,7 @@
             <ListView.Behaviors>
                 <prism:EventToCommandBehavior
                     EventName="ItemTapped"
-                    Command="{Binding ItemSelectedCommand}"/>
+                    Command="{Binding ItemTappedCommand}"/>
             </ListView.Behaviors>
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -45,42 +45,42 @@
                             <BoxView
                                 Color="White"/>
                             <StackLayout
-                            Spacing="0" Margin="10,15"
-                            Orientation="Vertical">
-                            <Grid
-                                RowSpacing="0" ColumnSpacing="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="150"/>
-                                    <ColumnDefinition Width="40"/>
-                                </Grid.ColumnDefinitions>
-                                <Label 
-                                    Grid.Row="0" Grid.Column="0"
-                                    Grid.RowSpan="2"
-                                    VerticalOptions="Center"
-                                    FontSize="22"
-                                    Text="{Binding MyUserName}"/>
-                                <Label 
-                                    Grid.Row="0" Grid.Column="1"
-                                    FontSize="20"
-                                    Text="{Binding BeginDate, StringFormat='{0:yyyy-MM-dd HH}'}"/>
-                                <Label  
-                                    Grid.Row="0" Grid.Column="2"
-                                    FontSize="20"
-                                    HorizontalOptions="End"
-                                    Text="{Binding Hours, StringFormat='{0:N1}'}"/>
-                                <Label  
-                                    Grid.Row="1" Grid.Column="1"
-                                    Grid.ColumnSpan="2"
-                                    FontSize="18"
-                                    HorizontalOptions="Start"
-                                    Text="{Binding LeaveCategoryName}"/>
-                            </Grid>
-                        </StackLayout>
+                                Spacing="0" Margin="10,15"
+                                Orientation="Vertical">
+                                <Grid
+                                    RowSpacing="0" ColumnSpacing="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label 
+                                        Grid.Row="0" Grid.Column="0"
+                                        Grid.RowSpan="2"
+                                        VerticalOptions="Center"
+                                        FontSize="22"
+                                        Text="{Binding MyUserName}"/>
+                                    <Label 
+                                        Grid.Row="0" Grid.Column="1"
+                                        FontSize="20"
+                                        Text="{Binding BeginDate, StringFormat='{0:yyyy-MM-dd HH}'}"/>
+                                    <Label  
+                                        Grid.Row="0" Grid.Column="2"
+                                        FontSize="20"
+                                        HorizontalOptions="End"
+                                        Text="{Binding Hours, StringFormat='{0:N1}'}"/>
+                                    <Label  
+                                        Grid.Row="1" Grid.Column="1"
+                                        Grid.ColumnSpan="2"
+                                        FontSize="18"
+                                        HorizontalOptions="Start"
+                                        Text="{Binding LeaveCategoryName}"/>
+                                </Grid>
+                            </StackLayout>
                             <BoxView
                                 Margin="5,0"
                                 HorizontalOptions="Fill"
