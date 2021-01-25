@@ -50,6 +50,9 @@ namespace FrontMobile.ViewModels
                     case "請假單":
                         await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
                         break;
+                    case "登出":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
+                        break;
                 }
             });
             #endregion

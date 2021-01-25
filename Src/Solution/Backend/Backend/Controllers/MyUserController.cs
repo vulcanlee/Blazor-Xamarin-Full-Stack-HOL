@@ -20,7 +20,7 @@ using ShareBusiness.Helpers;
 
 namespace Backend.Controllers
 {
-    [Authorize(AuthenticationSchemes = MagicHelper.JwtBearerAuthenticationScheme, Roles = "Administrator")]
+    [Authorize(AuthenticationSchemes = MagicHelper.JwtBearerAuthenticationScheme, Roles = "User")]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]

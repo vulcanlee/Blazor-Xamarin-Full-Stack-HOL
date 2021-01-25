@@ -105,9 +105,16 @@ namespace Backend.Services
             MyUser item = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
-            MyUserAdapterModel result = Mapper.Map<MyUserAdapterModel>(item);
-            await OhterDependencyData(result);
-            return result;
+            if (item != null)
+            {
+                MyUserAdapterModel result = Mapper.Map<MyUserAdapterModel>(item);
+                await OhterDependencyData(result);
+                return result;
+            }
+            else
+            {
+                return new MyUserAdapterModel();
+            }
         }
 
         public async Task<VerifyRecordResult> AddAsync(MyUserAdapterModel paraObject)

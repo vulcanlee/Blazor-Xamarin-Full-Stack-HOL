@@ -21,8 +21,8 @@
                         </yummy:PancakeView.BackgroundGradientStops>
                         <Label
                             HorizontalOptions="Center" VerticalOptions="Center"
-                            FontSize="50"
-                            Text="鴻才巡檢"/>
+                            FontSize="40"
+                            Text=".NET 超全端開發"/>
                     </yummy:PancakeView>
                     <Grid Margin="20,10">
                         <Grid.ColumnDefinitions>
@@ -50,6 +50,20 @@
                                FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF13B9;" />
                         <Label Grid.Column="1"
                                FontSize="30" TextColor="#4a4a4a" Text="請假單" />
+                    </Grid>
+                    <Grid Margin="20,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding LogoutCommand}"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF05FD;" />
+                        <Label Grid.Column="1"
+                               FontSize="30" TextColor="#4a4a4a" Text="登出" />
                     </Grid>
                 </StackLayout>
             </ScrollView>

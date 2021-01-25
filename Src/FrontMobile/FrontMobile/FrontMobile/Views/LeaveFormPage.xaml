@@ -28,7 +28,9 @@
                         <Grid
                             RowSpacing="0" ColumnSpacing="0"
                             >
-                        <StackLayout
+                            <BoxView
+                                Color="White"/>
+                            <StackLayout
                             Spacing="0" Margin="10,15"
                             Orientation="Vertical">
                             <Grid

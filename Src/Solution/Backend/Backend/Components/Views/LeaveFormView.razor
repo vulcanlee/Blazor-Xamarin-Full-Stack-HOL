@@ -41,8 +41,9 @@
         <GridColumn Field=@nameof(LeaveFormAdapterModel.CompleteDate) HeaderText="結束時間"
                     Format="yyyy-MM-dd HH:mm" />
         <GridColumn Field=@nameof(LeaveFormAdapterModel.Hours) HeaderText="時數"
-                    Format="N1"/>
+                    Format="N1" />
         <GridColumn Field=@nameof(LeaveFormAdapterModel.MyUserName) HeaderText="申請人" />
+        <GridColumn Field=@nameof(LeaveFormAdapterModel.LeaveCategoryName) HeaderText="假別" />
         <GridColumn Field=@nameof(LeaveFormAdapterModel.AgentName) HeaderText="代理人" />
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>

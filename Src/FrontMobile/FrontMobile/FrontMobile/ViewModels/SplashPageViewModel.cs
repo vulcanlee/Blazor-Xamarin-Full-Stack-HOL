@@ -119,7 +119,6 @@ namespace FrontMobile.ViewModels
             }
             #endregion
 
-            await Task.Delay(3000);
             if (appStatus.SystemStatus.IsLogin == false)
             {
                 // 使用者尚未成功登入，切換到登入頁面

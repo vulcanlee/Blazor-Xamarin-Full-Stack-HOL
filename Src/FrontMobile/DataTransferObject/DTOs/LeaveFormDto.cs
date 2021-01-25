@@ -63,6 +63,9 @@ namespace DataTransferObject.DTOs
             BeginDate = BeginDate + BeginTimeSpan;
             FormDate = FormDate + FormTimeSpan;
             CompleteDate = CompleteDate + CompleteTimeSpan;
+
+            MyUser = null;
+            LeaveCategory = null;
         }
     }
 }

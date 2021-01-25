@@ -25,6 +25,7 @@ namespace FrontMobile.ViewModels
         private readonly INavigationService navigationService;
         private readonly LeaveFormService leaveFormService;
         private readonly LeaveCategoryService leaveCategoryService;
+        private readonly MyUserService myUserService;
         private readonly RefreshTokenService refreshTokenService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
@@ -37,22 +38,25 @@ namespace FrontMobile.ViewModels
 
         public LeaveFormPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
+            MyUserService myUserService,
             RefreshTokenService refreshTokenService,
             SystemStatusService systemStatusService, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.leaveFormService = leaveFormService;
             this.leaveCategoryService = leaveCategoryService;
+            this.myUserService = myUserService;
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
 
             #region 點選某筆紀錄觸發命令
-            ItemSelectedCommand = new DelegateCommand(async() =>
+            ItemSelectedCommand = new DelegateCommand(async () =>
             {
                 NavigationParameters paras = new NavigationParameters();
                 var fooObject = SelectedItem.Clone();
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
+                paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudEditAction);
                 await navigationService.NavigateAsync("LeaveFormDetailPage", paras);
             });
             #endregion
@@ -77,6 +81,14 @@ namespace FrontMobile.ViewModels
             {
                 await RefreshData();
             }
+            else
+            {
+                string CrudAction = parameters.GetValue<string>(MagicStringHelper.CrudActionName);
+                if(CrudAction == MagicStringHelper.CrudRefreshAction)
+                {
+                    await ReloadData();
+                }
+            }
         }
         async Task RefreshData()
         {
@@ -90,12 +102,29 @@ namespace FrontMobile.ViewModels
         async Task ReloadData()
         {
             #region 讀取相關定義資料
-            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...",
+                null, null, true, MaskType.Black))
             {
                 await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
                 #region 取得請假假別
+                fooIProgressDialog.Title = "請稍後，取得請假單假別";
+                var fooResult = await leaveCategoryService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await leaveCategoryService.WriteToFileAsync();
+                }
+                #endregion
+                #region 取得人員清單
+                fooIProgressDialog.Title = "請稍後，取得人員清單";
+                fooResult = await myUserService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await myUserService.WriteToFileAsync();
+                }
+                #endregion
+                #region 取得請假
                 fooIProgressDialog.Title = "請稍後，取得請假單";
-                var fooResult = await leaveFormService.GetAsync();
+                fooResult = await leaveFormService.GetAsync();
                 if (fooResult.Status == true)
                 {
                     await leaveFormService.WriteToFileAsync();

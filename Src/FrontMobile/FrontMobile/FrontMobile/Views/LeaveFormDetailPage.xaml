@@ -6,26 +6,137 @@
              x:Class="FrontMobile.Views.LeaveFormDetailPage"
              Title="請假單紀錄">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="儲存"
+            Command="{Binding SaveCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+                    FontFamily="MaterialDesignIcons"
+                    Glyph="&#xF0CFB;"
+                    Size="30"
+                    Color="Red" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
     <Grid
         RowSpacing="0" ColumnSpacing="0"
         >
         <ScrollView
             Orientation="Both"
+            Margin="15,10"
             >
             <StackLayout
                 Spacing="0"
                 >
                 <Label 
-                    Text="開始日期" FontSize="14"/>
-                <DatePicker
-                    Date="{Binding SelectedItem.BeginDay}" 
-                    Format="yyyy-MM-dd"/>
+                    Text="請假假別" FontSize="14"/>
+                <Picker
+                    ItemsSource="{Binding LeaveCategoryItemsSource}"
+                    SelectedItem="{Binding LeaveCategorySelectedItem}"
+                    Title="請選擇 請假假別"
+                    ItemDisplayBinding="{Binding Name}">
+                </Picker>
+
                 <Label 
-                    Text="開始時間" FontSize="14"/>
-                <TimePicker 
-                    Time="{Binding SelectedItem.BeginTimeSpan}"
-                    Format="HH:mm:ss"
+                    Text="申請人" FontSize="14"/>
+                <Picker
+                    ItemsSource="{Binding MyUserItemsSource}"
+                    SelectedItem="{Binding MyUserSelectedItem}"
+                    Title="請選擇 申請人"
+                    ItemDisplayBinding="{Binding Name}">
+                </Picker>
+
+                <Label 
+                    Text="代理人" FontSize="14"/>
+                <Picker
+                    ItemsSource="{Binding MyUserItemsSource}"
+                    SelectedItem="{Binding AgentSelectedItem}"
+                    Title="請選擇 代理人"
+                    ItemDisplayBinding="{Binding Name}">
+                </Picker>
+
+                <StackLayout
+                    Spacing="0">
+                    <Label 
+                        Text="申請日期" FontSize="14"/>
+                    <DatePicker
+                        Date="{Binding SelectedItem.FormDateDay}" 
+                        Format="yyyy-MM-dd"/>
+                    <Label 
+                        Text="申請時間" FontSize="14"/>
+                    <TimePicker 
+                        Time="{Binding SelectedItem.FormDateTimeSpan}"
+                        Format="HH:mm:ss"
                     />
+                </StackLayout>
+  
+                <StackLayout
+                    Spacing="0">
+                    <Label 
+                        Text="開始日期" FontSize="14"/>
+                    <DatePicker
+                        Date="{Binding SelectedItem.BeginDay}" 
+                        Format="yyyy-MM-dd"/>
+                    <Label 
+                        Text="開始時間" FontSize="14"/>
+                    <TimePicker 
+                        Time="{Binding SelectedItem.BeginTimeSpan}"
+                        Format="HH:mm:ss"
+                    />
+                </StackLayout>
+
+                <StackLayout
+                    Spacing="0">
+                    <Label 
+                        Text="結束日期" FontSize="14"/>
+                    <DatePicker
+                        Date="{Binding SelectedItem.CompleteDay}" 
+                        Format="yyyy-MM-dd"/>
+                    <Label 
+                        Text="結束時間" FontSize="14"/>
+                    <TimePicker 
+                        Time="{Binding SelectedItem.CompleteTimeSpan}"
+                        Format="HH:mm:ss"
+                    />
+                </StackLayout>
+
+                <Label 
+                        Text="總時數" FontSize="14"/>
+                <Entry
+                    Text="{Binding SelectedItem.Hours, StringFormat='{0:N1}'}"
+                    Keyboard="Numeric"
+                    />
+
+                <Label 
+                    Text="請假事由" FontSize="14"/>
+                <Editor
+                    MaxLength="2"
+                    Text="{Binding SelectedItem.LeaveCause}"
+                    />
+
+                <Label 
+                    Text="請假單狀態" FontSize="14"/>
+                <Entry
+                    MaxLength="2"
+                    Text="{Binding SelectedItem.FormsStatus}"
+                    />
+
+                <Label 
+                    Text="請假單審核狀態" FontSize="14"/>
+                <Entry
+                    MaxLength="2"
+                    Text="{Binding SelectedItem.ApproveResult}"
+                    />
+
+                <Button 
+                    Margin="20,30"
+                    IsVisible="{Binding ShowDeleteButton}"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    FontSize="24"
+                    Text="刪除"/>
             </StackLayout>
 
         </ScrollView>

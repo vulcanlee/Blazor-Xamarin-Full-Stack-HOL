@@ -6,11 +6,17 @@ using System.Linq;
 
 namespace FrontMobile.ViewModels
 {
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Threading.Tasks;
+    using Acr.UserDialogs;
     using Business.DataModel;
+    using Business.Helpers.ServiceHelps;
     using Business.Services;
     using CommonLibrary.Helpers.Magics;
+    using CommonLibrary.Helpers.Utilities;
     using DataTransferObject.DTOs;
+    using FrontMobile.Models;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
@@ -27,6 +33,14 @@ namespace FrontMobile.ViewModels
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
         public LeaveFormDto SelectedItem { get; set; }
+        public string CrudAction { get; set; }
+        public ObservableCollection<PickerItemModel> MyUserItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
+        public PickerItemModel MyUserSelectedItem { get; set; }
+        public PickerItemModel AgentSelectedItem { get; set; }
+        public ObservableCollection<PickerItemModel> LeaveCategoryItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
+        public PickerItemModel LeaveCategorySelectedItem { get; set; }
+        public bool ShowDeleteButton { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
 
         public LeaveFormDetailPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
@@ -42,18 +56,159 @@ namespace FrontMobile.ViewModels
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
+
+            #region 儲存按鈕命令
+            SaveCommand = new DelegateCommand(async () =>
+            {
+                #region 進行資料完整性檢查
+                SelectedItem.CombineDate();
+                #endregion
+
+                #region 進行記錄儲存
+                using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，儲存資料中...",
+                    null, null, true, MaskType.Black))
+                {
+                    await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
+                    #region 儲存請假單
+                    fooIProgressDialog.Title = "請稍後，儲存請假單";
+                    var fooResult = await leaveFormService.PutAsync(SelectedItem);
+                    if (fooResult.Status == true)
+                    {
+                        ToastHelper.ShowToast($"請假單已經儲存");
+
+                        NavigationParameters paras = new NavigationParameters();
+                        paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
+                        await navigationService.GoBackAsync(paras);
+                    }
+                    else
+                    {
+                        ToastHelper.ShowToast($"請假單儲存失敗:{fooResult.Message}",4);
+                    }
+                    #endregion
+                    #region 取得請假
+                    fooIProgressDialog.Title = "請稍後，取得請假單";
+                    fooResult = await leaveFormService.GetAsync();
+                    if (fooResult.Status == true)
+                    {
+                        await leaveFormService.WriteToFileAsync();
+
+                    }
+                    #endregion
+                }
+                #endregion
+
+            });
+            #endregion
         }
+
+        #region Fody 自動綁定事件
+        public void OnLeaveCategorySelectedItemChanged()
+        {
+            if (LeaveCategorySelectedItem != null)
+            {
+                SelectedItem.LeaveCategoryId = LeaveCategorySelectedItem.Id;
+            }
+            else
+            {
+                SelectedItem.LeaveCategoryId = -1;
+            }
+        }
+        public void OnMyUserSelectedItemChanged()
+        {
+            if (MyUserSelectedItem != null)
+            {
+                SelectedItem.MyUserId = MyUserSelectedItem.Id;
+            }
+            else
+            {
+                SelectedItem.MyUserId = -1;
+            }
+        }
+        public void OnAgentSelectedItemChanged()
+        {
+            if (AgentSelectedItem != null)
+            {
+                SelectedItem.AgentId = AgentSelectedItem.Id;
+            }
+            else
+            {
+                SelectedItem.AgentId = -1;
+            }
+        }
+        #endregion
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
         }
 
-        public void OnNavigatedTo(INavigationParameters parameters)
+        public async void OnNavigatedTo(INavigationParameters parameters)
         {
+            await LoadPickerSourceAsync();
+
             var fooObject = parameters.GetValue<LeaveFormDto>(MagicStringHelper.CurrentSelectdItemParameterName);
             fooObject.SetDate();
             SelectedItem = fooObject;
+            CrudAction = parameters.GetValue<string>(MagicStringHelper.CrudActionName);
+            ShowDeleteButton = true;
+            if (CrudAction == MagicStringHelper.CrudAddAction)
+            {
+                ShowDeleteButton = false;
+            }
+
+            #region 進行選單初始化
+            #region 假別
+            if (SelectedItem.LeaveCategoryId >= 0)
+            {
+                LeaveCategorySelectedItem = LeaveCategoryItemsSource
+                    .FirstOrDefault(x => x.Id == SelectedItem.LeaveCategoryId);
+            }
+            #endregion
+            #region 申請人
+            if (SelectedItem.MyUserId >= 0)
+            {
+                MyUserSelectedItem = MyUserItemsSource
+                    .FirstOrDefault(x => x.Id == SelectedItem.MyUserId);
+            }
+            #endregion
+            #region 代理人
+            if (SelectedItem.AgentId >= 0)
+            {
+                AgentSelectedItem = MyUserItemsSource
+                    .FirstOrDefault(x => x.Id == SelectedItem.AgentId);
+            }
+            #endregion
+            #endregion
         }
 
+        async Task LoadPickerSourceAsync()
+        {
+            PickerItemModel pItem = new PickerItemModel();
+            #region 讀取請假假別
+            await leaveCategoryService.ReadFromFileAsync();
+            LeaveCategoryItemsSource.Clear();
+            foreach (var item in leaveCategoryService.Items)
+            {
+                pItem = new PickerItemModel()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                };
+                LeaveCategoryItemsSource.Add(pItem);
+            }
+            #endregion
+            #region 讀取使用者
+            await myUserService.ReadFromFileAsync();
+            MyUserItemsSource.Clear();
+            foreach (var item in myUserService.Items)
+            {
+                pItem = new PickerItemModel()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                };
+                MyUserItemsSource.Add(pItem);
+            }
+            #endregion
+        }
     }
 }

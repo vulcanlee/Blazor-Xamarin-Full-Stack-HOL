@@ -228,7 +228,7 @@ namespace CommonLibrary.Helpers.WebAPIs
                             apiResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
                             if (apiResult.Status == true)
                             {
-                                var fooDataString = apiResult.Payload.ToString();
+                                var fooDataString = apiResult.Payload==null?"": apiResult.Payload.ToString();
                                 if (ApiResultIsCollection == false)
                                 {
                                     SingleItem = JsonConvert.DeserializeObject<T>(fooDataString, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
