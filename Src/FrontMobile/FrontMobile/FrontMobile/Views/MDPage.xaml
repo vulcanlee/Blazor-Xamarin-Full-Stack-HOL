@@ -63,6 +63,66 @@
                         </Grid.ColumnDefinitions>
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer
+                                Command="{Binding MenuCommand}"
+                                CommandParameter="專案"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF0328;" />
+                        <Label Grid.Column="1"
+                               FontSize="30" TextColor="#4a4a4a" Text="專案" />
+                    </Grid>
+                    <Grid Margin="20,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding MenuCommand}"
+                                CommandParameter="工作日誌"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF0B77;" />
+                        <Label Grid.Column="1"
+                               FontSize="30" TextColor="#4a4a4a" Text="工作日誌" />
+                    </Grid>
+                    <Grid Margin="20,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding MenuCommand}"
+                                CommandParameter="差旅費用"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF0587;" />
+                        <Label Grid.Column="1"
+                               FontSize="30" TextColor="#4a4a4a" Text="差旅費用" />
+                    </Grid>
+                    <Grid Margin="20,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding MenuCommand}"
+                                CommandParameter="連絡電話本"/>
+                        </Grid.GestureRecognizers>
+                        <Label Grid.Column="0"
+                               FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF0F1A;" />
+                        <Label Grid.Column="1"
+                               FontSize="30" TextColor="#4a4a4a" Text="連絡電話本" />
+                    </Grid>
+                    <Grid Margin="20,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
                                 Command="{Binding LogoutCommand}"/>
                         </Grid.GestureRecognizers>
                         <Label Grid.Column="0"

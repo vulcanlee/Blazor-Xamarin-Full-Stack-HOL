@@ -32,12 +32,13 @@ namespace FrontMobile.ViewModels
         private readonly ExceptionRecordsService exceptionRecordsService;
         private readonly AppExceptionsService appExceptionsService;
         private readonly LeaveCategoryService leaveCategoryService;
+        private readonly OnCallPhoneService onCallPhoneService;
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             SystemStatusService systemStatusService, SystemEnvironmentsService systemEnvironmentsService,
             RecordCacheHelper recordCacheHelper, AppStatus appStatus,
             ExceptionRecordsService exceptionRecordsService, AppExceptionsService appExceptionsService,
-            LeaveCategoryService leaveCategoryService)
+            LeaveCategoryService leaveCategoryService, OnCallPhoneService onCallPhoneService)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
@@ -48,6 +49,7 @@ namespace FrontMobile.ViewModels
             this.exceptionRecordsService = exceptionRecordsService;
             this.appExceptionsService = appExceptionsService;
             this.leaveCategoryService = leaveCategoryService;
+            this.onCallPhoneService = onCallPhoneService;
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)
@@ -69,9 +71,19 @@ namespace FrontMobile.ViewModels
             {
                 await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
                 #region 取得請假假別
-                fooIProgressDialog.Title = "請稍後，取得請假假別";
+                fooIProgressDialog.Title = "請稍後，取得 連絡電話本";
+                await onCallPhoneService.ReadFromFileAsync();
+                var fooResult = await onCallPhoneService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await onCallPhoneService.WriteToFileAsync();
+                }
+                #endregion
+
+                #region 取得請假假別
+                fooIProgressDialog.Title = "請稍後，取得 ";
                 await leaveCategoryService.ReadFromFileAsync();
-                var fooResult = await leaveCategoryService.GetAsync();
+                fooResult = await leaveCategoryService.GetAsync();
                 if (fooResult.Status == true)
                 {
                     await leaveCategoryService.WriteToFileAsync();

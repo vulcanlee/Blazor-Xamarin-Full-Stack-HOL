@@ -53,6 +53,18 @@ namespace FrontMobile.ViewModels
                     case "請假單":
                         await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
                         break;
+                    case "連絡電話本":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/OnCallPhonePage");
+                        break;
+                    case "專案":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/ProjectPage");
+                        break;
+                    case "工作日誌":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/WorkingLog");
+                        break;
+                    case "差旅費用":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/TravelExpense");
+                        break;
                     case "登出":
                         await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
                         break;
