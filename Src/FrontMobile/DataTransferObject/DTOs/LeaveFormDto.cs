@@ -60,9 +60,9 @@ namespace DataTransferObject.DTOs
         }
         public void CombineDate()
         {
-            BeginDate = BeginDate + BeginTimeSpan;
-            FormDate = FormDate + FormTimeSpan;
-            CompleteDate = CompleteDate + CompleteTimeSpan;
+            BeginDate = BeginDay.Date + BeginTimeSpan;
+            FormDate = FormDay.Date + FormTimeSpan;
+            CompleteDate = CompleteDay.Date + CompleteTimeSpan;
 
             MyUser = null;
             LeaveCategory = null;

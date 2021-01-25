@@ -58,6 +58,10 @@ namespace FrontMobile.ViewModels
             {
                 NavigationParameters paras = new NavigationParameters();
                 var fooObject = new LeaveFormDto();
+                fooObject.FormDate = DateTime.Now.Date;
+                fooObject.BeginDate = DateTime.Now.AddDays(1).Date + new TimeSpan(09, 00, 00);
+                fooObject.CompleteDate = DateTime.Now.AddDays(1).Date + new TimeSpan(18, 00, 00);
+                fooObject.Hours = 8.0m;
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
                 await navigationService.NavigateAsync("LeaveFormDetailPage", paras);

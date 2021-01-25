@@ -97,7 +97,7 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            ToastHelper.ShowToast($"請假單儲存失敗:{apiResult.Message}", 4);
+                            await dialogService.DisplayAlertAsync("錯誤", $"請假單儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
@@ -116,7 +116,7 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            ToastHelper.ShowToast($"請假單儲存失敗:{apiResult.Message}", 4);
+                            await dialogService.DisplayAlertAsync("錯誤", $"請假單儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
@@ -127,7 +127,10 @@ namespace FrontMobile.ViewModels
                     if (apiResult.Status == true)
                     {
                         await leaveFormService.WriteToFileAsync();
-
+                    }
+                    else
+                    {
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得請假單 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
@@ -141,7 +144,7 @@ namespace FrontMobile.ViewModels
                 #region 進行記錄刪除
                 var confirm = await dialogService.DisplayAlertAsync(
                     "警告", "是否要刪除這筆紀錄?", "確定", "取消");
-                if(confirm == false)
+                if (confirm == false)
                 {
                     return;
                 }
@@ -175,7 +178,7 @@ namespace FrontMobile.ViewModels
                     }
                     else
                     {
-                        ToastHelper.ShowToast($"請假單刪除失敗:{apiResult.Message}", 4);
+                        await dialogService.DisplayAlertAsync("錯誤", $"請假單刪除失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
 
@@ -185,7 +188,10 @@ namespace FrontMobile.ViewModels
                     if (apiResult.Status == true)
                     {
                         await leaveFormService.WriteToFileAsync();
-
+                    }
+                    else
+                    {
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得請假單 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
