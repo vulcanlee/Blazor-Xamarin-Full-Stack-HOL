@@ -29,6 +29,11 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding MenuCommand}"
+                                CommandParameter="首頁"/>
+                        </Grid.GestureRecognizers>
                         <Label Grid.Column="0"
                                VerticalOptions="Center"
                                FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF07D2;" />

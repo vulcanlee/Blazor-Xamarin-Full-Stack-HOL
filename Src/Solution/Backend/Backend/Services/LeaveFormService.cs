@@ -103,9 +103,16 @@ namespace Backend.Services
                 .Include(x => x.MyUser)
                 .Include(x => x.LeaveCategory)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            LeaveFormAdapterModel result = Mapper.Map<LeaveFormAdapterModel>(item);
-            await OhterDependencyData(result);
-            return result;
+            if (item != null)
+            {
+                LeaveFormAdapterModel result = Mapper.Map<LeaveFormAdapterModel>(item);
+                await OhterDependencyData(result);
+                return result;
+            }
+            else
+            {
+                return new LeaveFormAdapterModel();
+            }
         }
 
         public async Task<VerifyRecordResult> AddAsync(LeaveFormAdapterModel paraObject)
@@ -188,7 +195,7 @@ namespace Backend.Services
             await Task.Yield();
             return VerifyRecordResultFactory.Build(true);
         }
-       async Task OhterDependencyData(LeaveFormAdapterModel data)
+        async Task OhterDependencyData(LeaveFormAdapterModel data)
         {
             data.MyUserName = data.MyUser.Name;
             var myUser = await context.MyUser

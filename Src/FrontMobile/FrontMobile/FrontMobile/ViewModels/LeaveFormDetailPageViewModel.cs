@@ -41,6 +41,7 @@ namespace FrontMobile.ViewModels
         public PickerItemModel LeaveCategorySelectedItem { get; set; }
         public bool ShowDeleteButton { get; set; }
         public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand DeleteCommand { get; set; }
 
         public LeaveFormDetailPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
@@ -57,7 +58,7 @@ namespace FrontMobile.ViewModels
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
 
-            #region 儲存按鈕命令
+            #region 儲存 按鈕命令
             SaveCommand = new DelegateCommand(async () =>
             {
                 #region 進行資料完整性檢查
@@ -65,30 +66,65 @@ namespace FrontMobile.ViewModels
                 #endregion
 
                 #region 進行記錄儲存
+                APIResult apiResult = new APIResult();
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，儲存資料中...",
                     null, null, true, MaskType.Black))
                 {
                     await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
-                    #region 儲存請假單
-                    fooIProgressDialog.Title = "請稍後，儲存請假單";
-                    var fooResult = await leaveFormService.PutAsync(SelectedItem);
-                    if (fooResult.Status == true)
+                    #region 檢查 Access Token 是否還可以使用
+                    bool refreshTokenResult = await RefreshTokenHelper
+                        .CheckAndRefreshToken(dialogService, refreshTokenService,
+                        systemStatusService, appStatus);
+                    if (refreshTokenResult == false)
                     {
-                        ToastHelper.ShowToast($"請假單已經儲存");
+                        return;
+                    }
+                    #endregion
 
-                        NavigationParameters paras = new NavigationParameters();
-                        paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
-                        await navigationService.GoBackAsync(paras);
+                    if (CrudAction == MagicStringHelper.CrudAddAction)
+                    {
+                        #region 新增請假單
+                        fooIProgressDialog.Title = "請稍後，新增請假單";
+                        SelectedItem.Id = 0;
+                        apiResult = await leaveFormService.PostAsync(SelectedItem);
+                        if (apiResult.Status == true)
+                        {
+                            ToastHelper.ShowToast($"請假單已經新增");
+
+                            NavigationParameters paras = new NavigationParameters();
+                            paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
+                            await navigationService.GoBackAsync(paras);
+                        }
+                        else
+                        {
+                            ToastHelper.ShowToast($"請假單儲存失敗:{apiResult.Message}", 4);
+                        }
+                        #endregion
                     }
                     else
                     {
-                        ToastHelper.ShowToast($"請假單儲存失敗:{fooResult.Message}",4);
+                        #region 儲存請假單
+                        fooIProgressDialog.Title = "請稍後，儲存請假單";
+                        apiResult = await leaveFormService.PutAsync(SelectedItem);
+                        if (apiResult.Status == true)
+                        {
+                            ToastHelper.ShowToast($"請假單已經儲存");
+
+                            NavigationParameters paras = new NavigationParameters();
+                            paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
+                            await navigationService.GoBackAsync(paras);
+                        }
+                        else
+                        {
+                            ToastHelper.ShowToast($"請假單儲存失敗:{apiResult.Message}", 4);
+                        }
+                        #endregion
                     }
-                    #endregion
-                    #region 取得請假
+
+                    #region 取得請假單
                     fooIProgressDialog.Title = "請稍後，取得請假單";
-                    fooResult = await leaveFormService.GetAsync();
-                    if (fooResult.Status == true)
+                    apiResult = await leaveFormService.GetAsync();
+                    if (apiResult.Status == true)
                     {
                         await leaveFormService.WriteToFileAsync();
 
@@ -96,7 +132,64 @@ namespace FrontMobile.ViewModels
                     #endregion
                 }
                 #endregion
+            });
+            #endregion
 
+            #region 刪除 按鈕命令
+            DeleteCommand = new DelegateCommand(async () =>
+            {
+                #region 進行記錄刪除
+                var confirm = await dialogService.DisplayAlertAsync(
+                    "警告", "是否要刪除這筆紀錄?", "確定", "取消");
+                if(confirm == false)
+                {
+                    return;
+                }
+
+                APIResult apiResult = new APIResult();
+                using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，刪除資料中...",
+                    null, null, true, MaskType.Black))
+                {
+                    await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
+                    #region 檢查 Access Token 是否還可以使用
+                    bool refreshTokenResult = await RefreshTokenHelper
+                        .CheckAndRefreshToken(dialogService, refreshTokenService,
+                        systemStatusService, appStatus);
+                    if (refreshTokenResult == false)
+                    {
+                        return;
+                    }
+                    #endregion
+
+                    #region 刪除請假單
+                    fooIProgressDialog.Title = "請稍後，刪除請假單";
+                    SelectedItem.Id = 0;
+                    apiResult = await leaveFormService.DeleteAsync(SelectedItem);
+                    if (apiResult.Status == true)
+                    {
+                        ToastHelper.ShowToast($"請假單已經刪除");
+
+                        NavigationParameters paras = new NavigationParameters();
+                        paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
+                        await navigationService.GoBackAsync(paras);
+                    }
+                    else
+                    {
+                        ToastHelper.ShowToast($"請假單刪除失敗:{apiResult.Message}", 4);
+                    }
+                    #endregion
+
+                    #region 取得請假單
+                    fooIProgressDialog.Title = "請稍後，取得請假單";
+                    apiResult = await leaveFormService.GetAsync();
+                    if (apiResult.Status == true)
+                    {
+                        await leaveFormService.WriteToFileAsync();
+
+                    }
+                    #endregion
+                }
+                #endregion
             });
             #endregion
         }

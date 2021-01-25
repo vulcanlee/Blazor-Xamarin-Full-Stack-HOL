@@ -53,7 +53,9 @@ namespace FrontMobile.ViewModels
             {
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，執行中...", null, null, true, MaskType.Black))
                 {
-                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenService, systemStatusService, appStatus);
+                    bool fooRefreshTokenResult = await RefreshTokenHelper
+                    .CheckAndRefreshToken(dialogService, refreshTokenService,
+                    systemStatusService, appStatus);
                     if (fooRefreshTokenResult == false)
                     {
                         return;
@@ -75,7 +77,9 @@ namespace FrontMobile.ViewModels
             {
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，執行中...", null, null, true, MaskType.Black))
                 {
-                    bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenService, systemStatusService, appStatus);
+                    bool fooRefreshTokenResult = await RefreshTokenHelper
+                    .CheckAndRefreshToken(dialogService, refreshTokenService,
+                    systemStatusService, appStatus);
                     if (fooRefreshTokenResult == false)
                     {
                         return;

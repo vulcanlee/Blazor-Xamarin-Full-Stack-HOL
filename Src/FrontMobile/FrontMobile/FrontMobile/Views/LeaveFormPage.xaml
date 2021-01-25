@@ -6,6 +6,20 @@
              x:Class="FrontMobile.Views.LeaveFormPage"
              Title="請假單">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="新增"
+            Command="{Binding AddCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+                    FontFamily="MaterialDesignIcons"
+                    Glyph="&#xF11FF;"
+                    Size="30"
+                    Color="White" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
     <Grid
         RowSpacing="0" ColumnSpacing="0">
         <ListView

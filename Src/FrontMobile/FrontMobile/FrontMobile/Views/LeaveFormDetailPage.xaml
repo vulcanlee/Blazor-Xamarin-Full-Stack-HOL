@@ -15,7 +15,7 @@
                     FontFamily="MaterialDesignIcons"
                     Glyph="&#xF0CFB;"
                     Size="30"
-                    Color="Red" />
+                    Color="White" />
             </ToolbarItem.IconImageSource>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
@@ -136,7 +136,8 @@
                     BackgroundColor="Red"
                     TextColor="White"
                     FontSize="24"
-                    Text="刪除"/>
+                    Text="刪除"
+                    Command="{Binding DeleteCommand}"/>
             </StackLayout>
 
         </ScrollView>

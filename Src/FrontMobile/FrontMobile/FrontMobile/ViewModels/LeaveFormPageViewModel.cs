@@ -23,6 +23,7 @@ namespace FrontMobile.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly INavigationService navigationService;
+        private readonly IPageDialogService dialogService;
         private readonly LeaveFormService leaveFormService;
         private readonly LeaveCategoryService leaveCategoryService;
         private readonly MyUserService myUserService;
@@ -35,6 +36,7 @@ namespace FrontMobile.ViewModels
         public LeaveFormDto SelectedItem { get; set; }
         public DelegateCommand RefreshCommand { get; set; }
         public DelegateCommand ItemSelectedCommand { get; set; }
+        public DelegateCommand AddCommand { get; set; }
 
         public LeaveFormPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
@@ -43,12 +45,24 @@ namespace FrontMobile.ViewModels
             SystemStatusService systemStatusService, AppStatus appStatus)
         {
             this.navigationService = navigationService;
+            this.dialogService = dialogService;
             this.leaveFormService = leaveFormService;
             this.leaveCategoryService = leaveCategoryService;
             this.myUserService = myUserService;
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
+
+            #region 新增紀錄
+            AddCommand = new DelegateCommand(async () =>
+            {
+                NavigationParameters paras = new NavigationParameters();
+                var fooObject = new LeaveFormDto();
+                paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
+                paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
+                await navigationService.NavigateAsync("LeaveFormDetailPage", paras);
+            });
+            #endregion
 
             #region 點選某筆紀錄觸發命令
             ItemSelectedCommand = new DelegateCommand(async () =>
@@ -84,7 +98,7 @@ namespace FrontMobile.ViewModels
             else
             {
                 string CrudAction = parameters.GetValue<string>(MagicStringHelper.CrudActionName);
-                if(CrudAction == MagicStringHelper.CrudRefreshAction)
+                if (CrudAction == MagicStringHelper.CrudRefreshAction)
                 {
                     await ReloadData();
                 }
@@ -106,29 +120,54 @@ namespace FrontMobile.ViewModels
                 null, null, true, MaskType.Black))
             {
                 await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
+                #region 檢查 Access Token 是否還可以使用
+                bool refreshTokenResult = await RefreshTokenHelper
+                    .CheckAndRefreshToken(dialogService, refreshTokenService,
+                    systemStatusService, appStatus);
+                if (refreshTokenResult == false)
+                {
+                    return;
+                }
+                #endregion
+
                 #region 取得請假假別
                 fooIProgressDialog.Title = "請稍後，取得請假單假別";
-                var fooResult = await leaveCategoryService.GetAsync();
-                if (fooResult.Status == true)
+                var apiResultssss = await leaveCategoryService.GetAsync();
+                if (apiResultssss.Status == true)
                 {
                     await leaveCategoryService.WriteToFileAsync();
+                }
+                else
+                {
+                    await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
+                    return;
                 }
                 #endregion
                 #region 取得人員清單
                 fooIProgressDialog.Title = "請稍後，取得人員清單";
-                fooResult = await myUserService.GetAsync();
-                if (fooResult.Status == true)
+                apiResultssss = await myUserService.GetAsync();
+                if (apiResultssss.Status == true)
                 {
                     await myUserService.WriteToFileAsync();
+                }
+                else
+                {
+                    await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
+                    return;
                 }
                 #endregion
                 #region 取得請假
                 fooIProgressDialog.Title = "請稍後，取得請假單";
-                fooResult = await leaveFormService.GetAsync();
-                if (fooResult.Status == true)
+                apiResultssss = await leaveFormService.GetAsync();
+                if (apiResultssss.Status == true)
                 {
                     await leaveFormService.WriteToFileAsync();
                     await RefreshData();
+                }
+                else
+                {
+                    await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
+                    return;
                 }
                 #endregion
             }

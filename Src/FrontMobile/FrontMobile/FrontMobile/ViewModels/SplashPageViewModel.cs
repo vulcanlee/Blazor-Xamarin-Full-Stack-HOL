@@ -64,42 +64,18 @@ namespace FrontMobile.ViewModels
             }
             #endregion
 
-            #region Toast
-            IUserDialogs dialogs = UserDialogs.Instance;
-            ToastConfig.DefaultBackgroundColor = System.Drawing.Color.AliceBlue;
-            ToastConfig.DefaultMessageTextColor = System.Drawing.Color.Red;
-            ToastConfig.DefaultActionTextColor = System.Drawing.Color.DarkRed;
-            //var bgColor = FromHex(this.BackgroundColor);
-            //var msgColor = FromHex(this.MessageTextColor);
-            //var actionColor = FromHex(this.ActionTextColor);
-
-            dialogs.Toast(new ToastConfig($"已經有最新版本推出")
-                //.SetBackgroundColor(bgColor)
-                //.SetMessageTextColor(msgColor)
-                .SetDuration(TimeSpan.FromSeconds(3))
-                .SetPosition( ToastPosition.Bottom)
-                //.SetIcon(icon)
-                .SetAction(x => x
-                    .SetText("this.ActionText")
-                    //.SetTextColor(actionColor)
-                    .SetAction(() => dialogs.Alert("You clicked the primary toast button"))
-                )
-            );
-
-            #endregion
-
             #region 讀取相關定義資料
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
                 await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
                 #region 取得請假假別
                 fooIProgressDialog.Title = "請稍後，取得請假假別";
-                    await leaveCategoryService.ReadFromFileAsync();
-                    var fooResult = await leaveCategoryService.GetAsync();
-                    if (fooResult.Status == true)
-                    {
-                        await leaveCategoryService.WriteToFileAsync();
-                    }
+                await leaveCategoryService.ReadFromFileAsync();
+                var fooResult = await leaveCategoryService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await leaveCategoryService.WriteToFileAsync();
+                }
                 #endregion
 
                 #region 上傳例外異常

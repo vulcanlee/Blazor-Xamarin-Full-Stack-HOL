@@ -268,6 +268,11 @@ namespace CommonLibrary.Helpers.WebAPIs
                             if (fooAPIResult != null)
                             {
                                 apiResult = fooAPIResult;
+                                if(apiResult.Status == true)
+                                {
+                                    apiResult.Status = false;
+                                    apiResult.Message = strResult;
+                                }
                             }
                             else
                             {

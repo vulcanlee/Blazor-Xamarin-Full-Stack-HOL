@@ -37,7 +37,9 @@ namespace Business.Helpers.ServiceHelps
         {
             APIResult fooAPIResult;
             progressDialog.Title = $"檢查與更新存取權杖";
-            bool fooRefreshTokenResult = await RefreshTokenHelper.CheckAndRefreshToken(dialogService, refreshTokenService, systemStatusService, appStatus);
+            bool fooRefreshTokenResult = await RefreshTokenHelper
+                .CheckAndRefreshToken(dialogService, refreshTokenService,
+                systemStatusService, appStatus);
             if (fooRefreshTokenResult == false)
             {
                 return false;

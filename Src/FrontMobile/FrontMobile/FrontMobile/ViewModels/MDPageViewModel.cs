@@ -47,6 +47,9 @@ namespace FrontMobile.ViewModels
             {
                 switch (x)
                 {
+                    case "首頁":
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
+                        break;
                     case "請假單":
                         await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
                         break;
