@@ -52,6 +52,40 @@ namespace FrontMobile.ViewModels
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
+
+            #region 新增紀錄
+            AddCommand = new DelegateCommand(async () =>
+            {
+                NavigationParameters paras = new NavigationParameters();
+                var fooObject = new WorkingLogDetailDto();
+                fooObject.WorkingLogId = MasterItem.Id;
+                paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
+                paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
+                paras.Add(MagicStringHelper.MasterRecordActionName, MasterItem);
+                await navigationService.NavigateAsync("WorkingLogDetailRecordPage", paras);
+            });
+            #endregion
+
+            #region 點選某筆紀錄觸發命令
+            ItemTappedCommand = new DelegateCommand(async () =>
+            {
+                NavigationParameters paras = new NavigationParameters();
+                var fooObject = SelectedItem.Clone();
+                paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
+                paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudEditAction);
+                paras.Add(MagicStringHelper.MasterRecordActionName, MasterItem);
+                await navigationService.NavigateAsync("WorkingLogDetailRecordPage", paras);
+            });
+            #endregion
+
+            #region 更新遠端紀錄命令
+            RefreshCommand = new DelegateCommand(async () =>
+            {
+                IsRefresh = true;
+                await ReloadData();
+                IsRefresh = false;
+            });
+            #endregion
         }
 
         public void OnNavigatedFrom(INavigationParameters parameters)

@@ -112,21 +112,19 @@
                 <Label 
                     Text="請假事由" FontSize="14"/>
                 <Editor
-                    MaxLength="2"
+                    AutoSize="TextChanges"
                     Text="{Binding SelectedItem.LeaveCause}"
                     />
 
                 <Label 
                     Text="請假單狀態" FontSize="14"/>
                 <Entry
-                    MaxLength="2"
                     Text="{Binding SelectedItem.FormsStatus}"
                     />
 
                 <Label 
                     Text="請假單審核狀態" FontSize="14"/>
                 <Entry
-                    MaxLength="2"
                     Text="{Binding SelectedItem.ApproveResult}"
                     />
 

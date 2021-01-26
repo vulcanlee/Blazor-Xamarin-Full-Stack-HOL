@@ -20,41 +20,36 @@ namespace FrontMobile.ViewModels
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
-    public class LeaveFormRecordPageViewModel : INotifyPropertyChanged, INavigationAware
+    public class WorkingLogDetailRecordPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly LeaveFormService leaveFormService;
-        private readonly LeaveCategoryService leaveCategoryService;
-        private readonly MyUserService myUserService;
+        private readonly WorkingLogDetailService workingLogDetailService;
+        private readonly ProjectService projectService;
         private readonly RefreshTokenService refreshTokenService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
 
-        public LeaveFormDto SelectedItem { get; set; }
+        public WorkingLogDetailDto SelectedItem { get; set; }
         public string CrudAction { get; set; }
-        public ObservableCollection<PickerItemModel> MyUserItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
-        public PickerItemModel MyUserSelectedItem { get; set; }
-        public PickerItemModel AgentSelectedItem { get; set; }
-        public ObservableCollection<PickerItemModel> LeaveCategoryItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
-        public PickerItemModel LeaveCategorySelectedItem { get; set; }
+        public ObservableCollection<PickerItemModel> ProjectItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
+        public PickerItemModel ProjectSelectedItem { get; set; }
         public bool ShowDeleteButton { get; set; }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand DeleteCommand { get; set; }
+        public WorkingLogDto MasterItem { get; set; }
 
-        public LeaveFormRecordPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
-            MyUserService myUserService,
+        public WorkingLogDetailRecordPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
+            WorkingLogDetailService workingLogDetailService, ProjectService projectService,
             RefreshTokenService refreshTokenService,
             SystemStatusService systemStatusService, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.leaveFormService = leaveFormService;
-            this.leaveCategoryService = leaveCategoryService;
-            this.myUserService = myUserService;
+            this.workingLogDetailService = workingLogDetailService;
+            this.projectService = projectService;
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
@@ -63,9 +58,8 @@ namespace FrontMobile.ViewModels
             SaveCommand = new DelegateCommand(async () =>
             {
                 #region 進行資料完整性檢查
-                SelectedItem.CombineDate();
                 var checkResult = SelectedItem.Validation();
-                if(!string.IsNullOrEmpty(checkResult))
+                if (!string.IsNullOrEmpty(checkResult))
                 {
                     await dialogService.DisplayAlertAsync("錯誤", $"請檢查並且修正錯誤{Environment.NewLine}{Environment.NewLine}" +
                         $"{checkResult}", "確定");
@@ -91,13 +85,13 @@ namespace FrontMobile.ViewModels
 
                     if (CrudAction == MagicStringHelper.CrudAddAction)
                     {
-                        #region 新增 請假單
-                        fooIProgressDialog.Title = "請稍後，新增 請假單";
+                        #region 新增 工作日誌明細紀錄
+                        fooIProgressDialog.Title = "請稍後，新增 工作日誌明細紀錄";
                         SelectedItem.Id = 0;
-                        apiResult = await leaveFormService.PostAsync(SelectedItem);
+                        apiResult = await workingLogDetailService.PostAsync(SelectedItem);
                         if (apiResult.Status == true)
                         {
-                            ToastHelper.ShowToast($"請假單 已經新增");
+                            ToastHelper.ShowToast($"工作日誌明細紀錄 已經新增");
 
                             NavigationParameters paras = new NavigationParameters();
                             paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -105,18 +99,18 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            await dialogService.DisplayAlertAsync("錯誤", $"請假單 儲存失敗:{apiResult.Message}", "確定");
+                            await dialogService.DisplayAlertAsync("錯誤", $"工作日誌明細紀錄 儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
                     else
                     {
-                        #region 儲存 請假單
-                        fooIProgressDialog.Title = "請稍後，儲存 請假單";
-                        apiResult = await leaveFormService.PutAsync(SelectedItem);
+                        #region 儲存 工作日誌明細紀錄
+                        fooIProgressDialog.Title = "請稍後，儲存 工作日誌明細紀錄";
+                        apiResult = await workingLogDetailService.PutAsync(SelectedItem);
                         if (apiResult.Status == true)
                         {
-                            ToastHelper.ShowToast($"請假單 已經儲存");
+                            ToastHelper.ShowToast($"工作日誌明細紀錄 已經儲存");
 
                             NavigationParameters paras = new NavigationParameters();
                             paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -124,21 +118,21 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            await dialogService.DisplayAlertAsync("錯誤", $"請假單 儲存失敗:{apiResult.Message}", "確定");
+                            await dialogService.DisplayAlertAsync("錯誤", $"工作日誌明細紀錄 儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
 
-                    #region 取得 請假單
-                    fooIProgressDialog.Title = "請稍後，取得 請假單";
-                    apiResult = await leaveFormService.GetAsync();
+                    #region 取得 工作日誌明細紀錄
+                    fooIProgressDialog.Title = "請稍後，取得 工作日誌明細紀錄";
+                    apiResult = await workingLogDetailService.GetAsync(MasterItem.Id);
                     if (apiResult.Status == true)
                     {
-                        await leaveFormService.WriteToFileAsync();
+                        await workingLogDetailService.WriteToFileAsync();
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"取得 請假單 失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得 工作日誌明細紀錄 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
@@ -172,12 +166,12 @@ namespace FrontMobile.ViewModels
                     }
                     #endregion
 
-                    #region 刪除 請假單
-                    fooIProgressDialog.Title = "請稍後，刪除 請假單";
-                    apiResult = await leaveFormService.DeleteAsync(SelectedItem);
+                    #region 刪除 工作日誌明細紀錄
+                    fooIProgressDialog.Title = "請稍後，刪除 工作日誌明細紀錄";
+                    apiResult = await workingLogDetailService.DeleteAsync(SelectedItem);
                     if (apiResult.Status == true)
                     {
-                        ToastHelper.ShowToast($"請假單 已經刪除");
+                        ToastHelper.ShowToast($"工作日誌明細紀錄 已經刪除");
 
                         NavigationParameters paras = new NavigationParameters();
                         paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -185,20 +179,20 @@ namespace FrontMobile.ViewModels
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"請假單 刪除失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"工作日誌明細紀錄 刪除失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
 
-                    #region 取得 請假單
-                    fooIProgressDialog.Title = "請稍後，取得 請假單";
-                    apiResult = await leaveFormService.GetAsync();
+                    #region 取得 工作日誌明細紀錄
+                    fooIProgressDialog.Title = "請稍後，取得 工作日誌明細紀錄";
+                    apiResult = await workingLogDetailService.GetAsync(MasterItem.Id);
                     if (apiResult.Status == true)
                     {
-                        await leaveFormService.WriteToFileAsync();
+                        await workingLogDetailService.WriteToFileAsync();
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"取得 請假單 失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得 工作日誌明細紀錄 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
@@ -206,42 +200,6 @@ namespace FrontMobile.ViewModels
             });
             #endregion
         }
-
-        #region Fody 自動綁定事件
-        public void OnLeaveCategorySelectedItemChanged()
-        {
-            if (LeaveCategorySelectedItem != null)
-            {
-                SelectedItem.LeaveCategoryId = LeaveCategorySelectedItem.Id;
-            }
-            else
-            {
-                SelectedItem.LeaveCategoryId = -1;
-            }
-        }
-        public void OnMyUserSelectedItemChanged()
-        {
-            if (MyUserSelectedItem != null)
-            {
-                SelectedItem.MyUserId = MyUserSelectedItem.Id;
-            }
-            else
-            {
-                SelectedItem.MyUserId = -1;
-            }
-        }
-        public void OnAgentSelectedItemChanged()
-        {
-            if (AgentSelectedItem != null)
-            {
-                SelectedItem.AgentId = AgentSelectedItem.Id;
-            }
-            else
-            {
-                SelectedItem.AgentId = -1;
-            }
-        }
-        #endregion
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
@@ -251,8 +209,8 @@ namespace FrontMobile.ViewModels
         {
             await LoadPickerSourceAsync();
 
-            var fooObject = parameters.GetValue<LeaveFormDto>(MagicStringHelper.CurrentSelectdItemParameterName);
-            fooObject.SetDate();
+            MasterItem = parameters.GetValue<WorkingLogDto>(MagicStringHelper.MasterRecordActionName);
+            var fooObject = parameters.GetValue<WorkingLogDetailDto>(MagicStringHelper.CurrentSelectdItemParameterName);
             SelectedItem = fooObject;
             CrudAction = parameters.GetValue<string>(MagicStringHelper.CrudActionName);
             ShowDeleteButton = true;
@@ -262,59 +220,48 @@ namespace FrontMobile.ViewModels
             }
 
             #region 進行選單初始化
-            #region 假別
-            if (SelectedItem.LeaveCategoryId >= 0)
+            #region 專案
+            if (SelectedItem.ProjectId >= 0)
             {
-                LeaveCategorySelectedItem = LeaveCategoryItemsSource
-                    .FirstOrDefault(x => x.Id == SelectedItem.LeaveCategoryId);
-            }
-            #endregion
-            #region 申請人
-            if (SelectedItem.MyUserId >= 0)
-            {
-                MyUserSelectedItem = MyUserItemsSource
-                    .FirstOrDefault(x => x.Id == SelectedItem.MyUserId);
-            }
-            #endregion
-            #region 代理人
-            if (SelectedItem.AgentId >= 0)
-            {
-                AgentSelectedItem = MyUserItemsSource
-                    .FirstOrDefault(x => x.Id == SelectedItem.AgentId);
+                ProjectSelectedItem = ProjectItemsSource
+                    .FirstOrDefault(x => x.Id == SelectedItem.ProjectId);
             }
             #endregion
             #endregion
         }
 
+
+        #region Fody 自動綁定事件
+        public void OnProjectSelectedItemChanged()
+        {
+            if (ProjectSelectedItem != null)
+            {
+                SelectedItem.ProjectId = ProjectSelectedItem.Id;
+            }
+            else
+            {
+                SelectedItem.ProjectId = -1;
+            }
+        }
+        #endregion
+
         async Task LoadPickerSourceAsync()
         {
             PickerItemModel pItem = new PickerItemModel();
-            #region 讀取請假假別
-            await leaveCategoryService.ReadFromFileAsync();
-            LeaveCategoryItemsSource.Clear();
-            foreach (var item in leaveCategoryService.Items)
+            #region 讀取 專案
+            await projectService.ReadFromFileAsync();
+            ProjectItemsSource.Clear();
+            foreach (var item in projectService.Items)
             {
                 pItem = new PickerItemModel()
                 {
                     Id = item.Id,
                     Name = item.Name,
                 };
-                LeaveCategoryItemsSource.Add(pItem);
-            }
-            #endregion
-            #region 讀取使用者
-            await myUserService.ReadFromFileAsync();
-            MyUserItemsSource.Clear();
-            foreach (var item in myUserService.Items)
-            {
-                pItem = new PickerItemModel()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                };
-                MyUserItemsSource.Add(pItem);
+                ProjectItemsSource.Add(pItem);
             }
             #endregion
         }
+
     }
 }

@@ -93,11 +93,11 @@ namespace DataTransferObject.DTOs
             }
             if (BeginDate>CompleteDate)
             {
-                sb.Append($"請假開始時間不可超過請假結束時間 {Environment.NewLine}");
+                sb.Append($"請假開始時間 不可超過 請假結束時間 {Environment.NewLine}");
             }
             if (string.IsNullOrEmpty(LeaveCause))
             {
-                sb.Append($"需要輸入請假事由 {Environment.NewLine}");
+                sb.Append($"需要輸入 請假事由 {Environment.NewLine}");
             }
             return sb.ToString();
         }

@@ -31,5 +31,26 @@ namespace DataTransferObject.DTOs
         {
             return this.MemberwiseClone();
         }
+        public string Validation()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (string.IsNullOrEmpty(Title))
+            {
+                sb.Append($"需要輸入 工作項目  {Environment.NewLine}");
+            }
+            if (string.IsNullOrEmpty(Summary))
+            {
+                sb.Append($"需要輸入 工作項目說明   {Environment.NewLine}");
+            }
+            if (Hours <= 0)
+            {
+                sb.Append($"時數 不可小於 0 {Environment.NewLine}");
+            }
+            if (ProjectId <= 0)
+            {
+                sb.Append($"需要選擇一個 專案 {Environment.NewLine}");
+            }
+            return sb.ToString();
+        }
     }
 }
