@@ -41,14 +41,17 @@ namespace FrontMobile
 
             RegisterOtherTypes(containerRegistry);
             containerRegistry.RegisterForNavigation<LeaveFormPage, LeaveFormPageViewModel>();
-            containerRegistry.RegisterForNavigation<LeaveFormDetailPage, LeaveFormDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<LeaveFormRecordPage, LeaveFormRecordPageViewModel>();
             containerRegistry.RegisterForNavigation<OnCallPhonePage, OnCallPhonePageViewModel>();
+            containerRegistry.RegisterForNavigation<WorkingLogPage, WorkingLogPageViewModel>();
+            containerRegistry.RegisterForNavigation<WorkingLogRecordPage, WorkingLogRecordPageViewModel>();
         }
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<WorkingLogDetailService>();
             containerRegistry.Register<WorkingLogService>();
+            containerRegistry.Register<LeaveFormService>();
             containerRegistry.Register<ProjectService>();
             containerRegistry.Register<OnCallPhoneService>();
             containerRegistry.Register<MyUserService>();

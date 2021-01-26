@@ -30,10 +30,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\LeaveFormRecordPage.xaml.cs">
+      <DependentUpon>LeaveFormRecordPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\WorkingLogRecordPage.xaml.cs">
+      <DependentUpon>WorkingLogRecordPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Views\HomePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\LeaveFormDetailPage.xaml">
+    <EmbeddedResource Update="Views\LeaveFormRecordPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\LeaveFormPage.xaml">
@@ -52,6 +61,12 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\SplashPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\WorkingLogRecordPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\WorkingLogPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

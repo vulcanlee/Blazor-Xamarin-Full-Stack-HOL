@@ -2,9 +2,9 @@
 
 namespace FrontMobile.Views
 {
-    public partial class LeaveFormDetailPage : ContentPage
+    public partial class LeaveFormRecordPage : ContentPage
     {
-        public LeaveFormDetailPage()
+        public LeaveFormRecordPage()
         {
             InitializeComponent();
         }

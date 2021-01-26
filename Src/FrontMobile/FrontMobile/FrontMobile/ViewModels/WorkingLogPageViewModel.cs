@@ -18,38 +18,39 @@ namespace FrontMobile.ViewModels
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
-    public class LeaveFormPageViewModel : INotifyPropertyChanged, INavigationAware
+    public class WorkingLogPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly LeaveFormService leaveFormService;
-        private readonly LeaveCategoryService leaveCategoryService;
+        private readonly WorkingLogService workingLogService;
+        private readonly ProjectService projectService;
         private readonly MyUserService myUserService;
+        private readonly WorkingLogDetailService workingLogDetailService;
         private readonly RefreshTokenService refreshTokenService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
-
-        public ObservableCollection<LeaveCategoryDto> PickerDataItems { get; set; } = new ObservableCollection<LeaveCategoryDto>();
-        public ObservableCollection<LeaveFormDto> DataItems { get; set; } = new ObservableCollection<LeaveFormDto>();
+        public ObservableCollection<ProductDto> PickerDataItems { get; set; } = new ObservableCollection<ProductDto>();
+        public ObservableCollection<WorkingLogDto> DataItems { get; set; } = new ObservableCollection<WorkingLogDto>();
         public bool IsRefresh { get; set; }
-        public LeaveFormDto SelectedItem { get; set; }
+        public WorkingLogDto SelectedItem { get; set; }
         public DelegateCommand RefreshCommand { get; set; }
         public DelegateCommand ItemTappedCommand { get; set; }
         public DelegateCommand AddCommand { get; set; }
 
-        public LeaveFormPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
-            MyUserService myUserService,
+        public WorkingLogPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
+            WorkingLogService workingLogService, ProjectService projectService,
+            MyUserService myUserService, WorkingLogDetailService workingLogDetailService,
             RefreshTokenService refreshTokenService,
             SystemStatusService systemStatusService, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.leaveFormService = leaveFormService;
-            this.leaveCategoryService = leaveCategoryService;
+            this.workingLogService = workingLogService;
+            this.projectService = projectService;
             this.myUserService = myUserService;
+            this.workingLogDetailService = workingLogDetailService;
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
@@ -58,14 +59,11 @@ namespace FrontMobile.ViewModels
             AddCommand = new DelegateCommand(async () =>
             {
                 NavigationParameters paras = new NavigationParameters();
-                var fooObject = new LeaveFormDto();
-                fooObject.FormDate = DateTime.Now.Date;
-                fooObject.BeginDate = DateTime.Now.AddDays(1).Date + new TimeSpan(09, 00, 00);
-                fooObject.CompleteDate = DateTime.Now.AddDays(1).Date + new TimeSpan(18, 00, 00);
-                fooObject.Hours = 8.0m;
+                var fooObject = new WorkingLogDto();
+                fooObject.LogDate = DateTime.Now.Date;
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
-                await navigationService.NavigateAsync("LeaveFormRecordPage", paras);
+                await navigationService.NavigateAsync("WorkingLogRecordPage", paras);
             });
             #endregion
 
@@ -76,7 +74,7 @@ namespace FrontMobile.ViewModels
                 var fooObject = SelectedItem.Clone();
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudEditAction);
-                await navigationService.NavigateAsync("LeaveFormRecordPage", paras);
+                await navigationService.NavigateAsync("WorkingLogRecordPage", paras);
             });
             #endregion
 
@@ -111,16 +109,16 @@ namespace FrontMobile.ViewModels
         }
         async Task RefreshData()
         {
-            await leaveFormService.ReadFromFileAsync();
+            await workingLogService.ReadFromFileAsync();
             DataItems.Clear();
-            foreach (var item in leaveFormService.Items)
+            foreach (var item in workingLogService.Items)
             {
                 DataItems.Add(item);
             }
         }
         async Task ReloadData()
         {
-            #region 讀取 相關定義資料
+            #region 讀取相關定義資料
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...",
                 null, null, true, MaskType.Black))
             {
@@ -135,12 +133,12 @@ namespace FrontMobile.ViewModels
                 }
                 #endregion
 
-                #region 取得 請假假別
-                fooIProgressDialog.Title = "請稍後，取得 請假單假別";
-                var apiResultssss = await leaveCategoryService.GetAsync();
+                #region 取得 專案清單
+                fooIProgressDialog.Title = "請稍後，取得 專案清單";
+                var apiResultssss = await projectService.GetAsync();
                 if (apiResultssss.Status == true)
                 {
-                    await leaveCategoryService.WriteToFileAsync();
+                    await projectService.WriteToFileAsync();
                 }
                 else
                 {
@@ -148,8 +146,8 @@ namespace FrontMobile.ViewModels
                     return;
                 }
                 #endregion
-                #region 取得 人員清單
-                fooIProgressDialog.Title = "請稍後，取得 人員清單";
+                #region 取得人員清單
+                fooIProgressDialog.Title = "請稍後，取得人員清單";
                 apiResultssss = await myUserService.GetAsync();
                 if (apiResultssss.Status == true)
                 {
@@ -161,12 +159,12 @@ namespace FrontMobile.ViewModels
                     return;
                 }
                 #endregion
-                #region 取得請假
-                fooIProgressDialog.Title = "請稍後，取得請假單";
-                apiResultssss = await leaveFormService.GetAsync();
+                #region 取得 工作日誌表單
+                fooIProgressDialog.Title = "請稍後，取得 工作日誌表單";
+                apiResultssss = await workingLogService.GetAsync();
                 if (apiResultssss.Status == true)
                 {
-                    await leaveFormService.WriteToFileAsync();
+                    await workingLogService.WriteToFileAsync();
                     await RefreshData();
                 }
                 else

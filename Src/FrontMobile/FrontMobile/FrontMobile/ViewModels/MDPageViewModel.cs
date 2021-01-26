@@ -60,13 +60,10 @@ namespace FrontMobile.ViewModels
                         await navigationService.NavigateAsync("/MDPage/NaviPage/ProjectPage");
                         break;
                     case "工作日誌":
-                        await navigationService.NavigateAsync("/MDPage/NaviPage/WorkingLog");
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/WorkingLogPage");
                         break;
                     case "差旅費用":
-                        await navigationService.NavigateAsync("/MDPage/NaviPage/TravelExpense");
-                        break;
-                    case "登出":
-                        await navigationService.NavigateAsync("/MDPage/NaviPage/LeaveFormPage");
+                        await navigationService.NavigateAsync("/MDPage/NaviPage/TravelExpensePage");
                         break;
                 }
             });

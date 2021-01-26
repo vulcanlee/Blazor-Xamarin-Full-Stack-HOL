@@ -20,7 +20,7 @@ namespace FrontMobile.ViewModels
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
-    public class LeaveFormDetailPageViewModel : INotifyPropertyChanged, INavigationAware
+    public class LeaveFormRecordPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -43,7 +43,7 @@ namespace FrontMobile.ViewModels
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand DeleteCommand { get; set; }
 
-        public LeaveFormDetailPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
+        public LeaveFormRecordPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LeaveFormService leaveFormService, LeaveCategoryService leaveCategoryService,
             MyUserService myUserService,
             RefreshTokenService refreshTokenService,
@@ -58,7 +58,7 @@ namespace FrontMobile.ViewModels
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
 
-            #region 儲存 按鈕命令
+            #region 新增 儲存 按鈕命令
             SaveCommand = new DelegateCommand(async () =>
             {
                 #region 進行資料完整性檢查
@@ -90,13 +90,13 @@ namespace FrontMobile.ViewModels
 
                     if (CrudAction == MagicStringHelper.CrudAddAction)
                     {
-                        #region 新增請假單
-                        fooIProgressDialog.Title = "請稍後，新增請假單";
+                        #region 新增 請假單
+                        fooIProgressDialog.Title = "請稍後，新增 請假單";
                         SelectedItem.Id = 0;
                         apiResult = await leaveFormService.PostAsync(SelectedItem);
                         if (apiResult.Status == true)
                         {
-                            ToastHelper.ShowToast($"請假單已經新增");
+                            ToastHelper.ShowToast($"請假單 已經新增");
 
                             NavigationParameters paras = new NavigationParameters();
                             paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -104,18 +104,18 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            await dialogService.DisplayAlertAsync("錯誤", $"請假單儲存失敗:{apiResult.Message}", "確定");
+                            await dialogService.DisplayAlertAsync("錯誤", $"請假單 儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
                     else
                     {
-                        #region 儲存請假單
-                        fooIProgressDialog.Title = "請稍後，儲存請假單";
+                        #region 儲存 請假單
+                        fooIProgressDialog.Title = "請稍後，儲存 請假單";
                         apiResult = await leaveFormService.PutAsync(SelectedItem);
                         if (apiResult.Status == true)
                         {
-                            ToastHelper.ShowToast($"請假單已經儲存");
+                            ToastHelper.ShowToast($"請假單 已經儲存");
 
                             NavigationParameters paras = new NavigationParameters();
                             paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -123,13 +123,13 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            await dialogService.DisplayAlertAsync("錯誤", $"請假單儲存失敗:{apiResult.Message}", "確定");
+                            await dialogService.DisplayAlertAsync("錯誤", $"請假單 儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
 
-                    #region 取得請假單
-                    fooIProgressDialog.Title = "請稍後，取得請假單";
+                    #region 取得 請假單
+                    fooIProgressDialog.Title = "請稍後，取得 請假單";
                     apiResult = await leaveFormService.GetAsync();
                     if (apiResult.Status == true)
                     {
@@ -137,7 +137,7 @@ namespace FrontMobile.ViewModels
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"取得請假單 失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得 請假單 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
@@ -171,13 +171,12 @@ namespace FrontMobile.ViewModels
                     }
                     #endregion
 
-                    #region 刪除請假單
-                    fooIProgressDialog.Title = "請稍後，刪除請假單";
-                    SelectedItem.Id = 0;
+                    #region 刪除 請假單
+                    fooIProgressDialog.Title = "請稍後，刪除 請假單";
                     apiResult = await leaveFormService.DeleteAsync(SelectedItem);
                     if (apiResult.Status == true)
                     {
-                        ToastHelper.ShowToast($"請假單已經刪除");
+                        ToastHelper.ShowToast($"請假單 已經刪除");
 
                         NavigationParameters paras = new NavigationParameters();
                         paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -185,12 +184,12 @@ namespace FrontMobile.ViewModels
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"請假單刪除失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"請假單 刪除失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
 
-                    #region 取得請假單
-                    fooIProgressDialog.Title = "請稍後，取得請假單";
+                    #region 取得 請假單
+                    fooIProgressDialog.Title = "請稍後，取得 請假單";
                     apiResult = await leaveFormService.GetAsync();
                     if (apiResult.Status == true)
                     {
@@ -198,7 +197,7 @@ namespace FrontMobile.ViewModels
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"取得請假單 失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得 請假單 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
