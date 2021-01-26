@@ -63,6 +63,13 @@ namespace FrontMobile.ViewModels
             {
                 #region 進行資料完整性檢查
                 SelectedItem.CombineDate();
+                var checkResult = SelectedItem.Validation();
+                if(!string.IsNullOrEmpty(checkResult))
+                {
+                    await dialogService.DisplayAlertAsync("錯誤", $"請檢查並且修正錯誤{Environment.NewLine}{Environment.NewLine}" +
+                        $"{checkResult}", "確定");
+                    return;
+                }
                 #endregion
 
                 #region 進行記錄儲存

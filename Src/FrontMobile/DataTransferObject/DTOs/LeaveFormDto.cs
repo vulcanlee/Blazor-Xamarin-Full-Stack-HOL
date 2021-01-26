@@ -67,5 +67,39 @@ namespace DataTransferObject.DTOs
             MyUser = null;
             LeaveCategory = null;
         }
+
+        public string Validation()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (LeaveCategoryId <= 0)
+            {
+                sb.Append($"需要選擇一個 請假假別 {Environment.NewLine}");
+            }
+            if (MyUserId <= 0)
+            {
+                sb.Append($"需要選擇一個 申請人 {Environment.NewLine}");
+            }
+            if (AgentId <= 0)
+            {
+                sb.Append($"需要選擇一個 代理人 {Environment.NewLine}");
+            }
+            if (AgentId == MyUserId)
+            {
+                sb.Append($"申請人 與 代理人 不能是同一人 {Environment.NewLine}");
+            }
+            if (Hours <= 0)
+            {
+                sb.Append($"請假總時數不可小於 0 {Environment.NewLine}");
+            }
+            if (BeginDate>CompleteDate)
+            {
+                sb.Append($"請假開始時間不可超過請假結束時間 {Environment.NewLine}");
+            }
+            if (string.IsNullOrEmpty(LeaveCause))
+            {
+                sb.Append($"需要輸入請假事由 {Environment.NewLine}");
+            }
+            return sb.ToString();
+        }
     }
 }
