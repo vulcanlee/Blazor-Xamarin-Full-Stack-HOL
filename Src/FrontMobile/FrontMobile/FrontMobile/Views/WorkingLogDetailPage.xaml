@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="FrontMobile.Views.WorkingLogPage"
-             Title="工作日誌表單"
-             x:Name="ThisPage">
+             x:Class="FrontMobile.Views.WorkingLogDetailPage"
+             Title="工作日誌明細">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem
@@ -52,38 +51,35 @@
                                     RowSpacing="0" ColumnSpacing="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="40"/>
                                         <ColumnDefinition Width="40"/>
                                     </Grid.ColumnDefinitions>
                                     <Label 
                                         Grid.Row="0" Grid.Column="0"
+                                        VerticalOptions="Start"
                                         FontSize="22"
-                                        Text="{Binding MyUserName}"/>
-                                    <Label 
+                                        Text="{Binding Title}"/>
+                                    <Label  
                                         Grid.Row="0" Grid.Column="1"
                                         FontSize="20"
-                                        Text="{Binding LogDate, StringFormat='{0:yyyy-MM-dd}'}"/>
-                                    <Label  
-                                        Grid.Row="0" Grid.Column="2"
-                                        FontSize="20"
                                         HorizontalOptions="End"
-                                        Text="{Binding TotalHours, StringFormat='{0:N1}'}"/>
+                                        Text="{Binding Hours, StringFormat='{0:N1}'}"/>
                                     <Label  
-                                        Grid.Row="0" Grid.Column="3"
-                                        FontSize="24"
-                                        FontFamily="MaterialDesignIcons" TextColor="#4a4a4a" Text="&#xF06A2;"
-                                        HorizontalOptions="End"
-                                        >
-                                        <Label.GestureRecognizers>
-                                            <TapGestureRecognizer
-                                                Command="{Binding BindingContext.ShowDetailCommand, Source={Reference ThisPage}}"
-                                                CommandParameter="{Binding}"/>
-                                        </Label.GestureRecognizers>
-                                    </Label>
+                                        Grid.Row="1" Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        FontSize="18"
+                                        HorizontalOptions="Start"
+                                        Text="{Binding ProjectName}"/>
+                                    <Label  
+                                        Grid.Row="2" Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        FontSize="14"
+                                        HorizontalOptions="Start"
+                                        Text="{Binding Summary}"/>
                                 </Grid>
                             </StackLayout>
                             <BoxView

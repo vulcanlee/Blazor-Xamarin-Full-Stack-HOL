@@ -129,7 +129,7 @@ namespace Backend.Controllers
             #endregion
 
             var records = await WorkingLogDetailService.GetByHeaderIDAsync(id, dataRequest);
-            var result = mapper.Map<List<TravelExpenseDetailDto>>(records.Result);
+            var result = mapper.Map<List<WorkingLogDetailDto>>(records.Result);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);
@@ -140,7 +140,7 @@ namespace Backend.Controllers
         {
             APIResult apiResult;
             var record = await WorkingLogDetailService.GetAsync(id);
-            var result = mapper.Map<TravelExpenseDetailDto>(record);
+            var result = mapper.Map< WorkingLogDetailDto>(record);
             if (record != null)
             {
                 apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,

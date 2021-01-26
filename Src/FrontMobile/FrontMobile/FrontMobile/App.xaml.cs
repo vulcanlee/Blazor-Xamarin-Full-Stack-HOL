@@ -45,6 +45,7 @@ namespace FrontMobile
             containerRegistry.RegisterForNavigation<OnCallPhonePage, OnCallPhonePageViewModel>();
             containerRegistry.RegisterForNavigation<WorkingLogPage, WorkingLogPageViewModel>();
             containerRegistry.RegisterForNavigation<WorkingLogRecordPage, WorkingLogRecordPageViewModel>();
+            containerRegistry.RegisterForNavigation<WorkingLogDetailPage, WorkingLogDetailPageViewModel>();
         }
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)

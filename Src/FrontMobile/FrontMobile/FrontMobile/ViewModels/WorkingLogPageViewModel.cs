@@ -38,6 +38,7 @@ namespace FrontMobile.ViewModels
         public DelegateCommand RefreshCommand { get; set; }
         public DelegateCommand ItemTappedCommand { get; set; }
         public DelegateCommand AddCommand { get; set; }
+        public DelegateCommand<WorkingLogDto> ShowDetailCommand { get; set; }
 
         public WorkingLogPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             WorkingLogService workingLogService, ProjectService projectService,
@@ -84,6 +85,62 @@ namespace FrontMobile.ViewModels
                 IsRefresh = true;
                 await ReloadData();
                 IsRefresh = false;
+            });
+            #endregion
+
+
+            #region 顯示明細頁面
+            ShowDetailCommand = new DelegateCommand<WorkingLogDto>(async x =>
+            {
+                #region 讀取該筆明細清單
+                using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...",
+                    null, null, true, MaskType.Black))
+                {
+                    await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
+                    #region 檢查 Access Token 是否還可以使用
+                    bool refreshTokenResult = await RefreshTokenHelper
+                        .CheckAndRefreshToken(dialogService, refreshTokenService,
+                        systemStatusService, appStatus);
+                    if (refreshTokenResult == false)
+                    {
+                        return;
+                    }
+                    #endregion
+
+                    #region 取得 專案清單
+                    fooIProgressDialog.Title = "請稍後，取得 專案清單";
+                    var apiResultssss = await projectService.GetAsync();
+                    if (apiResultssss.Status == true)
+                    {
+                        await projectService.WriteToFileAsync();
+                    }
+                    else
+                    {
+                        await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
+                        return;
+                    }
+                    #endregion
+
+                    #region 取得 工作日誌明細
+                    fooIProgressDialog.Title = "請稍後，取得 工作日誌明細";
+                    apiResultssss = await workingLogDetailService.GetAsync(x.Id);
+                    if (apiResultssss.Status == true)
+                    {
+                        await workingLogDetailService.WriteToFileAsync();
+
+                        NavigationParameters paras = new NavigationParameters();
+                        paras.Add(MagicStringHelper.MasterRecordActionName, x);
+                        await navigationService.NavigateAsync("WorkingLogDetailPage", paras);
+                    }
+                    else
+                    {
+                        await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
+                        return;
+                    }
+                    #endregion
+                }
+                #endregion
+
             });
             #endregion
         }

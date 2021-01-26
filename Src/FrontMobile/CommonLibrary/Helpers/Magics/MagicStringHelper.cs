@@ -12,5 +12,6 @@ namespace CommonLibrary.Helpers.Magics
         public static readonly string CrudEditAction = "Edit";
         public static readonly string CrudDeleteAction = "Delete";
         public static readonly string CrudRefreshAction = "Refresh";
+        public static readonly string MasterRecordActionName = "MasterRecord";
     }
 }
