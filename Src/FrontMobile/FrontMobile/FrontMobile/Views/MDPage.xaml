@@ -56,7 +56,7 @@
                         <Label Grid.Column="1"
                                FontSize="30" TextColor="#4a4a4a" Text="請假單" />
                     </Grid>
-                    <Grid Margin="20,10">
+                    <!--<Grid Margin="20,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="*"/>
@@ -70,7 +70,7 @@
                                FontFamily="MaterialDesignIcons" FontSize="30" TextColor="#4a4a4a" Text="&#xF0328;" />
                         <Label Grid.Column="1"
                                FontSize="30" TextColor="#4a4a4a" Text="專案" />
-                    </Grid>
+                    </Grid>-->
                     <Grid Margin="20,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60"/>

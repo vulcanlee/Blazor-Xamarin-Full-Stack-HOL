@@ -27,6 +27,7 @@ namespace FrontMobile.ViewModels
         private readonly IPageDialogService dialogService;
         private readonly SystemStatusService systemStatusService;
         private readonly SystemEnvironmentsService systemEnvironmentsService;
+        private readonly ProjectService projectService;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly AppStatus appStatus;
         private readonly ExceptionRecordsService exceptionRecordsService;
@@ -36,6 +37,7 @@ namespace FrontMobile.ViewModels
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             SystemStatusService systemStatusService, SystemEnvironmentsService systemEnvironmentsService,
+            ProjectService projectService,
             RecordCacheHelper recordCacheHelper, AppStatus appStatus,
             ExceptionRecordsService exceptionRecordsService, AppExceptionsService appExceptionsService,
             LeaveCategoryService leaveCategoryService, OnCallPhoneService onCallPhoneService)
@@ -44,6 +46,7 @@ namespace FrontMobile.ViewModels
             this.dialogService = dialogService;
             this.systemStatusService = systemStatusService;
             this.systemEnvironmentsService = systemEnvironmentsService;
+            this.projectService = projectService;
             this.recordCacheHelper = recordCacheHelper;
             this.appStatus = appStatus;
             this.exceptionRecordsService = exceptionRecordsService;
@@ -70,7 +73,7 @@ namespace FrontMobile.ViewModels
             using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
             {
                 await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
-                #region 取得請假假別
+                #region 取得 連絡電話本
                 fooIProgressDialog.Title = "請稍後，取得 連絡電話本";
                 await onCallPhoneService.ReadFromFileAsync();
                 var fooResult = await onCallPhoneService.GetAsync();
@@ -80,13 +83,23 @@ namespace FrontMobile.ViewModels
                 }
                 #endregion
 
-                #region 取得請假假別
+                #region 取得 請假假別
                 fooIProgressDialog.Title = "請稍後，取得 請假假別";
                 await leaveCategoryService.ReadFromFileAsync();
                 fooResult = await leaveCategoryService.GetAsync();
                 if (fooResult.Status == true)
                 {
                     await leaveCategoryService.WriteToFileAsync();
+                }
+                #endregion
+
+                #region 取得 專案清單
+                fooIProgressDialog.Title = "請稍後，取得 專案清單";
+                await projectService.ReadFromFileAsync();
+                fooResult = await projectService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await projectService.WriteToFileAsync();
                 }
                 #endregion
 
