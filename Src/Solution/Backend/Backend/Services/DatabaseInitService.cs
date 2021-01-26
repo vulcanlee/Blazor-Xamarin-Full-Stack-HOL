@@ -46,9 +46,9 @@ namespace Backend.Services
                         OrderNumber = order,
                     };
                     context.Add(itemLeaveCategory);
+                    await context.SaveChangesAsync();
                 }
             }
-            await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<LeaveCategory>(context);
 
             var items連絡電話 = Get連絡電話();
@@ -69,10 +69,29 @@ namespace Backend.Services
                         PhoneNumber = phone,
                     };
                     context.Add(item連絡電話);
+                    await context.SaveChangesAsync();
                 }
             }
-            await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<OnCallPhone>(context);
+
+            items = Get專案();
+            CleanTrackingHelper.Clean<Project>(context);
+            foreach (var item in items)
+            {
+                var itemProject = await context.Project
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Name == item);
+                if (itemProject == null)
+                {
+                    itemProject = new Project()
+                    {
+                        Name = item,
+                    };
+                    context.Add(itemProject);
+                    await context.SaveChangesAsync();
+                }
+            }
+            CleanTrackingHelper.Clean<Project>(context);
         }
 
         public List<string> Get假別()
@@ -92,6 +111,18 @@ namespace Backend.Services
             all假別.Add("安胎假");
             all假別.Add("撫育假");
             return all假別;
+        }
+
+        public List<string> Get專案()
+        {
+            List<string> all專案 = new List<string>();
+            all專案.Add("Blazor CMS");
+            all專案.Add("ASP.NET Core Web API");
+            all專案.Add("Xamarin.Forms");
+            all專案.Add("Blazor Deployment");
+            all專案.Add("Android Publish");
+            all專案.Add("iOS Publish");
+            return all專案;
         }
 
         public List<(string, string)> Get連絡電話()

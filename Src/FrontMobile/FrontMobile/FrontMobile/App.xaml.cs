@@ -47,6 +47,8 @@ namespace FrontMobile
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<WorkingLogDetailService>();
+            containerRegistry.Register<WorkingLogService>();
             containerRegistry.Register<ProjectService>();
             containerRegistry.Register<OnCallPhoneService>();
             containerRegistry.Register<MyUserService>();
