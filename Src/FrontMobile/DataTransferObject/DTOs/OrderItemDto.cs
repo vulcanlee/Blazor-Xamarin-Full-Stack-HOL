@@ -33,5 +33,10 @@ namespace DataTransferObject.DTOs
         {
             return this.MemberwiseClone();
         }
+        public string Validation()
+        {
+            StringBuilder sb = new StringBuilder();
+            return sb.ToString();
+        }
     }
 }

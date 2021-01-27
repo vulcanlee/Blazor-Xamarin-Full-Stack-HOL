@@ -26,5 +26,14 @@ namespace DataTransferObject.DTOs
         {
             return this.MemberwiseClone();
         }
+        public string Validation()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (MyUserId <= 0)
+            {
+                sb.Append($"需要選擇一個 申請人 {Environment.NewLine}");
+            }
+            return sb.ToString();
+        }
     }
 }

@@ -31,5 +31,14 @@ namespace DataTransferObject.DTOs
         {
             return this.MemberwiseClone();
         }
+        public string Validation()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (string.IsNullOrEmpty(Account))
+            {
+                sb.Append($"需要輸入 帳號  {Environment.NewLine}");
+            }
+            return sb.ToString();
+        }
     }
 }
