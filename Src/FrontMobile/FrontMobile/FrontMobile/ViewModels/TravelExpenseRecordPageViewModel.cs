@@ -20,19 +20,19 @@ namespace FrontMobile.ViewModels
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
-    public class WorkingLogRecordPageViewModel : INotifyPropertyChanged, INavigationAware
+    public class TravelExpenseRecordPageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly WorkingLogService workingLogService;
+        private readonly TravelExpenseService travelExpenseService;
         private readonly MyUserService myUserService;
         private readonly RefreshTokenService refreshTokenService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
-   
-        public WorkingLogDto SelectedItem { get; set; }
+
+        public TravelExpenseDto SelectedItem { get; set; }
         public string CrudAction { get; set; }
         public ObservableCollection<PickerItemModel> MyUserItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
         public PickerItemModel MyUserSelectedItem { get; set; }
@@ -40,15 +40,15 @@ namespace FrontMobile.ViewModels
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand DeleteCommand { get; set; }
 
-        public WorkingLogRecordPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            WorkingLogService workingLogService,
+        public TravelExpenseRecordPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
+            TravelExpenseService travelExpenseService,
             MyUserService myUserService,
             RefreshTokenService refreshTokenService,
             SystemStatusService systemStatusService, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.workingLogService = workingLogService;
+            this.travelExpenseService = travelExpenseService;
             this.myUserService = myUserService;
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
@@ -58,7 +58,6 @@ namespace FrontMobile.ViewModels
             SaveCommand = new DelegateCommand(async () =>
             {
                 #region 進行資料完整性檢查
-                SelectedItem.CombineDate();
                 var checkResult = SelectedItem.Validation();
                 if (!string.IsNullOrEmpty(checkResult))
                 {
@@ -86,13 +85,13 @@ namespace FrontMobile.ViewModels
 
                     if (CrudAction == MagicStringHelper.CrudAddAction)
                     {
-                        #region 新增 工作日誌表單
-                        fooIProgressDialog.Title = "請稍後，新增 工作日誌表單";
+                        #region 新增 差旅費用表單
+                        fooIProgressDialog.Title = "請稍後，新增 差旅費用表單";
                         SelectedItem.Id = 0;
-                        apiResult = await workingLogService.PostAsync(SelectedItem);
+                        apiResult = await travelExpenseService.PostAsync(SelectedItem);
                         if (apiResult.Status == true)
                         {
-                            ToastHelper.ShowToast($"工作日誌表單 已經新增");
+                            ToastHelper.ShowToast($"差旅費用表單 已經新增");
 
                             NavigationParameters paras = new NavigationParameters();
                             paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -100,18 +99,18 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            await dialogService.DisplayAlertAsync("錯誤", $"工作日誌表單 儲存失敗:{apiResult.Message}", "確定");
+                            await dialogService.DisplayAlertAsync("錯誤", $"差旅費用表單 儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
                     else
                     {
                         #region 儲存 工作日誌表單
-                        fooIProgressDialog.Title = "請稍後，儲存 工作日誌表單";
-                        apiResult = await workingLogService.PutAsync(SelectedItem);
+                        fooIProgressDialog.Title = "請稍後，儲存 差旅費用表單";
+                        apiResult = await travelExpenseService.PutAsync(SelectedItem);
                         if (apiResult.Status == true)
                         {
-                            ToastHelper.ShowToast($"工作日誌表單 已經儲存");
+                            ToastHelper.ShowToast($"差旅費用表單 已經儲存");
 
                             NavigationParameters paras = new NavigationParameters();
                             paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -119,21 +118,21 @@ namespace FrontMobile.ViewModels
                         }
                         else
                         {
-                            await dialogService.DisplayAlertAsync("錯誤", $"工作日誌表單 儲存失敗:{apiResult.Message}", "確定");
+                            await dialogService.DisplayAlertAsync("錯誤", $"差旅費用表單 儲存失敗:{apiResult.Message}", "確定");
                         }
                         #endregion
                     }
 
-                    #region 取得 工作日誌表單
-                    fooIProgressDialog.Title = "請稍後，取得 工作日誌表單";
-                    apiResult = await workingLogService.GetAsync();
+                    #region 取得 差旅費用表單
+                    fooIProgressDialog.Title = "請稍後，取得 差旅費用表單";
+                    apiResult = await travelExpenseService.GetAsync();
                     if (apiResult.Status == true)
                     {
-                        await workingLogService.WriteToFileAsync();
+                        await travelExpenseService.WriteToFileAsync();
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"取得 工作日誌表單 失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得 差旅費用表單 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
@@ -167,12 +166,12 @@ namespace FrontMobile.ViewModels
                     }
                     #endregion
 
-                    #region 刪除 工作日誌表單
-                    fooIProgressDialog.Title = "請稍後，刪除 工作日誌表單";
-                    apiResult = await workingLogService.DeleteAsync(SelectedItem);
+                    #region 刪除 差旅費用表單
+                    fooIProgressDialog.Title = "請稍後，刪除 差旅費用表單";
+                    apiResult = await travelExpenseService.DeleteAsync(SelectedItem);
                     if (apiResult.Status == true)
                     {
-                        ToastHelper.ShowToast($"工作日誌表單 已經刪除");
+                        ToastHelper.ShowToast($"差旅費用表單 已經刪除");
 
                         NavigationParameters paras = new NavigationParameters();
                         paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudRefreshAction);
@@ -180,20 +179,20 @@ namespace FrontMobile.ViewModels
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"工作日誌表單 刪除失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"差旅費用表單 刪除失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
 
-                    #region 取得 工作日誌表單
-                    fooIProgressDialog.Title = "請稍後，取得 工作日誌表單";
-                    apiResult = await workingLogService.GetAsync();
+                    #region 取得 差旅費用表單
+                    fooIProgressDialog.Title = "請稍後，取得 差旅費用表單";
+                    apiResult = await travelExpenseService.GetAsync();
                     if (apiResult.Status == true)
                     {
-                        await workingLogService.WriteToFileAsync();
+                        await travelExpenseService.WriteToFileAsync();
                     }
                     else
                     {
-                        await dialogService.DisplayAlertAsync("錯誤", $"取得請假單 失敗:{apiResult.Message}", "確定");
+                        await dialogService.DisplayAlertAsync("錯誤", $"取得 差旅費用表單 失敗:{apiResult.Message}", "確定");
                     }
                     #endregion
                 }
@@ -210,8 +209,7 @@ namespace FrontMobile.ViewModels
         {
             await LoadPickerSourceAsync();
 
-            var fooObject = parameters.GetValue<WorkingLogDto>(MagicStringHelper.CurrentSelectdItemParameterName);
-            fooObject.SetDate();
+            var fooObject = parameters.GetValue<TravelExpenseDto>(MagicStringHelper.CurrentSelectdItemParameterName);
             SelectedItem = fooObject;
             CrudAction = parameters.GetValue<string>(MagicStringHelper.CrudActionName);
             ShowDeleteButton = true;
@@ -262,5 +260,6 @@ namespace FrontMobile.ViewModels
             }
             #endregion
         }
+
     }
 }

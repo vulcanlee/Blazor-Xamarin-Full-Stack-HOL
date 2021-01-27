@@ -103,25 +103,28 @@ namespace Backend
                     };
                     options.Events = new JwtBearerEvents()
                     {
-                        OnAuthenticationFailed = async context =>
+                        OnAuthenticationFailed = context =>
                        {
-                           context.Response.StatusCode = 401;
-                           context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
-                           APIResult apiResult = JWTTokenFailHelper.GetFailResult(context.Exception);
+                           context.Response.OnStarting(async () =>
+                           {
+                               context.Response.StatusCode = 401;
+                               context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
+                               APIResult apiResult = JWTTokenFailHelper.GetFailResult(context.Exception);
 
-                           context.Response.ContentType = "application/json";
-                           await context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult));
-                           return;
+                               context.Response.ContentType = "application/json";
+                               await context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult));
+                           });
+                           return Task.CompletedTask;
                        },
                         OnChallenge = context =>
                         {
-                            //context.HandleResponse();
+                            ////context.HandleResponse();
                             return Task.CompletedTask;
                         },
                         OnTokenValidated = context =>
                         {
-                            Console.WriteLine("OnTokenValidated: " +
-                                context.SecurityToken);
+                            //Console.WriteLine("OnTokenValidated: " +
+                            //    context.SecurityToken);
                             return Task.CompletedTask;
                         }
 
@@ -155,7 +158,7 @@ namespace Backend
             #region Localization
             app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             #endregion
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

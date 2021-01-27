@@ -15,43 +15,44 @@ namespace FrontMobile.ViewModels
     using Business.Services;
     using CommonLibrary.Helpers.Magics;
     using DataTransferObject.DTOs;
+    using FrontMobile.Models;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
-    public class WorkingLogPageViewModel : INotifyPropertyChanged, INavigationAware
+    public class TravelExpensePageViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
-        private readonly WorkingLogService workingLogService;
-        private readonly ProjectService projectService;
+        private readonly TravelExpenseService travelExpenseService;
         private readonly MyUserService myUserService;
-        private readonly WorkingLogDetailService workingLogDetailService;
+        private readonly TravelExpenseDetailService travelExpenseDetailService;
         private readonly RefreshTokenService refreshTokenService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
-   
-        public ObservableCollection<WorkingLogDto> DataItems { get; set; } = new ObservableCollection<WorkingLogDto>();
+
+        public ObservableCollection<PickerItemModel> MyUserItemsSource { get; set; } = new ObservableCollection<PickerItemModel>();
+        public PickerItemModel MyUserSelectedItem { get; set; }
+        public ObservableCollection<TravelExpenseDto> DataItems { get; set; } = new ObservableCollection<TravelExpenseDto>();
         public bool IsRefresh { get; set; }
-        public WorkingLogDto SelectedItem { get; set; }
+        public TravelExpenseDto SelectedItem { get; set; }
         public DelegateCommand RefreshCommand { get; set; }
         public DelegateCommand ItemTappedCommand { get; set; }
         public DelegateCommand AddCommand { get; set; }
         public DelegateCommand<WorkingLogDto> ShowDetailCommand { get; set; }
 
-        public WorkingLogPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            WorkingLogService workingLogService, ProjectService projectService,
-            MyUserService myUserService, WorkingLogDetailService workingLogDetailService,
+        public TravelExpensePageViewModel(INavigationService navigationService, IPageDialogService dialogService,
+            TravelExpenseService travelExpenseService,
+            MyUserService myUserService, TravelExpenseDetailService travelExpenseDetailService,
             RefreshTokenService refreshTokenService,
             SystemStatusService systemStatusService, AppStatus appStatus)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
-            this.workingLogService = workingLogService;
-            this.projectService = projectService;
+            this.travelExpenseService = travelExpenseService;
             this.myUserService = myUserService;
-            this.workingLogDetailService = workingLogDetailService;
+            this.travelExpenseDetailService = travelExpenseDetailService;
             this.refreshTokenService = refreshTokenService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
@@ -60,11 +61,11 @@ namespace FrontMobile.ViewModels
             AddCommand = new DelegateCommand(async () =>
             {
                 NavigationParameters paras = new NavigationParameters();
-                var fooObject = new WorkingLogDto();
-                fooObject.LogDate = DateTime.Now.Date;
+                var fooObject = new TravelExpenseDto();
+                fooObject.ApplyDate = DateTime.Now.Date;
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
-                await navigationService.NavigateAsync("WorkingLogRecordPage", paras);
+                await navigationService.NavigateAsync("TravelExpenseRecordPage", paras);
             });
             #endregion
 
@@ -75,7 +76,7 @@ namespace FrontMobile.ViewModels
                 var fooObject = SelectedItem.Clone();
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudEditAction);
-                await navigationService.NavigateAsync("WorkingLogRecordPage", paras);
+                await navigationService.NavigateAsync("TravelExpenseRecordPage", paras);
             });
             #endregion
 
@@ -106,30 +107,16 @@ namespace FrontMobile.ViewModels
                     }
                     #endregion
 
-                    #region 取得 專案清單
-                    fooIProgressDialog.Title = "請稍後，取得 專案清單";
-                    var apiResultssss = await projectService.GetAsync();
+                    #region 取得 差旅費用明細紀錄
+                    fooIProgressDialog.Title = "請稍後，取得 差旅費用明細紀錄";
+                    var apiResultssss = await travelExpenseDetailService.GetAsync(x.Id);
                     if (apiResultssss.Status == true)
                     {
-                        await projectService.WriteToFileAsync();
-                    }
-                    else
-                    {
-                        await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
-                        return;
-                    }
-                    #endregion
-
-                    #region 取得 工作日誌明細
-                    fooIProgressDialog.Title = "請稍後，取得 工作日誌明細";
-                    apiResultssss = await workingLogDetailService.GetAsync(x.Id);
-                    if (apiResultssss.Status == true)
-                    {
-                        await workingLogDetailService.WriteToFileAsync();
+                        await travelExpenseDetailService.WriteToFileAsync();
 
                         NavigationParameters paras = new NavigationParameters();
                         paras.Add(MagicStringHelper.MasterRecordActionName, x);
-                        await navigationService.NavigateAsync("WorkingLogDetailPage", paras);
+                        await navigationService.NavigateAsync("TravelExpenseDetailPage", paras);
                     }
                     else
                     {
@@ -143,6 +130,20 @@ namespace FrontMobile.ViewModels
             });
             #endregion
         }
+
+        #region Fody 自動綁定事件
+        public void OnMyUserSelectedItemChanged()
+        {
+            if (MyUserSelectedItem != null)
+            {
+                SelectedItem.MyUserId = MyUserSelectedItem.Id;
+            }
+            else
+            {
+                SelectedItem.MyUserId = -1;
+            }
+        }
+        #endregion
 
         public void OnNavigatedFrom(INavigationParameters parameters)
         {
@@ -163,11 +164,12 @@ namespace FrontMobile.ViewModels
                 }
             }
         }
+
         async Task RefreshData()
         {
-            await workingLogService.ReadFromFileAsync();
+            await travelExpenseService.ReadFromFileAsync();
             DataItems.Clear();
-            foreach (var item in workingLogService.Items)
+            foreach (var item in travelExpenseService.Items)
             {
                 DataItems.Add(item);
             }
@@ -189,22 +191,9 @@ namespace FrontMobile.ViewModels
                 }
                 #endregion
 
-                #region 取得 專案清單
-                fooIProgressDialog.Title = "請稍後，取得 專案清單";
-                var apiResultssss = await projectService.GetAsync();
-                if (apiResultssss.Status == true)
-                {
-                    await projectService.WriteToFileAsync();
-                }
-                else
-                {
-                    await DialogHelper.ShowAPIResultIsFailureMessage(dialogService, apiResultssss);
-                    return;
-                }
-                #endregion
                 #region 取得人員清單
                 fooIProgressDialog.Title = "請稍後，取得人員清單";
-                apiResultssss = await myUserService.GetAsync();
+                var apiResultssss = await myUserService.GetAsync();
                 if (apiResultssss.Status == true)
                 {
                     await myUserService.WriteToFileAsync();
@@ -215,12 +204,12 @@ namespace FrontMobile.ViewModels
                     return;
                 }
                 #endregion
-                #region 取得 工作日誌表單
-                fooIProgressDialog.Title = "請稍後，取得 工作日誌表單";
-                apiResultssss = await workingLogService.GetAsync();
+                #region 取得 差旅費用表單
+                fooIProgressDialog.Title = "請稍後，取得 差旅費用表單";
+                apiResultssss = await travelExpenseService.GetAsync();
                 if (apiResultssss.Status == true)
                 {
-                    await workingLogService.WriteToFileAsync();
+                    await travelExpenseService.WriteToFileAsync();
                     await RefreshData();
                 }
                 else

@@ -47,10 +47,16 @@ namespace FrontMobile
             containerRegistry.RegisterForNavigation<WorkingLogRecordPage, WorkingLogRecordPageViewModel>();
             containerRegistry.RegisterForNavigation<WorkingLogDetailPage, WorkingLogDetailPageViewModel>();
             containerRegistry.RegisterForNavigation<WorkingLogDetailRecordPage, WorkingLogDetailRecordPageViewModel>();
+            containerRegistry.RegisterForNavigation<TravelExpensePage, TravelExpensePageViewModel>();
+            containerRegistry.RegisterForNavigation<TravelExpenseDetailRecordPage, TravelExpenseDetailRecordPageViewModel>();
+            containerRegistry.RegisterForNavigation<TravelExpenseRecordPage, TravelExpenseRecordPageViewModel>();
+            containerRegistry.RegisterForNavigation<TravelExpenseDetailPage, TravelExpenseDetailPageViewModel>();
         }
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<TravelExpenseDetailService>();
+            containerRegistry.Register<TravelExpenseService>();
             containerRegistry.Register<WorkingLogDetailService>();
             containerRegistry.Register<WorkingLogService>();
             containerRegistry.Register<LeaveFormService>();

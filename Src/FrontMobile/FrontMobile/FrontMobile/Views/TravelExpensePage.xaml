@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="FrontMobile.Views.TravelExpensePage"
+             Title="差旅費用表單"
+             x:Name="ThisPage">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="新增"
+            Command="{Binding AddCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+                    FontFamily="MaterialDesignIcons"
+                    Glyph="&#xF11FF;"
+                    Size="30"
+                    Color="White" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0">
+        <ListView
+            HasUnevenRows="True"
+            ItemsSource="{Binding DataItems}"
+            IsPullToRefreshEnabled="True"
+            RefreshCommand="{Binding RefreshCommand}"
+            IsRefreshing="{Binding IsRefresh}"
+            SelectedItem="{Binding SelectedItem}"
+            SeparatorVisibility="None"
+            >
+            <ListView.Behaviors>
+                <prism:EventToCommandBehavior
+                    EventName="ItemTapped"
+                    Command="{Binding ItemTappedCommand}"/>
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid
+                            RowSpacing="0" ColumnSpacing="0"
+                            >
+                            <BoxView
+                                Color="White"/>
+                            <StackLayout
+                                Spacing="0" Margin="10,15"
+                                Orientation="Vertical">
+                                <Grid
+                                    RowSpacing="0" ColumnSpacing="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="40"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label 
+                                        Grid.Row="0" Grid.Column="0"
+                                        FontSize="20"
+                                        Text="{Binding ApplyDate, StringFormat='{0:yyyy-MM-dd}'}"/>
+                                    <Label 
+                                        Grid.Row="0" Grid.Column="1"
+                                        FontSize="22"
+                                        Text="{Binding MyUserName}"/>
+                                    <Label  
+                                        Grid.Row="0" Grid.Column="2"
+                                        FontSize="20"
+                                        HorizontalOptions="End"
+                                        Text="{Binding TotalExpense, StringFormat='{0:N1}'}"/>
+                                    <Label  
+                                        Grid.Row="0" Grid.Column="3"
+                                        FontSize="24"
+                                        FontFamily="MaterialDesignIcons" TextColor="#4a4a4a" Text="&#xF06A2;"
+                                        HorizontalOptions="End"
+                                        >
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding BindingContext.ShowDetailCommand, Source={Reference ThisPage}}"
+                                                CommandParameter="{Binding}"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </StackLayout>
+                            <BoxView
+                                Margin="5,0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="End"
+                                HeightRequest="2"
+                                Color="DimGray"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+</ContentPage>

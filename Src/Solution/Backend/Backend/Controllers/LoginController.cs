@@ -84,11 +84,11 @@ namespace Backend.Controllers
             await Task.Yield();
             LoginRequestDto loginRequestDTO = new LoginRequestDto()
             {
-                Account = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value,
+                Account = User.FindFirst(ClaimTypes.Sid)?.Value,
             };
 
             MyUserAdapterModel user = await myUserService.GetAsync(Convert.ToInt32(loginRequestDTO.Account));
-            if (user == null)
+            if (user.Id == 0)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status401Unauthorized,
                 ErrorMessageEnum.沒有發現指定的該使用者資料);
@@ -163,6 +163,7 @@ namespace Backend.Controllers
                 audience: configuration["Tokens:ValidAudience"],
                 claims: claims,
                 expires: DateTime.Now.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])),
+                //expires: DateTime.Now.AddMinutes(1),
                 //notBefore: DateTime.Now.AddMinutes(-5),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                             (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),

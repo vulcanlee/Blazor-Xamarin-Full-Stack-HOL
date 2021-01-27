@@ -18,7 +18,7 @@ namespace ShareBusiness.Helpers
         {
             ErrorMessages = new Dictionary<ErrorMessageEnum, string>();
             ErrorMessages.Add(ErrorMessageEnum.None, "");
-            ErrorMessages.Add(ErrorMessageEnum.SecurityTokenExpiredException, "存取權杖可用期限已經逾期超過 ");
+            ErrorMessages.Add(ErrorMessageEnum.SecurityTokenExpiredException, $"存取權杖可用期限已經超過逾期{Environment.NewLine}{Environment.NewLine}請重新登入系統{Environment.NewLine}{Environment.NewLine}");
             ErrorMessages.Add(ErrorMessageEnum.SecurityTokenReplayDetectedException, "收到已重新執行的安全性權杖 ");
             ErrorMessages.Add(ErrorMessageEnum.SecurityTokenNotYetValidException, "接收到具有未來有效時間的安全性權杖 ");
             ErrorMessages.Add(ErrorMessageEnum.SecurityTokenValidationException, "接收到的安全性權杖無效 ");
