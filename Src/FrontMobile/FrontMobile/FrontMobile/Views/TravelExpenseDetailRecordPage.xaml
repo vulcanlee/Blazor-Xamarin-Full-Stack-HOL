@@ -4,6 +4,64 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="FrontMobile.Views.TravelExpenseDetailRecordPage"
-             Title="差旅費用明細紀錄">
-  
+             Title="差旅費用明細紀錄"
+             >
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="儲存"
+            Command="{Binding SaveCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+                    FontFamily="MaterialDesignIcons"
+                    Glyph="&#xF0CFB;"
+                    Size="30"
+                    Color="White" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0"
+        >
+        <ScrollView
+            Orientation="Both"
+            Margin="15,10"
+            >
+            <StackLayout
+                Spacing="0"
+                >
+                <Label 
+                    Text="主題 " FontSize="14"/>
+                <Entry
+                    Text="{Binding SelectedItem.Title}"
+                    />
+
+                <Label 
+                    Text="費用摘要說明 " FontSize="14"/>
+                <Editor
+                    AutoSize="TextChanges"
+                    Text="{Binding SelectedItem.Summary}"
+                    />
+
+                <Label 
+                    Text="費用" FontSize="14"/>
+                <Entry
+                    Text="{Binding SelectedItem.Expense, StringFormat='{0:N1}'}"
+                    Keyboard="Numeric"
+                    />
+
+                <Button 
+                    Margin="20,30"
+                    IsVisible="{Binding ShowDeleteButton}"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    FontSize="24"
+                    Text="刪除"
+                    Command="{Binding DeleteCommand}"/>
+            </StackLayout>
+
+        </ScrollView>
+    </Grid>
+
 </ContentPage>

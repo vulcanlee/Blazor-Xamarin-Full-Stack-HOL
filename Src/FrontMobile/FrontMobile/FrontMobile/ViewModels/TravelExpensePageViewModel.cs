@@ -40,7 +40,7 @@ namespace FrontMobile.ViewModels
         public DelegateCommand RefreshCommand { get; set; }
         public DelegateCommand ItemTappedCommand { get; set; }
         public DelegateCommand AddCommand { get; set; }
-        public DelegateCommand<WorkingLogDto> ShowDetailCommand { get; set; }
+        public DelegateCommand<TravelExpenseDto> ShowDetailCommand { get; set; }
 
         public TravelExpensePageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             TravelExpenseService travelExpenseService,
@@ -90,7 +90,7 @@ namespace FrontMobile.ViewModels
             #endregion
 
             #region 顯示明細頁面
-            ShowDetailCommand = new DelegateCommand<WorkingLogDto>(async x =>
+            ShowDetailCommand = new DelegateCommand<TravelExpenseDto>(async x =>
             {
                 #region 讀取該筆明細清單
                 using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...",

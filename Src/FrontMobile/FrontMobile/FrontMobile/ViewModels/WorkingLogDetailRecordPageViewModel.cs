@@ -230,7 +230,6 @@ namespace FrontMobile.ViewModels
             #endregion
         }
 
-
         #region Fody 自動綁定事件
         public void OnProjectSelectedItemChanged()
         {

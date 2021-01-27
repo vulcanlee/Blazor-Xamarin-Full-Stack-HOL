@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="FrontMobile.Views.TravelExpenseDetailPage"
-             Title="工作日誌明細">
+             Title="差旅費用明細">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem
@@ -51,12 +51,11 @@
                                     RowSpacing="0" ColumnSpacing="0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="26"/>
-                                        <RowDefinition Height="26"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="110"/>
                                     </Grid.ColumnDefinitions>
                                     <Label 
                                         Grid.Row="0" Grid.Column="0"
@@ -67,15 +66,9 @@
                                         Grid.Row="0" Grid.Column="1"
                                         FontSize="20"
                                         HorizontalOptions="End"
-                                        Text="{Binding Hours, StringFormat='{0:N1}'}"/>
+                                        Text="{Binding Expense, StringFormat='{0:N1}'}"/>
                                     <Label  
                                         Grid.Row="1" Grid.Column="0"
-                                        Grid.ColumnSpan="2"
-                                        FontSize="18"
-                                        HorizontalOptions="Start"
-                                        Text="{Binding ProjectName}"/>
-                                    <Label  
-                                        Grid.Row="2" Grid.Column="0"
                                         Grid.ColumnSpan="2"
                                         FontSize="14"
                                         HorizontalOptions="Start"
