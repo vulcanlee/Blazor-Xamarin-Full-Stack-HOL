@@ -13,6 +13,7 @@ namespace FrontMobile.ViewModels
     using Business.Helpers.ServiceHelps;
     using Business.Services;
     using CommonLibrary.Helpers.Utilities;
+    using Plugin.Connectivity;
     using Prism.Events;
     using Prism.Navigation;
     using Prism.Services;
@@ -28,6 +29,7 @@ namespace FrontMobile.ViewModels
         private readonly SystemStatusService systemStatusService;
         private readonly SystemEnvironmentsService systemEnvironmentsService;
         private readonly ProjectService projectService;
+        private readonly MyUserService myUserService;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly AppStatus appStatus;
         private readonly ExceptionRecordsService exceptionRecordsService;
@@ -37,7 +39,7 @@ namespace FrontMobile.ViewModels
 
         public SplashPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             SystemStatusService systemStatusService, SystemEnvironmentsService systemEnvironmentsService,
-            ProjectService projectService,
+            ProjectService projectService, MyUserService myUserService,
             RecordCacheHelper recordCacheHelper, AppStatus appStatus,
             ExceptionRecordsService exceptionRecordsService, AppExceptionsService appExceptionsService,
             LeaveCategoryService leaveCategoryService, OnCallPhoneService onCallPhoneService)
@@ -47,6 +49,7 @@ namespace FrontMobile.ViewModels
             this.systemStatusService = systemStatusService;
             this.systemEnvironmentsService = systemEnvironmentsService;
             this.projectService = projectService;
+            this.myUserService = myUserService;
             this.recordCacheHelper = recordCacheHelper;
             this.appStatus = appStatus;
             this.exceptionRecordsService = exceptionRecordsService;
@@ -62,11 +65,11 @@ namespace FrontMobile.ViewModels
         public async void OnNavigatedTo(INavigationParameters parameters)
         {
             #region 確認網路已經連線
-            if (UtilityHelper.IsConnected() == false)
-            {
-                await dialogService.DisplayAlertAsync("警告", "無網路連線可用，請檢查網路狀態", "確定");
-                return;
-            }
+            //if (await UtilityHelper.CanConnectRemoteHostService() == false)
+            //{
+            //    await dialogService.DisplayAlertAsync("警告", "無網路連線可用 或者 無法連線到遠端主機，請檢查網路狀態與主機服務是否可以使用", "確定");
+            //    return;
+            //}
             #endregion
 
             #region 讀取相關定義資料
@@ -100,6 +103,16 @@ namespace FrontMobile.ViewModels
                 if (fooResult.Status == true)
                 {
                     await projectService.WriteToFileAsync();
+                }
+                #endregion
+
+                #region 取得 使用者清單
+                fooIProgressDialog.Title = "請稍後，取得 使用者清單";
+                await myUserService.ReadFromFileAsync();
+                fooResult = await myUserService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await myUserService.WriteToFileAsync();
                 }
                 #endregion
 

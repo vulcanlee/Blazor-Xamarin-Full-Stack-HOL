@@ -63,6 +63,17 @@ namespace FrontMobile.ViewModels
                 fooObject.BeginDate = DateTime.Now.AddDays(1).Date + new TimeSpan(09, 00, 00);
                 fooObject.CompleteDate = DateTime.Now.AddDays(1).Date + new TimeSpan(18, 00, 00);
                 fooObject.Hours = 8.0m;
+     
+                #region 設定該使用者為預設紀錄申請者
+                var myUser = myUserService.Items
+                .FirstOrDefault(x => x.Id == appStatus.SystemStatus.UserID);
+                if(myUser !=null)
+                {
+                    fooObject.MyUserId = myUser.Id;
+                    fooObject.MyUserName = myUser.Name;
+                }
+                #endregion
+       
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
                 await navigationService.NavigateAsync("LeaveFormRecordPage", paras);
@@ -148,6 +159,7 @@ namespace FrontMobile.ViewModels
                     return;
                 }
                 #endregion
+
                 #region 取得 人員清單
                 fooIProgressDialog.Title = "請稍後，取得 人員清單";
                 apiResultssss = await myUserService.GetAsync();

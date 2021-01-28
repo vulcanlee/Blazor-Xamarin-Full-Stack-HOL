@@ -302,6 +302,7 @@ namespace FrontMobile.ViewModels
                 LeaveCategoryItemsSource.Add(pItem);
             }
             #endregion
+
             #region 讀取使用者
             await myUserService.ReadFromFileAsync();
             MyUserItemsSource.Clear();

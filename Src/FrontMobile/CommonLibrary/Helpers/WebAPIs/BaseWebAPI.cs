@@ -138,6 +138,14 @@ namespace CommonLibrary.Helpers.WebAPIs
             APIResult apiResult = this.ServiceResult;
             string jsonPayload = "";
 
+            #region 確認網路已經連線
+            if (await UtilityHelper.CanConnectRemoteHostService() == false)
+            {
+                apiResult.Status = false;
+                apiResult.Message = "無網路連線可用 或者 無法連線到遠端主機，請檢查網路狀態與主機服務是否可以使用";
+                return apiResult;
+            }
+            #endregion
             //檢查網路狀態
             if (UtilityHelper.IsConnected() == false)
             {

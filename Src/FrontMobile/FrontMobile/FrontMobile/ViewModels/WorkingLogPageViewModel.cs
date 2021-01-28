@@ -62,6 +62,17 @@ namespace FrontMobile.ViewModels
                 NavigationParameters paras = new NavigationParameters();
                 var fooObject = new WorkingLogDto();
                 fooObject.LogDate = DateTime.Now.Date;
+
+                #region 設定該使用者為預設紀錄申請者
+                var myUser = myUserService.Items
+                .FirstOrDefault(x => x.Id == appStatus.SystemStatus.UserID);
+                if (myUser != null)
+                {
+                    fooObject.MyUserId = myUser.Id;
+                    fooObject.MyUserName = myUser.Name;
+                }
+                #endregion
+
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
                 await navigationService.NavigateAsync("WorkingLogRecordPage", paras);
@@ -202,6 +213,7 @@ namespace FrontMobile.ViewModels
                     return;
                 }
                 #endregion
+
                 #region 取得人員清單
                 fooIProgressDialog.Title = "請稍後，取得人員清單";
                 apiResultssss = await myUserService.GetAsync();
@@ -215,6 +227,7 @@ namespace FrontMobile.ViewModels
                     return;
                 }
                 #endregion
+
                 #region 取得 工作日誌表單
                 fooIProgressDialog.Title = "請稍後，取得 工作日誌表單";
                 apiResultssss = await workingLogService.GetAsync();

@@ -63,6 +63,17 @@ namespace FrontMobile.ViewModels
                 NavigationParameters paras = new NavigationParameters();
                 var fooObject = new TravelExpenseDto();
                 fooObject.ApplyDate = DateTime.Now.Date;
+
+                #region 設定該使用者為預設紀錄申請者
+                var myUser = myUserService.Items
+                .FirstOrDefault(x => x.Id == appStatus.SystemStatus.UserID);
+                if (myUser != null)
+                {
+                    fooObject.MyUserId = myUser.Id;
+                    fooObject.MyUserName = myUser.Name;
+                }
+                #endregion
+
                 paras.Add(MagicStringHelper.CurrentSelectdItemParameterName, fooObject);
                 paras.Add(MagicStringHelper.CrudActionName, MagicStringHelper.CrudAddAction);
                 await navigationService.NavigateAsync("TravelExpenseRecordPage", paras);

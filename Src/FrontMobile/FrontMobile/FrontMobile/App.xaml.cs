@@ -55,24 +55,24 @@ namespace FrontMobile
 
         void RegisterOtherTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<TravelExpenseDetailService>();
-            containerRegistry.Register<TravelExpenseService>();
-            containerRegistry.Register<WorkingLogDetailService>();
-            containerRegistry.Register<WorkingLogService>();
-            containerRegistry.Register<LeaveFormService>();
-            containerRegistry.Register<ProjectService>();
-            containerRegistry.Register<OnCallPhoneService>();
-            containerRegistry.Register<MyUserService>();
-            containerRegistry.Register<LeaveCategoryService>();
-            containerRegistry.Register<OnlyAdministratorService>();
-            containerRegistry.Register<OnlyUserService>();
-            containerRegistry.Register<SystemStatusService>();
-            containerRegistry.Register<LoginService>();
-            containerRegistry.Register<ExceptionRecordsService>();
-            containerRegistry.Register<SystemEnvironmentsService>();
-            containerRegistry.Register<AppExceptionsService>();
-            containerRegistry.Register<RefreshTokenService>();
-            containerRegistry.Register<RecordCacheHelper>();
+            containerRegistry.RegisterSingleton<TravelExpenseDetailService>();
+            containerRegistry.RegisterSingleton<TravelExpenseService>();
+            containerRegistry.RegisterSingleton<WorkingLogDetailService>();
+            containerRegistry.RegisterSingleton<WorkingLogService>();
+            containerRegistry.RegisterSingleton<LeaveFormService>();
+            containerRegistry.RegisterSingleton<ProjectService>();
+            containerRegistry.RegisterSingleton<OnCallPhoneService>();
+            containerRegistry.RegisterSingleton<MyUserService>();
+            containerRegistry.RegisterSingleton<LeaveCategoryService>();
+            containerRegistry.RegisterSingleton<OnlyAdministratorService>();
+            containerRegistry.RegisterSingleton<OnlyUserService>();
+            containerRegistry.RegisterSingleton<SystemStatusService>();
+            containerRegistry.RegisterSingleton<LoginService>();
+            containerRegistry.RegisterSingleton<ExceptionRecordsService>();
+            containerRegistry.RegisterSingleton<SystemEnvironmentsService>();
+            containerRegistry.RegisterSingleton<AppExceptionsService>();
+            containerRegistry.RegisterSingleton<RefreshTokenService>();
+            containerRegistry.RegisterSingleton<RecordCacheHelper>();
             containerRegistry.RegisterSingleton<AppStatus>();
 
         }
