@@ -57,11 +57,12 @@
             },
             {
               "sku": {
-                "name": "Standard",
-                "tier": "Standard",
-                "capacity": 10
+                "name": "GP_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 2
               },
-              "kind": "v12.0,user",
+              "kind": "v12.0,user,vcore",
               "location": "[parameters('resourceLocation')]",
               "name": "hyperfullstackdbsrv/HyperFullStackDB",
               "type": "Microsoft.Sql/servers/databases",

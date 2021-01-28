@@ -26,8 +26,8 @@ namespace Backend.Pages
             Username = "user1";
             Password = "pw";
             PasswordType = "";
-            this.myUserService = myUserService;
 #endif
+            this.myUserService = myUserService;
         }
         [BindProperty]
         public string Username { get; set; } = "";
