@@ -47,7 +47,7 @@ namespace Initialization
             context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
             #region 產生開發用的測試資料
-            await GenerateMyUserAsync(context, random);
+            //await GenerateMyUserAsync(context, random);
             #endregion
         }
 
