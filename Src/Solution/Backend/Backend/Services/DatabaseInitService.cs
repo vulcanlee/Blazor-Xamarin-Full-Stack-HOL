@@ -29,7 +29,38 @@ namespace Backend.Services
 
         public async Task InitDataAsync()
         {
-            var items = Get假別();
+            #region 適用於 Code First ，刪除資料庫與移除資料庫
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+            #endregion
+
+            #region 假別 
+            var items = Get姓名();
+            CleanTrackingHelper.Clean<MyUser>(context);
+            int idx = 1;
+            foreach (var item in items)
+            {
+                var itemMyUser = await context.MyUser
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Name == item);
+                if (itemMyUser == null)
+                {
+                    itemMyUser = new MyUser()
+                    {
+                        Account = $"user{idx}",
+                        Name = $"{item}",
+                        Password = "pw",
+                    };
+                    if (idx == 9) itemMyUser.IsManager = true;
+                    context.Add(itemMyUser);
+                    await context.SaveChangesAsync();
+                    idx++;
+                }
+            }
+            CleanTrackingHelper.Clean<MyUser>(context);
+            #endregion
+            #region 假別
+            items = Get假別();
             CleanTrackingHelper.Clean<LeaveCategory>(context);
             int order = 0;
             foreach (var item in items)
@@ -50,7 +81,8 @@ namespace Backend.Services
                 }
             }
             CleanTrackingHelper.Clean<LeaveCategory>(context);
-
+            #endregion
+            #region 連絡電話
             var items連絡電話 = Get連絡電話();
             CleanTrackingHelper.Clean<OnCallPhone>(context);
             order = 0;
@@ -73,7 +105,8 @@ namespace Backend.Services
                 }
             }
             CleanTrackingHelper.Clean<OnCallPhone>(context);
-
+            #endregion
+            #region 專案
             items = Get專案();
             CleanTrackingHelper.Clean<Project>(context);
             foreach (var item in items)
@@ -92,6 +125,19 @@ namespace Backend.Services
                 }
             }
             CleanTrackingHelper.Clean<Project>(context);
+            #endregion
+        }
+
+        public List<string> Get姓名()
+        {
+            string nameString = "邱明儒、連寧甫、張瑞信、黃素貞、林淑惠、林國瑋、楊逸群、黃思翰、施詩婷、許建勳、蔡明虹、車振宇、李政心、王秀美、陳彥廷、袁幸萍、程怡君、林育齊、梁禎火、游登冰、袁彥璋、謝其易、楊宗翰、林欣年、王博新、林家希、陳奕翔、王萱寧、馮哲維、張瑤任、杜子方、曹松隆、張瑞發、陳俐瑜、侯宇嘉、翁俊毅、陳奕海、吳千慧、何茂平、郭又蕙、蘇志忠、藍邦琬、黃慧珠、夏姿瑩、劉柏鈞、張剛伸、顏彥文、張嘉玫、楊仕榮、馬育萱、王威任、林佳文、張淑敏、王俊剛、陳仕妍、黃宗吟、黃俊音、王志成、林郁人、王偉傑、張麗芬、郭欣怡、謝明淑、彭靜芳、吳淑華、周志星、黃美堅、盧哲瑋、吳朝以、張惠文、林秀玲、韓國偉、許靜宜、郭進瑤、符佩琪、張庭瑋、周聖凱";
+            List<string> all姓名 = new List<string>();
+            var allNames = nameString.Split("、");
+            foreach (var item in allNames)
+            {
+                all姓名.Add(item);
+            }
+            return all姓名;
         }
 
         public List<string> Get假別()
