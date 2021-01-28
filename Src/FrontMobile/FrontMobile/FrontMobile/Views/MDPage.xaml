@@ -19,10 +19,27 @@
                                 <yummy:GradientStop Color="SkyBlue" Offset="0.7" />
                             </yummy:GradientStopCollection>
                         </yummy:PancakeView.BackgroundGradientStops>
-                        <Label
-                            HorizontalOptions="Center" VerticalOptions="Center"
-                            FontSize="40"
-                            Text=".NET 超全端開發"/>
+                        <Grid
+                            RowSpacing="0" ColumnSpacing="0">
+                            <Label
+                                HorizontalOptions="Center" VerticalOptions="Center"
+                                FontSize="40"
+                                Text=".NET 超全端開發"/>
+                            <StackLayout
+                                Spacing="0"
+                                Orientation="Horizontal"
+                                HorizontalOptions="End" VerticalOptions="End"
+                                Margin="0,0,10,10">
+                                <Label
+                                    HorizontalOptions="Center" VerticalOptions="Center"
+                                    FontSize="16"
+                                    Text="{Binding MyUserName}"/>
+                                <Label
+                                    HorizontalOptions="Center" VerticalOptions="Center"
+                                    FontSize="16"
+                                    Text="{Binding MyUserAccount, StringFormat='  ({0})'}"/>
+                            </StackLayout>
+                        </Grid>
                     </yummy:PancakeView>
                     <Grid Margin="20,10">
                         <Grid.ColumnDefinitions>

@@ -26,17 +26,19 @@ namespace FrontMobile.ViewModels
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
         private readonly LoginService loginService;
+        private readonly MyUserService myUserService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
         private readonly RecordCacheHelper recordCacheHelper;
 
         public LoginPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
-            LoginService loginService, SystemStatusService systemStatusService,
+            LoginService loginService, MyUserService myUserService, SystemStatusService systemStatusService,
             AppStatus appStatus, RecordCacheHelper recordCacheHelper)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
             this.loginService = loginService;
+            this.myUserService = myUserService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
             this.recordCacheHelper = recordCacheHelper;
@@ -55,10 +57,19 @@ namespace FrontMobile.ViewModels
                         loginRequestDTO, appStatus);
                     if (fooResult == false)
                     {
-                        //await dialogService.DisplayAlertAsync("登入驗證失敗", "登入成功", "OK");
+                        await dialogService.DisplayAlertAsync("登入驗證失敗", "請重新輸入正確的帳號與密碼", "確定");
                         return;
                     }
                     await recordCacheHelper.RefreshAsync(fooIProgressDialog);
+                    #region 取得 使用者清單
+                    fooIProgressDialog.Title = "請稍後，取得 使用者清單";
+                    await myUserService.ReadFromFileAsync();
+                    APIResult apiResult = await myUserService.GetAsync();
+                    if (apiResult.Status == true)
+                    {
+                        await myUserService.WriteToFileAsync();
+                    }
+                    #endregion
                 }
 
                 await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");

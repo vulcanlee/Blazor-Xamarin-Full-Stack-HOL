@@ -20,22 +20,26 @@ namespace FrontMobile.ViewModels
 
         private readonly INavigationService navigationService;
         private readonly IPageDialogService dialogService;
+        private readonly MyUserService myUserService;
         private readonly LoginService loginService;
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
         private readonly RecordCacheHelper recordCacheHelper;
         private readonly LogoutCleanHelper logoutCleanHelper;
         public DelegateCommand<string> MenuCommand { get; set; }
+        public string MyUserName { get; set; }
+        public string MyUserAccount { get; set; }
 
         public DelegateCommand LogoutCommand { get; set; }
         public MDPageViewModel(INavigationService navigationService,
-            IPageDialogService dialogService,
+            IPageDialogService dialogService, MyUserService myUserService,
             LoginService loginService, SystemStatusService systemStatusService,
             AppStatus appStatus, RecordCacheHelper recordCacheHelper,
             LogoutCleanHelper logoutCleanHelper)
         {
             this.navigationService = navigationService;
             this.dialogService = dialogService;
+            this.myUserService = myUserService;
             this.loginService = loginService;
             this.systemStatusService = systemStatusService;
             this.appStatus = appStatus;
@@ -95,6 +99,13 @@ namespace FrontMobile.ViewModels
 
         public void OnNavigatedTo(INavigationParameters parameters)
         {
+            var fooItem = myUserService.Items
+                .FirstOrDefault(x => x.Id == appStatus.SystemStatus.UserID);
+            if(fooItem!=null)
+            {
+                MyUserName = fooItem.Name;
+                MyUserAccount = fooItem.Account;
+            }
         }
 
     }

@@ -106,16 +106,6 @@ namespace FrontMobile.ViewModels
                 }
                 #endregion
 
-                #region 取得 使用者清單
-                fooIProgressDialog.Title = "請稍後，取得 使用者清單";
-                await myUserService.ReadFromFileAsync();
-                fooResult = await myUserService.GetAsync();
-                if (fooResult.Status == true)
-                {
-                    await myUserService.WriteToFileAsync();
-                }
-                #endregion
-
                 #region 上傳例外異常
                 fooIProgressDialog.Title = "請稍後，上傳例外異常";
                 await appExceptionsService.ReadFromFileAsync();
@@ -141,11 +131,18 @@ namespace FrontMobile.ViewModels
             }
 
             #region 使用者已經成功登入了，接下來要更新相關資料
-            //using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，上傳例外異常資料中...", null, null, true, MaskType.Black))
-            //{
-            //    await recordCacheHelper.RefreshAsync(fooIProgressDialog);
-
-            //}
+            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            {
+                #region 取得 使用者清單
+                fooIProgressDialog.Title = "請稍後，取得 使用者清單";
+                await myUserService.ReadFromFileAsync();
+                var fooResult = await myUserService.GetAsync();
+                if (fooResult.Status == true)
+                {
+                    await myUserService.WriteToFileAsync();
+                }
+                #endregion
+            }
 
             // 使用者尚已經功登入，切換到首頁頁面
             await navigationService.NavigateAsync("/MDPage/NaviPage/HomePage");
