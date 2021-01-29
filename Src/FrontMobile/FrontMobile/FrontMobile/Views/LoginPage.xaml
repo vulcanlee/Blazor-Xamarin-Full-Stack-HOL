@@ -7,28 +7,128 @@
 
     <Grid
         RowSpacing="0" ColumnSpacing="0"
+        Margin="20,0"
+        HorizontalOptions="Fill" VerticalOptions="Center"
         >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Rectangle RadiusX="10" RadiusY="10"
+                   Grid.RowSpan="3"
+                   HorizontalOptions="Fill" VerticalOptions="Fill"
+                   Stroke="#aaa"/>
+
         <StackLayout
             Spacing="0"
+            HorizontalOptions="Center" VerticalOptions="Start"
+            Margin="0,20,0,0"
             >
-            <Entry
-                Text="{Binding Account}"
+            <Label
+                Text="快快樂樂逍遙學"
+                HorizontalOptions="Center"
+                FontSize="18" TextColor="Gray"
                 />
-            <Entry
-                Text="{Binding Password}"
-                IsPassword="True"/>
+            <Label
+                Text="Blazor+Xamarin 超全端程式設計"
+                HorizontalOptions="Center"
+                FontSize="24" TextColor="Gray"
+                />
+        </StackLayout>
+        <BoxView
+            Color="Gray"
+            VerticalOptions="End" HorizontalOptions="Fill"
+            HeightRequest="1"
+            Margin="15,0,15,5"
+            />
+        <StackLayout
+            Spacing="0"
+            Grid.Row="1"
+            Margin="15,0"
+            >
+            <Grid
+                RowSpacing="0" ColumnSpacing="0"
+                HeightRequest="60"
+                Margin="0,30,0,10"
+                >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle RadiusX="5" RadiusY="5"
+                   Grid.ColumnSpan="2"
+                   HorizontalOptions="Fill" VerticalOptions="Fill"
+                   Stroke="LightGray"/>
+                <BoxView
+                    Color="LightGray"
+                    />
+                <Label Grid.Column="0"
+                       VerticalOptions="Center"
+                       FontFamily="MaterialDesignIcons" 
+                       FontSize="50" TextColor="#4a4a4a" 
+                       Text="&#xF0004;" />
+                <Entry
+                    Grid.Column="1"
+                    Margin="15,0"
+                    Text="{Binding Account}"
+                    Placeholder="使用者的帳號"
+                    />
+            </Grid>
+            <Grid
+                RowSpacing="0" ColumnSpacing="0"
+                HeightRequest="60"
+                Margin="0,10,0,20"
+                >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle RadiusX="5" RadiusY="5"
+                   Grid.ColumnSpan="2"
+                   HorizontalOptions="Fill" VerticalOptions="Fill"
+                   Stroke="LightGray"/>
+                <BoxView
+                    Color="LightGray"
+                    />
+                <Label Grid.Column="0"
+                       VerticalOptions="Center"
+                       FontFamily="MaterialDesignIcons" 
+                       FontSize="50" TextColor="#4a4a4a" 
+                       Text="&#xF07F5;" />
+                <Entry
+                    Grid.Column="1"
+                    Margin="15,0"
+                    Text="{Binding Password}"
+                    Placeholder="使用者的密碼"
+                    IsPassword="True"
+                    />
+            </Grid>
             <Button
-                Text="登入"
+                Margin="0,10"
+                BackgroundColor="#2f62b5"
+                TextColor="White"
+                Text="登入" FontSize="22"
                 Command="{Binding LoginCommand}"/>
 
-            <Button
-                Text="切換為一般使用者"
-                Command="{Binding SwitchUserCommand}"
-                CommandParameter="user1"/>
-            <Button
-                Text="切換為管理者"
-                Command="{Binding SwitchUserCommand}"
-                CommandParameter="user9"/>
+            <StackLayout
+                Orientation="Horizontal"
+                Spacing="0">
+                <Button
+                    Margin="0,0,7,0"
+                    HorizontalOptions="FillAndExpand"
+                    BackgroundColor="DimGray"
+                    Text="切換為一般使用者" TextColor="White"
+                    Command="{Binding SwitchUserCommand}"
+                    CommandParameter="user1"/>
+                <Button
+                    Margin="7,0,0,0"
+                    HorizontalOptions="FillAndExpand"
+                    BackgroundColor="DimGray"
+                    Text="切換為管理者" TextColor="White"
+                    Command="{Binding SwitchUserCommand}"
+                    CommandParameter="user9"/>
+            </StackLayout>
         </StackLayout>
     </Grid>
 </ContentPage>
