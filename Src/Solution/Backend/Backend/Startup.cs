@@ -137,10 +137,15 @@ namespace Backend
             #endregion
 
             #region 修正 Web API 的 JSON 處理
-            services.AddControllers().AddJsonOptions(config =>
-            {
-                config.JsonSerializerOptions.PropertyNamingPolicy = null;
-            });
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                })
+                .AddJsonOptions(config =>
+                {
+                    config.JsonSerializerOptions.PropertyNamingPolicy = null;
+                });
             #endregion
 
             #region 設定 Swagger 中介軟體
