@@ -30,6 +30,8 @@ namespace FrontMobile.ViewModels
         private readonly SystemStatusService systemStatusService;
         private readonly AppStatus appStatus;
         private readonly RecordCacheHelper recordCacheHelper;
+        public bool ShowAccountValidationErrorMessage { get; set; }
+        public bool ShowPasswordValidationErrorMessage { get; set; }
 
         public LoginPageViewModel(INavigationService navigationService, IPageDialogService dialogService,
             LoginService loginService, MyUserService myUserService, SystemStatusService systemStatusService,
@@ -97,5 +99,29 @@ namespace FrontMobile.ViewModels
             await systemStatusService.ReadFromFileAsync();
         }
 
+        #region Fody 自動綁定事件
+        public void OnAccountChanged()
+        {
+            if (string.IsNullOrEmpty(Account))
+            {
+                ShowAccountValidationErrorMessage = true;
+            }
+            else
+            {
+                ShowAccountValidationErrorMessage = false;
+            }
+        }
+        public void OnPasswordChanged()
+        {
+            if (string.IsNullOrEmpty(Account))
+            {
+                ShowPasswordValidationErrorMessage = true;
+            }
+            else
+            {
+                ShowPasswordValidationErrorMessage = false;
+            }
+        }
+        #endregion
     }
 }
