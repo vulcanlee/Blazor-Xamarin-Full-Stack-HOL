@@ -97,6 +97,9 @@ namespace FrontMobile.ViewModels
             Password = "pw";
 #endif
             await systemStatusService.ReadFromFileAsync();
+
+            OnAccountChanged();
+            OnPasswordChanged();
         }
 
         #region Fody 自動綁定事件

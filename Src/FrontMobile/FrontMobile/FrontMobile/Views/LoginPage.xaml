@@ -11,7 +11,7 @@
         HorizontalOptions="Fill" VerticalOptions="Center"
         >
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -22,8 +22,8 @@
 
         <StackLayout
             Spacing="0"
-            HorizontalOptions="Center" VerticalOptions="Start"
-            Margin="0,20,0,0"
+            HorizontalOptions="Center" VerticalOptions="Center"
+            Margin="0,0,0,0"
             >
             <Label
                 Text="快快樂樂逍遙學"
@@ -31,7 +31,12 @@
                 FontSize="18" TextColor="Gray"
                 />
             <Label
-                Text="Blazor+Xamarin 超全端程式設計"
+                Text="Blazor+Xamarin"
+                HorizontalOptions="Center"
+                FontSize="24" TextColor="Gray"
+                />
+            <Label
+                Text="超全端程式設計 HOL"
                 HorizontalOptions="Center"
                 FontSize="24" TextColor="Gray"
                 />

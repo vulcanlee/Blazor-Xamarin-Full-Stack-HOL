@@ -73,7 +73,9 @@ namespace FrontMobile.ViewModels
             #endregion
 
             #region 讀取相關定義資料
-            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            using (IProgressDialog fooIProgressDialog = 
+                UserDialogs.Instance.Loading($"請稍後，更新資料中...",
+                null, null, true, MaskType.Clear))
             {
                 await AppStatusHelper.ReadAndUpdateAppStatus(systemStatusService, appStatus);
                 #region 取得 連絡電話本
@@ -131,7 +133,9 @@ namespace FrontMobile.ViewModels
             }
 
             #region 使用者已經成功登入了，接下來要更新相關資料
-            using (IProgressDialog fooIProgressDialog = UserDialogs.Instance.Loading($"請稍後，更新資料中...", null, null, true, MaskType.Black))
+            using (IProgressDialog fooIProgressDialog = 
+                UserDialogs.Instance.Loading($"請稍後，更新資料中...",
+                null, null, true, MaskType.Clear))
             {
                 #region 取得 使用者清單
                 fooIProgressDialog.Title = "請稍後，取得 使用者清單";

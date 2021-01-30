@@ -4,7 +4,7 @@
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="FrontMobile.Views.SplashPage"
-             Background="#a5ab9f">
+             Background="lightgreen">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,11 +14,20 @@
         <Image Source="Logo.png"
                HeightRequest="100"
                HorizontalOptions="Center" VerticalOptions="Center"/>
-        <Label
-            Grid.Row="1" Grid.Column="0"
-            HorizontalOptions="Center" VerticalOptions="Center"
-            FontSize="40"
-            Text="請稍後"/>
+        <StackLayout
+            Spacing="0"
+            VerticalOptions="End"
+            Margin="0,0,0,75"
+            Grid.Row="1" Grid.Column="0">
+            <Label
+                HorizontalOptions="Center" VerticalOptions="Center"
+                FontSize="32" TextColor="DarkGreen"
+                Text="快樂逍遙動手"/>
+            <Label
+                HorizontalOptions="Center" VerticalOptions="Center"
+                FontSize="32" TextColor="DarkGreen"
+                Text="學超全端開發"/>
+        </StackLayout>
     </Grid>
   
 </ContentPage>
