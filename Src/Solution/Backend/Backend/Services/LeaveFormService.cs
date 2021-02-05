@@ -175,6 +175,29 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要新增的紀錄已經存在無法新增);
             }
+            CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<LeaveCategory>(context);
+            LeaveCategory itemLeaveCategory = await context.LeaveCategory
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.LeaveCategoryId);
+            if (itemLeaveCategory == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定請假類別);
+            }
+            MyUser item = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.MyUserId);
+            if (item == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定使用者);
+            }
+            item = await context.MyUser
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.Id == paraObject.AgentId);
+            if (item == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定使用者);
+            }
             return VerifyRecordResultFactory.Build(true);
         }
 
@@ -188,25 +211,34 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要修改的紀錄已經存在無法修改);
             }
-            return VerifyRecordResultFactory.Build(true);
-        }
-        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(LeaveFormAdapterModel paraObject)
-        {
             CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<LeaveCategory>(context);
+            LeaveCategory itemLeaveCategory = await context.LeaveCategory
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.LeaveCategoryId);
+            if (itemLeaveCategory == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定請假類別);
+            }
             MyUser item = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.MyUserId);
-            if (item != null)
+            if (item == null)
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定使用者);
             }
             item = await context.MyUser
                .AsNoTracking()
                .FirstOrDefaultAsync(x => x.Id == paraObject.AgentId);
-            if (item != null)
+            if (item == null)
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.需要指定使用者);
             }
+            return VerifyRecordResultFactory.Build(true);
+        }
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(LeaveFormAdapterModel paraObject)
+        {
+            await Task.Yield();
             return VerifyRecordResultFactory.Build(true);
         }
         async Task OhterDependencyData(LeaveFormAdapterModel data)

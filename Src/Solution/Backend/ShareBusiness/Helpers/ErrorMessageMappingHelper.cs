@@ -55,6 +55,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入該工作日誌的歸屬專案, "尚未輸入該工作日誌的歸屬專案");
             ErrorMessages.Add(ErrorMessageEnum.工作時數必須大於0, "工作時數必須大於 0");
             ErrorMessages.Add(ErrorMessageEnum.需要指定使用者, "需要指定使用者");
+            ErrorMessages.Add(ErrorMessageEnum.需要指定請假類別, "需要指定請假類別");
 
         }
 

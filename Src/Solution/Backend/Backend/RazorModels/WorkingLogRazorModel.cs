@@ -132,6 +132,8 @@ namespace Backend.RazorModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    await Task.Yield();
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
                 #endregion
@@ -172,7 +174,6 @@ namespace Backend.RazorModels
             #endregion
 
             #region 檢查資料完整性
-            CurrentRecord.Name = CurrentRecord.LogDate.ToString("yyyyMMdd");
             if (isNewRecordMode == true)
             {
                 var checkedResult = await CurrentService
@@ -181,6 +182,7 @@ namespace Backend.RazorModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
             }
@@ -192,6 +194,7 @@ namespace Backend.RazorModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
             }

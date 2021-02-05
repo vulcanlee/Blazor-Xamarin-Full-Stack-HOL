@@ -44,6 +44,7 @@ namespace ShareDomain.Enums
         尚未輸入該工作日誌的歸屬專案,
         工作時數必須大於0,
         需要指定使用者,
+        需要指定請假類別,
         Exception = 2147483647,
     }
 }

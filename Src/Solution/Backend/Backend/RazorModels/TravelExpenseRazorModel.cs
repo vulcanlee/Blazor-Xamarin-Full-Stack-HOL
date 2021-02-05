@@ -132,6 +132,8 @@ namespace Backend.RazorModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    await Task.Yield();
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
                 #endregion
@@ -180,6 +182,7 @@ namespace Backend.RazorModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
             }
@@ -191,6 +194,7 @@ namespace Backend.RazorModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
             }
