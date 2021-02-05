@@ -149,7 +149,7 @@ namespace Backend
             #endregion
 
             #region 設定 Swagger 中介軟體
-            services.AddSwaggerDocument();
+            services.AddSwaggerGen();
             #endregion
         }
 
@@ -182,9 +182,15 @@ namespace Backend
             app.UseStaticFiles();
 
             #region 啟用 Swagger 中介軟體
-            // Register the Swagger generator and the Swagger UI middlewares
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API V1");
+            });
             #endregion
 
             app.UseRouting();

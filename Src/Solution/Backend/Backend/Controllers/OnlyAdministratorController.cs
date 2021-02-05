@@ -13,6 +13,9 @@ using ShareDomain.Enums;
 
 namespace Backend.Controllers
 {
+    /// <summary>
+    /// 需要使用具有 管理者 權限帳號者，才能夠呼叫
+    /// </summary>
     [Authorize(AuthenticationSchemes = MagicHelper.JwtBearerAuthenticationScheme, Roles = "Administrator")]
     [Produces("application/json")]
     [Route("api/[controller]")]
