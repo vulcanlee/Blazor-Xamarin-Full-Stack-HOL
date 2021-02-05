@@ -119,6 +119,7 @@ namespace Backend.RazorModels
                 #region 檢查關聯資料是否存在
                 var checkedResult = await CurrentService
                     .BeforeDeleteCheckAsync(CurrentNeedDeleteRecord);
+                await Task.Delay(100);
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
