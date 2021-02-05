@@ -192,7 +192,21 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(LeaveFormAdapterModel paraObject)
         {
-            await Task.Yield();
+            CleanTrackingHelper.Clean<MyUser>(context);
+            MyUser item = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.MyUserId);
+            if (item != null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
+            }
+            item = await context.MyUser
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.Id == paraObject.AgentId);
+            if (item != null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
+            }
             return VerifyRecordResultFactory.Build(true);
         }
         async Task OhterDependencyData(LeaveFormAdapterModel data)
