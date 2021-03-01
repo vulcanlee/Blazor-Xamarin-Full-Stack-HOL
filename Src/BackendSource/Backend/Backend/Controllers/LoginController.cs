@@ -25,13 +25,13 @@ namespace Backend.Controllers
     public class LoginController : ControllerBase
     {
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
-        private readonly IHoluserService holuserService;
+        private readonly IMyUserService myUserService;
 
         public LoginController(Microsoft.Extensions.Configuration.IConfiguration configuration,
-            IHoluserService holuserService)
+            IMyUserService myUserService)
         {
             this.configuration = configuration;
-            this.holuserService = holuserService;
+            this.myUserService = myUserService;
         }
         [AllowAnonymous]
         [HttpPost]
@@ -46,7 +46,7 @@ namespace Backend.Controllers
                 return Ok(apiResult);
             }
 
-            (HoluserAdapterModel user, string message) = await holuserService.CheckUser(loginRequestDTO.Account, loginRequestDTO.Password);
+            (MyUserAdapterModel user, string message) = await myUserService.CheckUser(loginRequestDTO.Account, loginRequestDTO.Password);
 
             if (user == null)
             {
@@ -61,7 +61,7 @@ namespace Backend.Controllers
             LoginResponseDto LoginResponseDTO = new LoginResponseDto()
             {
                 Account = loginRequestDTO.Account,
-                Id = 0,
+                Id = user.Id,
                 Name = loginRequestDTO.Account,
                 Token = token,
                 TokenExpireMinutes = Convert.ToInt32(configuration["Tokens:JwtExpireMinutes"]),
@@ -84,11 +84,11 @@ namespace Backend.Controllers
             await Task.Yield();
             LoginRequestDto loginRequestDTO = new LoginRequestDto()
             {
-                Account = User.FindFirst(JwtRegisteredClaimNames.Sid)?.Value,
+                Account = User.FindFirst(ClaimTypes.Sid)?.Value,
             };
 
-            HoluserAdapterModel user = await holuserService.GetAsync(Convert.ToInt32(loginRequestDTO.Account));
-            if (user == null)
+            MyUserAdapterModel user = await myUserService.GetAsync(Convert.ToInt32(loginRequestDTO.Account));
+            if (user.Id == 0)
             {
                 apiResult = APIResultFactory.Build(false, StatusCodes.Status401Unauthorized,
                 ErrorMessageEnum.沒有發現指定的該使用者資料);
@@ -115,17 +115,17 @@ namespace Backend.Controllers
 
         }
 
-        public string GenerateToken(HoluserAdapterModel user)
+        string GenerateToken(MyUserAdapterModel user)
         {
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, "User"),
                 new Claim(ClaimTypes.NameIdentifier, user.Account),
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, "User"),
-                new Claim("TokenVersion", user.TokenVersion.ToString()),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                
             };
-            if (user.Level == 4)
+            if (user.IsManager == true)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
             }
@@ -147,13 +147,13 @@ namespace Backend.Controllers
 
         }
 
-        public string GenerateRefreshToken(HoluserAdapterModel user)
+        string GenerateRefreshToken(MyUserAdapterModel user)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Account),
                 new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, $"RefreshToken"),
             };
 
@@ -163,6 +163,7 @@ namespace Backend.Controllers
                 audience: configuration["Tokens:ValidAudience"],
                 claims: claims,
                 expires: DateTime.Now.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])),
+                //expires: DateTime.Now.AddMinutes(1),
                 //notBefore: DateTime.Now.AddMinutes(-5),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey
                             (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),

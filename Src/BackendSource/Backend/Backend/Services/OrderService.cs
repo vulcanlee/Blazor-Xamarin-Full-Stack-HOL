@@ -32,7 +32,7 @@ namespace Backend.Services
         {
             List<OrderAdapterModel> data = new List<OrderAdapterModel>();
             DataRequestResult<OrderAdapterModel> result = new DataRequestResult<OrderAdapterModel>();
-            var DataSource = context.Orders
+            var DataSource = context.Order
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -72,26 +72,27 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<OrderAdapterModel> adaptorModelObjects =
+            List<OrderAdapterModel> adapterModelObjects =
                 Mapper.Map<List<OrderAdapterModel>>(DataSource);
 
-            foreach (var adaptorModelItem in adaptorModelObjects)
+            foreach (var adapterModelItem in adapterModelObjects)
             {
-                // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
-            result.Result = adaptorModelObjects;
+            result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
         }
 
         public async Task<OrderAdapterModel> GetAsync(int id)
         {
-            Order item = await context.Orders
+            Order item = await context.Order
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             OrderAdapterModel result = Mapper.Map<OrderAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -100,7 +101,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<Order>(context);
             Order itemParameter = Mapper.Map<Order>(paraObject);
             CleanTrackingHelper.Clean<Order>(context);
-            await context.Orders
+            await context.Order
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<Order>(context);
@@ -111,7 +112,7 @@ namespace Backend.Services
         {
             Order itemData = Mapper.Map<Order>(paraObject);
             CleanTrackingHelper.Clean<Order>(context);
-            Order item = await context.Orders
+            Order item = await context.Order
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -131,7 +132,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<Order>(context);
-            Order item = await context.Orders
+            Order item = await context.Order
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -149,7 +150,7 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderAdapterModel paraObject)
         {
-            var searchItem = await context.Orders
+            var searchItem = await context.Order
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name);
             if (searchItem != null)
@@ -161,7 +162,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OrderAdapterModel paraObject)
         {
-            var searchItem = await context.Orders
+            var searchItem = await context.Order
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
                 x.Id != paraObject.Id);
@@ -174,7 +175,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.OrderId == paraObject.Id);
             if (item != null)
@@ -182,6 +183,10 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
             return VerifyRecordResultFactory.Build(true);
+        }
+        Task OhterDependencyData(OrderAdapterModel data)
+        {
+            return Task.FromResult(0);
         }
     }
 }

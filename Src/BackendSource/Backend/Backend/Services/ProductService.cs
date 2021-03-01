@@ -31,7 +31,7 @@ namespace Backend.Services
         {
             List<ProductAdapterModel> data = new List<ProductAdapterModel>();
             DataRequestResult<ProductAdapterModel> result = new DataRequestResult<ProductAdapterModel>();
-            var DataSource = context.Products
+            var DataSource = context.Product
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -71,16 +71,16 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<ProductAdapterModel> adaptorModelObjects =
+            List<ProductAdapterModel> adapterModelObjects =
                 Mapper.Map<List<ProductAdapterModel>>(DataSource);
 
-            foreach (var adaptorModelItem in adaptorModelObjects)
+            foreach (var adapterModelItem in adapterModelObjects)
             {
-                // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
-            result.Result = adaptorModelObjects;
+            result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
         }
@@ -88,10 +88,11 @@ namespace Backend.Services
         public async Task<ProductAdapterModel> GetAsync(int id)
 
         {
-            Product item = await context.Products
+            Product item = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             ProductAdapterModel result = Mapper.Map<ProductAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -99,7 +100,7 @@ namespace Backend.Services
         {
             Product itemParameter = Mapper.Map<Product>(paraObject);
             CleanTrackingHelper.Clean<Product>(context);
-            await context.Products
+            await context.Product
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<Product>(context);
@@ -110,7 +111,7 @@ namespace Backend.Services
         {
             Product itemData = Mapper.Map<Product>(paraObject);
             CleanTrackingHelper.Clean<Product>(context);
-            Product item = await context.Products
+            Product item = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -130,7 +131,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<Product>(context);
-            Product item = await context.Products
+            Product item = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -148,7 +149,7 @@ namespace Backend.Services
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(ProductAdapterModel paraObject)
         {
-            var searchItem = await context.Products
+            var searchItem = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name);
             if (searchItem != null)
@@ -160,7 +161,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(ProductAdapterModel paraObject)
         {
-            var searchItem = await context.Products
+            var searchItem = await context.Product
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
                 x.Id != paraObject.Id);
@@ -173,14 +174,18 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(ProductAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                .FirstOrDefaultAsync(x => x.ProductId == paraObject.Id);
             if (item != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
             return VerifyRecordResultFactory.Build(true);
+        }
+         Task OhterDependencyData(ProductAdapterModel data)
+        {
+            return Task.FromResult(0);
         }
     }
 }

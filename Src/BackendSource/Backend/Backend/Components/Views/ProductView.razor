@@ -35,9 +35,9 @@
                 RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
     <GridPageSettings PageSize="@PageSize" />
     <GridColumns>
-        <GridColumn Field=@nameof(ProductAdapterModel.Name) HeaderText="名稱"></GridColumn>
-        <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) HeaderText="年份" Width="70"></GridColumn>
-        <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) HeaderText="售價" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(ProductAdapterModel.Name) HeaderText="名稱" />
+        <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) HeaderText="年份" Width="70" />
+        <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) HeaderText="售價" Width="150" />
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -82,7 +82,8 @@
                         <div class="form-group col">
                             <label class="control-label">售價</label>
                             <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.ListPrice"
-                                              Placeholder="請輸入大於0的整數數值" />
+                                              Placeholder="請輸入大於0的整數數值"
+                                              Format="#####.##" />
                             <ValidationMessage For="@(() => RazorModel.CurrentRecord.ListPrice)" />
                         </div>
                     </div>
@@ -99,6 +100,9 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
+
+@*<MyUserPicker OpenPicker="RazorModel.ShowAontherRecordPicker"
+              OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />*@
 
 <MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
             IsVisible="@RazorModel.MessageBox.IsVisible"
@@ -117,7 +121,7 @@
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
-    public EventCallback<ProductAdapterModel> OnRecordChanged { get; set; }
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
 
@@ -168,17 +172,21 @@
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(args.Data);
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = args.Data.Id,
+                Title = MagicHelper.確認有表頭預設文字
+            });
         }
     }
     public async Task RowDeselectHandler(RowDeselectEventArgs<ProductAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
-            await OnRecordChanged.InvokeAsync(new ProductAdapterModel()
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
             {
                 Id = -2,
-                Name = "",
+                Title = "",
             });
         }
     }

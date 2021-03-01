@@ -34,7 +34,7 @@ namespace Backend.Services
             await context.Database.EnsureCreatedAsync();
             #endregion
 
-            #region 假別 
+            #region 使用者 
             var items = Get姓名();
             CleanTrackingHelper.Clean<MyUser>(context);
             int idx = 1;

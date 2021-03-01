@@ -127,10 +127,13 @@ namespace Backend.RazorModels
                 #region 檢查關聯資料是否存在
                 var checkedResult = await CurrentService
                     .BeforeDeleteCheckAsync(CurrentNeedDeleteRecord);
+                await Task.Delay(100);
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMapping.Instance.GetErrorMessage(checkedResult.MessageId));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    await Task.Yield();
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
                 #endregion
@@ -177,8 +180,9 @@ namespace Backend.RazorModels
                     .BeforeAddCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    ConfirmMessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMapping.Instance.GetErrorMessage(checkedResult.MessageId));
+                    MessageBox.Show("400px", "200px", "警告",
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
             }
@@ -188,8 +192,9 @@ namespace Backend.RazorModels
                     .BeforeUpdateCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    ConfirmMessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMapping.Instance.GetErrorMessage(checkedResult.MessageId));
+                    MessageBox.Show("400px", "200px", "警告",
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    thisRazorComponent.NeedRefresh();
                     return;
                 }
             }

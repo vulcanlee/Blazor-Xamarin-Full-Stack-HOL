@@ -1,5 +1,6 @@
 ﻿using DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Http;
+using ShareBusiness.Helpers;
 using ShareDomain.Enums;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace ShareBusiness.Factories
             {
                 Status = aPIResultStatus,
                 ErrorCode = (int)errorMessageEnum,
-                Message = (errorMessageEnum == ErrorMessageEnum.None) ? "" : $"錯誤代碼 {(int)errorMessageEnum}, {ErrorMessageMapping.Instance.GetErrorMessage(errorMessageEnum)}",
+                Message = (errorMessageEnum == ErrorMessageEnum.None) ? "" : $"錯誤代碼 {(int)errorMessageEnum}, {ErrorMessageMappingHelper.Instance.GetErrorMessage(errorMessageEnum)}",
                 HTTPStatus = statusCodes,
                 Payload = payload,
             };

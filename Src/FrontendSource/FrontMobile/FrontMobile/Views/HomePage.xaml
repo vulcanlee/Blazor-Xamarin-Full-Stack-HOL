@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="FrontMobile.Views.HomePage"
+             Title="首頁">
+
+    <Grid>
+        <StackLayout>
+            <Button
+                Text="Only Administrator"
+                Command="{Binding OnlyAdministratorCommand}"/>
+            <Button
+                Text="Only User"
+                Command="{Binding OnlyUserCommand}"/>
+            <Label
+                Text="{Binding Message}"/>
+            <Button
+                Text="Throw Exception"
+                Command="{Binding ThrowExceptionrCommand}"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>

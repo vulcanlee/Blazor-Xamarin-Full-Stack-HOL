@@ -15,8 +15,9 @@ namespace Backend.Helpers
         public AutoMapping()
         {
             #region Blazor AdapterModel
-            CreateMap<Holuser, HoluserAdapterModel>();
-            CreateMap<HoluserAdapterModel, Holuser>();
+            CreateMap<MyUser, MyUserAdapterModel>();
+            CreateMap<MyUserAdapterModel, MyUser>();
+
             CreateMap<Product, ProductAdapterModel>();
             CreateMap<ProductAdapterModel, Product>();
             CreateMap<Order, OrderAdapterModel>();
@@ -26,18 +27,21 @@ namespace Backend.Helpers
             #endregion
 
             #region DTO
-            CreateMap<Holuser, HoluserDto>();
-            CreateMap<HoluserDto, Holuser>();
-            CreateMap<HoluserAdapterModel, HoluserDto>();
-            CreateMap<HoluserDto, HoluserAdapterModel>();
+            CreateMap<MyUser, MyUserDto>();
+            CreateMap<MyUserDto, MyUser>();
+            CreateMap<MyUserAdapterModel, MyUserDto>();
+            CreateMap<MyUserDto, MyUserAdapterModel>();
+
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<ProductAdapterModel, ProductDto>();
             CreateMap<ProductDto, ProductAdapterModel>();
+
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDto, Order>();
             CreateMap<OrderAdapterModel, OrderDto>();
             CreateMap<OrderDto, OrderAdapterModel>();
+
             CreateMap<OrderItem, OrderItemDto>();
             CreateMap<OrderItemDto, OrderItem>();
             CreateMap<OrderItemAdapterModel, OrderItemDto>();

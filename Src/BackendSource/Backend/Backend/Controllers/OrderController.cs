@@ -43,15 +43,37 @@ namespace Backend.Controllers
         public async Task<IActionResult> Post([FromBody] OrderDto data)
         {
             APIResult apiResult;
+
+            #region 驗證 DTO 物件的資料一致性
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: data);
+                return Ok(apiResult);
+            }
+            #endregion
+
             OrderAdapterModel record = mapper.Map<OrderAdapterModel>(data);
             if (record != null)
             {
                 var result = mapper.Map<OrderDto>(record);
+
+                #region 新增記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await OrderService.BeforeAddCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await OrderService.AddAsync(record);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status201Created,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
@@ -85,7 +107,7 @@ namespace Backend.Controllers
             #endregion
 
             var records = await OrderService.GetAsync(dataRequest);
-            var result = mapper.Map<List<OrderDto>>(records);
+            var result = mapper.Map<List<OrderDto>>(records.Result);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);
@@ -116,17 +138,39 @@ namespace Backend.Controllers
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] OrderDto data)
         {
             APIResult apiResult;
+
+            #region 驗證 DTO 物件的資料一致性
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: data);
+                return Ok(apiResult);
+            }
+            #endregion
+
             var record = await OrderService.GetAsync(id);
             if (record != null)
             {
                 OrderAdapterModel recordTarget = mapper.Map<OrderAdapterModel>(data);
                 recordTarget.Id = id;
                 var result = mapper.Map<OrderDto>(recordTarget);
+
+                #region 修改記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await OrderService.BeforeUpdateCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await OrderService.UpdateAsync(recordTarget);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
@@ -152,11 +196,23 @@ namespace Backend.Controllers
             var result = mapper.Map<OrderDto>(record);
             if (record != null)
             {
+
+                #region 刪除記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await OrderService.BeforeDeleteCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await OrderService.DeleteAsync(id);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {

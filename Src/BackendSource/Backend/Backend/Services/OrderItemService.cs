@@ -32,8 +32,10 @@ namespace Backend.Services
         {
             List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
-            var DataSource = context.OrderItems
-                .AsNoTracking();
+            var DataSource = context.OrderItem
+                .AsNoTracking()
+                .Include(x=>x.Product)
+                .AsQueryable();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
@@ -72,25 +74,26 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<OrderItemAdapterModel> adaptorModelObjects =
+            List<OrderItemAdapterModel> adapterModelObjects =
                 Mapper.Map<List<OrderItemAdapterModel>>(DataSource);
 
-            foreach (var adaptorModelItem in adaptorModelObjects)
+            foreach (var adapterModelItem in adapterModelObjects)
             {
-                // ??? 這裡需要完成管理者人員的相關資料讀取程式碼
+                await OhterDependencyData(adapterModelItem);
+
             }
             #endregion
 
-            result.Result = adaptorModelObjects;
+            result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
         }
 
-        public async Task<DataRequestResult<OrderItemAdapterModel>> GetByHeaderIDAsync(int id,DataRequest dataRequest)
+        public async Task<DataRequestResult<OrderItemAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
         {
             List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
-            var DataSource = context.OrderItems
+            var DataSource = context.OrderItem
                 .AsNoTracking()
                 .Include(x => x.Product)
                 .Where(x => x.OrderId == id);
@@ -133,26 +136,28 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<OrderItemAdapterModel> adaptorModelObjects =
+            List<OrderItemAdapterModel> adapterModelObjects =
                 Mapper.Map<List<OrderItemAdapterModel>>(DataSource);
 
-            foreach (var adaptorModelItem in adaptorModelObjects)
+            foreach (var adapterModelItem in adapterModelObjects)
             {
-                adaptorModelItem.ProductName = adaptorModelItem.Product.Name;
+                await OhterDependencyData(adapterModelItem);
             }
             #endregion
 
-            result.Result = adaptorModelObjects;
+            result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
         }
 
         public async Task<OrderItemAdapterModel> GetAsync(int id)
         {
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
+                .Include(x => x.Product)
                 .FirstOrDefaultAsync(x => x.Id == id);
             OrderItemAdapterModel result = Mapper.Map<OrderItemAdapterModel>(item);
+            await OhterDependencyData(result);
             return result;
         }
 
@@ -160,7 +165,7 @@ namespace Backend.Services
         {
             OrderItem itemParameter = Mapper.Map<OrderItem>(paraObject);
             CleanTrackingHelper.Clean<OrderItem>(context);
-            await context.OrderItems
+            await context.OrderItem
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<OrderItem>(context);
@@ -171,7 +176,7 @@ namespace Backend.Services
         {
             OrderItem itemData = Mapper.Map<OrderItem>(paraObject);
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -191,7 +196,7 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItems
+            OrderItem item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -215,7 +220,7 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.尚未輸入該訂單要用到的產品);
             }
-            var item = await context.OrderItems
+            var item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.OrderId == paraObject.OrderId &&
                 x.ProductId == paraObject.ProductId);
@@ -233,7 +238,7 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.尚未輸入該訂單要用到的產品);
             }
-            var item = await context.OrderItems
+            var item = await context.OrderItem
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.OrderId == paraObject.OrderId &&
                 x.ProductId == paraObject.ProductId &&
@@ -248,6 +253,11 @@ namespace Backend.Services
         public Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderItemAdapterModel paraObject)
         {
             return Task.FromResult(VerifyRecordResultFactory.Build(true));
+        }
+        Task OhterDependencyData(OrderItemAdapterModel data)
+        {
+            data.ProductName = data.Product.Name;
+            return Task.FromResult(0);
         }
     }
 }

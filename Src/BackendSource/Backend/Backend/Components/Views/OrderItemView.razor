@@ -39,11 +39,11 @@
     @*<GridSearchSettings Fields="@(new string[] { "Name" })"
         Operator=Syncfusion.Blazor.Operator.Contains IgnoreCase="true" />*@
     <GridColumns>
-        <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱"></GridColumn>
-        <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱"></GridColumn>
-        <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量" Width="80"></GridColumn>
-        <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣" Width="120"></GridColumn>
-        <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱" />
+        <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱" />
+        <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量" Width="80" />
+        <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣" Width="120" />
+        <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價" Width="150" />
         <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -208,7 +208,7 @@
             await OnRecordChanged.InvokeAsync(new MasterRecord()
             {
                 Id = args.Data.OrderId,
-                Title = args.Data.Name
+                Title = MagicHelper.確認有表頭預設文字
             });
         }
     }

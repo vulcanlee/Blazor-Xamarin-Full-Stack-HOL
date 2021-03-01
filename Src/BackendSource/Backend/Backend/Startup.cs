@@ -41,11 +41,32 @@ namespace Backend
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Blazor & Razor Page 用到服務
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            #endregion
 
-            #region Syncfusion 元件使用的宣告
+            #region Syncfusion 元件與多國語言服務
+            // Localization https://github.com/syncfusion/blazor-locale
+            // 各國語言代碼 https://en.wikipedia.org/wiki/Language_localisation
+            // Set the resx file folder path to access
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddSyncfusionBlazor();
+            // Register the Syncfusion locale service to customize the  SyncfusionBlazor component locale culture
+            services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                // Define the list of cultures your app will support
+                var supportedCultures = new List<CultureInfo>()
+                {
+                    new CultureInfo("en-US"),
+                    new CultureInfo("zh-TW"),
+                };
+                // Set the default culture
+                options.DefaultRequestCulture = new RequestCulture("zh-TW");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
             #endregion
 
             #region EF Core & AutoMapper 使用的宣告
@@ -53,7 +74,7 @@ namespace Backend
             services.AddDbContext<BackendDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString(
                 MagicHelper.DefaultConnectionString)), ServiceLifetime.Transient);
-            AddOtherServices(services);
+            services.AddCustomServices();
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
             #endregion
 
@@ -82,25 +103,28 @@ namespace Backend
                     };
                     options.Events = new JwtBearerEvents()
                     {
-                        OnAuthenticationFailed = async context =>
+                        OnAuthenticationFailed = context =>
                        {
-                           context.Response.StatusCode = 401;
-                           context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
-                           APIResult apiResult = JWTTokenFailHelper.GetFailResult(context.Exception);
+                           context.Response.OnStarting(async () =>
+                           {
+                               context.Response.StatusCode = 401;
+                               context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
+                               APIResult apiResult = JWTTokenFailHelper.GetFailResult(context.Exception);
 
-                           context.Response.ContentType = "application/json";
-                           await context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult));
-                           return;
+                               context.Response.ContentType = "application/json";
+                               await context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult));
+                           });
+                           return Task.CompletedTask;
                        },
                         OnChallenge = context =>
                         {
-                            //context.HandleResponse();
+                            ////context.HandleResponse();
                             return Task.CompletedTask;
                         },
                         OnTokenValidated = context =>
                         {
-                            Console.WriteLine("OnTokenValidated: " +
-                                context.SecurityToken);
+                            //Console.WriteLine("OnTokenValidated: " +
+                            //    context.SecurityToken);
                             return Task.CompletedTask;
                         }
 
@@ -113,52 +137,19 @@ namespace Backend
             #endregion
 
             #region 修正 Web API 的 JSON 處理
-            services.AddControllers().AddJsonOptions(config =>
-            {
-                config.JsonSerializerOptions.PropertyNamingPolicy = null;
-            });
-            #endregion
-
-            #region Localization https://github.com/syncfusion/blazor-locale
-            // 各國語言代碼 https://en.wikipedia.org/wiki/Language_localisation
-            // Set the resx file folder path to access
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-            services.AddSyncfusionBlazor();
-            // Register the Syncfusion locale service to customize the  SyncfusionBlazor component locale culture
-            services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof(SyncfusionLocalizer));
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                // Define the list of cultures your app will support
-                var supportedCultures = new List<CultureInfo>()
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
                 {
-                    new CultureInfo("en-US"),
-                    new CultureInfo("zh-TW"),
-                };
-                // Set the default culture
-                options.DefaultRequestCulture = new RequestCulture("zh-TW");
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
-            #endregion
-        }
-
-        private static void AddOtherServices(IServiceCollection services)
-        {
-            #region 註冊服務
-            services.AddTransient<IHoluserService, HoluserService>();
-            services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient<IOrderItemService, OrderItemService>();
+                    options.SuppressModelStateInvalidFilter = true;
+                })
+                .AddJsonOptions(config =>
+                {
+                    config.JsonSerializerOptions.PropertyNamingPolicy = null;
+                });
             #endregion
 
-            #region 註冊 Razor Model
-            services.AddTransient<HoluserRazorModel>();
-            services.AddTransient<OrderRazorModel>();
-            services.AddTransient<ProductRazorModel>();
-            services.AddTransient<OrderItemRazorModel>();
-            #endregion
-
-            #region 其他服務註冊
+            #region 設定 Swagger 中介軟體
+            services.AddSwaggerGen();
             #endregion
         }
 
@@ -172,7 +163,7 @@ namespace Backend
             #region Localization
             app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             #endregion
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -184,8 +175,23 @@ namespace Backend
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if (!env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseStaticFiles();
+
+            #region 啟用 Swagger 中介軟體
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API V1");
+            });
+            #endregion
 
             app.UseRouting();
 

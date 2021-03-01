@@ -43,10 +43,32 @@ namespace Backend.Controllers
         public async Task<IActionResult> Post([FromBody] ProductDto data)
         {
             APIResult apiResult;
+
+            #region 驗證 DTO 物件的資料一致性
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: null);
+                return Ok(apiResult);
+            }
+            #endregion
+
             ProductAdapterModel record = mapper.Map<ProductAdapterModel>(data);
             if (record != null)
             {
                 var result = mapper.Map<ProductDto>(record);
+
+                #region 新增記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await ProductService.BeforeAddCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await ProductService.AddAsync(record);
                 if (verifyRecordResult.Success)
                 {
@@ -116,17 +138,39 @@ namespace Backend.Controllers
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ProductDto data)
         {
             APIResult apiResult;
+
+            #region 驗證 DTO 物件的資料一致性
+            if (!ModelState.IsValid)
+            {
+                apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                      ErrorMessageEnum.傳送過來的資料有問題, payload: data);
+                return Ok(apiResult);
+            }
+            #endregion
+
             var record = await ProductService.GetAsync(id);
             if (record != null)
             {
                 ProductAdapterModel recordTarget = mapper.Map<ProductAdapterModel>(data);
                 recordTarget.Id = id;
                 var result = mapper.Map<ProductDto>(recordTarget);
+
+                #region 修改記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await ProductService.BeforeUpdateCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await ProductService.UpdateAsync(recordTarget);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
@@ -152,11 +196,23 @@ namespace Backend.Controllers
             var result = mapper.Map<ProductDto>(record);
             if (record != null)
             {
+
+                #region 刪除記錄前的紀錄完整性檢查
+                VerifyRecordResult verify = await ProductService.BeforeDeleteCheckAsync(record);
+                if (verify.Success == false)
+                {
+                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                          ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
+                          payload: result);
+                    return Ok(apiResult);
+                }
+                #endregion
+
                 var verifyRecordResult = await ProductService.DeleteAsync(id);
                 if (verifyRecordResult.Success)
                 {
                     apiResult = APIResultFactory.Build(true, StatusCodes.Status202Accepted,
-                        ErrorMessageEnum.None, payload: result);
+                        ErrorMessageEnum.None, payload: null);
                 }
                 else
                 {
