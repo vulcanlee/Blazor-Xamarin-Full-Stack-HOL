@@ -73,7 +73,7 @@ namespace Backend
             string foo = Configuration.GetConnectionString(MagicHelper.DefaultConnectionString);
             services.AddDbContext<BackendDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString(
-                MagicHelper.DefaultConnectionString)), ServiceLifetime.Transient);
+                MagicHelper.DefaultConnectionString)));
             services.AddCustomServices();
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
             #endregion
