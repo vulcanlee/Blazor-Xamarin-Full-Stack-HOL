@@ -56,8 +56,10 @@ namespace Backend.RazorModels
         public ProductAdapterModel CurrentRecord { get; set; } = new ProductAdapterModel();
         public ProductAdapterModel CurrentNeedDeleteRecord { get; set; } = new ProductAdapterModel();
         public EditContext LocalEditContext { get; set; }
+        public MasterRecord Header { get; set; } = new MasterRecord();
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        public IDataGrid ShowMoreDetailsGrid { get; set; }
 
         #region 訊息說明之對話窗使用的變數
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();

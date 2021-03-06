@@ -56,6 +56,7 @@ namespace Backend.RazorModels
         public MyUserAdapterModel CurrentRecord { get; set; } = new MyUserAdapterModel();
         public MyUserAdapterModel CurrentNeedDeleteRecord { get; set; } = new MyUserAdapterModel();
         public EditContext LocalEditContext { get; set; }
+        public MasterRecord Header { get; set; } = new MasterRecord();
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
 

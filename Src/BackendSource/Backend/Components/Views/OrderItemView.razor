@@ -10,14 +10,12 @@
 @implements IRazorPage
 @implements IDataGrid
 
-@if (RazorModel.Header.IsExist == true || CombineWithHeaderMode == false)
-{
 <SfGrid @ref="Grid" TValue="OrderItemAdapterModel"
         AllowPaging="true"
         Toolbar="RazorModel.Toolbaritems">
     <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-        <OrderItemAdapter HeaderID="RazorModel.Header.Id"
-                          CurrentSortCondition="@RazorModel.CurrentSortCondition"></OrderItemAdapter>
+        <OrderItemAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"
+                          HeaderID="@RazorModel.Header.Id"></OrderItemAdapter>
     </SfDataManager>
     <SfToolbar>
         <ToolbarItems>
@@ -34,10 +32,9 @@
         </ToolbarItems>
     </SfToolbar>
     <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OrderItemAdapterModel"
-                OnToolbarClick="RazorModel.ToolbarClickHandler" />
+                OnToolbarClick="RazorModel.ToolbarClickHandler"
+                RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
     <GridPageSettings PageSize="@PageSize" />
-    @*<GridSearchSettings Fields="@(new string[] { "Name" })"
-        Operator=Syncfusion.Blazor.Operator.Contains IgnoreCase="true" />*@
     <GridColumns>
         <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱" />
         <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱" />
@@ -54,7 +51,6 @@
         </GridColumn>
     </GridColumns>
 </SfGrid>
-}
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
           Width="600px" Height="600px">
@@ -139,11 +135,9 @@
 <DialogBackground />
 
 @code{
-    public SfGrid<OrderItemAdapterModel> Grid;
+    SfGrid<OrderItemAdapterModel> Grid;
     [Parameter]
-    public MasterRecord Header { get; set; }
-    [Parameter]
-    public bool CombineWithHeaderMode { get; set; } = false;
+    public MasterRecord Header { get; set; } = new MasterRecord();
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
@@ -151,11 +145,17 @@
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
 
-
     #region 生命週期事件
     protected override void OnInitialized()
     {
         RazorModel.Setup(this, this);
+    }
+    protected override void OnParametersSet()
+    {
+        if (Header != null)
+        {
+            RazorModel.Header = Header;
+        }
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -193,12 +193,6 @@
     }
     #endregion
 
-    #region 更新 Master 紀錄標題
-    public async Task RefreshNewMasterAsync(MasterRecord header)
-    {
-        await RazorModel.UpdateMasterHeaderAsync(header);
-    }
-    #endregion
 
     #region 選取紀錄異動的事件處理
     public async Task RowSelectHandler(RowSelectEventArgs<OrderItemAdapterModel> args)
@@ -207,7 +201,7 @@
         {
             await OnRecordChanged.InvokeAsync(new MasterRecord()
             {
-                Id = args.Data.OrderId,
+                Id = args.Data.Id,
                 Title = MagicHelper.確認有表頭預設文字
             });
         }
