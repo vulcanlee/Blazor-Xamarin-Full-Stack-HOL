@@ -4,6 +4,7 @@ using ShareBusiness.Helpers;
 using ShareDomain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace ShareBusiness.Factories
