@@ -57,13 +57,13 @@ namespace Backend.RazorModels
         public MasterRecord Header { get; set; } = new MasterRecord();
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        public string EditRecordDialogTitle { get; set; } = "";
+        private bool isShowConfirm { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         #endregion
-
-        public string EditRecordDialogTitle { get; set; } = "";
         #endregion
 
         #region Field
@@ -73,7 +73,6 @@ namespace Backend.RazorModels
         private readonly IMapper mapper;
         IRazorPage thisRazorComponent;
         IDataGrid dataGrid;
-        private bool isShowConfirm { get; set; } = false;
         public List<object> Toolbaritems = new List<object>();
         #endregion
 
