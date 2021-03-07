@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +6,6 @@ namespace Backend.Services
 {
     using AutoMapper;
     using Backend.AdapterModels;
-    using Backend.Helpers;
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
@@ -34,7 +32,7 @@ namespace Backend.Services
             DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
             var DataSource = context.OrderItem
                 .AsNoTracking()
-                .Include(x=>x.Product)
+                .Include(x => x.Product)
                 .AsQueryable();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Backend.AdapterModels
 {
-    public class MyUserAdapterModel:ICloneable
+    public class MyUserAdapterModel : ICloneable
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]

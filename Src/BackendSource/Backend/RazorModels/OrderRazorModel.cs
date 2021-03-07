@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.RazorModels
 {
     using AutoMapper;
-    using Entities.Models;
     using Backend.AdapterModels;
     using Backend.Interfaces;
     using Backend.Services;
-    using Backend.Helpers;
     using Backend.SortModels;
-    using Syncfusion.Blazor.Grids;
+    using Entities.Models;
     using Microsoft.AspNetCore.Components.Forms;
-    using ShareDomain.DataModels;
     using ShareBusiness.Helpers;
+    using ShareDomain.DataModels;
+    using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
     public class OrderRazorModel
@@ -150,7 +147,7 @@ namespace Backend.RazorModels
                 ShowMoreDetailsRecordDialogTitle = MagicHelper.訂單明細管理功能名稱;
                 MasterRecord masterRecord = new MasterRecord()
                 {
-                     Id = item.Id
+                    Id = item.Id
                 };
                 Header = masterRecord;
                 if (ShowMoreDetailsGrid != null)

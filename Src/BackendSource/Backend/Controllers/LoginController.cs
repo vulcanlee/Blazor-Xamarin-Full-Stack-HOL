@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Backend.AdapterModels;
+using Backend.Services;
 using DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShareBusiness.Factories;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Backend.Services;
-using Entities.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Backend.AdapterModels;
-using ShareDomain.Enums;
+using ShareBusiness.Factories;
 using ShareBusiness.Helpers;
+using ShareDomain.Enums;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -123,7 +121,7 @@ namespace Backend.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Account),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                
+
             };
             if (user.IsManager == true)
             {

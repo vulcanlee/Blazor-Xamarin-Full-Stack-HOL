@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Backend.AdapterModels;
 using Backend.Services;
-using Entities.Models;
 using DataTransferObject.DTOs;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using ShareBusiness.Factories;
+using ShareBusiness.Helpers;
 using ShareDomain.DataModels;
 using ShareDomain.Enums;
-using ShareBusiness.Helpers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -59,8 +53,8 @@ namespace Backend.Controllers
                 var result = mapper.Map<MyUserDto>(record);
 
                 #region 新增記錄前的紀錄完整性檢查
-                VerifyRecordResult verify= await myUserService.BeforeAddCheckAsync(record);
-                if(verify.Success == false)
+                VerifyRecordResult verify = await myUserService.BeforeAddCheckAsync(record);
+                if (verify.Success == false)
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
                           ErrorMessageMappingHelper.Instance.GetErrorMessage(verify.MessageId),
@@ -112,14 +106,14 @@ namespace Backend.Controllers
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);
         }
-      
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             APIResult apiResult;
             var record = await myUserService.GetAsync(id);
             var result = mapper.Map<MyUserDto>(record);
-            if (record != null && record.Id!=0)
+            if (record != null && record.Id != 0)
             {
                 apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                     ErrorMessageEnum.None, payload: result);

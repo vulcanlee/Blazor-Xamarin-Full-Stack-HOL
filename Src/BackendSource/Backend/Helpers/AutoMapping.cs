@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Backend.Helpers
+﻿namespace Backend.Helpers
 {
     using AutoMapper;
-    using Entities.Models;
     using Backend.AdapterModels;
     using DataTransferObject.DTOs;
+    using Entities.Models;
 
     public class AutoMapping : Profile
     {

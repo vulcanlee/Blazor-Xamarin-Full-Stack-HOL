@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Backend.AdapterModels;
+﻿using Backend.AdapterModels;
 using ShareDomain.DataModels;
 using System.Threading.Tasks;
 

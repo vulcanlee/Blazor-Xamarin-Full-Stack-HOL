@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    using ShareBusiness.Helpers;
+    using AutoMapper;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
-    using ShareDomain.DataModels;
-    using Backend.AdapterModels;
-    using Backend.SortModels;
-    using AutoMapper;
-    using ShareBusiness.Factories;
-    using ShareDomain.Enums;
+    using ShareBusiness.Helpers;
 
     public class DatabaseInitService
     {
