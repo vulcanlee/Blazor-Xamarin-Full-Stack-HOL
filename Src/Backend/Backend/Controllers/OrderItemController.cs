@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Backend.AdapterModels;
 using Backend.Services;
-using Entities.Models;
 using DataTransferObject.DTOs;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using ShareBusiness.Factories;
+using ShareBusiness.Helpers;
 using ShareDomain.DataModels;
 using ShareDomain.Enums;
-using ShareBusiness.Helpers;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -78,7 +72,7 @@ namespace Backend.Controllers
                 else
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        ErrorMessageEnum.無法新增紀錄, payload: result);
+                        verifyRecordResult.MessageId, payload: result);
                 }
             }
             else
@@ -128,7 +122,7 @@ namespace Backend.Controllers
             };
             #endregion
 
-            var records = await OrderItemService.GetByHeaderIDAsync(id,dataRequest);
+            var records = await OrderItemService.GetByHeaderIDAsync(id, dataRequest);
             var result = mapper.Map<List<OrderItemDto>>(records.Result);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
@@ -141,7 +135,7 @@ namespace Backend.Controllers
             APIResult apiResult;
             var record = await OrderItemService.GetAsync(id);
             var result = mapper.Map<OrderItemDto>(record);
-            if (record != null)
+            if (record != null && record.Id != 0)
             {
                 apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                     ErrorMessageEnum.None, payload: result);
@@ -171,7 +165,7 @@ namespace Backend.Controllers
             #endregion
 
             var record = await OrderItemService.GetAsync(id);
-            if (record != null)
+            if (record != null && record.Id != 0)
             {
                 OrderItemAdapterModel recordTarget = mapper.Map<OrderItemAdapterModel>(data);
                 recordTarget.Id = id;
@@ -197,7 +191,7 @@ namespace Backend.Controllers
                 else
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        ErrorMessageEnum.無法修改紀錄, payload: result);
+                        verifyRecordResult.MessageId, payload: result);
                 }
             }
             else
@@ -216,7 +210,7 @@ namespace Backend.Controllers
             APIResult apiResult;
             var record = await OrderItemService.GetAsync(id);
             var result = mapper.Map<OrderItemDto>(record);
-            if (record != null)
+            if (record != null && record.Id != 0)
             {
 
                 #region 刪除記錄前的紀錄完整性檢查
@@ -239,7 +233,7 @@ namespace Backend.Controllers
                 else
                 {
                     apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        ErrorMessageEnum.無法刪除紀錄, payload: result);
+                        verifyRecordResult.MessageId, payload: result);
                 }
             }
             else

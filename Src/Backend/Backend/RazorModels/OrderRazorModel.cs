@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.RazorModels
 {
     using AutoMapper;
-    using Entities.Models;
     using Backend.AdapterModels;
     using Backend.Interfaces;
     using Backend.Services;
-    using Backend.Helpers;
     using Backend.SortModels;
-    using Syncfusion.Blazor.Grids;
+    using Entities.Models;
     using Microsoft.AspNetCore.Components.Forms;
-    using ShareDomain.DataModels;
     using ShareBusiness.Helpers;
+    using ShareDomain.DataModels;
+    using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
     public class OrderRazorModel
@@ -53,20 +50,23 @@ namespace Backend.RazorModels
 
         #region Property
         public bool IsShowEditRecord { get; set; } = false;
+        public bool IsShowMoreDetailsRecord { get; set; } = false;
         public OrderAdapterModel CurrentRecord { get; set; } = new OrderAdapterModel();
         public OrderAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderAdapterModel();
         public EditContext LocalEditContext { get; set; }
         public bool ShowAontherRecordPicker { get; set; } = false;
+        public MasterRecord Header { get; set; } = new MasterRecord();
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
-
+        public IDataGrid ShowMoreDetailsGrid { get; set; }
+        public string EditRecordDialogTitle { get; set; } = "";
 
         #region 訊息說明之對話窗使用的變數
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         #endregion
-
-        public string EditRecordDialogTitle { get; set; } = "";
+        public string ShowMoreDetailsRecordDialogTitle { get; set; } = "";
+        private bool isShowConfirm { get; set; } = false;
         #endregion
 
         #region Field
@@ -76,7 +76,6 @@ namespace Backend.RazorModels
         private readonly IMapper mapper;
         IRazorPage thisRazorComponent;
         IDataGrid dataGrid;
-        private bool isShowConfirm { get; set; } = false;
         public List<object> Toolbaritems = new List<object>();
         #endregion
 
@@ -108,7 +107,7 @@ namespace Backend.RazorModels
         }
         #endregion
 
-        #region 記錄列的按鈕事件 (修改與刪除)
+        #region 記錄列的按鈕事件 (修改與刪除與明細紀錄瀏覽)
         public async Task OnCommandClicked(CommandClickEventArgs<OrderAdapterModel> args)
         {
             OrderAdapterModel item = args.RowData as OrderAdapterModel;
@@ -139,6 +138,21 @@ namespace Backend.RazorModels
                 #endregion
 
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
+            }
+            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
+            {
+                IsShowMoreDetailsRecord = true;
+                ShowMoreDetailsRecordDialogTitle = MagicHelper.訂單明細管理功能名稱;
+                MasterRecord masterRecord = new MasterRecord()
+                {
+                    Id = item.Id
+                };
+                Header = masterRecord;
+                if (ShowMoreDetailsGrid != null)
+                {
+                    await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
+                    ShowMoreDetailsGrid.RefreshGrid();
+                }
             }
         }
 

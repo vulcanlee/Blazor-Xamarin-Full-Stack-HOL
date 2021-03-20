@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.RazorModels
 {
     using AutoMapper;
-    using Entities.Models;
     using Backend.AdapterModels;
     using Backend.Interfaces;
     using Backend.Services;
-    using Backend.Helpers;
     using Backend.SortModels;
-    using Syncfusion.Blazor.Grids;
+    using Entities.Models;
     using Microsoft.AspNetCore.Components.Forms;
-    using ShareDomain.DataModels;
     using ShareBusiness.Helpers;
+    using ShareDomain.DataModels;
+    using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
     public class MyUserRazorModel
@@ -56,26 +53,26 @@ namespace Backend.RazorModels
         public MyUserAdapterModel CurrentRecord { get; set; } = new MyUserAdapterModel();
         public MyUserAdapterModel CurrentNeedDeleteRecord { get; set; } = new MyUserAdapterModel();
         public EditContext LocalEditContext { get; set; }
+        public MasterRecord Header { get; set; } = new MasterRecord();
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        public string EditRecordDialogTitle { get; set; } = "";
+        public bool ShowAontherRecordPicker { get; set; } = false;
+        private bool isShowConfirm { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         #endregion
-
-        public string EditRecordDialogTitle { get; set; } = "";
         #endregion
 
         #region Field
-        public bool ShowAontherRecordPicker { get; set; } = false;
         bool isNewRecordMode;
         private readonly IMyUserService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
         IRazorPage thisRazorComponent;
         IDataGrid dataGrid;
-        private bool isShowConfirm { get; set; } = false;
         public List<object> Toolbaritems = new List<object>();
         #endregion
 

@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    using ShareBusiness.Helpers;
-    using Entities.Models;
-    using Microsoft.EntityFrameworkCore;
-    using ShareDomain.DataModels;
+    using AutoMapper;
     using Backend.AdapterModels;
     using Backend.SortModels;
-    using AutoMapper;
+    using Entities.Models;
+    using Microsoft.EntityFrameworkCore;
     using ShareBusiness.Factories;
+    using ShareBusiness.Helpers;
+    using ShareDomain.DataModels;
     using ShareDomain.Enums;
 
     public class ProductService : IProductService
@@ -183,7 +182,7 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-         Task OhterDependencyData(ProductAdapterModel data)
+        Task OhterDependencyData(ProductAdapterModel data)
         {
             return Task.FromResult(0);
         }

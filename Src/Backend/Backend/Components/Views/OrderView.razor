@@ -41,8 +41,10 @@
         <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd" />
         <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd" />
         <GridColumn Field=@nameof(OrderAdapterModel.StatusName) HeaderText="狀態" />
-        <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+        <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
             <GridCommandColumns>
+                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowDetailOfMaster})" />
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
                 <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -126,6 +128,24 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
+
+<SfDialog @bind-Visible="@RazorModel.IsShowMoreDetailsRecord" IsModal="true"
+          Width="90%" Height="90%">
+    <DialogTemplates>
+        <Header>@RazorModel.ShowMoreDetailsRecordDialogTitle</Header>
+        <Content>
+            <OrderItemView @ref="RazorModel.ShowMoreDetailsGrid" PageSize="@MagicHelper.GridPageSize"
+                           Header="RazorModel.Header"/>
+        </Content>
+        <FooterTemplate>
+            <div>
+                <button class="btn btn-secondary" @onclick="()=> { RazorModel.IsShowMoreDetailsRecord = false; }">關閉</button>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
 
 @*<DepartmentPicker OpenPicker="RazorModel.ShowAontherRecordPicker" OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />*@
 

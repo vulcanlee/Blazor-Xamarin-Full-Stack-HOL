@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Services
 {
-    using ShareBusiness.Helpers;
-    using Entities.Models;
-    using Microsoft.EntityFrameworkCore;
-    using ShareDomain.DataModels;
+    using AutoMapper;
     using Backend.AdapterModels;
     using Backend.SortModels;
-    using AutoMapper;
+    using Entities.Models;
+    using Microsoft.EntityFrameworkCore;
     using ShareBusiness.Factories;
+    using ShareBusiness.Helpers;
+    using ShareDomain.DataModels;
     using ShareDomain.Enums;
 
     public class MyUserService : IMyUserService
@@ -192,33 +191,9 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
+        public Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<WorkingLog>(context);
-            CleanTrackingHelper.Clean<LeaveForm>(context);
-            CleanTrackingHelper.Clean<ExceptionRecord>(context);
-            WorkingLog item = await context.WorkingLog
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.MyUserId == paraObject.Id);
-            if (item != null)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
-            }
-            LeaveForm itemLeaveForm = await context.LeaveForm
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.MyUserId == paraObject.Id);
-            if (item != null)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
-            }
-            ExceptionRecord itemExceptionRecord = await context.ExceptionRecord
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.MyUserId == paraObject.Id);
-            if (item != null)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
-            }
-            return VerifyRecordResultFactory.Build(true);
+            return Task.FromResult(VerifyRecordResultFactory.Build(true));
         }
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +6,6 @@ namespace Backend.Services
 {
     using AutoMapper;
     using Backend.AdapterModels;
-    using Backend.Helpers;
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
