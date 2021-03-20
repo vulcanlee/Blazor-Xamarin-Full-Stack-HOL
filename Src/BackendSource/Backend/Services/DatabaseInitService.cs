@@ -7,6 +7,7 @@ namespace Backend.Services
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
     using ShareBusiness.Helpers;
+    using System;
 
     public class DatabaseInitService
     {
@@ -22,6 +23,8 @@ namespace Backend.Services
 
         public async Task InitDataAsync()
         {
+            Random random = new Random();
+
             #region 適用於 Code First ，刪除資料庫與移除資料庫
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
@@ -51,6 +54,55 @@ namespace Backend.Services
                 }
             }
             CleanTrackingHelper.Clean<MyUser>(context);
+            #endregion
+
+            #region 建立產品紀錄
+            CleanTrackingHelper.Clean<Product>(context);
+            CleanTrackingHelper.Clean<Order>(context);
+            CleanTrackingHelper.Clean<OrderItem>(context);
+            List<Product> products = new List<Product>();
+            for (int i = 0; i < 10; i++)
+            {
+                Product product = new Product()
+                {
+                    Name = $"Product{i}"
+                };
+                products.Add(product);
+                context.Add(product);
+            }
+            await context.SaveChangesAsync();
+            #endregion
+
+            #region 建立產品紀錄
+            for (int i = 0; i < 3; i++)
+            {
+                Order order = new Order()
+                {
+                    Name = $"Order{i}",
+                    OrderDate = DateTime.Now.AddDays(random.Next(30)),
+                    RequiredDate = DateTime.Now.AddDays(random.Next(30)),
+                    ShippedDate = DateTime.Now.AddDays(random.Next(30)),
+                };
+                context.Add(order);
+                await context.SaveChangesAsync();
+                var total = random.Next(1,6);
+                for (int j = 0; j < total; j++)
+                {
+                    OrderItem orderItem = new OrderItem()
+                    {
+                        Name = $"OrderItem{j}",
+                        OrderId = order.Id,
+                        ProductId = products[j].Id,
+                        Quantity = 3,
+                        ListPrice = 168,
+                    };
+                    context.Add(orderItem);
+                }
+                await context.SaveChangesAsync();
+            }
+            CleanTrackingHelper.Clean<Product>(context);
+            CleanTrackingHelper.Clean<Order>(context);
+            CleanTrackingHelper.Clean<OrderItem>(context);
             #endregion
         }
         public List<string> Get姓名()
