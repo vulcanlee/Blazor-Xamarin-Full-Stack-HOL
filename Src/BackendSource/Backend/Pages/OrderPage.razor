@@ -1,8 +1,0 @@
-﻿@page "/Order"
-@attribute [Authorize(Roles = "User")]
-
-<div>
-    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.訂單管理功能名稱</div>
-    <OrderView PageSize="@MagicHelper.GridPageSize" />
-
-</div>
