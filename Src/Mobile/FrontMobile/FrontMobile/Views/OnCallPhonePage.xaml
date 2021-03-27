@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="FrontMobile.Views.OnCallPhonePage"
+             Title="連絡電話本">
+
+    <Grid
+        RowSpacing="0" ColumnSpacing="0">
+        <ListView
+            HasUnevenRows="True"
+            ItemsSource="{Binding DataItems}"
+            IsPullToRefreshEnabled="True"
+            RefreshCommand="{Binding RefreshCommand}"
+            IsRefreshing="{Binding IsRefresh}"
+            SelectedItem="{Binding SelectedItem}"
+            SeparatorVisibility="None"
+            >
+            <ListView.Behaviors>
+                <prism:EventToCommandBehavior
+                    EventName="ItemTapped"
+                    Command="{Binding ItemTappedCommand}"/>
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid
+                            RowSpacing="0" ColumnSpacing="0"
+                            >
+                            <BoxView
+                                Color="White"/>
+                            <StackLayout
+                                Spacing="0" Margin="10,15"
+                                Orientation="Vertical">
+                                <Grid
+                                    RowSpacing="0" ColumnSpacing="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="28"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label 
+                                        Grid.Row="0" Grid.Column="0"
+                                        VerticalOptions="Start"
+                                        FontSize="26"
+                                        Text="{Binding Title}"/>
+                                    <Label 
+                                        Grid.Row="1" Grid.Column="0"
+                                        FontSize="20"
+                                        Text="{Binding PhoneNumber}"/>
+                                </Grid>
+                            </StackLayout>
+                            <BoxView
+                                Margin="5,0"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="End"
+                                HeightRequest="2"
+                                Color="DimGray"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>

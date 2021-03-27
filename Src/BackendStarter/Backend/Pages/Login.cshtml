@@ -1,0 +1,59 @@
+﻿@page
+@model Backend.Pages.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "身分驗證";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width">
+    <title>請進行 身分驗證</title>
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <style>
+        .centered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -150px;
+            margin-left: -250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container centered">
+        <div class="row ">
+            <div class="card " style="width: 30rem;">
+                <article class="card-body">
+                    <h4 class="card-title text-center mb-4 mt-1">請輸入帳號與密碼</h4>
+                    <hr>
+                    <p class="text-danger text-center">@Model.Msg</p>
+                    <form method="post">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text oi oi-person"> </span>
+                                </div>
+                                <input class="form-control" asp-for="Username" placeholder="使用者的帳號" >
+                            </div> <!-- input-group.// -->
+                        </div> <!-- form-group// -->
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text oi oi-lock-locked"> </span>
+                                </div>
+                                <input class="form-control" asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
+                            </div> <!-- input-group.// -->
+                        </div> <!-- form-group// -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block"> 登入  </button>
+                        </div> <!-- form-group// -->
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

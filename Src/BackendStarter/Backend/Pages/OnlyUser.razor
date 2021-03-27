@@ -1,0 +1,9 @@
+﻿@page "/OnlyUser"
+@using Microsoft.AspNetCore.Authentication.Cookies
+@attribute [Authorize(Roles = "User")]
+
+<h2 class="text-success">該頁面僅限具有使用者權限才能看到</h2>
+
+@code {
+
+}

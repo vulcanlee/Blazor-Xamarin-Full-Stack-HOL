@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="FrontMobile.Views.SplashPage"
+             Background="lightgreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image Source="Logo.png"
+               HeightRequest="100"
+               HorizontalOptions="Center" VerticalOptions="Center"/>
+        <StackLayout
+            Spacing="0"
+            VerticalOptions="End"
+            Margin="0,0,0,75"
+            Grid.Row="1" Grid.Column="0">
+            <Label
+                HorizontalOptions="Center" VerticalOptions="Center"
+                FontSize="32" TextColor="DarkGreen"
+                Text="快樂逍遙動手"/>
+            <Label
+                HorizontalOptions="Center" VerticalOptions="Center"
+                FontSize="32" TextColor="DarkGreen"
+                Text="學超全端開發"/>
+        </StackLayout>
+    </Grid>
+  
+</ContentPage>
