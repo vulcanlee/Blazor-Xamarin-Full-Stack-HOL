@@ -3,14 +3,14 @@
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
             <NotAuthorized>
-                <Backend.Components.Views.NotAuthorizedErrorView/>
+                <NotAuthorizedErrorView/>
             </NotAuthorized>
         </AuthorizeRouteView>
     </Found>
     <NotFound>
         <CascadingAuthenticationState>
             <LayoutView Layout="@typeof(MainLayout)">
-                <Backend.Components.Views.NotFoundErrorView/>
+                <NotFoundErrorView/>
             </LayoutView>
         </CascadingAuthenticationState>
     </NotFound>
