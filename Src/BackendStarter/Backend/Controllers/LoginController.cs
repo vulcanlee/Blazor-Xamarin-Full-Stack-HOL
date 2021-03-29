@@ -1,9 +1,11 @@
 ﻿using Backend.AdapterModels;
+using Backend.Models;
 using Backend.Services;
 using DataTransferObject.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ShareBusiness.Factories;
 using ShareBusiness.Helpers;
@@ -24,12 +26,14 @@ namespace Backend.Controllers
     {
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
         private readonly IMyUserService myUserService;
+        private readonly TokenConfiguration tokenConfiguration;
 
         public LoginController(Microsoft.Extensions.Configuration.IConfiguration configuration,
-            IMyUserService myUserService)
+            IMyUserService myUserService, IOptions<TokenConfiguration> tokenConfiguration)
         {
             this.configuration = configuration;
             this.myUserService = myUserService;
+            this.tokenConfiguration = tokenConfiguration.Value;
         }
         [AllowAnonymous]
         [HttpPost]
@@ -62,9 +66,9 @@ namespace Backend.Controllers
                 Id = user.Id,
                 Name = loginRequestDTO.Account,
                 Token = token,
-                TokenExpireMinutes = Convert.ToInt32(configuration["Tokens:JwtExpireMinutes"]),
+                TokenExpireMinutes = tokenConfiguration.JwtExpireMinutes,
                 RefreshToken = refreshToken,
-                RefreshTokenExpireDays = Convert.ToInt32(configuration["Tokens:JwtRefreshExpireDays"]),
+                RefreshTokenExpireDays = tokenConfiguration.JwtRefreshExpireDays,
             };
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
@@ -102,9 +106,9 @@ namespace Backend.Controllers
                 Id = 0,
                 Name = loginRequestDTO.Account,
                 Token = token,
-                TokenExpireMinutes = Convert.ToInt32(configuration["Tokens:JwtExpireMinutes"]),
+                TokenExpireMinutes = tokenConfiguration.JwtExpireMinutes,
                 RefreshToken = refreshToken,
-                RefreshTokenExpireDays = Convert.ToInt32(configuration["Tokens:JwtRefreshExpireDays"]),
+                RefreshTokenExpireDays = tokenConfiguration.JwtRefreshExpireDays,
             };
 
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
@@ -130,13 +134,13 @@ namespace Backend.Controllers
 
             var token = new JwtSecurityToken
             (
-                issuer: configuration["Tokens:ValidIssuer"],
-                audience: configuration["Tokens:ValidAudience"],
+                issuer: tokenConfiguration.ValidIssuer,
+                audience: tokenConfiguration.ValidAudience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(configuration["Tokens:JwtExpireMinutes"])),
+                expires: DateTime.Now.AddMinutes(tokenConfiguration.JwtExpireMinutes),
                 //notBefore: DateTime.Now.AddMinutes(-5),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                            (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
+                            (Encoding.UTF8.GetBytes(tokenConfiguration.IssuerSigningKey)),
                         SecurityAlgorithms.HmacSha512)
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
@@ -157,14 +161,14 @@ namespace Backend.Controllers
 
             var token = new JwtSecurityToken
             (
-                issuer: configuration["Tokens:ValidIssuer"],
-                audience: configuration["Tokens:ValidAudience"],
+                issuer: tokenConfiguration.ValidIssuer,
+                audience: tokenConfiguration.ValidAudience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(Convert.ToDouble(configuration["Tokens:JwtRefreshExpireDays"])),
+                expires: DateTime.Now.AddDays(tokenConfiguration.JwtRefreshExpireDays),
                 //expires: DateTime.Now.AddMinutes(1),
                 //notBefore: DateTime.Now.AddMinutes(-5),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                            (Encoding.UTF8.GetBytes(configuration["Tokens:IssuerSigningKey"])),
+                            (Encoding.UTF8.GetBytes(tokenConfiguration.IssuerSigningKey )),
                         SecurityAlgorithms.HmacSha512)
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,4 +1,5 @@
 using Backend.Helpers;
+using Backend.Models;
 using DataTransferObject.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -72,6 +73,10 @@ namespace Backend
                 MagicHelper.DefaultConnectionString)));
             services.AddCustomServices();
             services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
+            #endregion
+
+            #region 加入設定強型別注入宣告
+            services.Configure<TokenConfiguration>(Configuration.GetSection("Tokens"));
             #endregion
 
             #region 加入使用 Cookie & JWT 認證需要的宣告
