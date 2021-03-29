@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using ShareBusiness.Helpers;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,9 @@ namespace Backend.Pages
     public class LoginModel : PageModel
     {
         private readonly IMyUserService myUserService;
+        private readonly ILogger<LoginModel> logger;
 
-        public LoginModel(IMyUserService myUserService)
+        public LoginModel(IMyUserService myUserService, ILogger<LoginModel> logger)
         {
 #if DEBUG
             Username = "user1";
@@ -25,6 +27,7 @@ namespace Backend.Pages
             PasswordType = "";
 #endif
             this.myUserService = myUserService;
+            this.logger = logger;
         }
         [BindProperty]
         public string Username { get; set; } = "";
@@ -41,6 +44,7 @@ namespace Backend.Pages
                 await HttpContext
                     .SignOutAsync(
                     MagicHelper.CookieAuthenticationScheme);
+                logger.LogInformation("使用者登出");
             }
             catch { }
         }
@@ -52,6 +56,7 @@ namespace Backend.Pages
             if (user == null)
             {
                 Msg = message;
+                logger.LogInformation($"使用者 ({Username} / {Password}) 登入失敗");
             }
             else
             {
@@ -99,6 +104,7 @@ namespace Backend.Pages
                 }
                 #endregion
 
+                logger.LogInformation($"使用者 ({Username}) 登入成功");
                 return LocalRedirect(returnUrl);
             }
             return Page();

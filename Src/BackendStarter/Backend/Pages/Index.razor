@@ -4,19 +4,21 @@
 
 @using Syncfusion.Blazor.Spinner
 
-<h1>Hello, world!</h1>
+<h1>Hello, 超全端程式設計 Blazor 專案範本!</h1>
 
-Welcome to your new app.
-
-<button class="btn btn-primary" @onclick="Init">資料初始化</button>
+<div>
+    <button class="btn btn-primary" @onclick="Init">資料庫重新建立與資料初始化</button>
+</div>
 
 <div id="container">
     <SfSpinner @bind-Visible="@VisibleProperty">
     </SfSpinner>
 </div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
-
+<div class="text-md-left mt-4">
+    <a href="https://materialdesignicons.com/" target="_blank"> Material Deisgn Icon </a>
+    <span>        使用範例    </span>
+</div>
 <div>
     <span class="mdi mdi-coffee"></span>
     <span class="mdi mdi-48px mdi-coffee"></span>

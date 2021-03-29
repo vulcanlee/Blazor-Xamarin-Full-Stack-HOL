@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using NLog;
 using ShareBusiness.Helpers;
 using Syncfusion.Blazor;
 using System;
@@ -157,6 +158,11 @@ namespace Backend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            #region 宣告 NLog 要使用到的變數內容
+            var logRootPath = Configuration["CustomNLog:LogRootPath"];
+            LogManager.Configuration.Variables["LogRootPath"] = logRootPath;
+            #endregion
+
             #region Syncfusion License Registration
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("");
             #endregion
