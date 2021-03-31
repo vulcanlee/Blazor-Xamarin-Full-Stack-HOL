@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Backend.RazorModels
+namespace Backend.ViewModels
 {
     using AutoMapper;
     using Backend.AdapterModels;

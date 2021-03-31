@@ -1,4 +1,4 @@
-﻿using Backend.RazorModels;
+﻿using Backend.ViewModels;
 using Backend.Services;
 using Microsoft.Extensions.DependencyInjection;
 

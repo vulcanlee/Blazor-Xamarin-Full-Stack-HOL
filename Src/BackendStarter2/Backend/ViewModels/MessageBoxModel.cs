@@ -1,4 +1,4 @@
-﻿namespace Backend.RazorModels
+﻿namespace Backend.ViewModels
 {
     public class MessageBoxModel
     {

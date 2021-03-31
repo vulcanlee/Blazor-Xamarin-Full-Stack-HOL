@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Backend.RazorModels
+namespace Backend.ViewModels
 {
     using AutoMapper;
     using Backend.AdapterModels;
@@ -15,17 +15,17 @@ namespace Backend.RazorModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class OrderRazorModel
+    public class ProductRazorModel
     {
         #region Constructor
-        public OrderRazorModel(IOrderService CurrentService,
+        public ProductRazorModel(IProductService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            OrderSort.Initialization(SortConditions);
+            ProductSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -50,28 +50,26 @@ namespace Backend.RazorModels
 
         #region Property
         public bool IsShowEditRecord { get; set; } = false;
-        public bool IsShowMoreDetailsRecord { get; set; } = false;
-        public OrderAdapterModel CurrentRecord { get; set; } = new OrderAdapterModel();
-        public OrderAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderAdapterModel();
+        public ProductAdapterModel CurrentRecord { get; set; } = new ProductAdapterModel();
+        public ProductAdapterModel CurrentNeedDeleteRecord { get; set; } = new ProductAdapterModel();
         public EditContext LocalEditContext { get; set; }
-        public bool ShowAontherRecordPicker { get; set; } = false;
         public MasterRecord Header { get; set; } = new MasterRecord();
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
         public IDataGrid ShowMoreDetailsGrid { get; set; }
         public string EditRecordDialogTitle { get; set; } = "";
+        public bool ShowAontherRecordPicker { get; set; } = false;
+        private bool isShowConfirm { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         #endregion
-        public string ShowMoreDetailsRecordDialogTitle { get; set; } = "";
-        private bool isShowConfirm { get; set; } = false;
         #endregion
 
         #region Field
         bool isNewRecordMode;
-        private readonly IOrderService CurrentService;
+        private readonly IProductService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
         IRazorPage thisRazorComponent;
@@ -80,6 +78,7 @@ namespace Backend.RazorModels
         #endregion
 
         #region Method
+
         #region DataGrid 初始化
         public void Setup(IRazorPage razorPage, IDataGrid dataGrid)
         {
@@ -93,7 +92,7 @@ namespace Backend.RazorModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new OrderAdapterModel();
+                CurrentRecord = new ProductAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
@@ -107,10 +106,10 @@ namespace Backend.RazorModels
         }
         #endregion
 
-        #region 記錄列的按鈕事件 (修改與刪除與明細紀錄瀏覽)
-        public async Task OnCommandClicked(CommandClickEventArgs<OrderAdapterModel> args)
+        #region 記錄列的按鈕事件 (修改與刪除)
+        public async Task OnCommandClicked(CommandClickEventArgs<ProductAdapterModel> args)
         {
-            OrderAdapterModel item = args.RowData as OrderAdapterModel;
+            ProductAdapterModel item = args.RowData as ProductAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 CurrentRecord = item.Clone();
@@ -138,21 +137,6 @@ namespace Backend.RazorModels
                 #endregion
 
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
-            }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
-            {
-                IsShowMoreDetailsRecord = true;
-                ShowMoreDetailsRecordDialogTitle = MagicHelper.訂單明細管理功能名稱;
-                MasterRecord masterRecord = new MasterRecord()
-                {
-                    Id = item.Id
-                };
-                Header = masterRecord;
-                if (ShowMoreDetailsGrid != null)
-                {
-                    await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
-                    ShowMoreDetailsGrid.RefreshGrid();
-                }
             }
         }
 
@@ -237,19 +221,19 @@ namespace Backend.RazorModels
         //    ShowAontherRecordPicker = true;
         //}
 
-        //public void OnPickerCompletion(DepartmentAdapterModel e)
+        //public void OnPickerCompletion(MyUserAdapterModel e)
         //{
         //    if (e != null)
         //    {
-        //        CurrentRecord.DepartmentId = e.DepartmentId;
-        //        CurrentRecord.DepartmentName = e.Name;
+        //        CurrentRecord.Id = e.Id;
+        //        CurrentRecord.Name = e.Name;
         //    }
         //    ShowAontherRecordPicker = false;
         //}
         #endregion
 
         #region 排序搜尋事件
-
+        public int DefaultSorting { get; set; } = -1;
         public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)
         {
             if (dataGrid.GridIsExist() == true)
@@ -258,7 +242,6 @@ namespace Backend.RazorModels
                 dataGrid.RefreshGrid();
             }
         }
-
         #endregion
         #endregion
     }

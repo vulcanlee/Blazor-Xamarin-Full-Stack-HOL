@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Backend.RazorModels
+namespace Backend.ViewModels
 {
     public class ConfirmBoxModel
     {
