@@ -17,7 +17,7 @@ namespace Backend.Helpers
             get
             {
                 // Replace the ApplicationNamespace with your application name.
-                return Backend.Resources.SfResources.ResourceManager;
+                return Resources.SfResources.ResourceManager;
             }
         }
     }

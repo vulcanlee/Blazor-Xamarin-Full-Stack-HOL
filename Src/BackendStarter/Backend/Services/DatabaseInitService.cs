@@ -85,7 +85,7 @@ namespace Backend.Services
                 };
                 context.Add(order);
                 await context.SaveChangesAsync();
-                var total = random.Next(1,6);
+                var total = random.Next(1, 6);
                 for (int j = 0; j < total; j++)
                 {
                     OrderItem orderItem = new OrderItem()

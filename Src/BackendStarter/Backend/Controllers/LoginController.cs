@@ -168,7 +168,7 @@ namespace Backend.Controllers
                 //expires: DateTime.Now.AddMinutes(1),
                 //notBefore: DateTime.Now.AddMinutes(-5),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey
-                            (Encoding.UTF8.GetBytes(tokenConfiguration.IssuerSigningKey )),
+                            (Encoding.UTF8.GetBytes(tokenConfiguration.IssuerSigningKey)),
                         SecurityAlgorithms.HmacSha512)
             );
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
