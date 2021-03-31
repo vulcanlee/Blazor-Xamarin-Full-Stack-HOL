@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject DatabaseInitService DatabaseInitService
+@inject BackendDBContext context
+
+@using Syncfusion.Blazor.Spinner
+
+<h1>Hello 你好, 超全端程式設計 Blazor 專案範本!</h1>
+
+<div>
+    <button class="btn btn-primary" @onclick="Init">資料庫重新建立與資料初始化</button>
+</div>
+
+<div id="container">
+    <SfSpinner @bind-Visible="@VisibleProperty">
+    </SfSpinner>
+</div>
+
+<div class="text-md-left mt-4">
+    <a href="https://materialdesignicons.com/" target="_blank"> Material Deisgn Icon </a>
+    <span>        使用範例    </span>
+</div>
+<div>
+    <span class="mdi mdi-coffee"></span>
+    <span class="mdi mdi-48px mdi-coffee"></span>
+    <span class="mdi mdi-48px mdi-spin mdi-coffee"></span>
+</div>
+
+@code {
+    private bool VisibleProperty { get; set; } = false;
+    public async Task Init()
+    {
+        this.VisibleProperty = true;
+        await DatabaseInitService.InitDataAsync();
+        this.VisibleProperty = false;
+    }
+}
