@@ -26,7 +26,7 @@
 * ProductAdapter
   * 取得紀錄的轉換器
 
-* ProductRazorModel
+* ProductViewModel
   * Razor Component ViewModel
   * 若有開窗選取紀錄，需要特別修正程式碼
   * `註冊服務 CustomDependency.cs`
