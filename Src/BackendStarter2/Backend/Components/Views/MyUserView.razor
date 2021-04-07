@@ -10,9 +10,10 @@
 @inject MyUserRazorModel RazorModel
 @implements IRazorPage
 @implements IDataGrid
-<div >
+
+<div>
     <SfGrid @ref="Grid" TValue="MyUserAdapterModel"
-            AllowPaging="true" Width="100%"
+            AllowPaging="true" class="parentFullWidth"
             Toolbar="RazorModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <MyUserAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></MyUserAdapter>
@@ -38,9 +39,12 @@
         <GridColumns>
             <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="150" />
             <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" Width="250" />
-            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"/>
-            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"/>
-            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"
+                         HideAtMedia="(min-width: 640px)"/>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
