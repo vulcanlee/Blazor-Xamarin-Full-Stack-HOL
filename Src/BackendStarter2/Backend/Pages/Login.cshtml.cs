@@ -44,9 +44,9 @@ namespace Backend.Pages
                 await HttpContext
                     .SignOutAsync(
                     MagicHelper.CookieAuthenticationScheme);
+                logger.LogInformation("使用者登出");
             }
             catch { }
-            //logger.LogInformation("使用者登出");
         }
         public string ReturnUrl { get; set; }
         public async Task<IActionResult> OnPostAsync()
