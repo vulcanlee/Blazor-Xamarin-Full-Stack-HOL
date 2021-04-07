@@ -10,50 +10,51 @@
 @inject MyUserRazorModel RazorModel
 @implements IRazorPage
 @implements IDataGrid
-
-<SfGrid @ref="Grid" TValue="MyUserAdapterModel"
-        AllowPaging="true"
-        Toolbar="RazorModel.Toolbaritems">
-    <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-        <MyUserAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></MyUserAdapter>
-    </SfDataManager>
-    <SfToolbar>
-        <ToolbarItems>
-            <ToolbarItem Type="ItemType.Input">
-                <Template>
-                    <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
-                    <SfDropDownList TValue="int" TItem="SortCondition"
-                                    Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
-                        <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                        <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
-                    </SfDropDownList>
-                </Template>
-            </ToolbarItem>
-        </ToolbarItems>
-    </SfToolbar>
-    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="MyUserAdapterModel"
-                OnToolbarClick="RazorModel.ToolbarClickHandler"
-                RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
-    <GridPageSettings PageSize="@PageSize" />
-    <GridColumns>
-        <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" />
-        <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" />
-        <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管" />
-        <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱" />
-        <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門" />
-        <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
-            <GridCommandColumns>
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+<div class="sfgridScrolling">
+    <SfGrid @ref="Grid" TValue="MyUserAdapterModel"
+            AllowPaging="true" Width="100%"
+            Toolbar="RazorModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <MyUserAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></MyUserAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="MyUserAdapterModel"
+                    OnToolbarClick="RazorModel.ToolbarClickHandler"
+                    RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="150" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" Width="250" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管" Width="150" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱" Width="150" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門" Width="150"/>
+            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+                <GridCommandColumns>
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
-            </GridCommandColumns>
-        </GridColumn>
-    </GridColumns>
-</SfGrid>
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="600px" Height="600px">
+          Width="90%" Height="90%">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>
@@ -128,7 +129,7 @@
 </SfDialog>
 
 <MyUserPicker OpenPicker="RazorModel.ShowAontherRecordPicker"
-               OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />
+              OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />
 
 <MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
             IsVisible="@RazorModel.MessageBox.IsVisible"

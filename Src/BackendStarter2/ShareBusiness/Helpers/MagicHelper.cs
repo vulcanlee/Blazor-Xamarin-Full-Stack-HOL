@@ -11,8 +11,8 @@ namespace ShareBusiness.Helpers
         public static readonly string AppName = "Blazor + Xamarin 超全端程式設計 動手練習系列";
         public static readonly string MenuMainTitle = "Blazor 超全端程式設計";
         public static readonly string DefaultConnectionString = "DefaultConnection";
-        public const string CookieAuthenticationScheme = "HandsOnLabCookieAuthenticationScheme"; // CookieAuthenticationDefaults.AuthenticationScheme
-        public const string JwtBearerAuthenticationScheme = "HandsOnLabJwtBearerAuthenticationScheme"; // JwtBearerDefaults.AuthenticationScheme
+        public const string CookieAuthenticationScheme = "BackendCookieAuthenticationScheme"; // CookieAuthenticationDefaults.AuthenticationScheme
+        public const string JwtBearerAuthenticationScheme = "BackendJwtBearerAuthenticationScheme"; // JwtBearerDefaults.AuthenticationScheme
         public static readonly string 未經授權無法存取此頁面 = "抱歉，未經授權無法存取此頁面。";
         public static readonly string 未能找到您要的網頁 = "對不起，未能找到您要的網頁。";
         public static readonly string 可能該網頁已被移除或被移到其他的網址 = "可能該網頁已被移除或被移到其他的網址。";

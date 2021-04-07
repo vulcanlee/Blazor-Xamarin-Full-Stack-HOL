@@ -12,20 +12,22 @@
     <title>請進行 身分驗證</title>
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
+    <link href="css/customSite.css" rel="stylesheet" />
     <style>
         .centered {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            margin-top: -150px;
-            margin-left: -250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div class="container centered">
-        <div class="row ">
-            <div class="card " style="width: 30rem;">
+    <div class="centered">
+        <div class="">
+            <div class="card cardcenter" >
                 <article class="card-body">
                     <h4 class="card-title text-center mb-4 mt-1">請輸入帳號與密碼</h4>
                     <hr>

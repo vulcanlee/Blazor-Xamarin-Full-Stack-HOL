@@ -10,50 +10,52 @@
 @implements IRazorPage
 @implements IDataGrid
 
-<SfGrid @ref="Grid" TValue="OrderItemAdapterModel"
-        AllowPaging="true"
-        Toolbar="RazorModel.Toolbaritems">
-    <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-        <OrderItemAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"
-                          HeaderID="@RazorModel.Header.Id"></OrderItemAdapter>
-    </SfDataManager>
-    <SfToolbar>
-        <ToolbarItems>
-            <ToolbarItem Type="ItemType.Input">
-                <Template>
-                    <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
-                    <SfDropDownList TValue="int" TItem="SortCondition"
-                                    Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
-                        <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                        <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
-                    </SfDropDownList>
-                </Template>
-            </ToolbarItem>
-        </ToolbarItems>
-    </SfToolbar>
-    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OrderItemAdapterModel"
-                OnToolbarClick="RazorModel.ToolbarClickHandler"
-                RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
-    <GridPageSettings PageSize="@PageSize" />
-    <GridColumns>
-        <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱" />
-        <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱" />
-        <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量" Width="80" />
-        <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣" Width="120" />
-        <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價" Width="150" />
-        <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
-            <GridCommandColumns>
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+<div class="sfgridScrolling">
+    <SfGrid @ref="Grid" TValue="OrderItemAdapterModel"
+            AllowPaging="true" Width="100%"
+            Toolbar="RazorModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <OrderItemAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"
+                              HeaderID="@RazorModel.Header.Id"></OrderItemAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OrderItemAdapterModel"
+                    OnToolbarClick="RazorModel.ToolbarClickHandler"
+                    RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱" />
+            <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱" />
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量" Width="80" />
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣" Width="120" />
+            <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價" Width="150" />
+            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+                <GridCommandColumns>
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
-            </GridCommandColumns>
-        </GridColumn>
-    </GridColumns>
-</SfGrid>
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="600px" Height="600px">
+          Width="90%" Height="90%">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>

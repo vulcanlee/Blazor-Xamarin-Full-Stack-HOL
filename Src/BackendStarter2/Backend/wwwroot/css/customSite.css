@@ -1,0 +1,18 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+.sfgridScrolling {
+    width: calc(100vw - 20rem);
+}
+
+.cardcenter {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+    width: 30rem;
+}
+
+@media (max-width: 640.98px) {
+    .cardcenter {
+        width: 20rem;
+    }
+}

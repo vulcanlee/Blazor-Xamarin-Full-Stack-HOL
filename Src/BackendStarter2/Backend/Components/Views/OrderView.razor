@@ -11,51 +11,53 @@
 @implements IRazorPage
 @implements IDataGrid
 
-<SfGrid @ref="Grid" TValue="OrderAdapterModel"
-        AllowPaging="true"
-        Toolbar="RazorModel.Toolbaritems">
-    <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-        <OrderAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></OrderAdapter>
-    </SfDataManager>
-    <SfToolbar>
-        <ToolbarItems>
-            <ToolbarItem Type="ItemType.Input">
-                <Template>
-                    <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
-                    <SfDropDownList TValue="int" TItem="SortCondition"
-                                    Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
-                        <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                        <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
-                    </SfDropDownList>
-                </Template>
-            </ToolbarItem>
-        </ToolbarItems>
-    </SfToolbar>
-    <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OrderAdapterModel"
-                OnToolbarClick="RazorModel.ToolbarClickHandler"
-                RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
-    <GridPageSettings PageSize="@PageSize" />
-    <GridColumns>
-        <GridColumn Field=@nameof(OrderAdapterModel.Name) HeaderText="訂單名稱" Width="150" />
-        <GridColumn Field=@nameof(OrderAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd" />
-        <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd" />
-        <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd" />
-        <GridColumn Field=@nameof(OrderAdapterModel.StatusName) HeaderText="狀態" />
-        <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
-            <GridCommandColumns>
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+<div class="sfgridScrolling">
+    <SfGrid @ref="Grid" TValue="OrderAdapterModel"
+            AllowPaging="true" Width="100%"
+            Toolbar="RazorModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <OrderAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></OrderAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="OrderAdapterModel"
+                    OnToolbarClick="RazorModel.ToolbarClickHandler"
+                    RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(OrderAdapterModel.Name) HeaderText="訂單名稱" Width="150" />
+            <GridColumn Field=@nameof(OrderAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd" />
+            <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd" />
+            <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd" />
+            <GridColumn Field=@nameof(OrderAdapterModel.StatusName) HeaderText="狀態" />
+            <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
+                <GridCommandColumns>
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowDetailOfMaster})" />
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
-                <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
-            </GridCommandColumns>
-        </GridColumn>
-    </GridColumns>
-</SfGrid>
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="600px" Height="600px">
+          Width="90%" Height="90%">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>
@@ -135,7 +137,7 @@
         <Header>@RazorModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>
             <OrderItemView @ref="RazorModel.ShowMoreDetailsGrid" PageSize="@MagicHelper.GridPageSize"
-                           Header="RazorModel.Header"/>
+                           Header="RazorModel.Header" />
         </Content>
         <FooterTemplate>
             <div>
