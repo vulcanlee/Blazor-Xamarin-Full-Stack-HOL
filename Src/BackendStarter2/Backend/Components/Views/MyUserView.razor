@@ -37,7 +37,7 @@
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="100" />
             <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" Width="250" />
             <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"
                          HideAtMedia="(min-width: 640px)"/>

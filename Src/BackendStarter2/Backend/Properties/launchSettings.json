@@ -23,6 +23,14 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "Vulcan": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000;http://192.168.31.153:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "Watch": {
       "commandName": "Executable",
       "executablePath": "dotnet.exe",
