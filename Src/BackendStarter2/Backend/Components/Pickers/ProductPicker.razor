@@ -7,7 +7,8 @@
 
 @inject IProductService CurrentService
 
-<SfDialog @bind-Visible="@OpenPicker" Width="90%" Height="90%" IsModal="true">
+<SfDialog @bind-Visible="@OpenPicker" IsModal="true"
+          Width="95%" Height="95%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@DialogTitle</Header>
         <Content>

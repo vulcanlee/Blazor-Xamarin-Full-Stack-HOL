@@ -12,7 +12,7 @@
 
 <div >
     <SfGrid @ref="Grid" TValue="OrderItemAdapterModel"
-            AllowPaging="true" Width="100%"
+            AllowPaging="true" 
             Toolbar="RazorModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <OrderItemAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"
@@ -55,7 +55,7 @@
 </div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="90%" Height="90%">
+          Width="95%" Height="95%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>

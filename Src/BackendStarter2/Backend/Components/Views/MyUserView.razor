@@ -37,13 +37,13 @@
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="150" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" />
             <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" Width="250" />
-            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管" Width="250"
-                         />
-            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱" Width="250"
-                         />
-            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門" Width="250"
+            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"
                          HideAtMedia="(min-width: 640px)"/>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
@@ -58,7 +58,7 @@
 </div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="90%" Height="90%" CssClass="recordDialog">
+          Width="95%" Height="95%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>

@@ -12,7 +12,7 @@
 
 <div >
     <SfGrid @ref="Grid" TValue="ProductAdapterModel"
-            AllowPaging="true" Width="100%"
+            AllowPaging="true" class="parentFullWidth"
             Toolbar="RazorModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <ProductAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></ProductAdapter>
@@ -52,7 +52,7 @@
 </div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="90%" Height="90%">
+          Width="95%" Height="95%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>
@@ -102,9 +102,6 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
-
-@*<MyUserPicker OpenPicker="RazorModel.ShowAontherRecordPicker"
-    OnConfirmCallback="x=>RazorModel.OnPickerCompletion(x)" />*@
 
 <MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
             IsVisible="@RazorModel.MessageBox.IsVisible"

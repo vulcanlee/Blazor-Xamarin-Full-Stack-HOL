@@ -8,12 +8,17 @@
 }
 
 .recordDialog {
-    max-width: 90vw;
-    max-height: 90vh;
+    max-width: 100vw;
+    max-height: 100vh;
 }
 
 .parentFullWidth {
-    max-width: calc(100vw - 250px);
+    max-width: calc(100vw - 250px - 32px - 24px);
+}
+
+.dialogSize {
+    min-width: 95vw;
+    min-height: 95vh;
 }
 
 @media (max-width: 640px) {
