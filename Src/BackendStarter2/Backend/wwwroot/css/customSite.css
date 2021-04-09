@@ -21,7 +21,32 @@
     min-height: 95vh;
 }
 
+.fixSidebar {
+    position: fixed;
+    overflow-y: scroll;
+    height: 100%;
+    width: 250px;
+    -ms-overflow-style: none; /* IE and Edge */
+}
+    .fixSidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+
+
 @media (max-width: 640px) {
+    .fixSidebar {
+        position: initial;
+        overflow-y: initial;
+        height: 100%;
+        width: 100vw ;
+        -ms-overflow-style: initial; /* IE and Edge */
+    }
+
+        .fixSidebar::-webkit-scrollbar {
+            display: initial;
+        }
+
     .cardcenter {
         width: 20rem;
     }
