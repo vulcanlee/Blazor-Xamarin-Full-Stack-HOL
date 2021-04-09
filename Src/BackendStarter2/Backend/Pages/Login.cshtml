@@ -27,7 +27,10 @@
 <body>
     <div class="centered">
         <div class="">
-            <div class="card cardcenter" >
+            <div class="card cardcenter">
+                <div class="card-header">
+                    <span class="h2">超全端 Blazor 專案範本</span>
+                </div>
                 <article class="card-body">
                     <h4 class="card-title text-center mb-4 mt-1">請輸入帳號與密碼</h4>
                     <hr>
@@ -38,7 +41,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text oi oi-person"> </span>
                                 </div>
-                                <input class="form-control" asp-for="Username" placeholder="使用者的帳號" >
+                                <input class="form-control" asp-for="Username" placeholder="使用者的帳號">
                             </div> <!-- input-group.// -->
                         </div> <!-- form-group// -->
                         <div class="form-group">
@@ -54,6 +57,10 @@
                         </div> <!-- form-group// -->
                     </form>
                 </article>
+                <div class="card-footer">
+                    <div><a href="https://csharpkh.blogspot.com/">Vulcan Lee</a></div>
+                    <div>版本 @Model.Version</div>
+                </div>
             </div>
         </div>
     </div>

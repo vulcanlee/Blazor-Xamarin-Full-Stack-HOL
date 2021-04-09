@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using ShareBusiness.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -34,10 +35,14 @@ namespace Backend.Pages
 
         [BindProperty]
         public string Password { get; set; } = "";
+        [BindProperty]
+        public string Version { get; set; } = "";
         public string PasswordType { get; set; } = "password";
         public string Msg { get; set; }
         public async Task OnGetAsync()
         {
+            Version version = Assembly.GetEntryAssembly().GetName().Version;
+            Version = version.ToString();
             try
             {
                 // 清除已經存在的登入 Cookie 內容
