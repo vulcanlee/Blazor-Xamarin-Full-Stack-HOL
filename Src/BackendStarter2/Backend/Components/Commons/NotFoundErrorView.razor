@@ -1,11 +1,17 @@
 ﻿@page "/NotFound"
 
-<div style="margin-left: -20px;margin-top: 10px;background: silver;height: 118px;width: fit-content;border-radius: 10px;padding-top: 10px;padding-left: 14px;">
-    <div style="float: left;margin-right: 20px;margin-top: 26px;">
-        <span class="mdi mdi-48px mdi-emoticon-sad text-secondary"></span>
+<div class="parentFullWidth bg-secondary rounded p-2">
+    <div class="align-content-center">
+        <span class="h3 mdi mdi-emoticon-sad-outline text-white align-middle"></span>
+        <span class="text-white h3 align-middle">
+            @ShareBusiness.Helpers.MagicHelper.未能找到您要的網頁
+        </span>
     </div>
-    <div style="width: 617px;">
-        <h3 style="padding-top: 9px;color: white;font-weight: bold;">@ShareBusiness.Helpers.MagicHelper.未能找到您要的網頁</h3>
-        <h3 style="padding-top: 9px;color: white;font-weight: bold;padding-left: 70px;">@ShareBusiness.Helpers.MagicHelper.可能該網頁已被移除或被移到其他的網址</h3>
+    <div class="align-content-center mt-3">
+        <span class="text-white h3 align-middle">
+            @ShareBusiness.Helpers.MagicHelper.可能該網頁已被移除或被移到其他的網址
+        </span>
+    </div>
+    <div>
     </div>
 </div>
