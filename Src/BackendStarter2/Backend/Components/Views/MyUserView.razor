@@ -35,7 +35,7 @@
         <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="MyUserAdapterModel"
                     OnToolbarClick="RazorModel.ToolbarClickHandler"
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
-        <GridPageSettings PageSize="@PageSize" />
+        <GridPageSettings PageSize="@PageSize"  />
         <GridColumns>
             <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="100" />
             <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" Width="250" />

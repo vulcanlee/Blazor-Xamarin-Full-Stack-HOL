@@ -12,16 +12,23 @@
     <DialogTemplates>
         <Header>@DialogTitle</Header>
         <Content>
-            <div>
-                <SfDropDownList TValue="int" TItem="SortCondition"
-                                Placeholder="選擇排序條件" DataSource="@SortConditions">
-                    <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                    <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@SortChanged"></DropDownListEvents>
-                </SfDropDownList>
-            </div>
             <SfGrid @ref="GridDialog" TValue="MyUserAdapterModel"
                     AllowPaging="true"
                     Toolbar="Toolbaritems">
+                <SfToolbar>
+                    <ToolbarItems>
+                        <ToolbarItem Type="ItemType.Input">
+                            <Template>
+                                <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                                <SfDropDownList TValue="int" TItem="SortCondition"
+                                                Placeholder="選擇排序條件" DataSource="@SortConditions">
+                                    <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@SortChanged"></DropDownListEvents>
+                                </SfDropDownList>
+                            </Template>
+                        </ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
                 <SfDataManager Adaptor="Adaptors.CustomAdaptor">
                     <MyUserAdapter CurrentSortCondition="@CurrentSortCondition"></MyUserAdapter>
                 </SfDataManager>
