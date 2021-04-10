@@ -26,6 +26,8 @@ namespace ShareBusiness.Helpers
 
         #region 個別作業會用到的作業名稱宣告
         public static readonly string 首頁功能名稱 = "首頁";
+        public static readonly string 登入 = "登入";
+        public static readonly string 登出 = "登出";
         public static readonly string 帳號管理功能名稱 = "帳號管理";
         public static readonly string 訂單管理功能名稱 = "訂單管理";
         public static readonly string 訂單明細管理功能名稱 = "訂單明細管理";

@@ -1,4 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">@ShareBusiness.Helpers.MagicHelper.MenuMainTitle</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -14,6 +17,27 @@
                     @ShareBusiness.Helpers.MagicHelper.首頁功能名稱
                 </NavLink>
             </li>
+            @if (IsAuthenticated == false)
+            {
+                <li class="nav-item px-3">
+                    @*https://docs.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-3.1#lambda-expressions*@
+                    <NavLink class="nav-link" @onclick="@(()=>{Navigate("/login");})">
+                        <span class="mr-2 mdi mdi-18px mdi-login" aria-hidden="true"></span>
+                        @ShareBusiness.Helpers.MagicHelper.登入
+                    </NavLink>
+                </li>
+            }
+            @if (IsAuthenticated == true)
+            {
+                <li class="nav-item px-3">
+                    @*https://docs.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-3.1#lambda-expressions*@
+                    <NavLink class="nav-link" @onclick="@(()=>{Navigate("/logout");})">
+                        <span class="mr-2 mdi mdi-18px mdi-logout" aria-hidden="true"></span>
+                        @ShareBusiness.Helpers.MagicHelper.登出
+                    </NavLink>
+                </li>
+            }
+
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="MyUser">
                     <span class="mr-2 mdi mdi-18px mdi-clipboard-account" aria-hidden="true"></span>
@@ -48,9 +72,31 @@
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    bool IsAuthenticated = false;
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthenticated = false;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IsAuthenticated = true;
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+        }
+    }
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+    void Navigate(string path)
+    {
+        NavigationManager.NavigateTo(path, true);
     }
 }
