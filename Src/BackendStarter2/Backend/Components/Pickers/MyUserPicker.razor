@@ -8,7 +8,7 @@
 @inject IMyUserService CurrentService
 
 <SfDialog @bind-Visible="@OpenPicker" IsModal="true"
-          Width="95%" Height="95%" CssClass="dialogSize">
+          Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@DialogTitle</Header>
         <Content>
@@ -41,9 +41,12 @@
                 <GridColumns>
                     <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號"></GridColumn>
                     <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱"></GridColumn>
-                    <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"></GridColumn>
-                    <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"></GridColumn>
-                    <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"></GridColumn>
+                    <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"
+                                HideAtMedia="(min-width: 640px)"></GridColumn>
+                    <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"
+                                HideAtMedia="(min-width: 640px)"></GridColumn>
+                    <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"
+                                HideAtMedia="(min-width: 640px)"></GridColumn>
                 </GridColumns>
             </SfGrid>
         </Content>

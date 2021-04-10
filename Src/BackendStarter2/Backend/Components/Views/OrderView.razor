@@ -38,9 +38,12 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(OrderAdapterModel.Name) HeaderText="訂單名稱" Width="150" />
-            <GridColumn Field=@nameof(OrderAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd" />
-            <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd" />
-            <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd" />
+            <GridColumn Field=@nameof(OrderAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd"
+                         HideAtMedia="(min-width: 640px)"/>
             <GridColumn Field=@nameof(OrderAdapterModel.StatusName) HeaderText="狀態" />
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
@@ -57,7 +60,7 @@
 </div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="95%" Height="95%" CssClass="dialogSize">
+          Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>
@@ -132,7 +135,7 @@
 </SfDialog>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowMoreDetailsRecord" IsModal="true"
-          Width="95%" Height="95%" CssClass="dialogSize">
+          Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>

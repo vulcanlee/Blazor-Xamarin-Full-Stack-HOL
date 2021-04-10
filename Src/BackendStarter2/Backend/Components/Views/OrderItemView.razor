@@ -39,9 +39,12 @@
         <GridColumns>
             <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱" />
             <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱" />
-            <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量" Width="80" />
-            <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣" Width="120" />
-            <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價" Width="150" />
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價"
+                         HideAtMedia="(min-width: 640px)"/>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -55,7 +58,7 @@
 </div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="95%" Height="95%" CssClass="dialogSize">
+          Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>

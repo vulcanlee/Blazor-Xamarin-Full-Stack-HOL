@@ -37,8 +37,10 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(ProductAdapterModel.Name) HeaderText="名稱" />
-            <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) HeaderText="年份" Width="70" />
-            <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) HeaderText="售價" Width="150" />
+            <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) HeaderText="年份"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) HeaderText="售價"
+                         HideAtMedia="(min-width: 640px)"/>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -52,7 +54,7 @@
 </div>
 
 <SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
-          Width="95%" Height="95%" CssClass="dialogSize">
+          Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
         <Content>
