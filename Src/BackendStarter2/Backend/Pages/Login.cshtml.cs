@@ -105,7 +105,7 @@ namespace Backend.Pages
                 }
                 catch (Exception ex)
                 {
-                    string error = ex.Message;
+                    var msg = ex.Message;
                 }
                 #endregion
 
