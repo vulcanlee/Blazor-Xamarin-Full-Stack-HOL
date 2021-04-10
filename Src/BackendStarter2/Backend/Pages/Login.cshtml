@@ -13,6 +13,7 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="css/customSite.css" rel="stylesheet" />
+    <link rel="stylesheet" href="fonts/MaterialDesign/css/materialdesignicons.min.css">
     <style>
         .centered {
             display: flex;
@@ -39,26 +40,26 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text oi oi-person"> </span>
+                                    <span class="input-group-text mdi mdi-24px mdi-account"> </span>
                                 </div>
                                 <input class="form-control" asp-for="Username" placeholder="使用者的帳號">
                             </div> <!-- input-group.// -->
                         </div> <!-- form-group// -->
-                        <div class="form-group">
+                        <div class="form-group mt-2">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text oi oi-lock-locked"> </span>
+                                    <span class="input-group-text mdi mdi-24px mdi-shield-lock"> </span>
                                 </div>
                                 <input class="form-control" asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
                             </div> <!-- input-group.// -->
                         </div> <!-- form-group// -->
-                        <div class="form-group">
+                        <div class="form-group mt-2">
                             <button type="submit" class="btn btn-primary btn-block"> 登入  </button>
                         </div> <!-- form-group// -->
                     </form>
                 </article>
                 <div class="card-footer">
-                    <div><a href="https://csharpkh.blogspot.com/">Vulcan Lee</a></div>
+                    <div class="mb-2"><a href="https://csharpkh.blogspot.com/">Vulcan Lee</a></div>
                     <div>版本 @Model.Version</div>
                 </div>
             </div>
