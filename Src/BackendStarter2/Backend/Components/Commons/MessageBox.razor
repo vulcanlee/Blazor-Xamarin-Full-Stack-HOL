@@ -3,7 +3,8 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Buttons
 
-<SfDialog @bind-Visible="@IsVisible" Height="@Height" Width="@Width" ShowCloseIcon="false" IsModal="true">
+<SfDialog @bind-Visible="@IsVisible" class="message-box-width"
+          Height="@Height" Width="@Width" ShowCloseIcon="false" IsModal="true">
     <DialogTemplates>
         <Header>@Title</Header>
         <Content>@Message</Content>
