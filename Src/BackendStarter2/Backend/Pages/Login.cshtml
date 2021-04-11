@@ -40,18 +40,18 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text mdi mdi-24px mdi-account"> </span>
+                                    <span class="input-group-text mdi mdi-18px mdi-account"> </span>
                                 </div>
-                                <input class="form-control" asp-for="Username" placeholder="使用者的帳號">
-                            </div> <!-- input-group.// -->
+                                <input class="form-control m-auto" asp-for="Username" placeholder="使用者的帳號">
+                            </div>
                         </div> <!-- form-group// -->
                         <div class="form-group mt-2">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text mdi mdi-24px mdi-shield-lock"> </span>
+                                    <span class="input-group-text mdi mdi-18px mdi-shield-lock"> </span>
                                 </div>
-                                <input class="form-control" asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
-                            </div> <!-- input-group.// -->
+                                    <input class="form-control m-auto" asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
+                            </div>
                         </div> <!-- form-group// -->
                         <div class="form-group mt-2">
                             <button type="submit" class="btn btn-primary btn-block"> 登入  </button>
