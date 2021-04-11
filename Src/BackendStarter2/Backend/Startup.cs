@@ -160,7 +160,11 @@ namespace Backend
         {
             #region 宣告 NLog 要使用到的變數內容
             var logRootPath = Configuration["CustomNLog:LogRootPath"];
+            var allLogMessagesFilename = Configuration["CustomNLog:AllLogMessagesFilename"];
+            var allWebDetailsLogMessagesFilename = Configuration["CustomNLog:AllWebDetailsLogMessagesFilename"];
             LogManager.Configuration.Variables["LogRootPath"] = logRootPath;
+            LogManager.Configuration.Variables["AllLogMessagesFilename"] = allLogMessagesFilename;
+            LogManager.Configuration.Variables["AllWebDetailsLogMessagesFilename"] = allWebDetailsLogMessagesFilename;
             #endregion
 
             #region Syncfusion License Registration
