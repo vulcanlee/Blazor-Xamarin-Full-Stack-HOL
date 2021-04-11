@@ -23,7 +23,7 @@
             @env.EnvironmentName
         </div>
         <div class="h3">
-            <a href="/swagger/index.html">Web API</a>
+            <a href="/swagger/index.html" target="_blank">Web API</a>
         </div>
         <div class="h3">
             <div>
@@ -79,8 +79,35 @@
     </article>
 </div>
 
-<div>
-    <button class="btn btn-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</button>
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <span class="h2">測試強制拋出例外異常</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <button class="btn btn-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</button>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+        <span class="h2">專案原始碼</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="mb-4">
+            <a href="https://github.com/vulcanlee/Blazor-Xamarin-Full-Stack-HOL/" target="_blank"> Blazor 超全端程式設計專案原始碼 </a>
+        </div>
+        <div class="mb-4">
+            <a href="https://csharpkh.blogspot.com/" target="_blank"> 更多部落格文章 </a>
+        </div>
+        <div class="mb-4">
+            <a href="https://www.facebook.com/vulcanlabtw" target="_blank"> 歡迎加入 Xamarin Blazor 實驗室 粉絲團 </a>
+        </div>
+        <div class="">
+            <a href="https://www.facebook.com/groups/201660094303797" target="_blank"> 歡迎加入 Xamarin Blazor 討論社團 </a>
+        </div>
+    </article>
 </div>
 
 <div id="container">
