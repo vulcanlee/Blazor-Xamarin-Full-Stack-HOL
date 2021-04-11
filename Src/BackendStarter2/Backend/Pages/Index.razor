@@ -79,6 +79,10 @@
     </article>
 </div>
 
+<div>
+    <button class="btn btn-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</button>
+</div>
+
 <div id="container">
     <SfSpinner @bind-Visible="@VisibleProperty">
     </SfSpinner>
