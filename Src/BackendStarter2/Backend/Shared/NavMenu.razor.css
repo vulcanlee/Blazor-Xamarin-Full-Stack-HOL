@@ -21,6 +21,7 @@
 
 .nav-item {
     font-size: 0.9rem;
+    cursor: pointer;
     padding-bottom: 0.5rem;
 }
 
