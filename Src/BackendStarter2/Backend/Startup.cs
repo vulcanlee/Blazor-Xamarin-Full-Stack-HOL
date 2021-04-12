@@ -1,5 +1,6 @@
 using Backend.Helpers;
 using Backend.Models;
+using Backend.Services;
 using DataTransferObject.DTOs;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -153,6 +154,8 @@ namespace Backend
             #region 設定 Swagger 中介軟體
             services.AddSwaggerGen();
             #endregion
+
+            services.AddSingleton<IHostedService, SampleHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
