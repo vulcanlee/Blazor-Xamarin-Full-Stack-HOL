@@ -31,6 +31,7 @@ namespace Backend.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await Task.Yield();
+            Logger.LogInformation($"Keep alive 服務開始啟動");
             new Thread(async x =>
             {
                 try
@@ -72,7 +73,8 @@ namespace Backend.Services
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"Keep alive 服務即將停止");
+            TimeSpan timeSpan = DateTime.Now - StartupTime;
+            Logger.LogInformation($"Keep alive 服務即將停止，共花費 {timeSpan}");
 
             return Task.FromResult(0);
         }
