@@ -77,7 +77,7 @@
 @media (max-width: 640px) {
     .fixSidebar {
         position: initial;
-        overflow-y: initial;
+        /*overflow-y: initial;*/
         height: 100%;
         width: 100vw ;
         -ms-overflow-style: initial; /* IE and Edge */
