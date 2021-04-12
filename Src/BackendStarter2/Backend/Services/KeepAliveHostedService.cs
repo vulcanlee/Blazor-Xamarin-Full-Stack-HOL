@@ -67,6 +67,7 @@ namespace Backend.Services
                         }
                         await Task.Delay(checkCycle * 1000, cancellationToken);
                     }
+                    Logger.LogInformation($"Keep alive 服務準備正常離開中");
                 }
                 catch { }
             },TaskCreationOptions.LongRunning);
