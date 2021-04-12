@@ -28,19 +28,23 @@ namespace Backend.Services
         int checkCycle = 3;
         DateTime StartupTime = DateTime.Now;
         Task keepAliveTask;
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        bool checkServiceCompletion = false;
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await Task.Yield();
+            checkServiceCompletion = false;
+            cancellationTokenSource = new CancellationTokenSource();
             Logger.LogInformation($"Keep alive 服務開始啟動");
-            keepAliveTask = Task.Factory.StartNew(async() =>
+            keepAliveTask = Task.Factory.StartNew(async () =>
             {
                 try
                 {
                     StartupTime = DateTime.Now;
                     lastLogTime = DateTime.Now;
                     HttpClient client = new HttpClient();
-                    while (cancellationToken.IsCancellationRequested == false)
+                    while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
                         if (DateTime.Now > nextTime)
@@ -68,9 +72,10 @@ namespace Backend.Services
                         await Task.Delay(checkCycle * 1000, cancellationToken);
                     }
                     Logger.LogInformation($"Keep alive 服務準備正常離開中");
+                    checkServiceCompletion = true;
                 }
                 catch { }
-            },TaskCreationOptions.LongRunning);
+            }, TaskCreationOptions.LongRunning);
             //new Thread(async x =>
             //{
             //    try
@@ -110,12 +115,19 @@ namespace Backend.Services
             //}).Start();
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
+            cancellationTokenSource.Cancel();
+            for (int i = 0; i < 10; i++)
+            {
+                if (checkServiceCompletion == true)
+                    break;
+                await Task.Delay(500);
+            }
             TimeSpan timeSpan = DateTime.Now - StartupTime;
             Logger.LogInformation($"Keep alive 服務即將停止，共花費 {timeSpan}");
 
-            return Task.FromResult(0);
+            return;
         }
     }
 }
