@@ -26,6 +26,7 @@ namespace Backend.Services
         DateTime lastLogTime;
         int keepAliveCycle = 300;
         int checkCycle = 3;
+        DateTime StartupTime = DateTime.Now;
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -34,7 +35,9 @@ namespace Backend.Services
             {
                 try
                 {
+                    StartupTime = DateTime.Now;
                     lastLogTime = DateTime.Now;
+                    HttpClient client = new HttpClient();
                     while (cancellationToken.IsCancellationRequested == false)
                     {
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
@@ -50,11 +53,11 @@ namespace Backend.Services
 
                             var address = Configuration["KeepAliveEndpoint"];
                             var dateOffset = DateTime.UtcNow.AddHours(8);
-                            Logger.LogInformation($"Keep alive {address}: {dateOffset.ToString()}");
+                            TimeSpan timeSpan = DateTime.Now - StartupTime;
+                            Logger.LogInformation($"Keep alive ({timeSpan}) {dateOffset.ToString()}");
 
                             try
                             {
-                                var client = new HttpClient();
                                 await client.GetStringAsync($"{address}/Login");
                             }
                             catch { }
@@ -69,6 +72,8 @@ namespace Backend.Services
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            Logger.LogInformation($"Keep alive 服務即將停止");
+
             return Task.FromResult(0);
         }
     }
