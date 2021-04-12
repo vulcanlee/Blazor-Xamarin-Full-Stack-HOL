@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Backend.Services
 {
-    public class SampleHostedService : IHostedService
+    public class KeepAliveHostedService : IHostedService
     {
-        public SampleHostedService(ILogger<SampleHostedService> logger,
+        public KeepAliveHostedService(ILogger<KeepAliveHostedService> logger,
             IServer server, IConfiguration configuration)
         {
             Logger = logger;
@@ -19,7 +19,7 @@ namespace Backend.Services
             Configuration = configuration;
         }
 
-        public ILogger<SampleHostedService> Logger { get; }
+        public ILogger<KeepAliveHostedService> Logger { get; }
         public IServer Server { get; }
         public IConfiguration Configuration { get; }
 
@@ -29,15 +29,16 @@ namespace Backend.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            try
+            await Task.Yield();
+            new Thread(async x =>
             {
-                Task.Factory.StartNew(async () =>
+                try
                 {
                     lastLogTime = DateTime.Now;
-                    while (cancellationToken.IsCancellationRequested==false)
+                    while (cancellationToken.IsCancellationRequested == false)
                     {
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
-                        if(DateTime.Now> nextTime)
+                        if (DateTime.Now > nextTime)
                         {
                             //var features = Server.Features;
                             //var addresses = features.Get<IServerAddressesFeature>();
@@ -53,7 +54,7 @@ namespace Backend.Services
 
                             try
                             {
-                                var client =new HttpClient();
+                                var client = new HttpClient();
                                 await client.GetStringAsync($"{address}/Login");
                             }
                             catch { }
@@ -61,9 +62,9 @@ namespace Backend.Services
                         }
                         await Task.Delay(checkCycle * 1000, cancellationToken);
                     }
-                }, TaskCreationOptions.LongRunning);
-            }
-            catch { }
+                }
+                catch { }
+            }).Start();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
