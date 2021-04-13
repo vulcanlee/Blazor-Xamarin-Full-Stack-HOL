@@ -155,7 +155,9 @@ namespace Backend
             services.AddSwaggerGen();
             #endregion
 
-            services.AddSingleton<IHostedService, KeepAliveHostedService>();
+            #region 加入背景服務
+            services.AddHostedService<KeepAliveHostedService>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

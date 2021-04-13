@@ -24,21 +24,19 @@ namespace Backend.Services
         public IConfiguration Configuration { get; }
 
         DateTime lastLogTime;
-        int keepAliveCycle = 300;
-        int checkCycle = 3;
+        int keepAliveCycle = 360; // 約六分鐘
+        int checkCycle = 60;
         DateTime StartupTime = DateTime.Now;
         Task keepAliveTask;
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        bool checkServiceCompletion = false;
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            await Task.Yield();
-            checkServiceCompletion = false;
             cancellationTokenSource = new CancellationTokenSource();
             Logger.LogInformation($"Keep alive 服務開始啟動");
-            keepAliveTask = Task.Factory.StartNew(async () =>
+            var backgroundService = Task.Factory.StartNew(async () =>
             {
+                #region 確保 IIS 不會自動停止的背景服務
                 try
                 {
                     StartupTime = DateTime.Now;
@@ -49,70 +47,37 @@ namespace Backend.Services
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
                         if (DateTime.Now > nextTime)
                         {
-                            //var features = Server.Features;
-                            //var addresses = features.Get<IServerAddressesFeature>();
-                            //foreach (var item in addresses.Addresses)
-                            //{
-                            //    Logger.LogInformation($"item {item}");
-                            //}
-                            //var address = addresses.Addresses.FirstOrDefault();
-
                             var address = Configuration["KeepAliveEndpoint"];
                             var dateOffset = DateTime.UtcNow.AddHours(8);
                             TimeSpan timeSpan = DateTime.Now - StartupTime;
-                            Logger.LogInformation($"Keep alive ({timeSpan}) {dateOffset.ToString()}");
+                            Logger.LogInformation($@"Keep alive 確保IIS服務不會自動關閉 ({timeSpan}) {dateOffset.ToString("yyyy-MM-dd HH:mm:ss")}");
 
                             try
                             {
                                 await client.GetStringAsync($"{address}/Login");
                             }
-                            catch { }
+                            catch(Exception ex)
+                            {
+                                Logger.LogWarning(ex, $"Keep alive 連線到 {address}/Login 發生例外異常");
+                            }
                             lastLogTime = DateTime.Now;
                         }
-                        await Task.Delay(checkCycle * 1000, cancellationToken);
+                        await Task.Delay(checkCycle * 1000, cancellationTokenSource.Token);
                     }
-                    Logger.LogInformation($"Keep alive 服務準備正常離開中");
-                    checkServiceCompletion = true;
                 }
-                catch { }
+                catch (OperationCanceledException ex)
+                {
+                    Logger.LogInformation($"Keep alive 服務準備正常離開中");
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogWarning(ex, $"Keep alive 服務產生例外異常");
+                }
+                #endregion
             }, TaskCreationOptions.LongRunning);
-            //new Thread(async x =>
-            //{
-            //    try
-            //    {
-            //        StartupTime = DateTime.Now;
-            //        lastLogTime = DateTime.Now;
-            //        HttpClient client = new HttpClient();
-            //        while (cancellationToken.IsCancellationRequested == false)
-            //        {
-            //            var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
-            //            if (DateTime.Now > nextTime)
-            //            {
-            //                //var features = Server.Features;
-            //                //var addresses = features.Get<IServerAddressesFeature>();
-            //                //foreach (var item in addresses.Addresses)
-            //                //{
-            //                //    Logger.LogInformation($"item {item}");
-            //                //}
-            //                //var address = addresses.Addresses.FirstOrDefault();
+            keepAliveTask = backgroundService.Result;
 
-            //                var address = Configuration["KeepAliveEndpoint"];
-            //                var dateOffset = DateTime.UtcNow.AddHours(8);
-            //                TimeSpan timeSpan = DateTime.Now - StartupTime;
-            //                Logger.LogInformation($"Keep alive ({timeSpan}) {dateOffset.ToString()}");
-
-            //                try
-            //                {
-            //                    await client.GetStringAsync($"{address}/Login");
-            //                }
-            //                catch { }
-            //                lastLogTime = DateTime.Now;
-            //            }
-            //            await Task.Delay(checkCycle * 1000, cancellationToken);
-            //        }
-            //    }
-            //    catch { }
-            //}).Start();
+            return Task.CompletedTask;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -120,7 +85,7 @@ namespace Backend.Services
             cancellationTokenSource.Cancel();
             for (int i = 0; i < 10; i++)
             {
-                if (checkServiceCompletion == true)
+                if (keepAliveTask.IsCompleted == true)
                     break;
                 await Task.Delay(500);
             }
