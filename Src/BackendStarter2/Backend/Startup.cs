@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -161,7 +162,7 @@ namespace Backend
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger)
         {
             #region 宣告 NLog 要使用到的變數內容
             var logRootPath = Configuration["CustomNLog:LogRootPath"];
@@ -181,16 +182,29 @@ namespace Backend
             app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             #endregion
 
-            if (env.IsDevelopment())
+            #region 是否要啟用詳細除錯資訊
+            bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
+            if (emergenceDebugStatus == true)
             {
                 app.UseDeveloperExceptionPage();
+                app.UseHsts();
+                logger.LogInformation("緊急除錯模式 : 啟用");
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    app.UseHsts();
+                }
+                logger.LogInformation("緊急除錯模式 : 停用");
             }
+            #endregion
 
             if (!env.IsDevelopment())
             {

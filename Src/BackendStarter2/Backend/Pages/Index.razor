@@ -1,8 +1,12 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.EntityFrameworkCore;
+
 @inject DatabaseInitService DatabaseInitService
 @inject BackendDBContext context
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebHostEnvironment env
+@inject IConfiguration configuration
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Hosting
@@ -21,6 +25,9 @@
         </div>
         <div class="h3">
             @env.EnvironmentName
+        </div>
+        <div class="h3">
+            緊急除錯狀態 : @EmergenceDebugMessage
         </div>
         <div class="h3">
             <a href="/swagger/index.html" target="_blank">Web API</a>
@@ -122,8 +129,11 @@
     string authMessage = "";
     string userId = "";
     string versionNumber = "";
+    string EmergenceDebugMessage = "";
     protected override async Task OnInitializedAsync()
     {
+        bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
+        EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
         Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
         versionNumber = version.ToString();
 
@@ -144,6 +154,13 @@
             authMessage = "沒有任何使用者登入";
             userId = "";
         }
+
+        #region 測試緊急除錯功能
+        if (EmergenceDebugStatus == true)
+        {
+            var users = await context.MyUser.ToListAsync();
+        }
+        #endregion
     }
     public async Task Init()
     {
