@@ -18,11 +18,11 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 Razor Model
-            services.AddTransient<MyUserRazorModel>();
+            services.AddTransient<MyUserViewModel>();
 
-            services.AddTransient<OrderRazorModel>();
-            services.AddTransient<ProductRazorModel>();
-            services.AddTransient<OrderItemRazorModel>();
+            services.AddTransient<OrderViewModel>();
+            services.AddTransient<ProductViewModel>();
+            services.AddTransient<OrderItemViewModel>();
             #endregion
 
             #region 其他服務註冊

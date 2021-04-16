@@ -15,10 +15,10 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class MyUserRazorModel
+    public class MyUserViewModel
     {
         #region Constructor
-        public MyUserRazorModel(IMyUserService CurrentService,
+        public MyUserViewModel(IMyUserService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {

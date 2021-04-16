@@ -15,17 +15,17 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class OrderItemRazorModel
+    public class ProductViewModel
     {
         #region Constructor
-        public OrderItemRazorModel(IOrderItemService CurrentService,
+        public ProductViewModel(IProductService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            OrderItemSort.Initialization(SortConditions);
+            ProductSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -60,19 +60,15 @@ namespace Backend.ViewModels
         /// <summary>
         /// 現在正在新增或修改的紀錄  
         /// </summary>
-        public OrderItemAdapterModel CurrentRecord { get; set; } = new OrderItemAdapterModel();
+        public ProductAdapterModel CurrentRecord { get; set; } = new ProductAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
-        public OrderItemAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderItemAdapterModel();
+        public ProductAdapterModel CurrentNeedDeleteRecord { get; set; } = new ProductAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
         public EditContext LocalEditContext { get; set; }
-        /// <summary>
-        /// 是否顯示選取其他清單記錄對話窗 
-        /// </summary>
-        public bool ShowAontherRecordPicker { get; set; } = false;
         /// <summary>
         /// 父參考物件的 Id 
         /// </summary>
@@ -90,9 +86,17 @@ namespace Backend.ViewModels
         /// </summary>
         public IDataGrid ShowMoreDetailsGrid { get; set; }
         /// <summary>
+        /// 明細清單 Grid 的對話窗主題 
+        /// </summary>
+        public string ShowMoreDetailsRecordDialogTitle { get; set; } = "";
+        /// <summary>
         /// 新增或修改對話窗的標題 
         /// </summary>
         public string EditRecordDialogTitle { get; set; } = "";
+        /// <summary>
+        /// 是否顯示選取其他清單記錄對話窗 
+        /// </summary>
+        public bool ShowAontherRecordPicker { get; set; } = false;
         /// <summary>
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
@@ -118,7 +122,7 @@ namespace Backend.ViewModels
         /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
-        private readonly IOrderItemService CurrentService;
+        private readonly IProductService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
         /// <summary>
@@ -132,6 +136,7 @@ namespace Backend.ViewModels
         #endregion
 
         #region Method
+
         #region DataGrid 初始化
         /// <summary>
         /// 將會於 生命週期事件 OnInitialized / OnAfterRenderAsync 觸發此方法
@@ -150,14 +155,12 @@ namespace Backend.ViewModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new OrderItemAdapterModel();
+                CurrentRecord = new ProductAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
                 IsShowEditRecord = true;
-                CurrentRecord.OrderId = Header.Id;
-                //CurrentRecord.Name = Header.Title;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {
@@ -167,19 +170,21 @@ namespace Backend.ViewModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除)
-        public async Task OnCommandClicked(CommandClickEventArgs<OrderItemAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<ProductAdapterModel> args)
         {
-            OrderItemAdapterModel item = args.RowData as OrderItemAdapterModel;
+            ProductAdapterModel item = args.RowData as ProductAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
+                #region 點選 修改紀錄 按鈕
                 CurrentRecord = item.Clone();
                 EditRecordDialogTitle = "修改紀錄";
                 IsShowEditRecord = true;
                 isNewRecordMode = false;
-
+                #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdDelete)
             {
+                #region 點選 刪除紀錄 按鈕
                 CurrentNeedDeleteRecord = item;
 
                 #region 檢查關聯資料是否存在
@@ -197,6 +202,7 @@ namespace Backend.ViewModels
                 #endregion
 
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
+                #endregion
             }
         }
 
@@ -276,33 +282,24 @@ namespace Backend.ViewModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
-        public void OnOpenPicker()
-        {
-            ShowAontherRecordPicker = true;
-        }
+        //public void OnOpenPicker()
+        //{
+        //    ShowAontherRecordPicker = true;
+        //}
 
-        public void OnPickerCompletion(ProductAdapterModel e)
-        {
-            if (e != null)
-            {
-                CurrentRecord.ProductId = e.Id;
-                CurrentRecord.ProductName = e.Name;
-            }
-            ShowAontherRecordPicker = false;
-        }
-        #endregion
-
-        #region 資料表關聯的方法
-        public async Task UpdateMasterHeaderAsync(MasterRecord header)
-        {
-            Header = header;
-            await Task.Delay(100);
-            dataGrid.RefreshGrid();
-        }
+        //public void OnPickerCompletion(MyUserAdapterModel e)
+        //{
+        //    if (e != null)
+        //    {
+        //        CurrentRecord.Id = e.Id;
+        //        CurrentRecord.Name = e.Name;
+        //    }
+        //    ShowAontherRecordPicker = false;
+        //}
         #endregion
 
         #region 排序搜尋事件
-
+        public int DefaultSorting { get; set; } = -1;
         public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)
         {
             if (dataGrid.GridIsExist() == true)
@@ -311,7 +308,6 @@ namespace Backend.ViewModels
                 dataGrid.RefreshGrid();
             }
         }
-
         #endregion
         #endregion
     }

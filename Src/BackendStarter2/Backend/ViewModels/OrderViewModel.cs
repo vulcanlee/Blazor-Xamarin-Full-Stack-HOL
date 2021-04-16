@@ -15,10 +15,10 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class OrderRazorModel
+    public class OrderViewModel
     {
         #region Constructor
-        public OrderRazorModel(IOrderService CurrentService,
+        public OrderViewModel(IOrderService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {
@@ -174,14 +174,16 @@ namespace Backend.ViewModels
             OrderAdapterModel item = args.RowData as OrderAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
+                #region 點選 修改紀錄 按鈕
                 CurrentRecord = item.Clone();
                 EditRecordDialogTitle = "修改紀錄";
                 IsShowEditRecord = true;
                 isNewRecordMode = false;
-
+                #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdDelete)
             {
+                #region 點選 刪除紀錄 按鈕
                 CurrentNeedDeleteRecord = item;
 
                 #region 檢查關聯資料是否存在
@@ -199,9 +201,11 @@ namespace Backend.ViewModels
                 #endregion
 
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
+                #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
             {
+                #region 點選 開啟多筆 CRUD 對話窗 按鈕
                 IsShowMoreDetailsRecord = true;
                 ShowMoreDetailsRecordDialogTitle = MagicHelper.訂單明細管理功能名稱;
                 MasterRecord masterRecord = new MasterRecord()
@@ -214,6 +218,7 @@ namespace Backend.ViewModels
                     await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
                     ShowMoreDetailsGrid.RefreshGrid();
                 }
+                #endregion
             }
         }
 
