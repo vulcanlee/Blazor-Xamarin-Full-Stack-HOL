@@ -73,6 +73,9 @@
 .components-reconnect-refused > .refused {
     display: block;
 }
+.Yo-ConfirmBox {
+    max-width: 90vw;
+}
 
 @media (max-width: 640px) {
     .fixSidebar {
@@ -93,4 +96,11 @@
     .parentFullWidth {
         max-width: 100vw;
     }
+    #My-ConfirmBox {
+        max-width: 90vw;
+    }
+    #My-MessageBox {
+        max-width: 90vw;
+    }
+
 }
