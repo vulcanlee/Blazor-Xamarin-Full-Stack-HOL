@@ -90,6 +90,10 @@ namespace Backend.ViewModels
         /// </summary>
         public IDataGrid ShowMoreDetailsGrid { get; set; }
         /// <summary>
+        /// 明細清單 Grid 的對話窗主題 
+        /// </summary>
+        public string ShowMoreDetailsRecordDialogTitle { get; set; } = "";
+        /// <summary>
         /// 新增或修改對話窗的標題 
         /// </summary>
         public string EditRecordDialogTitle { get; set; } = "";

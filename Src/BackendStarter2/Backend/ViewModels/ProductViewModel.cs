@@ -70,6 +70,10 @@ namespace Backend.ViewModels
         /// </summary>
         public EditContext LocalEditContext { get; set; }
         /// <summary>
+        /// 是否顯示選取其他清單記錄對話窗 
+        /// </summary>
+        public bool ShowAontherRecordPicker { get; set; } = false;
+        /// <summary>
         /// 父參考物件的 Id 
         /// </summary>
         public MasterRecord Header { get; set; } = new MasterRecord();
@@ -93,10 +97,6 @@ namespace Backend.ViewModels
         /// 新增或修改對話窗的標題 
         /// </summary>
         public string EditRecordDialogTitle { get; set; } = "";
-        /// <summary>
-        /// 是否顯示選取其他清單記錄對話窗 
-        /// </summary>
-        public bool ShowAontherRecordPicker { get; set; } = false;
         /// <summary>
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
