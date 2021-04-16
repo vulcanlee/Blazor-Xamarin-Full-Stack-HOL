@@ -49,38 +49,98 @@ namespace Backend.ViewModels
         #endregion
 
         #region Property
+        /// <summary>
+        /// 是否要顯示紀錄新增或修改對話窗 
+        /// </summary>
         public bool IsShowEditRecord { get; set; } = false;
+        /// <summary>
+        /// 是否要顯示關聯多筆資料表的 CRUD 對話窗
+        /// </summary>
+        public bool IsShowMoreDetailsRecord { get; set; } = false;
+        /// <summary>
+        /// 現在正在新增或修改的紀錄  
+        /// </summary>
         public OrderItemAdapterModel CurrentRecord { get; set; } = new OrderItemAdapterModel();
+        /// <summary>
+        /// 現在正在刪除的紀錄  
+        /// </summary>
         public OrderItemAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderItemAdapterModel();
+        /// <summary>
+        /// 保存與資料編輯程式相關的中繼資料
+        /// </summary>
         public EditContext LocalEditContext { get; set; }
+        /// <summary>
+        /// 是否顯示選取其他清單記錄對話窗 
+        /// </summary>
         public bool ShowAontherRecordPicker { get; set; } = false;
+        /// <summary>
+        /// 父參考物件的 Id 
+        /// </summary>
         public MasterRecord Header { get; set; } = new MasterRecord();
+        /// <summary>
+        /// 可以選擇排序條件清單
+        /// </summary>
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
+        /// <summary>
+        /// 現在選擇排序條件項目
+        /// </summary>
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        /// <summary>
+        /// 用於控制、更新明細清單 Grid 
+        /// </summary>
+        public IDataGrid ShowMoreDetailsGrid { get; set; }
+        /// <summary>
+        /// 新增或修改對話窗的標題 
+        /// </summary>
         public string EditRecordDialogTitle { get; set; } = "";
-        private bool isShowConfirm { get; set; } = false;
+        /// <summary>
+        /// 指定 Grid 上方可以使用的按鈕項目清單
+        /// </summary>
+        public List<object> Toolbaritems { get; set; } = new List<object>();
 
         #region 訊息說明之對話窗使用的變數
+        /// <summary>
+        /// 確認對話窗設定
+        /// </summary>
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
+        /// <summary>
+        /// 訊息對話窗設定
+        /// </summary>
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         #endregion
         #endregion
 
         #region Field
+        /// <summary>
+        /// 對選取紀錄進行 新增 或者 修改 
+        /// </summary>
         bool isNewRecordMode;
+        /// <summary>
+        /// 當前記錄需要用到的 Service 物件 
+        /// </summary>
         private readonly IOrderItemService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
-        IRazorPage thisRazorComponent;
+        /// <summary>
+        /// 這個元件整體的通用介面方法
+        /// </summary>
+        IRazorPage thisView;
+        /// <summary>
+        /// 當前 Grid 元件可以使用的通用方法
+        /// </summary>
         IDataGrid dataGrid;
-        public List<object> Toolbaritems = new List<object>();
         #endregion
 
         #region Method
         #region DataGrid 初始化
+        /// <summary>
+        /// 將會於 生命週期事件 OnInitialized / OnAfterRenderAsync 觸發此方法
+        /// </summary>
+        /// <param name="razorPage">當前元件的物件</param>
+        /// <param name="dataGrid">當前 Grid 的元件</param>
         public void Setup(IRazorPage razorPage, IDataGrid dataGrid)
         {
-            thisRazorComponent = razorPage;
+            thisView = razorPage;
             this.dataGrid = dataGrid;
         }
         #endregion
@@ -131,7 +191,7 @@ namespace Backend.ViewModels
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     await Task.Yield();
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
                 #endregion
@@ -180,7 +240,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
             }
@@ -192,7 +252,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
             }
