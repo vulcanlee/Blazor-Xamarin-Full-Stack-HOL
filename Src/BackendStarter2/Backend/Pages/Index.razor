@@ -1,12 +1,18 @@
 ﻿@page "/"
 @using Microsoft.Extensions.Configuration;
 @using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks
+@using System.Threading
+@using System.Diagnostics
 
 @inject DatabaseInitService DatabaseInitService
 @inject BackendDBContext context
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IWebHostEnvironment env
 @inject IConfiguration configuration
+@inject IJSRuntime JSRuntime
+
+@implements IDisposable
 
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Hosting
@@ -65,6 +71,27 @@
         <div>
             <div>@authMessage</div>
             <div>@userId</div>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <span class="h2">瀏覽器與伺服器 RTT 延遲量測</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <div>@latency ms</div>
+            <div>
+                <button class="btn btn-dark"
+                        @onclick="MeasureRTT">
+                    開始量測
+                </button>
+                <button class="btn btn-dark"
+                        @onclick="StopMeasureRTT">
+                    結束量測
+                </button>
+            </div>
         </div>
     </article>
 </div>
@@ -130,8 +157,12 @@
     string userId = "";
     string versionNumber = "";
     string EmergenceDebugMessage = "";
+    long latency = 0;
+    CancellationTokenSource cts;
+
     protected override async Task OnInitializedAsync()
     {
+        cts = new CancellationTokenSource();
         bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
         EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
         Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
@@ -167,5 +198,45 @@
         this.VisibleProperty = true;
         await DatabaseInitService.InitDataAsync();
         this.VisibleProperty = false;
+    }
+    void StopMeasureRTT()
+    {
+        latency = 0;
+        cts.Cancel();
+    }
+    void MeasureRTT()
+    {
+        var stopwatch = new Stopwatch();
+        cts = new CancellationTokenSource();
+        Task.Run(async () =>
+        {
+            while (cts.Token.IsCancellationRequested == false)
+            {
+                stopwatch.Restart();
+                try
+                {
+                    latency = 0;
+                    await JSRuntime.InvokeVoidAsync("ping");
+                    latency = stopwatch.ElapsedMilliseconds;
+                }
+                catch (Exception)
+                {
+                }
+
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
+                try
+                {
+                    await Task.Delay(1000, cts.Token);
+                }
+                catch { break; }
+            }
+        });
+    }
+    void IDisposable.Dispose()
+    {
+        cts.Cancel();
     }
 }
