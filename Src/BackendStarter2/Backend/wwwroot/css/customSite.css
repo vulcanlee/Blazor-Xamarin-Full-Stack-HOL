@@ -1,4 +1,4 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 .cardcenter {
     margin: 0 auto; /* Added */
@@ -73,11 +73,21 @@
 .components-reconnect-refused > .refused {
     display: block;
 }
-.Yo-ConfirmBox {
-    max-width: 90vw;
+﻿.confirm-box-width {
+}
+﻿.message-box-width {
 }
 
+
 @media (max-width: 640px) {
+    .confirm-box-width {
+        width: 90vw !important;
+    }
+
+    .message-box-width {
+        width: 90vw !important;
+    }
+
     .fixSidebar {
         position: initial;
         /*overflow-y: initial;*/
@@ -96,11 +106,11 @@
     .parentFullWidth {
         max-width: 100vw;
     }
-    #My-ConfirmBox {
+/*    #My-ConfirmBox {
         max-width: 90vw;
     }
     #My-MessageBox {
         max-width: 90vw;
     }
-
+*/
 }
