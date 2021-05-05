@@ -24,11 +24,11 @@ namespace Backend.Services
         public IConfiguration Configuration { get; }
 
         DateTime lastLogTime;
-        int keepAliveCycle = 360; // 約六分鐘
-        int checkCycle = 60;
+        readonly int keepAliveCycle = 360; // 約六分鐘
+        readonly int checkCycle = 60;
         DateTime StartupTime = DateTime.Now;
         Task keepAliveTask;
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        CancellationTokenSource cancellationTokenSource = new();
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
@@ -41,7 +41,7 @@ namespace Backend.Services
                 {
                     StartupTime = DateTime.Now;
                     lastLogTime = DateTime.Now;
-                    HttpClient client = new HttpClient();
+                    HttpClient client = new();
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
@@ -50,13 +50,14 @@ namespace Backend.Services
                             var address = Configuration["KeepAliveEndpoint"];
                             var dateOffset = DateTime.UtcNow.AddHours(8);
                             TimeSpan timeSpan = DateTime.Now - StartupTime;
-                            Logger.LogInformation($@"Keep alive 確保IIS服務不會自動關閉 ({timeSpan}) {dateOffset.ToString("yyyy-MM-dd HH:mm:ss")}");
+                            // Todo : 這樣的用法要學起來
+                            Logger.LogInformation($@"Keep alive 確保IIS服務不會自動關閉 ({timeSpan}) {dateOffset:yyyy-MM-dd HH:mm:ss}");
 
                             try
                             {
                                 await client.GetStringAsync($"{address}/Login");
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 Logger.LogWarning(ex, $"Keep alive 連線到 {address}/Login 發生例外異常");
                             }
@@ -65,7 +66,7 @@ namespace Backend.Services
                         await Task.Delay(checkCycle * 1000, cancellationTokenSource.Token);
                     }
                 }
-                catch (OperationCanceledException ex)
+                catch (OperationCanceledException)
                 {
                     Logger.LogInformation($"Keep alive 服務準備正常離開中");
                 }
@@ -87,7 +88,9 @@ namespace Backend.Services
             {
                 if (keepAliveTask.IsCompleted == true)
                     break;
+#pragma warning disable CA2016 // 將 'CancellationToken' 參數傳遞給使用該參數的方法
                 await Task.Delay(500);
+#pragma warning restore CA2016 // 將 'CancellationToken' 參數傳遞給使用該參數的方法
             }
             TimeSpan timeSpan = DateTime.Now - StartupTime;
             Logger.LogInformation($"Keep alive 服務即將停止，共花費 {timeSpan}");

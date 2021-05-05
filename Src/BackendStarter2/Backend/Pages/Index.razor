@@ -152,7 +152,6 @@
 
 @code {
     private bool VisibleProperty { get; set; } = false;
-    bool IsAuthenticated = false;
     string authMessage = "";
     string userId = "";
     string versionNumber = "";
@@ -168,13 +167,11 @@
         Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
         versionNumber = version.ToString();
 
-        IsAuthenticated = false;
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
         if (user.Identity.IsAuthenticated)
         {
-            IsAuthenticated = true;
             authMessage = $"現在登入的使用者為 {user.Identity.Name}";
             IEnumerable<Claim> _claims = user.Claims;
             userId =
