@@ -182,6 +182,19 @@ namespace Backend
             app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             #endregion
 
+            #region Set X-FRAME-OPTIONS in ASP.NET Core
+            // https://blog.johnwu.cc/article/asp-net-core-response-header.html
+            // https://dotnetcoretutorials.com/2017/01/08/set-x-frame-options-asp-net-core/
+            // https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Headers/X-Frame-Options
+            // https://blog.darkthread.net/blog/remove-iis-response-server-header/
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Remove("X-Frame-Options");
+                context.Response.Headers.TryAdd("X-Frame-Options", "DENY");
+                await next();
+            });
+            #endregion
+
             #region 是否要啟用詳細除錯資訊
             bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
             if (emergenceDebugStatus == true)
