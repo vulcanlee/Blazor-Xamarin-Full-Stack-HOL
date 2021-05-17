@@ -10,7 +10,7 @@ namespace ShareBusiness.Helpers
         #region 系統預設參數
         public static readonly string AppName = "Blazor + Xamarin 超全端程式設計 動手練習系列";
         public static readonly string MenuMainTitle = "Blazor 超全端程式設計";
-        public static readonly string DefaultConnectionString = "DefaultConnection";
+        public static readonly string DefaultConnectionString = "BackendDefaultConnection";
         public const string CookieAuthenticationScheme = "BackendCookieAuthenticationScheme"; // CookieAuthenticationDefaults.AuthenticationScheme
         public const string JwtBearerAuthenticationScheme = "BackendJwtBearerAuthenticationScheme"; // JwtBearerDefaults.AuthenticationScheme
         public static readonly string 未經授權無法存取此頁面 = "抱歉，未經授權無法存取此頁面。";
