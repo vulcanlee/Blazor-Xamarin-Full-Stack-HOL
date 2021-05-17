@@ -12,19 +12,6 @@ namespace Backend.AdapterModels
         public DateTime RequiredDate { get; set; }
         public DateTime? ShippedDate { get; set; }
 
-
-        public bool IsExist()
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
         public OrderAdapterModel Clone()
         {
             return ((ICloneable)this).Clone() as OrderAdapterModel;

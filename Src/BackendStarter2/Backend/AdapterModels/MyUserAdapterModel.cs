@@ -18,18 +18,6 @@ namespace Backend.AdapterModels
         public string ManagerName { get; set; }
         public string IsManagerString { get; set; }
 
-        public bool IsExist()
-        {
-            if (string.IsNullOrEmpty(Account))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
         public MyUserAdapterModel Clone()
         {
             return ((ICloneable)this).Clone() as MyUserAdapterModel;

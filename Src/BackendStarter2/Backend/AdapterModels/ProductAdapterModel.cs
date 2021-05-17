@@ -11,18 +11,6 @@ namespace Backend.AdapterModels
         public short ModelYear { get; set; }
         public decimal ListPrice { get; set; }
 
-        public bool IsExist()
-        {
-            if (string.IsNullOrEmpty(Name))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
         public ProductAdapterModel Clone()
         {
             return ((ICloneable)this).Clone() as ProductAdapterModel;
