@@ -58,7 +58,7 @@ namespace Backend.Services
 
             #region 建立產品紀錄
             CleanTrackingHelper.Clean<Product>(context);
-            CleanTrackingHelper.Clean<Order>(context);
+            CleanTrackingHelper.Clean<OrderMaster>(context);
             CleanTrackingHelper.Clean<OrderItem>(context);
             List<Product> products = new List<Product>();
             for (int i = 0; i < 10; i++)
@@ -76,7 +76,7 @@ namespace Backend.Services
             #region 建立產品紀錄
             for (int i = 0; i < 3; i++)
             {
-                Order order = new Order()
+                OrderMaster order = new OrderMaster()
                 {
                     Name = $"Order{i}",
                     OrderDate = DateTime.Now.AddDays(random.Next(30)),
@@ -101,7 +101,7 @@ namespace Backend.Services
                 await context.SaveChangesAsync();
             }
             CleanTrackingHelper.Clean<Product>(context);
-            CleanTrackingHelper.Clean<Order>(context);
+            CleanTrackingHelper.Clean<OrderMaster>(context);
             CleanTrackingHelper.Clean<OrderItem>(context);
             #endregion
         }

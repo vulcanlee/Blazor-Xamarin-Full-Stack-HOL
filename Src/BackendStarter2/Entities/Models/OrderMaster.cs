@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Entities.Models
 {
-    public partial class Order
+    public partial class OrderMaster
     {
-        public Order()
+        public OrderMaster()
         {
             OrderItems = new HashSet<OrderItem>();
         }

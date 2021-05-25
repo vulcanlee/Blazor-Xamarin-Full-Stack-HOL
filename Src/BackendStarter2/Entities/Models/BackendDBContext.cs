@@ -18,7 +18,7 @@ namespace Entities.Models
         {
         }
 
-        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<OrderMaster> OrderMaster { get; set; }
         public virtual DbSet<OrderItem> OrderItem { get; set; }
         public virtual DbSet<Product> Product { get; set; }
 

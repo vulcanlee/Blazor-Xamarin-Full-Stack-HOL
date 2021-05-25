@@ -15,7 +15,7 @@ namespace Entities.Models
         public decimal ListPrice { get; set; }
         public decimal Discount { get; set; }
 
-        public virtual Order Order { get; set; }
+        public virtual OrderMaster Order { get; set; }
         public virtual Product Product { get; set; }
     }
 }

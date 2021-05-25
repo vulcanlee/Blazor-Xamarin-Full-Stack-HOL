@@ -30,7 +30,7 @@ namespace Backend.Services
         {
             List<OrderMasterAdapterModel> data = new List<OrderMasterAdapterModel>();
             DataRequestResult<OrderMasterAdapterModel> result = new DataRequestResult<OrderMasterAdapterModel>();
-            var DataSource = context.Order
+            var DataSource = context.OrderMaster
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -61,7 +61,7 @@ namespace Backend.Services
 
             #region 進行分頁
             // 取得記錄總數量，將要用於分頁元件面板使用
-            result.Count = DataSource.Cast<Order>().Count();
+            result.Count = DataSource.Cast<OrderMaster>().Count();
             DataSource = DataSource.Skip(dataRequest.Skip);
             if (dataRequest.Take != 0)
             {
@@ -86,7 +86,7 @@ namespace Backend.Services
 
         public async Task<OrderMasterAdapterModel> GetAsync(int id)
         {
-            Order item = await context.Order
+            OrderMaster item = await context.OrderMaster
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             OrderMasterAdapterModel result = Mapper.Map<OrderMasterAdapterModel>(item);
@@ -96,21 +96,21 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> AddAsync(OrderMasterAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<Order>(context);
-            Order itemParameter = Mapper.Map<Order>(paraObject);
-            CleanTrackingHelper.Clean<Order>(context);
-            await context.Order
+            CleanTrackingHelper.Clean<OrderMaster>(context);
+            OrderMaster itemParameter = Mapper.Map<OrderMaster>(paraObject);
+            CleanTrackingHelper.Clean<OrderMaster>(context);
+            await context.OrderMaster
                 .AddAsync(itemParameter);
             await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<Order>(context);
+            CleanTrackingHelper.Clean<OrderMaster>(context);
             return VerifyRecordResultFactory.Build(true);
         }
 
         public async Task<VerifyRecordResult> UpdateAsync(OrderMasterAdapterModel paraObject)
         {
-            Order itemData = Mapper.Map<Order>(paraObject);
-            CleanTrackingHelper.Clean<Order>(context);
-            Order item = await context.Order
+            OrderMaster itemData = Mapper.Map<OrderMaster>(paraObject);
+            CleanTrackingHelper.Clean<OrderMaster>(context);
+            OrderMaster item = await context.OrderMaster
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -119,18 +119,18 @@ namespace Backend.Services
             }
             else
             {
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
                 context.Entry(itemData).State = EntityState.Modified;
                 await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<Order>(context);
-            Order item = await context.Order
+            CleanTrackingHelper.Clean<OrderMaster>(context);
+            OrderMaster item = await context.OrderMaster
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
@@ -139,16 +139,16 @@ namespace Backend.Services
             }
             else
             {
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
                 context.Entry(item).State = EntityState.Deleted;
                 await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<Order>(context);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
         }
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderMasterAdapterModel paraObject)
         {
-            var searchItem = await context.Order
+            var searchItem = await context.OrderMaster
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name);
             if (searchItem != null)
@@ -160,7 +160,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OrderMasterAdapterModel paraObject)
         {
-            var searchItem = await context.Order
+            var searchItem = await context.OrderMaster
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
                 x.Id != paraObject.Id);

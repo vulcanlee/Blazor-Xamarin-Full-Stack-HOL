@@ -15,8 +15,8 @@
 
             CreateMap<Product, ProductAdapterModel>();
             CreateMap<ProductAdapterModel, Product>();
-            CreateMap<Order, OrderMasterAdapterModel>();
-            CreateMap<OrderMasterAdapterModel, Order>();
+            CreateMap<OrderMaster, OrderMasterAdapterModel>();
+            CreateMap<OrderMasterAdapterModel, OrderMaster>();
             CreateMap<OrderItem, OrderItemAdapterModel>();
             CreateMap<OrderItemAdapterModel, OrderItem>();
             #endregion
@@ -32,8 +32,8 @@
             CreateMap<ProductAdapterModel, ProductDto>();
             CreateMap<ProductDto, ProductAdapterModel>();
 
-            CreateMap<Order, OrderDto>();
-            CreateMap<OrderDto, Order>();
+            CreateMap<OrderMaster, OrderDto>();
+            CreateMap<OrderDto, OrderMaster>();
             CreateMap<OrderMasterAdapterModel, OrderDto>();
             CreateMap<OrderDto, OrderMasterAdapterModel>();
 
