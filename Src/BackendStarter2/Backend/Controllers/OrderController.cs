@@ -20,11 +20,11 @@ namespace Backend.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService OrderService;
+        private readonly IOrderMasterService OrderService;
         private readonly IMapper mapper;
 
         #region 建構式
-        public OrderController(IOrderService OrderService,
+        public OrderController(IOrderMasterService OrderService,
             IMapper mapper)
         {
             this.OrderService = OrderService;
@@ -47,7 +47,7 @@ namespace Backend.Controllers
             }
             #endregion
 
-            OrderAdapterModel record = mapper.Map<OrderAdapterModel>(data);
+            OrderMasterAdapterModel record = mapper.Map<OrderMasterAdapterModel>(data);
             if (record != null)
             {
                 var result = mapper.Map<OrderDto>(record);
@@ -145,7 +145,7 @@ namespace Backend.Controllers
             var record = await OrderService.GetAsync(id);
             if (record != null && record.Id != 0)
             {
-                OrderAdapterModel recordTarget = mapper.Map<OrderAdapterModel>(data);
+                OrderMasterAdapterModel recordTarget = mapper.Map<OrderMasterAdapterModel>(data);
                 recordTarget.Id = id;
                 var result = mapper.Map<OrderDto>(recordTarget);
 

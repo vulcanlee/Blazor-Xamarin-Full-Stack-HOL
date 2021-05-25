@@ -15,17 +15,17 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class OrderViewModel
+    public class OrderMasterViewModel
     {
         #region Constructor
-        public OrderViewModel(IOrderService CurrentService,
+        public OrderMasterViewModel(IOrderMasterService CurrentService,
            BackendDBContext context,
            IMapper Mapper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            OrderSort.Initialization(SortConditions);
+            OrderMasterSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -60,11 +60,11 @@ namespace Backend.ViewModels
         /// <summary>
         /// 現在正在新增或修改的紀錄  
         /// </summary>
-        public OrderAdapterModel CurrentRecord { get; set; } = new OrderAdapterModel();
+        public OrderMasterAdapterModel CurrentRecord { get; set; } = new OrderMasterAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
-        public OrderAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderAdapterModel();
+        public OrderMasterAdapterModel CurrentNeedDeleteRecord { get; set; } = new OrderMasterAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
@@ -122,7 +122,7 @@ namespace Backend.ViewModels
         /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
-        private readonly IOrderService CurrentService;
+        private readonly IOrderMasterService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
         /// <summary>
@@ -154,7 +154,7 @@ namespace Backend.ViewModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new OrderAdapterModel();
+                CurrentRecord = new OrderMasterAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
@@ -169,9 +169,9 @@ namespace Backend.ViewModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除與明細紀錄瀏覽)
-        public async Task OnCommandClicked(CommandClickEventArgs<OrderAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<OrderMasterAdapterModel> args)
         {
-            OrderAdapterModel item = args.RowData as OrderAdapterModel;
+            OrderMasterAdapterModel item = args.RowData as OrderMasterAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 #region 點選 修改紀錄 按鈕

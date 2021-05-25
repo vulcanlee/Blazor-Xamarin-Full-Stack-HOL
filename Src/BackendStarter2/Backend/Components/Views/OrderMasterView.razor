@@ -7,16 +7,16 @@
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
 
-@inject OrderViewModel ViewModel
+@inject OrderMasterViewModel ViewModel
 @implements IRazorPage
 @implements IDataGrid
 
 <div >
-    <SfGrid @ref="Grid" TValue="OrderAdapterModel"
+    <SfGrid @ref="Grid" TValue="OrderMasterAdapterModel"
             AllowPaging="true" class="parentFullWidth"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <OrderAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></OrderAdapter>
+            <OrderMasterAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></OrderMasterAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -32,19 +32,19 @@
                 </ToolbarItem>
             </ToolbarItems>
         </SfToolbar>
-        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="OrderAdapterModel"
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="OrderMasterAdapterModel"
                     OnToolbarClick="ViewModel.ToolbarClickHandler"
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(OrderAdapterModel.Name) HeaderText="訂單名稱" Width="150" />
-            <GridColumn Field=@nameof(OrderAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd"
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.Name) HeaderText="訂單名稱" Width="150" />
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd"
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd"
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderAdapterModel.StatusName) HeaderText="狀態" />
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.StatusName) HeaderText="狀態" />
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -164,7 +164,7 @@
 <DialogBackground />
 
 @code{
-    SfGrid<OrderAdapterModel> Grid;
+    SfGrid<OrderMasterAdapterModel> Grid;
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
@@ -214,7 +214,7 @@
     #endregion
 
     #region 選取紀錄異動的事件處理
-    public async Task RowSelectHandler(RowSelectEventArgs<OrderAdapterModel> args)
+    public async Task RowSelectHandler(RowSelectEventArgs<OrderMasterAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {
@@ -225,7 +225,7 @@
             });
         }
     }
-    public async Task RowDeselectHandler(RowDeselectEventArgs<OrderAdapterModel> args)
+    public async Task RowDeselectHandler(RowDeselectEventArgs<OrderMasterAdapterModel> args)
     {
         if (OnRecordChanged.HasDelegate)
         {

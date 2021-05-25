@@ -1,7 +1,7 @@
 ﻿@using Syncfusion.Blazor;
 @using Syncfusion.Blazor.Data;
 
-@inherits DataAdaptor<IOrderService>
+@inherits DataAdaptor<IOrderMasterService>
 @inject IMapper Mapper
 
 <CascadingValue Value="@this">
@@ -36,7 +36,7 @@
         #endregion
 
         #region 發出查詢要求
-        DataRequestResult<OrderAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
+        DataRequestResult<OrderMasterAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
         var item = dataManagerRequest.RequiresCounts
             ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
             : (object)adaptorModelObjects.Result;

@@ -14,22 +14,22 @@ namespace Backend.Services
     using ShareDomain.DataModels;
     using ShareDomain.Enums;
 
-    public class OrderService : IOrderService
+    public class OrderMasterService : IOrderMasterService
     {
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
 
-        public OrderService(BackendDBContext context, IMapper mapper)
+        public OrderMasterService(BackendDBContext context, IMapper mapper)
         {
             this.context = context;
             Mapper = mapper;
         }
 
-        public async Task<DataRequestResult<OrderAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<OrderMasterAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<OrderAdapterModel> data = new List<OrderAdapterModel>();
-            DataRequestResult<OrderAdapterModel> result = new DataRequestResult<OrderAdapterModel>();
+            List<OrderMasterAdapterModel> data = new List<OrderMasterAdapterModel>();
+            DataRequestResult<OrderMasterAdapterModel> result = new DataRequestResult<OrderMasterAdapterModel>();
             var DataSource = context.Order
                 .AsNoTracking();
             #region 進行搜尋動作
@@ -46,10 +46,10 @@ namespace Backend.Services
                 SortCondition CurrentSortCondition = dataRequest.Sorted;
                 switch (CurrentSortCondition.Id)
                 {
-                    case (int)OrderSortEnum.OrderDateDescending:
+                    case (int)OrderMasterSortEnum.OrderDateDescending:
                         DataSource = DataSource.OrderByDescending(x => x.OrderDate);
                         break;
-                    case (int)OrderSortEnum.OrderDateAscending:
+                    case (int)OrderMasterSortEnum.OrderDateAscending:
                         DataSource = DataSource.OrderBy(x => x.OrderDate);
                         break;
                     default:
@@ -70,8 +70,8 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<OrderAdapterModel> adapterModelObjects =
-                Mapper.Map<List<OrderAdapterModel>>(DataSource);
+            List<OrderMasterAdapterModel> adapterModelObjects =
+                Mapper.Map<List<OrderMasterAdapterModel>>(DataSource);
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
@@ -84,17 +84,17 @@ namespace Backend.Services
             return result;
         }
 
-        public async Task<OrderAdapterModel> GetAsync(int id)
+        public async Task<OrderMasterAdapterModel> GetAsync(int id)
         {
             Order item = await context.Order
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
-            OrderAdapterModel result = Mapper.Map<OrderAdapterModel>(item);
+            OrderMasterAdapterModel result = Mapper.Map<OrderMasterAdapterModel>(item);
             await OhterDependencyData(result);
             return result;
         }
 
-        public async Task<VerifyRecordResult> AddAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> AddAsync(OrderMasterAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<Order>(context);
             Order itemParameter = Mapper.Map<Order>(paraObject);
@@ -106,7 +106,7 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> UpdateAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> UpdateAsync(OrderMasterAdapterModel paraObject)
         {
             Order itemData = Mapper.Map<Order>(paraObject);
             CleanTrackingHelper.Clean<Order>(context);
@@ -146,7 +146,7 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(true);
             }
         }
-        public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderMasterAdapterModel paraObject)
         {
             var searchItem = await context.Order
                 .AsNoTracking()
@@ -158,7 +158,7 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OrderMasterAdapterModel paraObject)
         {
             var searchItem = await context.Order
                 .AsNoTracking()
@@ -170,7 +170,7 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderMasterAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
             OrderItem item = await context.OrderItem
@@ -182,7 +182,7 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-        Task OhterDependencyData(OrderAdapterModel data)
+        Task OhterDependencyData(OrderMasterAdapterModel data)
         {
             return Task.FromResult(0);
         }

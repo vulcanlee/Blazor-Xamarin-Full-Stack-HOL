@@ -17,7 +17,7 @@ namespace Backend.AdapterModels
         public string ProductName { get; set; }
         public string OrderName { get; set; }
 
-        public OrderAdapterModel Order { get; set; }
+        public OrderMasterAdapterModel Order { get; set; }
         public ProductAdapterModel Product { get; set; }
 
         public OrderItemAdapterModel Clone()

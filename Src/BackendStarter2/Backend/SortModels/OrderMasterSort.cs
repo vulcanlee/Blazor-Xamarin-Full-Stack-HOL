@@ -3,24 +3,24 @@ using System.Collections.Generic;
 
 namespace Backend.SortModels
 {
-    public enum OrderSortEnum
+    public enum OrderMasterSortEnum
     {
         OrderDateAscending,
         OrderDateDescending,
     }
-    public class OrderSort
+    public class OrderMasterSort
     {
         public static void Initialization(List<SortCondition> SortConditions)
         {
             SortConditions.Clear();
             SortConditions.Add(new SortCondition()
             {
-                Id = (int)OrderSortEnum.OrderDateAscending,
+                Id = (int)OrderMasterSortEnum.OrderDateAscending,
                 Title = "訂單時間 遞增"
             });
             SortConditions.Add(new SortCondition()
             {
-                Id = (int)OrderSortEnum.OrderDateDescending,
+                Id = (int)OrderMasterSortEnum.OrderDateDescending,
                 Title = "訂單時間 遞減"
             });
         }

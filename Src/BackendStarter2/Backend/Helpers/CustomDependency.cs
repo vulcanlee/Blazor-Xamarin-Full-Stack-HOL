@@ -13,14 +13,14 @@ namespace Backend.Helpers
             services.AddTransient<DatabaseInitService>();
 
             services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IOrderMasterService, OrderMasterService>();
             services.AddTransient<IOrderItemService, OrderItemService>();
             #endregion
 
             #region 註冊 Razor Model
             services.AddTransient<MyUserViewModel>();
 
-            services.AddTransient<OrderViewModel>();
+            services.AddTransient<OrderMasterViewModel>();
             services.AddTransient<ProductViewModel>();
             services.AddTransient<OrderItemViewModel>();
             #endregion

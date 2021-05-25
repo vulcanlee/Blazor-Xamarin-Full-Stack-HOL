@@ -2,7 +2,7 @@
 
 namespace Backend.AdapterModels
 {
-    public class OrderAdapterModel : ICloneable
+    public class OrderMasterAdapterModel : ICloneable
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -12,9 +12,9 @@ namespace Backend.AdapterModels
         public DateTime RequiredDate { get; set; }
         public DateTime? ShippedDate { get; set; }
 
-        public OrderAdapterModel Clone()
+        public OrderMasterAdapterModel Clone()
         {
-            return ((ICloneable)this).Clone() as OrderAdapterModel;
+            return ((ICloneable)this).Clone() as OrderMasterAdapterModel;
         }
         object ICloneable.Clone()
         {
