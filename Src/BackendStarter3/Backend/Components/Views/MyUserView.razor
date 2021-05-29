@@ -1,0 +1,225 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+
+@inject MyUserViewModel ViewModel
+@implements IRazorPage
+@implements IDataGrid
+
+<div>
+    <SfGrid @ref="Grid" TValue="MyUserAdapterModel"
+            AllowPaging="true" class="parentFullWidth"
+            Toolbar="ViewModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <MyUserAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></MyUserAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="MyUserAdapterModel"
+                    OnToolbarClick="ViewModel.ToolbarClickHandler"
+                    RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+        <GridPageSettings PageSize="@PageSize"  />
+        <GridColumns>
+            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="100" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+                <GridCommandColumns>
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
+                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<SfDialog @bind-Visible="@ViewModel.IsShowEditRecord" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@ViewModel.EditRecordDialogTitle</Header>
+        <Content>
+            <EditForm Model="@ViewModel.CurrentRecord">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <InputWatcher EditContextActionChanged="@ViewModel.OnEditContestChanged" />
+
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">帳號</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Account"
+                                       Placeholder="請輸入帳號" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Account)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">名稱</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Name"
+                                       Placeholder="請輸入帳號使用者姓名" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Name)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">密碼</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Password"
+                                       Placeholder="請輸入密碼" Type="InputType.Password"
+                                       Autocomplete="AutoComplete.Off" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Password)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">部門名稱</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.DepartmentName"
+                                       Placeholder="請輸入部門名稱" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.DepartmentName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <SfCheckBox Label="是否為主管名稱" @bind-Checked="ViewModel.CurrentRecord.IsManager"></SfCheckBox>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.IsManager)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">主管名稱 <span class="mdi mdi-18px mdi-magnify" @onclick="ViewModel.OnOpenPicker"></span></label>
+                            <SfTextBox Value="@ViewModel.CurrentRecord.ManagerName" Enabled="false"></SfTextBox>
+                        </div>
+                    </div>
+
+                </div>
+            </EditForm>
+        </Content>
+        <FooterTemplate>
+            <div>
+                <button type="submit" class="btn btn-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</button>
+                <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</button>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<MyUserPicker OpenPicker="ViewModel.ShowAontherRecordPicker"
+              OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
+
+<MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
+            IsVisible="@ViewModel.MessageBox.IsVisible"
+            Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
+            Callback="x=>ViewModel.MessageBox.Hidden()" />
+
+<ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
+            IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
+            Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
+            Callback="x=>ViewModel.RemoveThisRecord(x)" />
+
+<DialogBackground />
+
+@code{
+    SfGrid<MyUserAdapterModel> Grid;
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    [Parameter]
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+    [Parameter]
+    public EventCallback<object> OnViewRender { get; set; }
+
+    #region 生命週期事件
+    protected override void OnInitialized()
+    {
+        ViewModel.Setup(this, this);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            ViewModel.Setup(this, this);
+        }
+        if (OnViewRender.HasDelegate)
+        {
+            await OnViewRender.InvokeAsync(null);
+        }
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        StateHasChanged();
+    }
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    public void RefreshGrid()
+    {
+        Grid?.Refresh();
+    }
+    public bool GridIsExist()
+    {
+        return Grid == null ? false : true;
+    }
+    public Task InvokeGridAsync(string actionName)
+    {
+        return Task.CompletedTask;
+    }
+    #endregion
+
+
+    #region 選取紀錄異動的事件處理
+    public async Task RowSelectHandler(RowSelectEventArgs<MyUserAdapterModel> args)
+    {
+        if (OnRecordChanged.HasDelegate)
+        {
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = args.Data.Id,
+                Title = MagicHelper.確認有表頭預設文字
+            });
+        }
+    }
+    public async Task RowDeselectHandler(RowDeselectEventArgs<MyUserAdapterModel> args)
+    {
+        if (OnRecordChanged.HasDelegate)
+        {
+            await OnRecordChanged.InvokeAsync(new MasterRecord()
+            {
+                Id = -2,
+                Title = "",
+            });
+        }
+    }
+    #endregion
+}
