@@ -24,6 +24,8 @@ namespace Entities.Models
 
 
         public virtual DbSet<MyUser> MyUser { get; set; }
+        public virtual DbSet<MenuRole> MenuRole { get; set; }
+        public virtual DbSet<MenuData> MenuData { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
