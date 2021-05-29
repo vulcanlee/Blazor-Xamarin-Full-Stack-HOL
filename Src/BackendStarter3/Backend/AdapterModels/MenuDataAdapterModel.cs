@@ -14,11 +14,13 @@ namespace Backend.AdapterModels
         [Range(0, 1, ErrorMessage = "僅能輸入 0 或者 1 不可為空白")]
         public int Level { get; set; }
         public bool IsGroup { get; set; }
+        public string IsGroupName { get; set; }
         public int Sequence { get; set; }
         public string Icon { get; set; }
         [Required(ErrorMessage = "作業名稱 不可為空白")]
         public string CodeName { get; set; }
         public bool Enable { get; set; }
+        public string EnableName { get; set; }
         [Required(ErrorMessage = "驗證碼 不可為空白")]
         public string VerifyCode { get; set; }
         public Guid Guid { get; set; }

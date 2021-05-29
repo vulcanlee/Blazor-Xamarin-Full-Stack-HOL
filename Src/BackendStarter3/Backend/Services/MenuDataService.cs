@@ -260,6 +260,22 @@ namespace Backend.Services
         }
         Task OhterDependencyData(MenuDataAdapterModel data)
         {
+            if (data.IsGroup == true)
+            {
+                data.IsGroupName = "是";
+            }
+            else
+            {
+                data.IsGroupName = "否";
+            }
+            if (data.Enable == true)
+            {
+                data.EnableName = "是";
+            }
+            else
+            {
+                data.EnableName = "否";
+            }
             return Task.FromResult(0);
         }
 

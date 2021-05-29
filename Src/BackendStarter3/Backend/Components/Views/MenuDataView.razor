@@ -39,10 +39,9 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(MenuDataAdapterModel.Name) HeaderText="名稱" />
-            <GridColumn Field=@nameof(MenuDataAdapterModel.IsGroup) HeaderText="子功能表" />
+            <GridColumn Field=@nameof(MenuDataAdapterModel.IsGroupName) HeaderText="子功能表" />
             <GridColumn Field=@nameof(MenuDataAdapterModel.Level) HeaderText="層級" />
             <GridColumn Field=@nameof(MenuDataAdapterModel.Sequence) HeaderText="順序" />
-            <GridColumn Field=@nameof(MenuDataAdapterModel.Enable) HeaderText="啟用" />
             <GridColumn Field=@nameof(MenuDataAdapterModel.Enable)
                         HeaderText="啟用" Width="70">
                 <Template>
