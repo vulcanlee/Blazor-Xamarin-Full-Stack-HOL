@@ -67,6 +67,7 @@
         <div class="menu-extend"></div>
     </div>
 </div>
+
 @code {
     private bool collapseNavMenu = true;
 
@@ -91,7 +92,7 @@
             {
                 var foo = user
                     .FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Role
-                    && c.Value == MagicHelper.SystemAdminClaim); // 確認這個使用者為系統管理者
+                    && c.Value == MagicHelper.開發者的角色聲明); // 確認這個使用者為系統管理者
                 MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
                 mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
             }
@@ -101,6 +102,7 @@
         }
 
     }
+
 
     void MenuDataClicked(MainMenu currentMenuData)
     {

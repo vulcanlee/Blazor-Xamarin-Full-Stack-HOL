@@ -219,6 +219,7 @@ namespace Backend.Services
                     #region 開發者帳號也需要在資料庫上有存在
                     user = await context.MyUser
                         .Include(x=>x.MenuRole)
+                        .ThenInclude(x=>x.MenuData)
                         .AsNoTracking()
                         .FirstOrDefaultAsync(x => x.Account == account);
 
@@ -250,6 +251,7 @@ namespace Backend.Services
             {
                 user = await context.MyUser
                     .Include(x => x.MenuRole)
+                    .ThenInclude(x => x.MenuData)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Account == account);
      

@@ -219,6 +219,7 @@ namespace Backend.Services
             #endregion
 
             #region 建立各角色會用到的功能表清單項目
+           
             #region 建立系統管理員角色功能表項目清單 
             CleanTrackingHelper.Clean<MenuData>(context);
             int cc = 0;
@@ -288,7 +289,7 @@ namespace Backend.Services
                 Icon = "mdi-shopping",
                 IsGroup = false,
                 Level = 0,
-                MenuRoleId = menuRole系統管理員.Id,
+                MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
             menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
@@ -306,7 +307,7 @@ namespace Backend.Services
                 Icon = "mdi-gift",
                 IsGroup = false,
                 Level = 0,
-                MenuRoleId = menuRole系統管理員.Id,
+                MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
             menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
@@ -324,7 +325,7 @@ namespace Backend.Services
                 Icon = "mdi-hand-pointing-up",
                 IsGroup = false,
                 Level = 0,
-                MenuRoleId = menuRole系統管理員.Id,
+                MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
             menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
@@ -342,7 +343,7 @@ namespace Backend.Services
                 Icon = "mdi-head-heart",
                 IsGroup = false,
                 Level = 0,
-                MenuRoleId = menuRole系統管理員.Id,
+                MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
             menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
@@ -358,7 +359,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MenuData>(context);
             var defaultMenuData = await context.MenuData
                 .AsNoTracking()
-                .Where(x => x.MenuRoleId == menuRole系統管理員.Id)
+                .Where(x => x.MenuRoleId == menuRole開發者.Id)
                 .ToListAsync();
 
             defaultMenuData
@@ -383,7 +384,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MenuData>(context);
             defaultMenuData = await context.MenuData
                 .AsNoTracking()
-                .Where(x => x.MenuRoleId == menuRole系統管理員.Id)
+                .Where(x => x.MenuRoleId == menuRole開發者.Id)
                 .ToListAsync();
 
             defaultMenuData
@@ -411,6 +412,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MenuRole>(context);
             #endregion
             #endregion
+   
             #endregion
 
             #endregion
