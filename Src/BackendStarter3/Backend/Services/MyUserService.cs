@@ -36,6 +36,7 @@ namespace Backend.Services
             DataRequestResult<MyUserAdapterModel> result = new DataRequestResult<MyUserAdapterModel>();
             var DataSource = context.MyUser
                 .Include(x => x.MenuRole)
+                .ThenInclude(x=>x.MenuData)
                 .AsNoTracking();
 
             #region 進行搜尋動作
@@ -102,6 +103,7 @@ namespace Backend.Services
         {
             MyUser item = await context.MyUser
                 .Include(x => x.MenuRole)
+                .ThenInclude(x => x.MenuData)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item != null)
@@ -112,7 +114,7 @@ namespace Backend.Services
             }
             else
             {
-                return new MyUserAdapterModel();
+                return new MyUserAdapterModel() { Status = false };
             }
         }
 
@@ -241,6 +243,7 @@ namespace Backend.Services
                     #endregion
 
                     #region 建立預設管理者帳號的物件
+                    user.Status = true;
                     user.MenuRoleId = menuRole.Id;
                     user.MenuRole = menuRole;
 

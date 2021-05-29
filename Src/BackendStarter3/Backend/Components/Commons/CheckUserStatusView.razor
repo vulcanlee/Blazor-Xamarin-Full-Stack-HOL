@@ -1,0 +1,85 @@
+﻿@using Syncfusion.Blazor.Notifications
+@using System.Threading;
+@using System.Security.Claims
+@using Microsoft.Extensions.Configuration
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IMyUserService MyUserService
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+@implements IDisposable
+@*<button @onclick="click">Send</button>*@
+<SfToast @ref="ToastObj"
+         Title="重要通知" Content="使用者已經被停用，5秒鐘後，將會強制登出"
+         Timeout="5000">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+
+@code {
+    SfToast ToastObj;
+    public string ToastTitle { get; set; }
+    public string ToastContent { get; set; }
+    Task CheckUserTask;
+    CancellationTokenSource cts;
+    ClaimsPrincipal user;
+    bool IsRunning = true;
+
+    async Task click()
+    {
+        ToastTitle = "重要通知";
+        ToastContent = "使用者已經被停用，5秒鐘後，將會強制登出";
+        await Task.Delay(100);
+        await ToastObj.Show();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            int CheckUserStateInterval = Convert.ToInt32(Configuration["CheckUserStateInterval"]);
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = authState.User;
+            if (user.Identity.IsAuthenticated)
+            {
+                cts = new CancellationTokenSource();
+                CheckUserTask = Task.Run(async () =>
+                {
+                    while (cts.Token.IsCancellationRequested == false || IsRunning)
+                    {
+                        try
+                        {
+                            var userId = Convert.ToInt32(user.FindFirst(ClaimTypes.Sid)?.Value);
+                            var myUser = await MyUserService.GetAsync(userId);
+                            if (myUser.Status == false)
+                            {
+                                ToastTitle = "重要通知";
+                                ToastContent = "使用者已經被停用，5秒鐘後，將會強制登出";
+                                await Task.Delay(500);
+                                await ToastObj.Show();
+                                await Task.Delay(5000);
+                                NavigationManager.NavigateTo("/Logout", true);
+                                IsRunning = false;
+                                continue;
+                            }
+                            await Task.Delay(CheckUserStateInterval, cts.Token);
+                        }
+                        catch
+                        {
+                            IsRunning = false;
+                        }
+                    }
+                });
+            }
+            else
+            {
+            }
+        }
+    }
+    public void Dispose()
+    {
+        if (cts != null && cts.IsCancellationRequested == false)
+        {
+            cts.Cancel();
+            CheckUserTask = null;
+        }
+    }
+}
