@@ -22,12 +22,16 @@ namespace ShareBusiness.Helpers
         public static readonly string MyUserUserMode = "MyUser";
         public static readonly string AgentUserMode = "Agent";
         public static readonly int GridPageSize = 12;
+        public static readonly string 功能表項目數位簽名添加內容 = "TT!hf0Q}]Jti+;rax<@u6P]j3CsT.Nm7V>DdX+mX=XE6K1Jx!z6>#0;FR+'R_N";
+        public static readonly string MenuRoleClaim = "MenuRole";
         #endregion
 
         #region 個別作業會用到的作業名稱宣告
         public static readonly string 首頁功能名稱 = "首頁";
         public static readonly string 登入 = "登入";
         public static readonly string 登出 = "登出";
+        public static readonly string 變更密碼 = "變更密碼";
+        public static readonly string 功能表角色功能名稱 = "功能表角色";
         public static readonly string 帳號管理功能名稱 = "帳號管理";
         public static readonly string 訂單管理功能名稱 = "訂單管理";
         public static readonly string 訂單明細管理功能名稱 = "訂單明細管理";

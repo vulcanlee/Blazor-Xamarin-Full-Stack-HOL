@@ -12,6 +12,8 @@ namespace ShareBusiness.Helpers
         public static string ButtonNameAdd => "新增";
         public static string ButtonIdRefresh => "Refresh";
         public static string ButtonNameRefresh => "重新整理";
+        public static string ButtonIdReOrder => "ReOrder";
+        public static string ButtonNameReOrder => "重新編號";
         public static string ButtonIdDetail => "mdi mdi-image-filter-center-focus";
         public static string ButtonNameDetail => "明細";
         public static string ButtonIdEdit => "mdi mdi-square-edit-outline";

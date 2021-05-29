@@ -1,0 +1,7 @@
+﻿@page "/MenuRole"
+@*@attribute [Authorize(Roles = "MenuRole, httc")]*@
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.功能表角色功能名稱</div>
+    <MenuRoleView PageSize="@MagicHelper.GridPageSize" />
+</div>
