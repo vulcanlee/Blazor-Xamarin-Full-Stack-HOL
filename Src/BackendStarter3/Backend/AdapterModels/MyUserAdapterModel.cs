@@ -12,11 +12,16 @@ namespace Backend.AdapterModels
         public string Password { get; set; }
         [Required(ErrorMessage = "名稱 不可為空白")]
         public string Name { get; set; }
+        public string Salt { get; set; }
+        public bool Status { get; set; }
         public string DepartmentName { get; set; }
         public int ManagerId { get; set; }
         public bool IsManager { get; set; }
         public string ManagerName { get; set; }
         public string IsManagerString { get; set; }
+        public int MenuRoleId { get; set; }
+        public string MenuRoleName { get; set; }
+        public virtual MenuRoleAdapterModel MenuRole { get; set; }
 
         public MyUserAdapterModel Clone()
         {

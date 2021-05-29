@@ -24,6 +24,7 @@ namespace ShareBusiness.Helpers
         public static readonly int GridPageSize = 12;
         public static readonly string 功能表項目數位簽名添加內容 = "TT!hf0Q}]Jti+;rax<@u6P]j3CsT.Nm7V>DdX+mX=XE6K1Jx!z6>#0;FR+'R_N";
         public static readonly string MenuRoleClaim = "MenuRole";
+        public static readonly string SystemAdminClaim = "Administrator";
         #endregion
 
         #region 個別作業會用到的作業名稱宣告
@@ -36,8 +37,19 @@ namespace ShareBusiness.Helpers
         public static readonly string 訂單管理功能名稱 = "訂單管理";
         public static readonly string 訂單明細管理功能名稱 = "訂單明細管理";
         public static readonly string 商品管理功能名稱 = "商品管理";
+        public static readonly string 管理者專用功能名稱 = "管理者專用";
+        public static readonly string 一般使用者使用功能名稱 = "一般使用者使用";
         #endregion
 
+        #region 測試與系統帳號
+        public static readonly string 開發者功能表角色 = "開發者角色";
+        public static readonly string 系統管理員功能表角色 = "系統管理員角色";
+        public static readonly string 使用者功能表角色 = "使用者角色";
+        public static readonly string MenuRoleNameClaim = "MenuRoleNameClaim";
+        public static string 開發者帳號 = "god";
+        public static string 系統管理員帳號 = "admin";
+        public static string[] 使用者帳號 = { "user1", "user2", "user3", "user4" };
+        #endregion
         #endregion
 
         #region 支援方法

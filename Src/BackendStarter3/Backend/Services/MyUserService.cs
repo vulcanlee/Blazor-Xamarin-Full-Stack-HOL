@@ -31,6 +31,7 @@ namespace Backend.Services
             List<MyUserAdapterModel> data = new List<MyUserAdapterModel>();
             DataRequestResult<MyUserAdapterModel> result = new DataRequestResult<MyUserAdapterModel>();
             var DataSource = context.MyUser
+                .Include(x => x.MenuRole)
                 .AsNoTracking();
 
             #region 進行搜尋動作
@@ -102,6 +103,7 @@ namespace Backend.Services
 
         {
             MyUser item = await context.MyUser
+                .Include(x => x.MenuRole)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (item != null)
@@ -230,6 +232,8 @@ namespace Backend.Services
             {
                 data.ManagerName = user.Name;
             }
+
+            data.MenuRoleName = data.MenuRole.Name;
         }
     }
 }

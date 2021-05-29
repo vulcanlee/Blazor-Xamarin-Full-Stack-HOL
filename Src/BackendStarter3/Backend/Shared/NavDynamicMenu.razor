@@ -85,11 +85,16 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            int menuRoleId = Convert.ToInt32(user.FindFirst(c => c.Type == MagicHelper.MenuRoleClaim)?.Value);
-            var foo = user.FindFirst(c =>
-            c.Type == System.Security.Claims.ClaimTypes.Role && c.Value == "httc");
-            MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
-            mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
+            int menuRoleId = Convert.ToInt32(user
+                .FindFirst(c => c.Type == MagicHelper.MenuRoleClaim)?.Value);
+            if (menuRoleId > 0)
+            {
+                var foo = user
+                    .FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Role
+                    && c.Value == MagicHelper.SystemAdminClaim); // 確認這個使用者為系統管理者
+                MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
+                mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
+            }
         }
         else
         {
