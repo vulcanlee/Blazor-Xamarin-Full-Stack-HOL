@@ -1,0 +1,130 @@
+﻿@page "/Initialization"
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks
+@using System.Threading
+@using System.Diagnostics
+
+@inject DatabaseInitService DatabaseInitService
+@inject BackendDBContext context
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWebHostEnvironment env
+@inject IConfiguration configuration
+@inject IJSRuntime JSRuntime
+
+@implements IDisposable
+@layout EmptyLayout
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@using Syncfusion.Blazor.Spinner
+
+<h1>Hello 你好, 超全端程式設計 Blazor 專案範本!</h1>
+
+<div class="card mb-4">
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <span class="h2">資料庫初始化</span>
+        </div>
+        <article class="card-body bg-light">
+            <div>
+                <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
+            </div>
+        </article>
+    </div>
+</div>
+
+<div id="container">
+    <SfSpinner @bind-Visible="@VisibleProperty">
+    </SfSpinner>
+</div>
+
+
+@code {
+    private bool VisibleProperty { get; set; } = false;
+    string authMessage = "";
+    string userId = "";
+    string versionNumber = "";
+    string EmergenceDebugMessage = "";
+    long latency = 0;
+    CancellationTokenSource cts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cts = new CancellationTokenSource();
+        bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
+        EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
+        Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+        versionNumber = version.ToString();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            authMessage = $"現在登入的使用者為 {user.Identity.Name}";
+            IEnumerable<Claim> _claims = user.Claims;
+            userId =
+            $"該使用者在資料庫內的 Id 為: {user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value}";
+        }
+        else
+        {
+            authMessage = "沒有任何使用者登入";
+            userId = "";
+        }
+
+        #region 測試緊急除錯功能
+        if (EmergenceDebugStatus == true)
+        {
+            var users = await context.MyUser.ToListAsync();
+        }
+        #endregion
+    }
+    public async Task Init()
+    {
+        this.VisibleProperty = true;
+        await DatabaseInitService.InitDataAsync();
+        this.VisibleProperty = false;
+    }
+    void StopMeasureRTT()
+    {
+        latency = 0;
+        cts.Cancel();
+    }
+    void MeasureRTT()
+    {
+        var stopwatch = new Stopwatch();
+        cts = new CancellationTokenSource();
+        Task.Run(async () =>
+        {
+            while (cts.Token.IsCancellationRequested == false)
+            {
+                stopwatch.Restart();
+                try
+                {
+                    latency = 0;
+                    await JSRuntime.InvokeVoidAsync("ping");
+                    latency = stopwatch.ElapsedMilliseconds;
+                }
+                catch (Exception)
+                {
+                }
+
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
+                try
+                {
+                    await Task.Delay(1000, cts.Token);
+                }
+                catch { break; }
+            }
+        });
+    }
+    void IDisposable.Dispose()
+    {
+        cts.Cancel();
+    }
+}

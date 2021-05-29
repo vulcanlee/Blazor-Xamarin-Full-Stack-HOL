@@ -9,6 +9,7 @@ namespace Backend.Services
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using ShareBusiness.Helpers;
     using System;
     using System.Linq;
@@ -19,13 +20,15 @@ namespace Backend.Services
 
         public IMapper Mapper { get; }
         public IConfiguration Configuration { get; }
+        public ILogger<DatabaseInitService> Logger { get; }
 
         public DatabaseInitService(BackendDBContext context, IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration, ILogger<DatabaseInitService> logger)
         {
             this.context = context;
             Mapper = mapper;
             Configuration = configuration;
+            Logger = logger;
         }
 
         public async Task InitDataAsync()

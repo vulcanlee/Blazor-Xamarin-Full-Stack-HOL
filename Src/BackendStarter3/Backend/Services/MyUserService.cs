@@ -10,24 +10,26 @@ namespace Backend.Services
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
     using ShareBusiness.Factories;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
     using ShareDomain.Enums;
-
     public class MyUserService : IMyUserService
     {
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
         public IConfiguration Configuration { get; }
+        public ILogger<MyUserService> Logger { get; }
 
         public MyUserService(BackendDBContext context, IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration, ILogger<MyUserService> logger)
         {
             this.context = context;
             Mapper = mapper;
             Configuration = configuration;
+            Logger = logger;
         }
 
         public async Task<DataRequestResult<MyUserAdapterModel>> GetAsync(DataRequest dataRequest)
@@ -209,10 +211,12 @@ namespace Backend.Services
         {
             MyUser user = new MyUser();
             MyUserAdapterModel userAdapterModel = new MyUserAdapterModel();
-            if (account == MagicHelper.系統管理員帳號)
+            if (account == MagicHelper.開發者帳號)
             {
-                #region 進行系統管理者的帳號、密碼的驗證
+                #region 進行開發者帳號、密碼的驗證
                 var rawPassword = Configuration["AdministratorPassword"];
+                //Logger.LogInformation($"rawPassword:{rawPassword}");
+                //Logger.LogInformation($"password:{password}");
                 if (password != rawPassword)
                 {
                     return (null, ErrorMessageMappingHelper.Instance
