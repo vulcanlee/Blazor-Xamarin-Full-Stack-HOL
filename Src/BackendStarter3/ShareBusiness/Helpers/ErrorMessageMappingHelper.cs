@@ -49,6 +49,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.資料有問題無法新增或者修改, "資料有問題無法新增或者修改");
             ErrorMessages.Add(ErrorMessageEnum.要新增的紀錄已經存在無法新增, "要新增的紀錄已經存在無法新增");
             ErrorMessages.Add(ErrorMessageEnum.要修改的紀錄已經存在無法修改, "要修改的紀錄已經存在無法修改");
+            ErrorMessages.Add(ErrorMessageEnum.開發者帳號不存在資料庫上, "開發者帳號不存在資料庫上");
             ErrorMessages.Add(ErrorMessageEnum.使用者帳號不存在, "使用者帳號不存在");
             ErrorMessages.Add(ErrorMessageEnum.密碼不正確, "密碼不正確");
             ErrorMessages.Add(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中, "該紀錄無法刪除，因為有其他資料表在使用中");

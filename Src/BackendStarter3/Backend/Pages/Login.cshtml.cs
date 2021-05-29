@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using ShareBusiness.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,8 +24,8 @@ namespace Backend.Pages
         public LoginModel(IMyUserService myUserService, ILogger<LoginModel> logger)
         {
 #if DEBUG
-            Username = "user1";
-            Password = "pw";
+            Username = "god";
+            Password = "123";
             PasswordType = "";
 #endif
             this.myUserService = myUserService;
@@ -56,7 +57,8 @@ namespace Backend.Pages
         public string ReturnUrl { get; set; }
         public async Task<IActionResult> OnPostAsync()
         {
-            (MyUserAdapterModel user, string message) = await myUserService.CheckUser(Username, Password);
+            (MyUserAdapterModel user, string message) =
+                await myUserService.CheckUser(Username, Password);
 
             if (user == null)
             {
@@ -74,11 +76,34 @@ namespace Backend.Pages
                     new Claim(ClaimTypes.NameIdentifier, user.Account),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                    new Claim(MagicHelper.MenuRoleClaim, user.MenuRoleId.ToString()),
+                    new Claim(MagicHelper.MenuRoleNameClaim, user.MenuRole?.Name),
                 };
-                if (user.IsManager == true)
+
+                #region 若為 開發人員，加入 開發人員 專屬的角色
+                if (MagicHelper.開發者帳號 == Username.ToLower())
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
+                    claims.Add(new Claim(ClaimTypes.Role, MagicHelper.開發者的角色聲明));
                 }
+                #endregion
+
+                #region 加入該使用者需要加入的相關角色
+                var menuDatas = user.MenuRole.MenuData
+                     .Where(x => x.Enable == true).ToList();
+
+                foreach (var item in menuDatas)
+                {
+                    if (item.IsGroup == false)
+                    {
+                        // 避免使用者自己加入一個 開發人員專屬 的角色
+                        if (item.CodeName != "/" && 
+                            item.CodeName.ToLower() != MagicHelper.開發者的角色聲明)
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, item.CodeName));
+                        }
+                    }
+                }
+                #endregion
                 #endregion
 
                 #region 建立 宣告式身分識別

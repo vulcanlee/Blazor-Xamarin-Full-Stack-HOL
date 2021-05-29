@@ -9,6 +9,7 @@ namespace Backend.Services
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using ShareBusiness.Factories;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
@@ -19,11 +20,14 @@ namespace Backend.Services
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
+        public IConfiguration Configuration { get; }
 
-        public MyUserService(BackendDBContext context, IMapper mapper)
+        public MyUserService(BackendDBContext context, IMapper mapper,
+            IConfiguration configuration)
         {
             this.context = context;
             Mapper = mapper;
+            Configuration = configuration;
         }
 
         public async Task<DataRequestResult<MyUserAdapterModel>> GetAsync(DataRequest dataRequest)
@@ -199,19 +203,72 @@ namespace Backend.Services
         }
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {
-            MyUser user = await context.MyUser.AsNoTracking().FirstOrDefaultAsync(x => x.Account == account);
-            if (user == null)
+            MyUser user = new MyUser();
+            MyUserAdapterModel userAdapterModel = new MyUserAdapterModel();
+            if (account == MagicHelper.系統管理員帳號)
             {
-                return (null, ErrorMessageMappingHelper.Instance
-                    .GetErrorMessage(ErrorMessageEnum.使用者帳號不存在));
-            }
+                #region 進行系統管理者的帳號、密碼的驗證
+                var rawPassword = Configuration["AdministratorPassword"];
+                if (password != rawPassword)
+                {
+                    return (null, ErrorMessageMappingHelper.Instance
+                        .GetErrorMessage(ErrorMessageEnum.密碼不正確));
+                }
+                else
+                {
+                    #region 開發者帳號也需要在資料庫上有存在
+                    user = await context.MyUser
+                        .Include(x=>x.MenuRole)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Account == account);
 
-            if (user.Password != password)
-            {
-                return (null, ErrorMessageMappingHelper.Instance
-                    .GetErrorMessage(ErrorMessageEnum.密碼不正確));
+                    if (user == null)
+                    {
+                        return (null, ErrorMessageMappingHelper.Instance
+                            .GetErrorMessage(ErrorMessageEnum.密碼不正確));
+
+                    }
+                    #endregion
+
+                    #region 取出 開發者功能表角色 功能清單項目
+                    var menuRole = await context.MenuRole
+                        .AsNoTracking()
+                        .Include(x => x.MenuData)
+                        .FirstOrDefaultAsync(x => x.Name == MagicHelper.開發者功能表角色);
+                    #endregion
+             
+                    #region 建立預設管理者帳號的物件
+                    user.MenuRoleId = menuRole.Id;
+                    user.MenuRole = menuRole;
+
+                    userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
+                    #endregion
+                }
+                #endregion
             }
-            MyUserAdapterModel userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
+            else
+            {
+                user = await context.MyUser
+                    .Include(x => x.MenuRole)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Account == account);
+     
+                if (user == null)
+                {
+                    return (null, ErrorMessageMappingHelper.Instance
+                        .GetErrorMessage(ErrorMessageEnum.使用者帳號不存在));
+                }
+
+                var shaPassword =
+                    PasswordHelper.GetPasswordSHA(user.Salt, password);
+
+                if (user.Password != shaPassword)
+                {
+                    return (null, ErrorMessageMappingHelper.Instance
+                        .GetErrorMessage(ErrorMessageEnum.密碼不正確));
+                }
+                userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
+            }
             return (userAdapterModel, "");
         }
 

@@ -46,6 +46,7 @@ namespace ShareBusiness.Helpers
         public static readonly string 系統管理員功能表角色 = "系統管理員角色";
         public static readonly string 使用者功能表角色 = "使用者角色";
         public static readonly string MenuRoleNameClaim = "MenuRoleNameClaim";
+        public static string 開發者的角色聲明 = "developer";
         public static string 開發者帳號 = "god";
         public static string 系統管理員帳號 = "admin";
         public static string[] 使用者帳號 = { "user1", "user2", "user3", "user4" };
