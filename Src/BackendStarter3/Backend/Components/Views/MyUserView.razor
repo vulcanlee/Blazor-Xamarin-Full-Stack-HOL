@@ -40,6 +40,24 @@
             <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="100" />
             <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱"
                         HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.Status)
+                        HeaderText="啟用" Width="70">
+                <Template>
+                    @{
+                        var currentRec = (context as MyUserAdapterModel);
+                        if (currentRec.Status == true)
+                        {
+                            <span class="mdi mdi-24px mdi-play-circle mx-2 text-success"
+                                  @onclick="x=>ViewModel.DisableIt(currentRec)" />
+                        }
+                        else
+                        {
+                            <span class="mdi mdi-24px mdi-stop-circle mx-2 text-danger"
+                                  @onclick="x=>ViewModel.EnableIt(currentRec)" />
+                        }
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn Field=@nameof(MyUserAdapterModel.MenuRoleName) HeaderText="功能表角色" />
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
@@ -89,6 +107,14 @@
                                        Placeholder="請輸入密碼" Type="InputType.Password"
                                        Autocomplete="AutoComplete.Off" />
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.PasswordPlaintext)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">啟用</label>
+                            <SfCheckBox @bind-Checked="@ViewModel.CurrentRecord.Status" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Status)" />
                         </div>
                     </div>
 

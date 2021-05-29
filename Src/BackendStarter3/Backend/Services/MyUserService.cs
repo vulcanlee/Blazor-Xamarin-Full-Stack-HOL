@@ -176,6 +176,14 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要新增的紀錄已經存在無法新增);
             }
+            var searchMenuRoleItem = await context.MenuRole
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.MenuRoleId);
+            if (searchMenuRoleItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.沒有指定功能表角色項目);
+            }
+
             return VerifyRecordResultFactory.Build(true);
         }
 
@@ -212,8 +220,8 @@ namespace Backend.Services
                 {
                     #region 開發者帳號也需要在資料庫上有存在
                     user = await context.MyUser
-                        .Include(x=>x.MenuRole)
-                        .ThenInclude(x=>x.MenuData)
+                        .Include(x => x.MenuRole)
+                        .ThenInclude(x => x.MenuData)
                         .AsNoTracking()
                         .FirstOrDefaultAsync(x => x.Account == account);
 
@@ -231,7 +239,7 @@ namespace Backend.Services
                         .Include(x => x.MenuData)
                         .FirstOrDefaultAsync(x => x.Name == MagicHelper.開發者功能表角色);
                     #endregion
-             
+
                     #region 建立預設管理者帳號的物件
                     user.MenuRoleId = menuRole.Id;
                     user.MenuRole = menuRole;
@@ -248,7 +256,7 @@ namespace Backend.Services
                     .ThenInclude(x => x.MenuData)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Account == account);
-     
+
                 if (user == null)
                 {
                     return (null, ErrorMessageMappingHelper.Instance
@@ -271,6 +279,44 @@ namespace Backend.Services
         async Task OhterDependencyData(MyUserAdapterModel data)
         {
             data.MenuRoleName = data.MenuRole.Name;
+        }
+
+        public async Task DisableIt(MyUserAdapterModel paraObject)
+        {
+            MyUser itemData = Mapper.Map<MyUser>(paraObject);
+            CleanTrackingHelper.Clean<MyUser>(context);
+            MyUser item = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (item == null)
+            {
+            }
+            else
+            {
+                item.Status = false;
+                context.Entry(item).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<MenuData>(context);
+            }
+        }
+
+        public async Task EnableIt(MyUserAdapterModel paraObject)
+        {
+            MyUser itemData = Mapper.Map<MyUser>(paraObject);
+            CleanTrackingHelper.Clean<MyUser>(context);
+            MyUser item = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (item == null)
+            {
+            }
+            else
+            {
+                item.Status = true;
+                context.Entry(item).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<MenuData>(context);
+            }
         }
     }
 }

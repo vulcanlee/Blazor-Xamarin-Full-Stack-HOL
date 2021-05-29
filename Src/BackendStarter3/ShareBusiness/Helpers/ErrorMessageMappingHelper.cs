@@ -43,6 +43,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.新密碼不能為空白, "新密碼不能為空白");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入功能表的角色, "尚未輸入功能表的角色");
             ErrorMessages.Add(ErrorMessageEnum.該功能項目已經存在該功能表的角色, "該功能項目已經存在該功能表的角色");
+            ErrorMessages.Add(ErrorMessageEnum.沒有指定功能表角色項目, "沒有指定功能表角色項目");
             ErrorMessages.Add(ErrorMessageEnum.沒有發現指定的發票, "沒有發現指定的發票");
             ErrorMessages.Add(ErrorMessageEnum.沒有發現指定的發票明細項目, "沒有發現指定的發票明細項目");
             ErrorMessages.Add(ErrorMessageEnum.Exception, "發生例外異常：");

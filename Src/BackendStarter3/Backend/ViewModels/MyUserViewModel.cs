@@ -95,6 +95,7 @@ namespace Backend.ViewModels
             {
                 CurrentRecord = new MyUserAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
+                CurrentRecord.Status = true;
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
@@ -257,6 +258,19 @@ namespace Backend.ViewModels
                 CurrentSortCondition.Id = args.Value;
                 dataGrid.RefreshGrid();
             }
+        }
+        #endregion
+
+        #region 啟用/停用
+        public async Task DisableIt(MyUserAdapterModel item)
+        {
+            await CurrentService.DisableIt(item);
+            dataGrid.RefreshGrid();
+        }
+        public async Task EnableIt(MyUserAdapterModel item)
+        {
+            await CurrentService.EnableIt(item);
+            dataGrid.RefreshGrid();
         }
         #endregion
         #endregion
