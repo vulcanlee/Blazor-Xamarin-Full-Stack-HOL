@@ -12,8 +12,10 @@ namespace Backend.ViewModels
     using Microsoft.AspNetCore.Components.Forms;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
+    using ShareDomain.Enums;
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
+    using System;
 
     public class MyUserViewModel
     {
@@ -173,6 +175,13 @@ namespace Backend.ViewModels
             #region 檢查資料完整性
             if (isNewRecordMode == true)
             {
+                if (string.IsNullOrEmpty(CurrentRecord.PasswordPlaintext))
+                {
+                    MessageBox.Show("400px", "200px", "警告",
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼不能為空白));
+                    thisRazorComponent.NeedRefresh();
+                    return;
+                }
                 var checkedResult = await CurrentService
                     .BeforeAddCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
@@ -182,6 +191,9 @@ namespace Backend.ViewModels
                     thisRazorComponent.NeedRefresh();
                     return;
                 }
+                CurrentRecord.Salt = Guid.NewGuid().ToString();
+                CurrentRecord.Password =
+                    PasswordHelper.GetPasswordSHA(CurrentRecord.Salt, CurrentRecord.PasswordPlaintext);
             }
             else
             {
@@ -193,6 +205,11 @@ namespace Backend.ViewModels
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     thisRazorComponent.NeedRefresh();
                     return;
+                }
+                if (string.IsNullOrEmpty(CurrentRecord.PasswordPlaintext)==false)
+                {
+                    CurrentRecord.Password =
+                        PasswordHelper.GetPasswordSHA(CurrentRecord.Salt, CurrentRecord.PasswordPlaintext);
                 }
             }
             #endregion
@@ -220,12 +237,12 @@ namespace Backend.ViewModels
             ShowAontherRecordPicker = true;
         }
 
-        public void OnPickerCompletion(MyUserAdapterModel e)
+        public void OnPickerCompletion(MenuRoleAdapterModel e)
         {
             if (e != null)
             {
-                CurrentRecord.ManagerId = e.Id;
-                CurrentRecord.ManagerName = e.Name;
+                CurrentRecord.MenuRoleId = e.Id;
+                CurrentRecord.MenuRoleName = e.Name;
             }
             ShowAontherRecordPicker = false;
         }

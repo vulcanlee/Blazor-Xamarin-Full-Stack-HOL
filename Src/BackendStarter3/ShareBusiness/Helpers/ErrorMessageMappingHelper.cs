@@ -39,6 +39,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.無法刪除紀錄, "無法刪除紀錄");
             ErrorMessages.Add(ErrorMessageEnum.使用者需要強制登出並重新登入以便進行身分驗證, "系統存取政策違反，使用者需要強制登出，並重新登入，以便進行身分驗證");
             ErrorMessages.Add(ErrorMessageEnum.原有密碼不正確, "原有密碼不正確");
+            ErrorMessages.Add(ErrorMessageEnum.密碼不能為空白, "密碼不能為空白");
             ErrorMessages.Add(ErrorMessageEnum.新密碼不能為空白, "新密碼不能為空白");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入功能表的角色, "尚未輸入功能表的角色");
             ErrorMessages.Add(ErrorMessageEnum.該功能項目已經存在該功能表的角色, "該功能項目已經存在該功能表的角色");

@@ -127,10 +127,6 @@ namespace Backend.Controllers
                 new Claim(ClaimTypes.Sid, user.Id.ToString()),
 
             };
-            if (user.IsManager == true)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
-            }
 
             var token = new JwtSecurityToken
             (

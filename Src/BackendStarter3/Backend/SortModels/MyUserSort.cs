@@ -9,8 +9,6 @@ namespace Backend.SortModels
         NameDescending,
         AccountAscending,
         AccountDescending,
-        DepartmentNameAscending,
-        DepartmentNameDescending,
     }
     public class MyUserSort
     {
@@ -36,16 +34,6 @@ namespace Backend.SortModels
             {
                 Id = (int)MyUserSortEnum.AccountDescending,
                 Title = "帳號 遞減"
-            });
-            SortConditions.Add(new SortCondition()
-            {
-                Id = (int)MyUserSortEnum.DepartmentNameAscending,
-                Title = "部門名稱 遞增"
-            });
-            SortConditions.Add(new SortCondition()
-            {
-                Id = (int)MyUserSortEnum.DepartmentNameDescending,
-                Title = "部門名稱 遞減"
             });
         }
     }

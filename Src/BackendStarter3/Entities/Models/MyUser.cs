@@ -21,9 +21,6 @@ namespace Entities.Models
         public string Name { get; set; }
         public string Salt { get; set; }
         public bool Status { get; set; }
-        public string DepartmentName { get; set; }
-        public int ManagerId { get; set; }
-        public bool IsManager { get; set; }
         public int MenuRoleId { get; set; }
         public virtual MenuRole MenuRole { get; set; }
     }

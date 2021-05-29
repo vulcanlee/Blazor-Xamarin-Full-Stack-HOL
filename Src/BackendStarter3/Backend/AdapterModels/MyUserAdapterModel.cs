@@ -8,17 +8,12 @@ namespace Backend.AdapterModels
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]
         public string Account { get; set; }
-        [Required(ErrorMessage = "密碼 不可為空白")]
         public string Password { get; set; }
+        public string PasswordPlaintext { get; set; }
         [Required(ErrorMessage = "名稱 不可為空白")]
         public string Name { get; set; }
         public string Salt { get; set; }
         public bool Status { get; set; }
-        public string DepartmentName { get; set; }
-        public int ManagerId { get; set; }
-        public bool IsManager { get; set; }
-        public string ManagerName { get; set; }
-        public string IsManagerString { get; set; }
         public int MenuRoleId { get; set; }
         public string MenuRoleName { get; set; }
         public virtual MenuRoleAdapterModel MenuRole { get; set; }

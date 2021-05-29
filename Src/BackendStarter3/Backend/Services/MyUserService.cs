@@ -65,12 +65,6 @@ namespace Backend.Services
                     case (int)MyUserSortEnum.AccountAscending:
                         DataSource = DataSource.OrderBy(x => x.Account);
                         break;
-                    case (int)MyUserSortEnum.DepartmentNameDescending:
-                        DataSource = DataSource.OrderByDescending(x => x.DepartmentName);
-                        break;
-                    case (int)MyUserSortEnum.DepartmentNameAscending:
-                        DataSource = DataSource.OrderBy(x => x.DepartmentName);
-                        break;
                     default:
                         DataSource = DataSource.OrderBy(x => x.Id);
                         break;
@@ -276,22 +270,6 @@ namespace Backend.Services
 
         async Task OhterDependencyData(MyUserAdapterModel data)
         {
-            if (data.IsManager == true)
-            {
-                data.IsManagerString = "是";
-            }
-            else
-            {
-                data.IsManagerString = "否";
-            }
-
-            var user = await context.MyUser
-                .FirstOrDefaultAsync(x => x.Id == data.ManagerId);
-            if (user != null)
-            {
-                data.ManagerName = user.Name;
-            }
-
             data.MenuRoleName = data.MenuRole.Name;
         }
     }

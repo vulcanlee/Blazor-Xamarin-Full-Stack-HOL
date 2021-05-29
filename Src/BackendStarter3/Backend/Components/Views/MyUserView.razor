@@ -35,16 +35,12 @@
         <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="MyUserAdapterModel"
                     OnToolbarClick="ViewModel.ToolbarClickHandler"
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
-        <GridPageSettings PageSize="@PageSize"  />
+        <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="100" />
-            <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱" />
-            <GridColumn Field=@nameof(MyUserAdapterModel.IsManagerString) HeaderText="主管"
-                         HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(MyUserAdapterModel.ManagerName) HeaderText="主管名稱"
-                         HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(MyUserAdapterModel.DepartmentName) HeaderText="部門"
-                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.MenuRoleName) HeaderText="功能表角色" />
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
@@ -89,33 +85,22 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">密碼</label>
-                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Password"
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.PasswordPlaintext"
                                        Placeholder="請輸入密碼" Type="InputType.Password"
                                        Autocomplete="AutoComplete.Off" />
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Password)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.PasswordPlaintext)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">部門名稱</label>
-                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.DepartmentName"
-                                       Placeholder="請輸入部門名稱" />
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.DepartmentName)" />
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <SfCheckBox Label="是否為主管名稱" @bind-Checked="ViewModel.CurrentRecord.IsManager"></SfCheckBox>
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.IsManager)" />
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="control-label">主管名稱 <span class="mdi mdi-18px mdi-magnify" @onclick="ViewModel.OnOpenPicker"></span></label>
-                            <SfTextBox Value="@ViewModel.CurrentRecord.ManagerName" Enabled="false"></SfTextBox>
+                            <label class="control-label">
+                                功能表角色
+                                <span class="mdi mdi-18px mdi-magnify"
+                                      @onclick="ViewModel.OnOpenPicker"></span>
+                            </label>
+                            <SfTextBox Value="@ViewModel.CurrentRecord.MenuRoleName"
+                                       Enabled="false"></SfTextBox>
                         </div>
                     </div>
 
@@ -132,7 +117,7 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
-<MyUserPicker OpenPicker="ViewModel.ShowAontherRecordPicker"
+<MenuRolePicker OpenPicker="ViewModel.ShowAontherRecordPicker"
               OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"

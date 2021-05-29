@@ -5,14 +5,14 @@
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.DropDowns
 
-@inject IMyUserService CurrentService
+@inject IMenuRoleService CurrentService
 
 <SfDialog @bind-Visible="@OpenPicker" IsModal="true"
           Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@DialogTitle</Header>
         <Content>
-            <SfGrid @ref="GridDialog" TValue="MyUserAdapterModel"
+            <SfGrid @ref="GridDialog" TValue="MenuRoleAdapterModel"
                     AllowPaging="true"
                     Toolbar="Toolbaritems">
                 <SfToolbar>
@@ -30,19 +30,16 @@
                     </ToolbarItems>
                 </SfToolbar>
                 <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-                    <MyUserAdapter CurrentSortCondition="@CurrentSortCondition"></MyUserAdapter>
+                    <MenuRoleAdapter CurrentSortCondition="@CurrentSortCondition"></MenuRoleAdapter>
                 </SfDataManager>
                 <GridSelectionSettings Type="@Syncfusion.Blazor.Grids.SelectionType.Single"></GridSelectionSettings>
-                <GridEvents RowSelected="GetSelectedRecords" TValue="MyUserAdapterModel"
+                <GridEvents RowSelected="GetSelectedRecords" TValue="MenuRoleAdapterModel"
                             OnToolbarClick="ToolbarClickHandler" />
                 <GridPageSettings PageSize="8"></GridPageSettings>
                 <GridSearchSettings Fields="@(new string[] { "Name"})"
                                     Operator=Syncfusion.Blazor.Operator.Contains IgnoreCase="true" />
                 <GridColumns>
-                    <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號"></GridColumn>
-                    <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱"></GridColumn>
-                    <GridColumn Field=@nameof(MyUserAdapterModel.MenuRoleName) HeaderText="功能表角色"
-                                HideAtMedia="(min-width: 640px)"></GridColumn>
+                    <GridColumn Field=@nameof(MenuRoleAdapterModel.Name) HeaderText="名稱"></GridColumn>
                 </GridColumns>
             </SfGrid>
         </Content>
@@ -61,14 +58,14 @@
 <DialogBackground />
 
 @code{
-    SfGrid<MyUserAdapterModel> GridDialog;
+    SfGrid<MenuRoleAdapterModel> GridDialog;
     public List<object> Toolbaritems = new List<object>();
     [Parameter]
     public bool OpenPicker { get; set; } = false;
     string DialogTitle = "請選取紀錄";
-    MyUserAdapterModel CurrentRecord;
+    MenuRoleAdapterModel CurrentRecord;
     [Parameter]
-    public EventCallback<MyUserAdapterModel> OnConfirmCallback { get; set; }
+    public EventCallback<MenuRoleAdapterModel> OnConfirmCallback { get; set; }
     public bool ShowMessageBox { get; set; } = false;
     public string MessageBoxBody { get; set; } = "";
     public string MessageBoxTitle { get; set; } = "";
@@ -77,7 +74,7 @@
 
     protected override void OnInitialized()
     {
-        MyUserSort.Initialization(SortConditions);
+        MenuRoleSort.Initialization(SortConditions);
 
         Toolbaritems.Add(new ItemModel() { Text = "重新整理", TooltipText = "重新整理", CssClass = "mdi mdi-refresh" });
         Toolbaritems.Add("Search");
@@ -105,9 +102,9 @@
     {
         await OnConfirmCallback.InvokeAsync(null);
     }
-    public void GetSelectedRecords(RowSelectEventArgs<MyUserAdapterModel> args)
+    public void GetSelectedRecords(RowSelectEventArgs<MenuRoleAdapterModel> args)
     {
-        CurrentRecord = args.Data as MyUserAdapterModel;
+        CurrentRecord = args.Data as MenuRoleAdapterModel;
     }
     #region 排序搜尋事件
 
