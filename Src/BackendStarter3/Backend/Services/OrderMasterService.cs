@@ -146,6 +146,7 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(true);
             }
         }
+    
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderMasterAdapterModel paraObject)
         {
             var searchItem = await context.OrderMaster
@@ -160,7 +161,16 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(OrderMasterAdapterModel paraObject)
         {
+            CleanTrackingHelper.Clean<OrderMaster>(context);
             var searchItem = await context.OrderMaster
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
+            }
+
+             searchItem = await context.OrderMaster
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
                 x.Id != paraObject.Id);
@@ -170,18 +180,30 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+    
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderMasterAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItem
+            CleanTrackingHelper.Clean<OrderMaster>(context);
+
+            var searchItem = await context.OrderMaster
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+            }
+
+            var searchOrderItemItem = await context.OrderItem
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.OrderId == paraObject.Id);
-            if (item != null)
+                .FirstOrDefaultAsync(x => x.OrderMasterId == paraObject.Id);
+            if (searchOrderItemItem != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
             }
             return VerifyRecordResultFactory.Build(true);
         }
+    
         Task OhterDependencyData(OrderMasterAdapterModel data)
         {
             return Task.FromResult(0);

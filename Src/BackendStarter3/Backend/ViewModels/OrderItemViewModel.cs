@@ -160,7 +160,7 @@ namespace Backend.ViewModels
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
                 IsShowEditRecord = true;
-                CurrentRecord.OrderId = Header.Id;
+                CurrentRecord.OrderMasterId = Header.Id;
                 //CurrentRecord.Name = Header.Title;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)

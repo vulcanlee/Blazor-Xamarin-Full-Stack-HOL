@@ -94,7 +94,7 @@ namespace Backend.Services
             var DataSource = context.OrderItem
                 .AsNoTracking()
                 .Include(x => x.Product)
-                .Where(x => x.OrderId == id);
+                .Where(x => x.OrderMasterId == id);
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
@@ -220,7 +220,7 @@ namespace Backend.Services
             }
             var item = await context.OrderItem
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.OrderId == paraObject.OrderId &&
+                .FirstOrDefaultAsync(x => x.OrderMasterId == paraObject.OrderMasterId &&
                 x.ProductId == paraObject.ProductId);
             if (item != null)
             {
@@ -236,22 +236,41 @@ namespace Backend.Services
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.尚未輸入該訂單要用到的產品);
             }
-            var item = await context.OrderItem
+
+            var searchItem = await context.OrderItem
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.OrderId == paraObject.OrderId &&
+                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
+            }
+
+            searchItem = await context.OrderItem
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.OrderMasterId == paraObject.OrderMasterId &&
                 x.ProductId == paraObject.ProductId &&
                 x.Id != paraObject.Id);
-            if (item != null)
+            if (searchItem != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該訂單已經存在該產品_不能重複同樣的商品在一訂單內);
             }
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderItemAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderItemAdapterModel paraObject)
         {
-            return Task.FromResult(VerifyRecordResultFactory.Build(true));
+            CleanTrackingHelper.Clean<OrderItem>(context);
+            var searchItem = await context.OrderItem
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+            }
+
+            return VerifyRecordResultFactory.Build(true);
         }
+  
         Task OhterDependencyData(OrderItemAdapterModel data)
         {
             data.ProductName = data.Product.Name;

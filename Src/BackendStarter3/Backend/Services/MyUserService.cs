@@ -193,7 +193,16 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MyUserAdapterModel paraObject)
         {
+            CleanTrackingHelper.Clean<MyUser>(context);
             var searchItem = await context.MyUser
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
+            }
+
+            searchItem = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem != null)
@@ -220,9 +229,19 @@ namespace Backend.Services
 
             return VerifyRecordResultFactory.Build(true);
         }
+   
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
         {
+            CleanTrackingHelper.Clean<MyUser>(context);
             var searchItem = await context.MyUser
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+            }
+
+            searchItem = await context.MyUser
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem != null)
@@ -242,6 +261,7 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+     
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {
             MyUser user = new MyUser();

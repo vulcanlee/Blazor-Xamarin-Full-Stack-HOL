@@ -238,6 +238,14 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MenuDataAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<MenuData>(context);
+            var searchItem = await context.MenuData
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
+            }
+
             if (paraObject.MenuRoleId == 0)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.尚未輸入功能表的角色);
@@ -254,10 +262,18 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public Task<VerifyRecordResult> BeforeDeleteCheckAsync(MenuDataAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MenuDataAdapterModel paraObject)
         {
-            return Task.FromResult(VerifyRecordResultFactory.Build(true));
+            var searchItem = await context.MenuData
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+            }
+            return VerifyRecordResultFactory.Build(true);
         }
+    
         Task OhterDependencyData(MenuDataAdapterModel data)
         {
             if (data.IsGroup == true)

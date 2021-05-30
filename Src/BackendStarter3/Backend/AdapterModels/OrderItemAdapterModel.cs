@@ -6,7 +6,7 @@ namespace Backend.AdapterModels
     public class OrderItemAdapterModel : ICloneable
     {
         public int Id { get; set; }
-        public int OrderId { get; set; }
+        public int OrderMasterId { get; set; }
         [Required(ErrorMessage = "訂單項目名稱 欄位必須要輸入值")]
         public string Name { get; set; }
         public int ProductId { get; set; }
@@ -17,7 +17,7 @@ namespace Backend.AdapterModels
         public string ProductName { get; set; }
         public string OrderName { get; set; }
 
-        public OrderMasterAdapterModel Order { get; set; }
+        public OrderMasterAdapterModel OrderMaster { get; set; }
         public ProductAdapterModel Product { get; set; }
 
         public OrderItemAdapterModel Clone()

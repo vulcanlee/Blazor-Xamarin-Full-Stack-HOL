@@ -36,15 +36,22 @@ namespace Backend.Services
             Random random = new Random();
 
             #region 適用於 Code First ，刪除資料庫與移除資料庫
+            Logger.LogInformation($"適用於 Code First ，刪除資料庫與移除資料庫");
             await context.Database.EnsureDeletedAsync();
+            Logger.LogInformation($"刪除資料庫");
             await context.Database.EnsureCreatedAsync();
+            Logger.LogInformation($"建立資料庫");
             #endregion
 
             #region 建立開發環境要用到的測試紀錄
             await 建立功能表角色與項目清單Async();
+            Logger.LogInformation($"建立功能表角色與項目清單");
             await 建立使用者紀錄Async();
+            Logger.LogInformation($"建立使用者紀錄");
             List<Product> products = await 建立產品紀錄Async();
+            Logger.LogInformation($"建立產品紀錄");
             await 建立訂單紀錄Async(random, products);
+            Logger.LogInformation($"建立訂單紀錄");
             #endregion
         }
 
@@ -67,7 +74,7 @@ namespace Backend.Services
                     OrderItem orderItem = new OrderItem()
                     {
                         Name = $"OrderItem{j}",
-                        OrderId = order.Id,
+                        OrderMasterId = order.Id,
                         ProductId = products[j].Id,
                         Quantity = 3,
                         ListPrice = 168,
