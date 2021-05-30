@@ -26,6 +26,16 @@
             #endregion
 
             #region DTO
+            CreateMap<MenuData, MenuDataDto>();
+            CreateMap<MenuDataDto, MenuData>();
+            CreateMap<MenuDataAdapterModel, MenuDataDto>();
+            CreateMap<MenuDataDto, MenuDataAdapterModel>();
+
+            CreateMap<MenuRole, MenuRoleDto>();
+            CreateMap<MenuRoleDto, MenuRole>();
+            CreateMap<MenuRoleAdapterModel, MenuRoleDto>();
+            CreateMap<MenuRoleDto, MenuRoleAdapterModel>();
+
             CreateMap<MyUser, MyUserDto>();
             CreateMap<MyUserDto, MyUser>();
             CreateMap<MyUserAdapterModel, MyUserDto>();
@@ -36,10 +46,10 @@
             CreateMap<ProductAdapterModel, ProductDto>();
             CreateMap<ProductDto, ProductAdapterModel>();
 
-            CreateMap<OrderMaster, OrderDto>();
-            CreateMap<OrderDto, OrderMaster>();
-            CreateMap<OrderMasterAdapterModel, OrderDto>();
-            CreateMap<OrderDto, OrderMasterAdapterModel>();
+            CreateMap<OrderMaster, OrderMasterDto>();
+            CreateMap<OrderMasterDto, OrderMaster>();
+            CreateMap<OrderMasterAdapterModel, OrderMasterDto>();
+            CreateMap<OrderMasterDto, OrderMasterAdapterModel>();
 
             CreateMap<OrderItem, OrderItemDto>();
             CreateMap<OrderItemDto, OrderItem>();

@@ -20,7 +20,6 @@ namespace Backend.Helpers
             services.AddTransient<IOrderMasterService, OrderMasterService>();
             services.AddTransient<IOrderItemService, OrderItemService>();
 
-            services.AddScoped<IEventAggregator, EventAggregator>();
             #endregion
 
             #region 註冊 Razor Model
@@ -36,6 +35,7 @@ namespace Backend.Helpers
 
             #region 其他服務註冊
             services.AddTransient<TranscationResultHelper>();
+            services.AddScoped<IEventAggregator, EventAggregator>();
             #endregion
             return services;
         }

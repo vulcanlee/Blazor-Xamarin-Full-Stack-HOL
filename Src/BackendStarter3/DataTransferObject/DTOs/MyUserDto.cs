@@ -19,5 +19,9 @@ namespace DataTransferObject.DTOs
         public bool IsManager { get; set; }
         public string ManagerName { get; set; }
         public string IsManagerString { get; set; }
+        public string Salt { get; set; }
+        public bool Status { get; set; }
+        public int MenuRoleId { get; set; }
+        public virtual MenuRoleDto MenuRole { get; set; }
     }
 }

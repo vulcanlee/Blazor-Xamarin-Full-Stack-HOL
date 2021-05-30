@@ -8,7 +8,7 @@ namespace DataTransferObject.DTOs
     public class OrderItemDto
     {
         public int Id { get; set; }
-        public int OrderId { get; set; }
+        public int OrderMasterId { get; set; }
         [Required(ErrorMessage = "訂單項目名稱 欄位必須要輸入值")]
         public string Name { get; set; }
         public int ProductId { get; set; }
@@ -19,7 +19,7 @@ namespace DataTransferObject.DTOs
         public string ProductName { get; set; }
         public string OrderName { get; set; }
 
-        public OrderDto Order { get; set; }
+        public OrderMasterDto OrderMaster { get; set; }
         public ProductDto Product { get; set; }
     }
 }

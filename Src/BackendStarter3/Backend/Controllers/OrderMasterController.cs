@@ -34,7 +34,7 @@ namespace Backend.Controllers
 
         #region C 新增
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] OrderDto data)
+        public async Task<IActionResult> Post([FromBody] OrderMasterDto data)
         {
             APIResult apiResult;
 
@@ -50,7 +50,7 @@ namespace Backend.Controllers
             OrderMasterAdapterModel record = mapper.Map<OrderMasterAdapterModel>(data);
             if (record != null)
             {
-                var result = mapper.Map<OrderDto>(record);
+                var result = mapper.Map<OrderMasterDto>(record);
 
                 #region 新增記錄前的紀錄完整性檢查
                 VerifyRecordResult verify = await OrderService.BeforeAddCheckAsync(record);
@@ -119,7 +119,7 @@ namespace Backend.Controllers
             #endregion
 
             var records = await OrderService.GetAsync(dataRequest);
-            var result = mapper.Map<List<OrderDto>>(records.Result);
+            var result = mapper.Map<List<OrderMasterDto>>(records.Result);
             apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
                 ErrorMessageEnum.None, payload: result);
             return Ok(apiResult);
@@ -130,7 +130,7 @@ namespace Backend.Controllers
         {
             APIResult apiResult;
             var record = await OrderService.GetAsync(id);
-            var result = mapper.Map<OrderDto>(record);
+            var result = mapper.Map<OrderMasterDto>(record);
             if (record != null && record.Id != 0)
             {
                 apiResult = APIResultFactory.Build(true, StatusCodes.Status200OK,
@@ -147,7 +147,7 @@ namespace Backend.Controllers
 
         #region U 更新
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] OrderDto data)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] OrderMasterDto data)
         {
             APIResult apiResult;
 
@@ -165,7 +165,7 @@ namespace Backend.Controllers
             {
                 OrderMasterAdapterModel recordTarget = mapper.Map<OrderMasterAdapterModel>(data);
                 recordTarget.Id = id;
-                var result = mapper.Map<OrderDto>(recordTarget);
+                var result = mapper.Map<OrderMasterDto>(recordTarget);
 
                 #region 修改記錄前的紀錄完整性檢查
                 VerifyRecordResult verify = await OrderService.BeforeUpdateCheckAsync(record);
@@ -223,7 +223,7 @@ namespace Backend.Controllers
         {
             APIResult apiResult;
             var record = await OrderService.GetAsync(id);
-            var result = mapper.Map<OrderDto>(record);
+            var result = mapper.Map<OrderMasterDto>(record);
             if (record != null && record.Id != 0)
             {
 

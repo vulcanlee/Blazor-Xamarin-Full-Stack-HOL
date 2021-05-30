@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataTransferObject.DTOs
 {
-    public partial class OrderDto
+    public partial class OrderMasterDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
