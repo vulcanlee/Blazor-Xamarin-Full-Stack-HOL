@@ -337,6 +337,7 @@ namespace Backend.Services
         {
             var DataSource = context.MenuData
                 .Include(x => x.MenuRole)
+                .OrderBy(x=>x.Sequence)
                 .Where(x => x.MenuRoleId == id);
 
             var allMenuData = await DataSource.ToListAsync();

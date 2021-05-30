@@ -9,15 +9,15 @@
 @implements IDisposable
 @*<button @onclick="click">Send</button>*@
 <SfToast @ref="ToastObj"
-         Title="重要通知" Content="使用者已經被停用，5秒鐘後，將會強制登出"
          Timeout="5000">
     <ToastPosition X="Right" Y="Top"></ToastPosition>
 </SfToast>
+         @*Title="@ToastModel.Title" Content="@ToastModel.Content"*@
 
 <style>
     /* To change background color */
     .e-toast-container .e-toast {
-        background-color: red;
+        background-color: orange;
     }
 
         /* To change color, font family and font size */
@@ -37,8 +37,7 @@
 
 @code {
     SfToast ToastObj;
-    public string ToastTitle { get; set; }
-    public string ToastContent { get; set; }
+    public ToastModel ToastModel { get; set; } = new ToastModel();
     Task CheckUserTask;
     CancellationTokenSource cts;
     ClaimsPrincipal user;
@@ -46,8 +45,10 @@
 
     async Task click()
     {
-        ToastTitle = "重要通知";
-        ToastContent = "使用者已經被停用，5秒鐘後，將會強制登出";
+        ToastModel.Title = "重要通知~~";
+        ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出~~";
+        ToastObj.Title = ToastModel.Title;
+        ToastObj.Content = ToastModel.Content;
         await Task.Delay(100);
         await ToastObj.Show();
     }
@@ -64,7 +65,7 @@
                 cts = new CancellationTokenSource();
                 CheckUserTask = Task.Run(async () =>
                 {
-                    while (cts.Token.IsCancellationRequested == false || IsRunning)
+                    while (cts.Token.IsCancellationRequested == false && IsRunning == true)
                     {
                         try
                         {
@@ -74,9 +75,10 @@
                             {
                                 if (myUser.Status == false)
                                 {
-                                    ToastTitle = "重要通知";
-                                    ToastContent = "使用者已經被停用，5秒鐘後，將會強制登出";
-                                    await Task.Delay(500);
+                                    ToastModel.Title = "重要通知";
+                                    ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出";
+                                    ToastObj.Title = ToastModel.Title;
+                                    ToastObj.Content = ToastModel.Content;
                                     await ToastObj.Show();
                                     await Task.Delay(5000);
                                     NavigationManager.NavigateTo("/Logout", true);

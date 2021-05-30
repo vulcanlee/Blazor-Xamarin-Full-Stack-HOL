@@ -1,6 +1,7 @@
 ﻿using Backend.ViewModels;
 using Backend.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Prism.Events;
 
 namespace Backend.Helpers
 {
@@ -18,6 +19,8 @@ namespace Backend.Helpers
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IOrderMasterService, OrderMasterService>();
             services.AddTransient<IOrderItemService, OrderItemService>();
+
+            services.AddScoped<IEventAggregator, EventAggregator>();
             #endregion
 
             #region 註冊 Razor Model
