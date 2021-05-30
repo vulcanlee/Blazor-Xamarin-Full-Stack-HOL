@@ -10,6 +10,7 @@ namespace Backend.Services
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using ShareBusiness.Factories;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
@@ -20,11 +21,14 @@ namespace Backend.Services
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
+        public ILogger<MenuRoleService> Logger { get; }
 
-        public MenuRoleService(BackendDBContext context, IMapper mapper)
+        public MenuRoleService(BackendDBContext context, IMapper mapper,
+            ILogger<MenuRoleService> logger)
         {
             this.context = context;
             Mapper = mapper;
+            Logger = logger;
         }
 
         public async Task<DataRequestResult<MenuRoleAdapterModel>> GetAsync(DataRequest dataRequest)
@@ -111,56 +115,81 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> AddAsync(MenuRoleAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<MenuRole>(context);
-            MenuRole itemParameter = Mapper.Map<MenuRole>(paraObject);
-            CleanTrackingHelper.Clean<MenuRole>(context);
-            await context.MenuRole
-                .AddAsync(itemParameter);
-            await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<MenuRole>(context);
-            return VerifyRecordResultFactory.Build(true);
+            try
+            {
+                CleanTrackingHelper.Clean<MenuRole>(context);
+                MenuRole itemParameter = Mapper.Map<MenuRole>(paraObject);
+                CleanTrackingHelper.Clean<MenuRole>(context);
+                await context.MenuRole
+                    .AddAsync(itemParameter);
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<MenuRole>(context);
+                return VerifyRecordResultFactory.Build(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "新增記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "新增記錄發生例外異常", ex);
+            }
         }
 
         public async Task<VerifyRecordResult> UpdateAsync(MenuRoleAdapterModel paraObject)
         {
-            MenuRole itemData = Mapper.Map<MenuRole>(paraObject);
-            CleanTrackingHelper.Clean<MenuRole>(context);
-            MenuRole item = await context.MenuRole
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                MenuRole itemData = Mapper.Map<MenuRole>(paraObject);
+                CleanTrackingHelper.Clean<MenuRole>(context);
+                MenuRole item = await context.MenuRole
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<MenuRole>(context);
+                    context.Entry(itemData).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MenuRole>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<MenuRole>(context);
-                context.Entry(itemData).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<MenuRole>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "修改記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "修改記錄發生例外異常", ex);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<MenuRole>(context);
-            MenuRole item = await context.MenuRole
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                CleanTrackingHelper.Clean<MenuRole>(context);
+                MenuRole item = await context.MenuRole
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<MenuRole>(context);
+                    context.Entry(item).State = EntityState.Deleted;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MenuRole>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<MenuRole>(context);
-                context.Entry(item).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<MenuRole>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "刪除記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MenuRoleAdapterModel paraObject)
         {
             var searchItem = await context.MenuRole

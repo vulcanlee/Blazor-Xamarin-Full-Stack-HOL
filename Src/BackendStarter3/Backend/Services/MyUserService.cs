@@ -15,6 +15,8 @@ namespace Backend.Services
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
     using ShareDomain.Enums;
+    using System;
+
     public class MyUserService : IMyUserService
     {
         private readonly BackendDBContext context;
@@ -122,55 +124,80 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> AddAsync(MyUserAdapterModel paraObject)
         {
-            MyUser itemParameter = Mapper.Map<MyUser>(paraObject);
-            CleanTrackingHelper.Clean<MyUser>(context);
-            await context.MyUser
-                .AddAsync(itemParameter);
-            await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<MyUser>(context);
-            return VerifyRecordResultFactory.Build(true);
+            try
+            {
+                MyUser itemParameter = Mapper.Map<MyUser>(paraObject);
+                CleanTrackingHelper.Clean<MyUser>(context);
+                await context.MyUser
+                    .AddAsync(itemParameter);
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<MyUser>(context);
+                return VerifyRecordResultFactory.Build(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "新增記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "新增記錄發生例外異常", ex);
+            }
         }
 
         public async Task<VerifyRecordResult> UpdateAsync(MyUserAdapterModel paraObject)
         {
-            MyUser itemData = Mapper.Map<MyUser>(paraObject);
-            CleanTrackingHelper.Clean<MyUser>(context);
-            MyUser item = await context.MyUser
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                MyUser itemData = Mapper.Map<MyUser>(paraObject);
+                CleanTrackingHelper.Clean<MyUser>(context);
+                MyUser item = await context.MyUser
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<MyUser>(context);
+                    context.Entry(itemData).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MyUser>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<MyUser>(context);
-                context.Entry(itemData).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<MyUser>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "修改記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "修改記錄發生例外異常", ex);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<MyUser>(context);
-            MyUser item = await context.MyUser
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                CleanTrackingHelper.Clean<MyUser>(context);
+                MyUser item = await context.MyUser
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<MyUser>(context);
+                    context.Entry(item).State = EntityState.Deleted;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MyUser>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<MyUser>(context);
-                context.Entry(item).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<MyUser>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "刪除記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MyUserAdapterModel paraObject)
         {
             var searchItem = await context.MyUser
@@ -215,7 +242,7 @@ namespace Backend.Services
             }
             else
             {
-                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
             }
 
             searchItem = await context.MyUser
@@ -229,7 +256,7 @@ namespace Backend.Services
 
             return VerifyRecordResultFactory.Build(true);
         }
-   
+
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<MyUser>(context);
@@ -261,7 +288,7 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-     
+
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {
             MyUser user = new MyUser();

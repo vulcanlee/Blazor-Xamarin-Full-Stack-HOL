@@ -10,5 +10,6 @@ namespace ShareDomain.DataModels
         public bool Success { get; set; }
         public ErrorMessageEnum MessageId { get; set; }
         public Exception Exception { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -5,6 +5,7 @@ namespace Backend.ViewModels
 {
     using AutoMapper;
     using Backend.AdapterModels;
+    using Backend.Helpers;
     using Backend.Interfaces;
     using Backend.Services;
     using Backend.SortModels;
@@ -21,12 +22,13 @@ namespace Backend.ViewModels
     {
         #region Constructor
         public MyUserViewModel(IMyUserService CurrentService,
-           BackendDBContext context,
-           IMapper Mapper)
+           BackendDBContext context, IMapper Mapper,
+           TranscationResultHelper transcationResultHelper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
+            TranscationResultHelper = transcationResultHelper;
             MyUserSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
@@ -146,7 +148,8 @@ namespace Backend.ViewModels
         {
             if (NeedDelete == true)
             {
-                await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
                 dataGrid.RefreshGrid();
             }
             ConfirmMessageBox.Hidden();
@@ -207,7 +210,7 @@ namespace Backend.ViewModels
                     thisRazorComponent.NeedRefresh();
                     return;
                 }
-                if (string.IsNullOrEmpty(CurrentRecord.PasswordPlaintext)==false)
+                if (string.IsNullOrEmpty(CurrentRecord.PasswordPlaintext) == false)
                 {
                     CurrentRecord.Password =
                         PasswordHelper.GetPasswordSHA(CurrentRecord.Salt, CurrentRecord.PasswordPlaintext);
@@ -219,12 +222,14 @@ namespace Backend.ViewModels
             {
                 if (isNewRecordMode == true)
                 {
-                    await CurrentService.AddAsync(CurrentRecord);
+                    var verifyRecordResult = await CurrentService.AddAsync(CurrentRecord);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
                     dataGrid.RefreshGrid();
                 }
                 else
                 {
-                    await CurrentService.UpdateAsync(CurrentRecord);
+                    var verifyRecordResult = await CurrentService.UpdateAsync(CurrentRecord);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
                     dataGrid.RefreshGrid();
                 }
                 IsShowEditRecord = false;
@@ -251,6 +256,8 @@ namespace Backend.ViewModels
 
         #region 排序搜尋事件
         public int DefaultSorting { get; set; } = -1;
+        public TranscationResultHelper TranscationResultHelper { get; }
+
         public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)
         {
             if (dataGrid.GridIsExist() == true)
@@ -264,7 +271,7 @@ namespace Backend.ViewModels
         #region 啟用/停用
         public async Task DisableIt(MyUserAdapterModel item)
         {
-            if(item.Account.ToLower() == MagicHelper.開發者帳號)
+            if (item.Account.ToLower() == MagicHelper.開發者帳號)
             {
                 MessageBox.Show("400px", "200px", "警告",
                     "開發者帳號不可以被停用");

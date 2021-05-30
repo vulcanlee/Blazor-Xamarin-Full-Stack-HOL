@@ -35,6 +35,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 其他服務註冊
+            services.AddTransient<TranscationResultHelper>();
             #endregion
             return services;
         }

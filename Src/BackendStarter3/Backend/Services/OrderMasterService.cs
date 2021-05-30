@@ -9,21 +9,26 @@ namespace Backend.Services
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using ShareBusiness.Factories;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
     using ShareDomain.Enums;
+    using System;
 
     public class OrderMasterService : IOrderMasterService
     {
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
+        public ILogger<OrderMasterService> Logger { get; }
 
-        public OrderMasterService(BackendDBContext context, IMapper mapper)
+        public OrderMasterService(BackendDBContext context, IMapper mapper,
+            ILogger<OrderMasterService> logger)
         {
             this.context = context;
             Mapper = mapper;
+            Logger = logger;
         }
 
         public async Task<DataRequestResult<OrderMasterAdapterModel>> GetAsync(DataRequest dataRequest)
@@ -96,57 +101,81 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> AddAsync(OrderMasterAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            OrderMaster itemParameter = Mapper.Map<OrderMaster>(paraObject);
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            await context.OrderMaster
-                .AddAsync(itemParameter);
-            await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            return VerifyRecordResultFactory.Build(true);
+            try
+            {
+                CleanTrackingHelper.Clean<OrderMaster>(context);
+                OrderMaster itemParameter = Mapper.Map<OrderMaster>(paraObject);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
+                await context.OrderMaster
+                    .AddAsync(itemParameter);
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<OrderMaster>(context);
+                return VerifyRecordResultFactory.Build(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "新增記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "新增記錄發生例外異常", ex);
+            }
         }
 
         public async Task<VerifyRecordResult> UpdateAsync(OrderMasterAdapterModel paraObject)
         {
-            OrderMaster itemData = Mapper.Map<OrderMaster>(paraObject);
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            OrderMaster item = await context.OrderMaster
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                OrderMaster itemData = Mapper.Map<OrderMaster>(paraObject);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
+                OrderMaster item = await context.OrderMaster
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<OrderMaster>(context);
+                    context.Entry(itemData).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<OrderMaster>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<OrderMaster>(context);
-                context.Entry(itemData).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<OrderMaster>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "修改記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "修改記錄發生例外異常", ex);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            OrderMaster item = await context.OrderMaster
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
+                OrderMaster item = await context.OrderMaster
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<OrderMaster>(context);
+                    context.Entry(item).State = EntityState.Deleted;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<OrderMaster>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<OrderMaster>(context);
-                context.Entry(item).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<OrderMaster>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "刪除記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
-    
+
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderMasterAdapterModel paraObject)
         {
             var searchItem = await context.OrderMaster
@@ -170,40 +199,47 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
             }
 
-             searchItem = await context.OrderMaster
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
-                x.Id != paraObject.Id);
+            searchItem = await context.OrderMaster
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.Name == paraObject.Name &&
+               x.Id != paraObject.Id);
             if (searchItem != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要修改的紀錄已經存在無法修改);
             }
             return VerifyRecordResultFactory.Build(true);
         }
-    
+
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(OrderMasterAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-
-            var searchItem = await context.OrderMaster
-             .AsNoTracking()
-             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-            if (searchItem == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
-            }
+                CleanTrackingHelper.Clean<OrderItem>(context);
+                CleanTrackingHelper.Clean<OrderMaster>(context);
 
-            var searchOrderItemItem = await context.OrderItem
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.OrderMasterId == paraObject.Id);
-            if (searchOrderItemItem != null)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
+                var searchItem = await context.OrderMaster
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                if (searchItem == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+                }
+
+                var searchOrderItemItem = await context.OrderItem
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.OrderMasterId == paraObject.Id);
+                if (searchOrderItemItem != null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
+                }
+                return VerifyRecordResultFactory.Build(true);
             }
-            return VerifyRecordResultFactory.Build(true);
+            catch (Exception ex)
+            {
+                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
+            }
         }
-    
+
         Task OhterDependencyData(OrderMasterAdapterModel data)
         {
             return Task.FromResult(0);

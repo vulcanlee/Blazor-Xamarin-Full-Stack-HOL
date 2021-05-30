@@ -12,6 +12,7 @@ namespace ShareDomain.Enums
         SecurityTokenNotYetValidException,
         SecurityTokenValidationException,
         AuthenticationFailed,
+        客製化文字錯誤訊息,
         // Web API 使用到的錯誤訊息
         帳號或密碼不正確 = 1000,
         權杖中沒有發現指定使用者ID,

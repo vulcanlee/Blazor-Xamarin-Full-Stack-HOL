@@ -9,21 +9,26 @@ namespace Backend.Services
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using ShareBusiness.Factories;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
     using ShareDomain.Enums;
+    using System;
 
     public class OrderItemService : IOrderItemService
     {
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
+        public ILogger<OrderItemService> Logger { get; }
 
-        public OrderItemService(BackendDBContext context, IMapper mapper)
+        public OrderItemService(BackendDBContext context, IMapper mapper,
+            ILogger<OrderItemService> logger)
         {
             this.context = context;
             Mapper = mapper;
+            Logger = logger;
         }
 
         public async Task<DataRequestResult<OrderItemAdapterModel>> GetAsync(DataRequest dataRequest)
@@ -161,53 +166,77 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> AddAsync(OrderItemAdapterModel paraObject)
         {
-            OrderItem itemParameter = Mapper.Map<OrderItem>(paraObject);
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            await context.OrderItem
-                .AddAsync(itemParameter);
-            await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            return VerifyRecordResultFactory.Build(true);
+            try
+            {
+                OrderItem itemParameter = Mapper.Map<OrderItem>(paraObject);
+                CleanTrackingHelper.Clean<OrderItem>(context);
+                await context.OrderItem
+                    .AddAsync(itemParameter);
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<OrderItem>(context);
+                return VerifyRecordResultFactory.Build(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "新增記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "新增記錄發生例外異常", ex);
+            }
         }
 
         public async Task<VerifyRecordResult> UpdateAsync(OrderItemAdapterModel paraObject)
         {
-            OrderItem itemData = Mapper.Map<OrderItem>(paraObject);
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItem
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                OrderItem itemData = Mapper.Map<OrderItem>(paraObject);
+                CleanTrackingHelper.Clean<OrderItem>(context);
+                OrderItem item = await context.OrderItem
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<OrderItem>(context);
+                    context.Entry(itemData).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<OrderItem>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<OrderItem>(context);
-                context.Entry(itemData).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<OrderItem>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "修改記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "修改記錄發生例外異常", ex);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            OrderItem item = await context.OrderItem
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                CleanTrackingHelper.Clean<OrderItem>(context);
+                OrderItem item = await context.OrderItem
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<OrderItem>(context);
+                    context.Entry(item).State = EntityState.Deleted;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<OrderItem>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<OrderItem>(context);
-                context.Entry(item).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<OrderItem>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "刪除記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
 
@@ -270,7 +299,7 @@ namespace Backend.Services
 
             return VerifyRecordResultFactory.Build(true);
         }
-  
+
         Task OhterDependencyData(OrderItemAdapterModel data)
         {
             data.ProductName = data.Product.Name;

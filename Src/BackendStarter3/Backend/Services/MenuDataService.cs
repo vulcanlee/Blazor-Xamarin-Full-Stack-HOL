@@ -10,6 +10,7 @@ namespace Backend.Services
     using Backend.SortModels;
     using Entities.Models;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
     using ShareBusiness.Factories;
     using ShareBusiness.Helpers;
     using ShareDomain.DataModels;
@@ -20,11 +21,14 @@ namespace Backend.Services
         private readonly BackendDBContext context;
 
         public IMapper Mapper { get; }
+        public ILogger<MenuDataService> Logger { get; }
 
-        public MenuDataService(BackendDBContext context, IMapper mapper)
+        public MenuDataService(BackendDBContext context, IMapper mapper,
+            ILogger<MenuDataService> logger)
         {
             this.context = context;
             Mapper = mapper;
+            Logger = logger;
         }
 
         public async Task<DataRequestResult<MenuDataAdapterModel>> GetAsync(DataRequest dataRequest)
@@ -167,53 +171,77 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> AddAsync(MenuDataAdapterModel paraObject)
         {
-            MenuData itemParameter = Mapper.Map<MenuData>(paraObject);
-            CleanTrackingHelper.Clean<MenuData>(context);
-            await context.MenuData
-                .AddAsync(itemParameter);
-            await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<MenuData>(context);
-            return VerifyRecordResultFactory.Build(true);
+            try
+            {
+                MenuData itemParameter = Mapper.Map<MenuData>(paraObject);
+                CleanTrackingHelper.Clean<MenuData>(context);
+                await context.MenuData
+                    .AddAsync(itemParameter);
+                await context.SaveChangesAsync();
+                CleanTrackingHelper.Clean<MenuData>(context);
+                return VerifyRecordResultFactory.Build(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "新增記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "新增記錄發生例外異常", ex);
+            }
         }
 
         public async Task<VerifyRecordResult> UpdateAsync(MenuDataAdapterModel paraObject)
         {
-            MenuData itemData = Mapper.Map<MenuData>(paraObject);
-            CleanTrackingHelper.Clean<MenuData>(context);
-            MenuData item = await context.MenuData
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                MenuData itemData = Mapper.Map<MenuData>(paraObject);
+                CleanTrackingHelper.Clean<MenuData>(context);
+                MenuData item = await context.MenuData
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法修改紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<MenuData>(context);
+                    context.Entry(itemData).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MenuData>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<MenuData>(context);
-                context.Entry(itemData).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<MenuData>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "修改記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "修改記錄發生例外異常", ex);
             }
         }
 
         public async Task<VerifyRecordResult> DeleteAsync(int id)
         {
-            CleanTrackingHelper.Clean<MenuData>(context);
-            MenuData item = await context.MenuData
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (item == null)
+            try
             {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                CleanTrackingHelper.Clean<MenuData>(context);
+                MenuData item = await context.MenuData
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                if (item == null)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                }
+                else
+                {
+                    CleanTrackingHelper.Clean<MenuData>(context);
+                    context.Entry(item).State = EntityState.Deleted;
+                    await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MenuData>(context);
+                    return VerifyRecordResultFactory.Build(true);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CleanTrackingHelper.Clean<MenuData>(context);
-                context.Entry(item).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<MenuData>(context);
-                return VerifyRecordResultFactory.Build(true);
+                Logger.LogError(ex, "刪除記錄發生例外異常");
+                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
 
@@ -273,7 +301,7 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
-    
+
         Task OhterDependencyData(MenuDataAdapterModel data)
         {
             if (data.IsGroup == true)
@@ -337,7 +365,7 @@ namespace Backend.Services
         {
             var DataSource = context.MenuData
                 .Include(x => x.MenuRole)
-                .OrderBy(x=>x.Sequence)
+                .OrderBy(x => x.Sequence)
                 .Where(x => x.MenuRoleId == id);
 
             var allMenuData = await DataSource.ToListAsync();

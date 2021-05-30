@@ -7,6 +7,7 @@ namespace Backend.ViewModels
 {
     using AutoMapper;
     using Backend.AdapterModels;
+    using Backend.Helpers;
     using Backend.Interfaces;
     using Backend.Services;
     using Backend.SortModels;
@@ -21,12 +22,13 @@ namespace Backend.ViewModels
     {
         #region Constructor
         public MenuRoleViewModel(IMenuRoleService CurrentService,
-           BackendDBContext context,
-           IMapper Mapper)
+           BackendDBContext context, IMapper Mapper,
+           TranscationResultHelper transcationResultHelper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
+            TranscationResultHelper = transcationResultHelper;
             MenuRoleSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
@@ -113,6 +115,7 @@ namespace Backend.ViewModels
         /// 訊息對話窗設定
         /// </summary>
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
+        public TranscationResultHelper TranscationResultHelper { get; }
         #endregion
         #endregion
 
@@ -228,7 +231,8 @@ namespace Backend.ViewModels
         {
             if (NeedDelete == true)
             {
-                await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
                 dataGrid.RefreshGrid();
             }
             ConfirmMessageBox.Hidden();
@@ -286,12 +290,14 @@ namespace Backend.ViewModels
             {
                 if (isNewRecordMode == true)
                 {
-                    await CurrentService.AddAsync(CurrentRecord);
+                    var verifyRecordResult = await CurrentService.AddAsync(CurrentRecord);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
                     dataGrid.RefreshGrid();
                 }
                 else
                 {
-                    await CurrentService.UpdateAsync(CurrentRecord);
+                    var verifyRecordResult = await CurrentService.UpdateAsync(CurrentRecord);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
                     dataGrid.RefreshGrid();
                 }
                 IsShowEditRecord = false;
