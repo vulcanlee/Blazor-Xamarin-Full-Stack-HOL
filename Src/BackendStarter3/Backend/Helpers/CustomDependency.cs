@@ -9,6 +9,7 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<IChangePasswordService, ChangePasswordService>();
             services.AddTransient<IMenuRoleService, MenuRoleService>();
             services.AddTransient<IMenuDataService, MenuDataService>();
             services.AddTransient<IMyUserService, MyUserService>();
@@ -20,6 +21,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 Razor Model
+            services.AddTransient<ChangePasswordViewModel>();
             services.AddTransient<MenuRoleViewModel>();
             services.AddTransient<MenuDataViewModel>();
             services.AddTransient<MyUserViewModel>();

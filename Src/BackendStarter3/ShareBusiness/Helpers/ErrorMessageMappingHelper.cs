@@ -54,6 +54,14 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.開發者帳號不存在資料庫上, "開發者帳號不存在資料庫上");
             ErrorMessages.Add(ErrorMessageEnum.使用者帳號不存在, "使用者帳號不存在");
             ErrorMessages.Add(ErrorMessageEnum.密碼不正確, "密碼不正確");
+            ErrorMessages.Add(ErrorMessageEnum.訊息, "訊息");
+            ErrorMessages.Add(ErrorMessageEnum.警告, "警告");
+            ErrorMessages.Add(ErrorMessageEnum.請再次輸入新密碼, "請再次輸入新密碼");
+            ErrorMessages.Add(ErrorMessageEnum.新密碼2次輸入須相同, "新密碼2次輸入須相同");
+            ErrorMessages.Add(ErrorMessageEnum.舊密碼不正確, "舊密碼不正確");
+            ErrorMessages.Add(ErrorMessageEnum.新密碼須和舊密碼不同, "新密碼須和舊密碼不同");
+            ErrorMessages.Add(ErrorMessageEnum.密碼已經變更成功, "密碼已經變更成功");
+            ErrorMessages.Add(ErrorMessageEnum.使用者不存在, "使用者不存在");
             ErrorMessages.Add(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中, "該紀錄無法刪除，因為有其他資料表在使用中");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入該訂單要用到的產品, "尚未輸入該訂單要用到的產品");
             ErrorMessages.Add(ErrorMessageEnum.該訂單已經存在該產品_不能重複同樣的商品在一訂單內, "該訂單已經存在該產品，不能重複同樣的商品在一訂單內");
