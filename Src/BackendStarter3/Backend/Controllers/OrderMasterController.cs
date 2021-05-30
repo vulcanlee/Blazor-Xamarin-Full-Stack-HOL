@@ -18,13 +18,13 @@ namespace Backend.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderMasterController : ControllerBase
     {
         private readonly IOrderMasterService OrderService;
         private readonly IMapper mapper;
 
         #region 建構式
-        public OrderController(IOrderMasterService OrderService,
+        public OrderMasterController(IOrderMasterService OrderService,
             IMapper mapper)
         {
             this.OrderService = OrderService;
@@ -71,8 +71,26 @@ namespace Backend.Controllers
                 }
                 else
                 {
-                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        verifyRecordResult.MessageId, payload: record);
+                    if (verifyRecordResult.MessageId == ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        if (verifyRecordResult.Exception == null)
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result);
+                        }
+                        else
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result,
+                                exceptionMessage: verifyRecordResult.Exception.Message,
+                                replaceExceptionMessage: true);
+                        }
+                    }
+                    else
+                    {
+                        apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                            verifyRecordResult.MessageId, payload: result);
+                    }
                 }
             }
             else
@@ -168,8 +186,26 @@ namespace Backend.Controllers
                 }
                 else
                 {
-                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        verifyRecordResult.MessageId, payload: result);
+                    if (verifyRecordResult.MessageId == ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        if (verifyRecordResult.Exception == null)
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result);
+                        }
+                        else
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result,
+                                exceptionMessage: verifyRecordResult.Exception.Message,
+                                replaceExceptionMessage: true);
+                        }
+                    }
+                    else
+                    {
+                        apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                            verifyRecordResult.MessageId, payload: result);
+                    }
                 }
             }
             else
@@ -210,8 +246,26 @@ namespace Backend.Controllers
                 }
                 else
                 {
-                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        verifyRecordResult.MessageId, payload: result);
+                    if (verifyRecordResult.MessageId == ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        if (verifyRecordResult.Exception == null)
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result);
+                        }
+                        else
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result,
+                                exceptionMessage: verifyRecordResult.Exception.Message,
+                                replaceExceptionMessage: true);
+                        }
+                    }
+                    else
+                    {
+                        apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                            verifyRecordResult.MessageId, payload: result);
+                    }
                 }
             }
             else

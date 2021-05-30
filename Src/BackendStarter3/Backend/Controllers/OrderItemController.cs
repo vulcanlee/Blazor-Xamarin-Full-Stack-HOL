@@ -71,8 +71,26 @@ namespace Backend.Controllers
                 }
                 else
                 {
-                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        verifyRecordResult.MessageId, payload: result);
+                    if (verifyRecordResult.MessageId == ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        if (verifyRecordResult.Exception == null)
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result);
+                        }
+                        else
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result,
+                                exceptionMessage: verifyRecordResult.Exception.Message,
+                                replaceExceptionMessage: true);
+                        }
+                    }
+                    else
+                    {
+                        apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                            verifyRecordResult.MessageId, payload: result);
+                    }
                 }
             }
             else
@@ -190,8 +208,26 @@ namespace Backend.Controllers
                 }
                 else
                 {
-                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        verifyRecordResult.MessageId, payload: result);
+                    if (verifyRecordResult.MessageId == ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        if (verifyRecordResult.Exception == null)
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result);
+                        }
+                        else
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result,
+                                exceptionMessage: verifyRecordResult.Exception.Message,
+                                replaceExceptionMessage: true);
+                        }
+                    }
+                    else
+                    {
+                        apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                            verifyRecordResult.MessageId, payload: result);
+                    }
                 }
             }
             else
@@ -232,8 +268,26 @@ namespace Backend.Controllers
                 }
                 else
                 {
-                    apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
-                        verifyRecordResult.MessageId, payload: result);
+                    if (verifyRecordResult.MessageId == ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        if (verifyRecordResult.Exception == null)
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result);
+                        }
+                        else
+                        {
+                            apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                                verifyRecordResult.Message, payload: result,
+                                exceptionMessage: verifyRecordResult.Exception.Message,
+                                replaceExceptionMessage: true);
+                        }
+                    }
+                    else
+                    {
+                        apiResult = APIResultFactory.Build(false, StatusCodes.Status200OK,
+                            verifyRecordResult.MessageId, payload: result);
+                    }
                 }
             }
             else
