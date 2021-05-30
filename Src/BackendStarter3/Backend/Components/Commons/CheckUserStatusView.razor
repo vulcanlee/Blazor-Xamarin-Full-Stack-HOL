@@ -6,15 +6,20 @@
 @inject IMyUserService MyUserService
 @inject NavigationManager NavigationManager
 @inject IConfiguration Configuration
+@using Prism.Events
+@inject IEventAggregator EventAggregator
 @implements IDisposable
+
+<ToastView />
+
 @*<button @onclick="click">Send</button>*@
-<SfToast @ref="ToastObj"
+@*<SfToast @ref="ToastObj"
          Timeout="5000">
     <ToastPosition X="Right" Y="Top"></ToastPosition>
-</SfToast>
-         @*Title="@ToastModel.Title" Content="@ToastModel.Content"*@
+</SfToast>*@
+@*Title="@ToastModel.Title" Content="@ToastModel.Content"*@
 
-<style>
+@*<style>
     /* To change background color */
     .e-toast-container .e-toast {
         background-color: orange;
@@ -33,11 +38,11 @@
             font-size: 13px;
             font-weight: normal;
         }
-</style>
+</style>*@
 
 @code {
     SfToast ToastObj;
-    public ToastModel ToastModel { get; set; } = new ToastModel();
+    public ToastMessageModel ToastModel { get; set; } = new ToastMessageModel();
     Task CheckUserTask;
     CancellationTokenSource cts;
     ClaimsPrincipal user;
@@ -47,10 +52,20 @@
     {
         ToastModel.Title = "重要通知~~";
         ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出~~";
-        ToastObj.Title = ToastModel.Title;
-        ToastObj.Content = ToastModel.Content;
-        await Task.Delay(100);
-        await ToastObj.Show();
+        EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+        {
+            Title = "重要通知",
+            Content = "使用者已經被停用，5秒鐘後，將會強制登出",
+            Timeout = 5000,
+        });
+
+
+        //ToastModel.Title = "重要通知~~";
+        //ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出~~";
+        //ToastObj.Title = ToastModel.Title;
+        //ToastObj.Content = ToastModel.Content;
+        //await Task.Delay(100);
+        //await ToastObj.Show();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -77,9 +92,15 @@
                                 {
                                     ToastModel.Title = "重要通知";
                                     ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出";
-                                    ToastObj.Title = ToastModel.Title;
-                                    ToastObj.Content = ToastModel.Content;
-                                    await ToastObj.Show();
+                                    EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+                                    {
+                                        Title = "重要通知",
+                                        Content = "使用者已經被停用，5秒鐘後，將會強制登出",
+                                        Timeout = 5000,
+                                    });
+                                    //ToastObj.Title = ToastModel.Title;
+                                    //ToastObj.Content = ToastModel.Content;
+                                    //await ToastObj.Show();
                                     await Task.Delay(5000);
                                     NavigationManager.NavigateTo("/Logout", true);
                                     IsRunning = false;

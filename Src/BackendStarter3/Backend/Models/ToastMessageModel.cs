@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class ToastModel
+    public class ToastMessageModel
     {
         public string Title { get; set; } = "";
         public string Content { get; set; } = "";

@@ -1,0 +1,69 @@
+﻿@using Syncfusion.Blazor.Notifications
+@using System.Threading
+@using Prism.Events
+@implements IDisposable
+@inject IEventAggregator EventAggregator
+
+@*<button @onclick="click">Send</button>*@
+<SfToast @ref="ToastObj"
+         Timeout="5000">
+    <ToastPosition X="Right" Y="Top"></ToastPosition>
+</SfToast>
+@*Title="@ToastModel.Title" Content="@ToastModel.Content"*@
+
+<style>
+    /* To change background color */
+    .e-toast-container .e-toast {
+        background-color: dodgerblue;
+    }
+
+        /* To change color, font family and font size */
+        .e-toast-container .e-toast .e-toast-message .e-toast-title {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* To change color, font family and font size */
+        .e-toast-container .e-toast .e-toast-message .e-toast-content {
+            color: white;
+            font-size: 13px;
+            font-weight: normal;
+        }
+</style>
+
+@code {
+    SfToast ToastObj;
+    public ToastMessageModel ToastModel { get; set; } = new ToastMessageModel();
+    SubscriptionToken SubscriptionToken;
+
+    async Task click()
+    {
+        ToastModel.Title = "重要通知~~";
+        ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出~~";
+        ToastObj.Title = ToastModel.Title;
+        ToastObj.Content = ToastModel.Content;
+        await ToastObj.Show();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SubscriptionToken= EventAggregator.GetEvent<ToastEvent>().Subscribe(async x =>
+            {
+                ToastObj.Title = x.Title;
+                ToastObj.Content = x.Content;
+                ToastObj.Timeout = x.Timeout;
+                await ToastObj.Show();
+            });
+        }
+    }
+    public void Dispose()
+    {
+        if(SubscriptionToken!=null)
+        {
+            EventAggregator.GetEvent<ToastEvent>().Unsubscribe(SubscriptionToken);
+        }
+    }
+}
