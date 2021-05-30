@@ -49,12 +49,12 @@
                         var currentRec = (context as MenuDataAdapterModel);
                         if (currentRec.Enable == true)
                         {
-                            <span class="mdi mdi-24px mdi-play-circle mx-2 text-success"
+                            <span class="mdi mdi-24px mdi-play-circle mx-2 text-success cursor-pointer"
                                   @onclick="x=>ViewModel.DisableIt(currentRec)" />
                         }
                         else
                         {
-                            <span class="mdi mdi-24px mdi-stop-circle mx-2 text-danger"
+                            <span class="mdi mdi-24px mdi-stop-circle mx-2 text-danger cursor-pointer"
                                   @onclick="x=>ViewModel.EnableIt(currentRec)" />
                         }
                     }
