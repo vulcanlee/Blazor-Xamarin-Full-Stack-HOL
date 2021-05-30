@@ -9,5 +9,7 @@ namespace Backend.Models
     {
         public string Title { get; set; } = "";
         public string Content { get; set; } = "";
+        public int Timeout { get; set; } = 5000;
+        public string Color { get; set; } = "dodgerblue";
     }
 }

@@ -3,10 +3,10 @@
 @using Prism.Events
 @implements IDisposable
 @inject IEventAggregator EventAggregator
-
 @*<button @onclick="click">Send</button>*@
 <SfToast @ref="ToastObj"
-         Timeout="5000">
+         Title="@ToastModel.Title" Content="@ToastModel.Content"
+         Timeout="@ToastModel.Timeout">
     <ToastPosition X="Right" Y="Top"></ToastPosition>
 </SfToast>
 @*Title="@ToastModel.Title" Content="@ToastModel.Content"*@
@@ -14,7 +14,7 @@
 <style>
     /* To change background color */
     .e-toast-container .e-toast {
-        background-color: dodgerblue;
+        background-color: @ToastModel.Color;
     }
 
         /* To change color, font family and font size */
@@ -50,18 +50,24 @@
     {
         if (firstRender)
         {
-            SubscriptionToken= EventAggregator.GetEvent<ToastEvent>().Subscribe(async x =>
-            {
-                ToastObj.Title = x.Title;
-                ToastObj.Content = x.Content;
-                ToastObj.Timeout = x.Timeout;
-                await ToastObj.Show();
-            });
+            SubscriptionToken = EventAggregator.GetEvent<ToastEvent>().Subscribe(async x =>
+             {
+                 ToastModel.Title = x.Title;
+                 ToastModel.Content = x.Content;
+                 ToastModel.Timeout = x.Timeout;
+                 ToastModel.Color = x.Color;
+             //ToastObj.Title = x.Title;
+             //ToastObj.Content = x.Content;
+             //ToastObj.Timeout = x.Timeout;
+
+             await InvokeAsync(() => StateHasChanged());
+                 await ToastObj.Show();
+             });
         }
     }
     public void Dispose()
     {
-        if(SubscriptionToken!=null)
+        if (SubscriptionToken != null)
         {
             EventAggregator.GetEvent<ToastEvent>().Unsubscribe(SubscriptionToken);
         }

@@ -167,6 +167,13 @@ namespace Backend.ViewModels
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {
+                TranscationResultHelper.CheckDatabaseResult(MessageBox, new VerifyRecordResult()
+                {
+                    Message = "異常訊息 異常訊息 異常訊息 異常訊息 異常訊息 異常訊息 異常訊息 異常訊息 異常訊息 ",
+                    Exception = new System.Exception("例外異常已經發生了例外異常已經發生了例外異常已經發生了例外異常已經發生了"),
+                    Success = false,
+                    MessageId = ShareDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息,
+                });
                 dataGrid.RefreshGrid();
             }
         }

@@ -1,8 +1,10 @@
-﻿using Backend.ViewModels;
+﻿using Backend.Events;
+using Backend.ViewModels;
 using Prism.Events;
 using ShareDomain.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +39,14 @@ namespace Backend.Helpers
                         message = $"{verifyRecordResult.Message}，例外異常:{verifyRecordResult.Exception.Message}";
                     }
                     messageBox.Show("400px", "200px", "發生例外異常", message);
+                    EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+                    {
+                        Title = "重要通知",
+                        Content = "系統發生例外異常，請查詢系統日誌系統來查看發生原因",
+                        Timeout = 7000,
+                        Color = "Red",
+                    });
+
                 }
             }
             await Task.Yield();

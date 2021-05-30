@@ -13,8 +13,9 @@ namespace Backend.Events
 
     public class ToastPayload
     {
-        public string Title { get; set; }
-        public string Content { get; set; }
-        public int Timeout { get; set; }
+        public string Title { get; set; } = "";
+        public string Content { get; set; } = "";
+        public int Timeout { get; set; } = 3000;
+        public string Color { get; set; } = "dodgerblue";
     }
 }
