@@ -1,0 +1,243 @@
+﻿@using Microsoft.Extensions.Configuration;
+@using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks
+@using System.Threading
+@using System.Diagnostics
+
+@inject DatabaseInitService DatabaseInitService
+@inject BackendDBContext context
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWebHostEnvironment env
+@inject IConfiguration configuration
+@inject IJSRuntime JSRuntime
+
+@implements IDisposable
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@using Syncfusion.Blazor.Spinner
+
+<h1>Hello 你好, 超全端程式設計 Blazor 專案範本!</h1>
+
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <span class="h2">專案版本資訊</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="h1">
+            @versionNumber
+        </div>
+        <div class="h3">
+            @env.EnvironmentName
+        </div>
+        <div class="h3">
+            緊急除錯狀態 : @EmergenceDebugMessage
+        </div>
+        <div class="h3">
+            <a href="/swagger/index.html" target="_blank">Web API</a>
+        </div>
+        <div class="h3">
+            <div>
+                系統開發者帳密 : god / @rawPassword
+            </div>
+            <div>
+                管理者帳密 : admin / 123
+            </div>
+            <div>
+                一般使用者帳密 : user1~4 / 123
+            </div>
+        </div>
+    </article>
+</div>
+
+@if (env.IsProduction() == false)
+{
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <span class="h2">資料庫初始化</span>
+        </div>
+        <article class="card-body bg-light">
+            <div>
+                <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
+            </div>
+        </article>
+    </div>
+}
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <span class="h2">使用者認證資訊</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <div>@authMessage</div>
+            <div>@userId</div>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <span class="h2">瀏覽器與伺服器 RTT 延遲量測</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <div>@latency ms</div>
+            <div>
+                <button class="btn btn-dark"
+                        @onclick="MeasureRTT">
+                    開始量測
+                </button>
+                <button class="btn btn-dark"
+                        @onclick="StopMeasureRTT">
+                    結束量測
+                </button>
+            </div>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-warning text-white">
+        <span class="h2">Material Deisgn Icon</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="text-md-left">
+            <a href="https://materialdesignicons.com/" target="_blank"> Material Deisgn Icon </a>
+            <span>        使用範例    </span>
+        </div>
+        <div>
+            <span class="mdi mdi-coffee"></span>
+            <span class="mdi mdi-48px mdi-coffee"></span>
+            <span class="mdi mdi-48px mdi-spin mdi-coffee"></span>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <span class="h2">測試強制拋出例外異常</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <button class="btn btn-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</button>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+        <span class="h2">專案原始碼</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="mb-4">
+            <a href="https://github.com/vulcanlee/Blazor-Xamarin-Full-Stack-HOL/" target="_blank"> Blazor 超全端程式設計專案原始碼 </a>
+        </div>
+        <div class="mb-4">
+            <a href="https://csharpkh.blogspot.com/" target="_blank"> 更多部落格文章 </a>
+        </div>
+        <div class="mb-4">
+            <a href="https://www.facebook.com/vulcanlabtw" target="_blank"> 歡迎加入 Xamarin Blazor 實驗室 粉絲團 </a>
+        </div>
+        <div class="">
+            <a href="https://www.facebook.com/groups/201660094303797" target="_blank"> 歡迎加入 Xamarin Blazor 討論社團 </a>
+        </div>
+    </article>
+</div>
+
+<div id="container">
+    <SfSpinner @bind-Visible="@VisibleProperty">
+    </SfSpinner>
+</div>
+
+
+@code {
+    private bool VisibleProperty { get; set; } = false;
+    string authMessage = "";
+    string userId = "";
+    string versionNumber = "";
+    string EmergenceDebugMessage = "";
+    long latency = 0;
+    CancellationTokenSource cts;
+    string rawPassword;
+
+    protected override async Task OnInitializedAsync()
+    {
+        rawPassword = configuration["AdministratorPassword"];
+        cts = new CancellationTokenSource();
+        bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
+        EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
+        Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+        versionNumber = version.ToString();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            authMessage = $"現在登入的使用者為 {user.Identity.Name}";
+            IEnumerable<Claim> _claims = user.Claims;
+            userId =
+            $"該使用者在資料庫內的 Id 為: {user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value}";
+        }
+        else
+        {
+            authMessage = "沒有任何使用者登入";
+            userId = "";
+        }
+
+        #region 測試緊急除錯功能
+        if (EmergenceDebugStatus == true)
+        {
+            var users = await context.MyUser.ToListAsync();
+        }
+        #endregion
+    }
+    public async Task Init()
+    {
+        this.VisibleProperty = true;
+        await DatabaseInitService.InitDataAsync();
+        this.VisibleProperty = false;
+    }
+    void StopMeasureRTT()
+    {
+        latency = 0;
+        cts.Cancel();
+    }
+    void MeasureRTT()
+    {
+        var stopwatch = new Stopwatch();
+        cts = new CancellationTokenSource();
+        Task.Run(async () =>
+        {
+            while (cts.Token.IsCancellationRequested == false)
+            {
+                stopwatch.Restart();
+                try
+                {
+                    latency = 0;
+                    await JSRuntime.InvokeVoidAsync("ping");
+                    latency = stopwatch.ElapsedMilliseconds;
+                }
+                catch (Exception)
+                {
+                }
+
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
+                try
+                {
+                    await Task.Delay(1000, cts.Token);
+                }
+                catch { break; }
+            }
+        });
+    }
+    void IDisposable.Dispose()
+    {
+        cts.Cancel();
+    }
+}
