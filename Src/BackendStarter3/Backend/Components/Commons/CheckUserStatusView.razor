@@ -14,6 +14,27 @@
     <ToastPosition X="Right" Y="Top"></ToastPosition>
 </SfToast>
 
+<style>
+    /* To change background color */
+    .e-toast-container .e-toast {
+        background-color: red;
+    }
+
+        /* To change color, font family and font size */
+        .e-toast-container .e-toast .e-toast-message .e-toast-title {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* To change color, font family and font size */
+        .e-toast-container .e-toast .e-toast-message .e-toast-content {
+            color: white;
+            font-size: 13px;
+            font-weight: normal;
+        }
+</style>
+
 @code {
     SfToast ToastObj;
     public string ToastTitle { get; set; }
