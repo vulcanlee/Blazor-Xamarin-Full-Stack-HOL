@@ -1,0 +1,44 @@
+﻿@using Syncfusion.Blazor.Notifications
+@using System.Threading;
+@using System.Security.Claims
+@using Microsoft.Extensions.Configuration
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IMyUserService MyUserService
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+@using Prism.Events
+@inject IEventAggregator EventAggregator
+@implements IDisposable
+
+<ToastView />
+
+@code {
+    public ToastMessageModel ToastModel { get; set; } = new ToastMessageModel();
+    ClaimsPrincipal user;
+    bool IsRunning = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = authState.User;
+            if (user.Identity.IsAuthenticated == false)
+            {
+                await Task.Delay(500);
+                EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+                {
+                    Title = "通知",
+                    Content = "使用者尚未登入，即將導入登入頁面",
+                    Timeout = 3000,
+
+                });
+                await Task.Delay(3000);
+                NavigationManager.NavigateTo("/Logout", true);
+            }
+        }
+    }
+    public void Dispose()
+    {
+    }
+}
