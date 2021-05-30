@@ -38,7 +38,7 @@ namespace Backend.Services
             DataRequestResult<MyUserAdapterModel> result = new DataRequestResult<MyUserAdapterModel>();
             var DataSource = context.MyUser
                 .Include(x => x.MenuRole)
-                .ThenInclude(x=>x.MenuData)
+                .ThenInclude(x => x.MenuData)
                 .AsNoTracking();
 
             #region 進行搜尋動作
@@ -195,17 +195,52 @@ namespace Backend.Services
         {
             var searchItem = await context.MyUser
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Account == paraObject.Account &&
-                x.Id != paraObject.Id);
+                .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem != null)
+            {
+                if (searchItem.Account.ToLower() == MagicHelper.開發者帳號 &&
+                    paraObject.Account.ToLower() != MagicHelper.開發者帳號)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
+                }
+            }
+            else
+            {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
+            }
+
+            searchItem = await context.MyUser
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.Account == paraObject.Account &&
+               x.Id != paraObject.Id);
             if (searchItem != null)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要修改的紀錄已經存在無法修改);
             }
+
             return VerifyRecordResultFactory.Build(true);
         }
-        public Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
         {
-            return Task.FromResult(VerifyRecordResultFactory.Build(true));
+            var searchItem = await context.MyUser
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem != null)
+            {
+                if (searchItem.Account.ToLower() == MagicHelper.開發者帳號)
+                {
+                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被刪除);
+                }
+            }
+            else
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+            }
+            if (searchItem.Account.ToLower() == MagicHelper.開發者帳號)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
+            }
+            return VerifyRecordResultFactory.Build(true);
         }
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {

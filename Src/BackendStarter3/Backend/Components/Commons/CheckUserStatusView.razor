@@ -70,16 +70,19 @@
                         {
                             var userId = Convert.ToInt32(user.FindFirst(ClaimTypes.Sid)?.Value);
                             var myUser = await MyUserService.GetAsync(userId);
-                            if (myUser.Status == false)
+                            if (myUser.Account.ToLower() != MagicHelper.開發者帳號)
                             {
-                                ToastTitle = "重要通知";
-                                ToastContent = "使用者已經被停用，5秒鐘後，將會強制登出";
-                                await Task.Delay(500);
-                                await ToastObj.Show();
-                                await Task.Delay(5000);
-                                NavigationManager.NavigateTo("/Logout", true);
-                                IsRunning = false;
-                                continue;
+                                if (myUser.Status == false)
+                                {
+                                    ToastTitle = "重要通知";
+                                    ToastContent = "使用者已經被停用，5秒鐘後，將會強制登出";
+                                    await Task.Delay(500);
+                                    await ToastObj.Show();
+                                    await Task.Delay(5000);
+                                    NavigationManager.NavigateTo("/Logout", true);
+                                    IsRunning = false;
+                                    continue;
+                                }
                             }
                             await Task.Delay(CheckUserStateInterval, cts.Token);
                         }

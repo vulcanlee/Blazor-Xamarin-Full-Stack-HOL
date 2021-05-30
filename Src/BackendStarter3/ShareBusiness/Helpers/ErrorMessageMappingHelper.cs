@@ -37,6 +37,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.無法新增紀錄, "無法新增紀錄");
             ErrorMessages.Add(ErrorMessageEnum.無法修改紀錄, "無法修改紀錄");
             ErrorMessages.Add(ErrorMessageEnum.無法刪除紀錄, "無法刪除紀錄");
+            ErrorMessages.Add(ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上, "無法刪除紀錄，要刪除的紀錄已經不存在資料庫上");
             ErrorMessages.Add(ErrorMessageEnum.使用者需要強制登出並重新登入以便進行身分驗證, "系統存取政策違反，使用者需要強制登出，並重新登入，以便進行身分驗證");
             ErrorMessages.Add(ErrorMessageEnum.原有密碼不正確, "原有密碼不正確");
             ErrorMessages.Add(ErrorMessageEnum.密碼不能為空白, "密碼不能為空白");
@@ -61,6 +62,8 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.舊密碼不正確, "舊密碼不正確");
             ErrorMessages.Add(ErrorMessageEnum.新密碼須和舊密碼不同, "新密碼須和舊密碼不同");
             ErrorMessages.Add(ErrorMessageEnum.密碼已經變更成功, "密碼已經變更成功");
+            ErrorMessages.Add(ErrorMessageEnum.開發者帳號不可以被修改, "開發者帳號不可以被修改");
+            ErrorMessages.Add(ErrorMessageEnum.開發者帳號不可以被刪除, "開發者帳號不可以被刪除");
             ErrorMessages.Add(ErrorMessageEnum.使用者不存在, "使用者不存在");
             ErrorMessages.Add(ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中, "該紀錄無法刪除，因為有其他資料表在使用中");
             ErrorMessages.Add(ErrorMessageEnum.尚未輸入該訂單要用到的產品, "尚未輸入該訂單要用到的產品");

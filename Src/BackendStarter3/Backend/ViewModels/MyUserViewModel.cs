@@ -264,6 +264,12 @@ namespace Backend.ViewModels
         #region 啟用/停用
         public async Task DisableIt(MyUserAdapterModel item)
         {
+            if(item.Account.ToLower() == MagicHelper.開發者帳號)
+            {
+                MessageBox.Show("400px", "200px", "警告",
+                    "開發者帳號不可以被停用");
+                return;
+            }
             await CurrentService.DisableIt(item);
             dataGrid.RefreshGrid();
         }
