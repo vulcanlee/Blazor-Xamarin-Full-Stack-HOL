@@ -8,6 +8,7 @@ namespace Backend.Models
     public class LogCategories
     {
         public static string User { get; set; } = "使用者";
+        public static string Initialization { get; set; } = "資料庫重建";
         public static string Ohter { get; set; } = "其他";
     }
 }

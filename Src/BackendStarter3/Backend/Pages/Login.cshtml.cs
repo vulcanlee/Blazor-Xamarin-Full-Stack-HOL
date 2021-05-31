@@ -70,8 +70,8 @@ namespace Backend.Pages
 
             if (user == null)
             {
-                Msg = $"身分驗證失敗，使用者({Username}不存在 : {message}";
-                await SystemLogHelper.Log(new SystemLogAdapterModel()
+                Msg = $"身分驗證失敗，使用者({Username}不存在 : {message})";
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
                 {
                     Message = Msg,
                     Category = LogCategories.User,
@@ -89,7 +89,7 @@ namespace Backend.Pages
             if (user.Status == false)
             {
                 Msg = $"使用者 {user.Account} 已經被停用，無法登入";
-                await SystemLogHelper.Log(new SystemLogAdapterModel()
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
                 {
                     Message = Msg,
                     Category = LogCategories.User,
@@ -172,7 +172,7 @@ namespace Backend.Pages
             #endregion
 
             Msg = $"使用者 ({Username}) 登入成功";
-            await SystemLogHelper.Log(new SystemLogAdapterModel()
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
             {
                 Message = Msg,
                 Category = LogCategories.User,

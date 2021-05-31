@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 namespace Backend.Services
 {
     using AutoMapper;
+    using Backend.AdapterModels;
     using Backend.Helpers;
+    using Backend.Models;
     using EFCore.BulkExtensions;
     using Entities.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
@@ -21,14 +24,19 @@ namespace Backend.Services
         public IMapper Mapper { get; }
         public IConfiguration Configuration { get; }
         public ILogger<DatabaseInitService> Logger { get; }
+        public IHttpContextAccessor HttpContextAccessor { get; }
+        public SystemLogHelper SystemLogHelper { get; }
 
         public DatabaseInitService(BackendDBContext context, IMapper mapper,
-            IConfiguration configuration, ILogger<DatabaseInitService> logger)
+            IConfiguration configuration, ILogger<DatabaseInitService> logger,
+            IHttpContextAccessor httpContextAccessor, SystemLogHelper systemLogHelper)
         {
             this.context = context;
             Mapper = mapper;
             Configuration = configuration;
             Logger = logger;
+            HttpContextAccessor = httpContextAccessor;
+            SystemLogHelper = systemLogHelper;
         }
 
         public async Task InitDataAsync()
@@ -36,22 +44,85 @@ namespace Backend.Services
             Random random = new Random();
 
             #region 適用於 Code First ，刪除資料庫與移除資料庫
-            Logger.LogInformation($"適用於 Code First ，刪除資料庫與移除資料庫");
+            string Msg = "";
+            Msg = $"適用於 Code First ，刪除資料庫與移除資料庫";
+            Logger.LogInformation($"{Msg}");
             await context.Database.EnsureDeletedAsync();
-            Logger.LogInformation($"刪除資料庫");
+            Msg = $"刪除資料庫";
+            Logger.LogInformation($"{Msg}");
             await context.Database.EnsureCreatedAsync();
-            Logger.LogInformation($"建立資料庫");
+            Msg = $"建立資料庫";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            }, () =>
+            {
+                Logger.LogInformation($"{Msg}");
+            });
             #endregion
 
             #region 建立開發環境要用到的測試紀錄
             await 建立功能表角色與項目清單Async();
-            Logger.LogInformation($"建立功能表角色與項目清單");
+            Msg = $"建立功能表角色與項目清單";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            }, () =>
+            {
+                Logger.LogInformation($"{Msg}");
+            });
             await 建立使用者紀錄Async();
-            Logger.LogInformation($"建立使用者紀錄");
+            Msg = $"建立使用者紀錄";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            }, () =>
+            {
+                Logger.LogInformation($"{Msg}");
+            });
             List<Product> products = await 建立產品紀錄Async();
-            Logger.LogInformation($"建立產品紀錄");
+            Msg = $"建立產品紀錄";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            }, () =>
+            {
+                Logger.LogInformation($"{Msg}");
+            });
             await 建立訂單紀錄Async(random, products);
-            Logger.LogInformation($"建立訂單紀錄");
+            Msg = $"建立訂單紀錄";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            }, () =>
+            {
+                Logger.LogInformation($"{Msg}");
+            });
             #endregion
         }
 
@@ -229,7 +300,7 @@ namespace Backend.Services
             #endregion
 
             #region 建立各角色會用到的功能表清單項目
-           
+
             #region 建立系統管理員角色功能表項目清單 
             CleanTrackingHelper.Clean<MenuData>(context);
             int cc = 0;
@@ -422,7 +493,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MenuRole>(context);
             #endregion
             #endregion
-   
+
             #endregion
 
             #endregion

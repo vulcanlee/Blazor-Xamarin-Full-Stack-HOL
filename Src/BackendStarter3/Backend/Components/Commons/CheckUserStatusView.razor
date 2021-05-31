@@ -26,6 +26,7 @@
             user = authState.User;
             if (user.Identity.IsAuthenticated)
             {
+                #region 使用者已經登入了
                 cts = new CancellationTokenSource();
                 CheckUserTask = Task.Run(async () =>
                 {
@@ -49,9 +50,6 @@
                                         Color="Green",
 
                                     });
-                                    //ToastObj.Title = ToastModel.Title;
-                                    //ToastObj.Content = ToastModel.Content;
-                                    //await ToastObj.Show();
                                     await Task.Delay(5000);
                                     NavigationManager.NavigateTo("/Logout", true);
                                     IsRunning = false;
@@ -66,9 +64,21 @@
                         }
                     }
                 });
+                #endregion
             }
             else
             {
+                #region 使用者尚未登入
+                await Task.Delay(1000);
+                EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+                {
+                    Title = "通知",
+                    Content = "使用者尚未登入，即將導入登入頁面",
+                    Timeout = 1500,
+                });
+                await Task.Delay(2000);
+                NavigationManager.NavigateTo("/Logout", true);
+                #endregion
             }
         }
     }

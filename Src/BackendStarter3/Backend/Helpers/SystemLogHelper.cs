@@ -26,7 +26,7 @@ namespace Backend.Helpers
             Mapper = mapper;
         }
 
-        public async Task Log(SystemLogAdapterModel systemLogAdapterModel, Action action)
+        public async Task LogAsync(SystemLogAdapterModel systemLogAdapterModel, Action action)
         {
             action?.Invoke();
             await SystemLogService.AddAsync(systemLogAdapterModel);
