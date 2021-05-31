@@ -4,10 +4,6 @@
 
 [https://backendhol.azurewebsites.net/](https://backendhol.azurewebsites.net/)
 
-## 螢幕截圖
-
-![image](https://user-images.githubusercontent.com/5071744/120072823-36c7fb80-c0c8-11eb-8112-70f1ebde10c5.png)
-
 ## 主要特色
 
 * 提供 Cookie & Jwt 的身分認證與授權
@@ -24,3 +20,22 @@
 
   > 一旦發生例外異常，可以按下 F12 來查看當時發生的例外異常
 * 
+
+## 螢幕截圖
+
+![超全端程式設計樣板 首頁 電腦版](Features/Images/z999.png)
+
+![超全端程式設計樣板 紀錄瀏覽 電腦版](Features/Images/z998.png)
+
+![超全端程式設計樣板 紀錄修改 電腦版](Features/Images/z997.png)
+
+![超全端程式設計樣板 登入 電腦版](Features/Images/z996.png)
+
+![超全端程式設計樣板 首頁 手機板](Features/Images/z995.png)
+
+![超全端程式設計樣板 紀錄瀏覽 手機板](Features/Images/z994.png)
+
+![超全端程式設計樣板 紀錄修改 手機板](Features/Images/z993.png)
+
+![超全端程式設計樣板 登入 手機板](Features/Images/z992.png)
+
