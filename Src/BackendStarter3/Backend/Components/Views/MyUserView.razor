@@ -37,8 +37,13 @@
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(MyUserAdapterModel.Account) HeaderText="帳號" Width="100" />
-            <GridColumn Field=@nameof(MyUserAdapterModel.Name) HeaderText="名稱"
+            <GridColumn Field=@nameof(MyUserAdapterModel.Account)
+                        HeaderText="帳號" Width="100" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.Name)
+                        HeaderText="名稱"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(MyUserAdapterModel.MenuRoleName)
+                        HeaderText="功能表角色"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(MyUserAdapterModel.Status)
                         HeaderText="啟用" Width="70">
@@ -58,7 +63,6 @@
                     }
                 </Template>
             </GridColumn>
-            <GridColumn Field=@nameof(MyUserAdapterModel.MenuRoleName) HeaderText="功能表角色" />
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()

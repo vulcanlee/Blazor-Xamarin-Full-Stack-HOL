@@ -38,7 +38,8 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(MenuRoleAdapterModel.Name) HeaderText="名稱" />
-            <GridColumn Field=@nameof(MenuRoleAdapterModel.Remark) HeaderText="備註" />
+            <GridColumn Field=@nameof(MenuRoleAdapterModel.Remark) HeaderText="備註"
+                        HideAtMedia="(min-width: 640px)" />
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()

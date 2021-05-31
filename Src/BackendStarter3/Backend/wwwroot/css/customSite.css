@@ -78,6 +78,9 @@
 ﻿.message-box-width {
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
 
 @media (max-width: 640px) {
     .confirm-box-width {
