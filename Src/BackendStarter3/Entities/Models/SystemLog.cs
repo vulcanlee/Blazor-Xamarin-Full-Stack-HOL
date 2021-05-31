@@ -12,6 +12,7 @@ namespace Entities.Models
         public string LogLevel { get; set; }
         public string Message { get; set; }
         public string Content { get; set; }
+        public string IP { get; set; }
         public DateTime Updatetime { get; set; }
     }
 }

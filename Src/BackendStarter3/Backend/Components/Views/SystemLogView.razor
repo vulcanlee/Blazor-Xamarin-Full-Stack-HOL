@@ -5,6 +5,7 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Calendars
 
 @inject SystemLogViewModel RazorModel
 @implements IRazorPage
@@ -44,21 +45,24 @@
             <GridColumn Field=@nameof(SystemLogAdapterModel.LogLevel)
                         HeaderText="日誌等級"
                         HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(SystemLogAdapterModel.IP)
+                        HeaderText="IP"
+                        HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(SystemLogAdapterModel.Updatetime)
-                        HeaderText="時間" Format="yyyyMMdd HHmmss"/>
+                        HeaderText="時間" Format="yyyyMMdd HHmmss" />
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
-                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
-                                                   { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdRead})" />
+                    @*<GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />*@
                 </GridCommandColumns>
             </GridColumn>
         </GridColumns>
     </SfGrid>
 </div>
 
-@*<SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
+<SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
           Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@RazorModel.EditRecordDialogTitle</Header>
@@ -71,29 +75,56 @@
                 <div>
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">名稱</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Name"
-                                       Placeholder="請輸入商品名稱" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Name)" />
+                            <label class="control-label">分類</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Category"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Category)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">年份</label>
-                            <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.ModelYear"
-                                              Placeholder="請輸入大於0的整數數值" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.ModelYear)" />
+                            <label class="control-label">日誌等級</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.LogLevel"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.LogLevel)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">售價</label>
-                            <SfNumericTextBox @bind-Value="RazorModel.CurrentRecord.ListPrice"
-                                              Placeholder="請輸入大於0的整數數值"
-                                              Format="#####.##" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.ListPrice)" />
+                            <label class="control-label">訊息</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Message"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Message)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">其他內容</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Content"
+                                       Readonly="true" Multiline="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Content)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">使用者 IP</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.IP"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.IP)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">紀錄時間</label>
+                            <SfDateTimePicker @bind-Value="RazorModel.CurrentRecord.Updatetime"
+                                              Format="yyyyMMdd HHmmss"
+                                              Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Updatetime)" />
                         </div>
                     </div>
 
@@ -102,13 +133,12 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button type="submit" class="btn btn-primary" @onclick="RazorModel.OnRecordEditConfirm">儲存</button>
-                <button class="btn btn-secondary" @onclick="RazorModel.OnRecordEditCancel">取消</button>
+                <button class="btn btn-secondary" @onclick="RazorModel.OnRecordEditCancel">關閉</button>
             </div>
         </FooterTemplate>
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
-</SfDialog>*@
+</SfDialog>
 
 <MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
             IsVisible="@RazorModel.MessageBox.IsVisible"

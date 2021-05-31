@@ -1,7 +1,10 @@
 using Backend.AdapterModels;
+using Backend.Helpers;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -21,7 +24,8 @@ namespace Backend.Pages
         private readonly IMyUserService myUserService;
         private readonly ILogger<LoginModel> logger;
 
-        public LoginModel(IMyUserService myUserService, ILogger<LoginModel> logger)
+        public LoginModel(IMyUserService myUserService, ILogger<LoginModel> logger,
+            SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor)
         {
 #if DEBUG
             Username = "god";
@@ -30,6 +34,8 @@ namespace Backend.Pages
 #endif
             this.myUserService = myUserService;
             this.logger = logger;
+            SystemLogHelper = systemLogHelper;
+            HttpContextAccessor = httpContextAccessor;
         }
         [BindProperty]
         public string Username { get; set; } = "";
@@ -50,11 +56,13 @@ namespace Backend.Pages
                 await HttpContext
                     .SignOutAsync(
                     MagicHelper.CookieAuthenticationScheme);
-                logger.LogInformation("使用者登出");
             }
             catch { }
         }
         public string ReturnUrl { get; set; }
+        public SystemLogHelper SystemLogHelper { get; }
+        public IHttpContextAccessor HttpContextAccessor { get; }
+
         public async Task<IActionResult> OnPostAsync()
         {
             (MyUserAdapterModel user, string message) =
@@ -62,15 +70,37 @@ namespace Backend.Pages
 
             if (user == null)
             {
-                Msg = message;
-                logger.LogInformation($"使用者 ({Username} / {Password}) 登入失敗");
+                Msg = $"身分驗證失敗，使用者({Username}不存在 : {message}";
+                await SystemLogHelper.Log(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.User,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                }, () =>
+                {
+                    logger.LogInformation("使用者登出");
+                });
                 return Page();
             }
 
             if (user.Status == false)
             {
-                Msg = $"使用者 {user.Account} 已經被停用";
-                logger.LogInformation($"{Msg}");
+                Msg = $"使用者 {user.Account} 已經被停用，無法登入";
+                await SystemLogHelper.Log(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.User,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                }, () =>
+                {
+                    logger.LogInformation($"{Msg}");
+                });
                 return Page();
             }
 
@@ -141,7 +171,19 @@ namespace Backend.Pages
             }
             #endregion
 
-            logger.LogInformation($"使用者 ({Username}) 登入成功");
+            Msg = $"使用者 ({Username}) 登入成功";
+            await SystemLogHelper.Log(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.User,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            }, () =>
+            {
+                logger.LogInformation($"{Msg}");
+            });
             return LocalRedirect(returnUrl);
             return Page();
         }

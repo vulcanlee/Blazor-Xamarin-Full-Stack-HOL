@@ -20,6 +20,8 @@ namespace ShareBusiness.Helpers
         public static string ButtonNameEdit => "修改";
         public static string ButtonIdDelete => "mdi mdi-delete-forever e-danger";
         public static string ButtonNameDelete => "刪除";
+        public static string ButtonIdRead => "mdi mdi-book-open-variant";
+        public static string ButtonNameRead => "查看";
         public static string ButtonIdShowDetailOfMaster => "mdi mdi-table-large";
         public static string ButtonNameShowDetailOfMaster => "明細";
     }

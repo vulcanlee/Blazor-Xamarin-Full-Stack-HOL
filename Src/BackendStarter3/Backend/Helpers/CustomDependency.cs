@@ -37,6 +37,8 @@ namespace Backend.Helpers
 
             #region 其他服務註冊
             services.AddTransient<TranscationResultHelper>();
+            services.AddTransient<SystemLogHelper>();
+            services.AddScoped<BlazorAppContext>();
             services.AddScoped<IEventAggregator, EventAggregator>();
             #endregion
             return services;

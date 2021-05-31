@@ -176,7 +176,7 @@ namespace Backend.ViewModels
         public async Task OnCommandClicked(CommandClickEventArgs<SystemLogAdapterModel> args)
         {
             SystemLogAdapterModel item = args.RowData as SystemLogAdapterModel;
-            if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
+            if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdRead)
             {
                 #region 點選 修改紀錄 按鈕
                 CurrentRecord = item.Clone();

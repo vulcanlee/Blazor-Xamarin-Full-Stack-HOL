@@ -10,6 +10,7 @@
 @inject IWebHostEnvironment env
 @inject IConfiguration configuration
 @inject IJSRuntime JSRuntime
+@inject BlazorAppContext BlazorAppContext
 
 @implements IDisposable
 
@@ -27,6 +28,9 @@
     <article class="card-body bg-light">
         <div class="h1">
             @versionNumber
+        </div>
+        <div class="h3">
+            來源 IP : <span>@IP</span>
         </div>
         <div class="h3">
             @env.EnvironmentName
@@ -161,9 +165,11 @@
     long latency = 0;
     CancellationTokenSource cts;
     string rawPassword;
+    string IP;
 
     protected override async Task OnInitializedAsync()
     {
+        IP = BlazorAppContext.CurrentUserIP;
         rawPassword = configuration["AdministratorPassword"];
         cts = new CancellationTokenSource();
         bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);

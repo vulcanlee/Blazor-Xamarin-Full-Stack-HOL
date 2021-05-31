@@ -1,4 +1,5 @@
 using Backend.Helpers;
+using Backend.Middlewares;
 using Backend.Models;
 using Backend.Services;
 using DataTransferObject.DTOs;
@@ -246,6 +247,10 @@ namespace Backend
 
             #region 指定使用授權檢查的中介軟體
             app.UseAuthorization();
+            #endregion
+
+            #region 取得來源 IP
+            app.UseMyMiddleware();
             #endregion
 
             app.UseEndpoints(endpoints =>
