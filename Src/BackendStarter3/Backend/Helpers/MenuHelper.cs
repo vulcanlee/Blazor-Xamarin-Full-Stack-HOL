@@ -111,6 +111,20 @@ namespace Backend.Helpers
                     }
                 };
                 mainMenu.SubMenus.Add(subMenu);
+                subMenu = new SubMenu()
+                {
+                    MenuData = new MenuDataAdapterModel()
+                    {
+                        Name = ShareBusiness.Helpers.MagicHelper.系統日誌功能名稱,
+                        CodeName = "SystemLog",
+                        Enable = true,
+                        Guid = Guid.NewGuid(),
+                        Icon = "mdi-message-processing",
+                        IsGroup = false,
+                        Level = 1,
+                    }
+                };
+                mainMenu.SubMenus.Add(subMenu);
                 #endregion
             }
             #endregion  

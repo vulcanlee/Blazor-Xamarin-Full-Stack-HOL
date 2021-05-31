@@ -10,6 +10,8 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<SystemLog, SystemLogAdapterModel>();
+            CreateMap<SystemLogAdapterModel, SystemLog>();
             CreateMap<MenuRole, MenuRoleAdapterModel>();
             CreateMap<MenuRoleAdapterModel, MenuRole>();
             CreateMap<MenuData, MenuDataAdapterModel>();

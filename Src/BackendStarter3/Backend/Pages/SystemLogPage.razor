@@ -1,0 +1,7 @@
+﻿@page "/SystemLog"
+@attribute [Authorize(Roles = ShareBusiness.Helpers.MagicHelper.開發者的角色聲明)]
+
+<div>
+    <div class="page-title">@ShareBusiness.Helpers.MagicHelper.系統日誌功能名稱</div>
+    <SystemLogView PageSize="@MagicHelper.GridPageSize" />
+</div>

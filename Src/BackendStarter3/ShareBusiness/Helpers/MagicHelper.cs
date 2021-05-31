@@ -33,6 +33,7 @@ namespace ShareBusiness.Helpers
         public static readonly string 登出 = "登出";
         public static readonly string 變更密碼 = "變更密碼";
         public static readonly string 功能表角色功能名稱 = "功能表角色";
+        public static readonly string 系統日誌功能名稱 = "系統日誌";
         public static readonly string 帳號管理功能名稱 = "帳號管理";
         public static readonly string 訂單管理功能名稱 = "訂單管理";
         public static readonly string 訂單明細管理功能名稱 = "訂單明細管理";
