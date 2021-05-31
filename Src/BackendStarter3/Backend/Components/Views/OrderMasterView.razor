@@ -37,14 +37,19 @@
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(OrderMasterAdapterModel.Name) HeaderText="訂單名稱" Width="150" />
-            <GridColumn Field=@nameof(OrderMasterAdapterModel.OrderDate) HeaderText="訂單日期" Format="yyyy-MM-dd"
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.Name) 
+                        HeaderText="訂單名稱" Width="150" />
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.OrderDate) 
+                        HeaderText="訂單日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderMasterAdapterModel.RequiredDate) HeaderText="需求日期" Format="yyyy-MM-dd"
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.RequiredDate) 
+                        HeaderText="需求日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderMasterAdapterModel.ShippedDate) HeaderText="出貨日期" Format="yyyy-MM-dd"
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.ShippedDate) 
+                        HeaderText="出貨日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderMasterAdapterModel.StatusName) HeaderText="狀態" />
+            <GridColumn Field=@nameof(OrderMasterAdapterModel.StatusName) 
+                        HeaderText="狀態" />
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn ButtonOption="@(new CommandButtonOptions()

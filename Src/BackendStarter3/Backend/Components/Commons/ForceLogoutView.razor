@@ -25,15 +25,15 @@
             user = authState.User;
             if (user.Identity.IsAuthenticated == false)
             {
-                await Task.Delay(500);
+                await Task.Delay(1000);
                 EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
                 {
                     Title = "通知",
                     Content = "使用者尚未登入，即將導入登入頁面",
-                    Timeout = 3000,
+                    Timeout = 1500,
 
                 });
-                await Task.Delay(3000);
+                await Task.Delay(2000);
                 NavigationManager.NavigateTo("/Logout", true);
             }
         }

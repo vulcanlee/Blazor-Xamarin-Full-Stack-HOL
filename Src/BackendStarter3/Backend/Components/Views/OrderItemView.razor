@@ -38,12 +38,16 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(OrderItemAdapterModel.Name) HeaderText="名稱" />
-            <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) HeaderText="商品名稱" />
-            <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) HeaderText="數量"
+            <GridColumn Field=@nameof(OrderItemAdapterModel.ProductName) 
+                        HeaderText="商品名稱" />
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Quantity) 
+                        HeaderText="數量"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) HeaderText="折扣"
+            <GridColumn Field=@nameof(OrderItemAdapterModel.Discount) 
+                        HeaderText="折扣"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) HeaderText="售價"
+            <GridColumn Field=@nameof(OrderItemAdapterModel.ListPrice) 
+                        HeaderText="售價"
                          HideAtMedia="(min-width: 640px)"/>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
@@ -79,7 +83,7 @@
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">產品 <span class="mdi mdi-18px mdi-magnify" @onclick="ViewModel.OnOpenPicker"></span></label>
+                            <label class="control-label">產品 <span class="mdi mdi-24px mdi-magnify" @onclick="ViewModel.OnOpenPicker"></span></label>
                             <SfTextBox Value="@ViewModel.CurrentRecord.ProductName" Enabled="false"></SfTextBox>
                         </div>
                     </div>

@@ -36,10 +36,13 @@
                     RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(ProductAdapterModel.Name) HeaderText="名稱" />
-            <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) HeaderText="年份"
+            <GridColumn Field=@nameof(ProductAdapterModel.Name) 
+                        HeaderText="名稱" />
+            <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) 
+                        HeaderText="年份"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) HeaderText="售價"
+            <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) 
+                        HeaderText="售價"
                          HideAtMedia="(min-width: 640px)"/>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
