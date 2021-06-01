@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Backend.Models;
 using EFCore.BulkExtensions;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,9 @@ namespace Backend.Helpers
                 case "使用者":
                     await Import使用者匯入Async();
                     break;
+                case "功能表角色":
+                    await Import功能表角色匯入Async();
+                    break;
                 default:
                     break;
             }
@@ -69,6 +73,8 @@ namespace Backend.Helpers
             workbook = null;
             sheet = null;
         }
+        #region 匯入資料
+        #region 使用者匯入
         public async Task Import使用者匯入Async()
         {
             var total = sheet.Rows.Length;
@@ -135,5 +141,124 @@ namespace Backend.Helpers
 
             await Task.Yield();
         }
+        #endregion
+
+        #region 功能表角色匯入
+        public async Task Import功能表角色匯入Async()
+        {
+            var total = sheet.Rows.Length;
+            ShowStatusHandler?.Invoke($"");
+
+            #region 開始進行 功能表角色
+            List<MenuRole> foundMenuRoleInsert = new List<MenuRole>();
+            List<MenuRole> needMenuRoleInsert = new List<MenuRole>();
+            List<MenuData> needMenuDataInsert = new List<MenuData>();
+            List<MenuRole> needUpdate = new List<MenuRole>();
+
+            var menuRoles = await Context.MenuRole
+                .Include(x => x.MenuData)
+                .ToListAsync();
+
+            CleanTrackingHelper.Clean<MenuRole>(Context);
+            CleanTrackingHelper.Clean<MenuData>(Context);
+            #region 讀取要匯入的資料，轉成中間紀錄
+            List<功能表角色匯入> all功能表角色匯入 = new List<功能表角色匯入>();
+            for (int i = 2; i <= total; i++)
+            {
+                ShowStatusHandler?.Invoke($"匯入 功能表角色 {i} / {total}");
+
+                //角色名稱	名稱	層級	子功能表	排序值	Icon名稱	路由作業	啟用	強制導航
+                //匯入角色	帳號管理	0	0	20	mdi-clipboard-account	MyUser	1	0
+                var item功能表角色匯入 = new 功能表角色匯入();
+                item功能表角色匯入.角色名稱 = sheet[i, 1].Value;
+                item功能表角色匯入.名稱 = sheet[i, 2].Value;
+                item功能表角色匯入.層級 = sheet[i, 3].Value;
+                item功能表角色匯入.子功能表 = sheet[i, 4].Value;
+                item功能表角色匯入.排序值 = sheet[i, 5].Value;
+                item功能表角色匯入.Icon名稱 = sheet[i, 6].Value;
+                item功能表角色匯入.路由作業 = sheet[i, 7].Value;
+                item功能表角色匯入.啟用 = sheet[i, 8].Value;
+                item功能表角色匯入.強制導航 = sheet[i, 9].Value;
+
+                all功能表角色匯入.Add(item功能表角色匯入);
+            }
+            #endregion
+
+            #region 轉換 all功能表角色匯入 成為 MenuData
+            foreach (var item in all功能表角色匯入)
+            {
+                var searchItem = foundMenuRoleInsert.FirstOrDefault(x => x.Name == item.角色名稱);
+                #region 確認與建立 MenuRole
+                if (searchItem == null)
+                {
+                    searchItem = new MenuRole()
+                    {
+                        Name = item.角色名稱,
+                        MenuData = new List<MenuData>(),
+                        Remark = "",
+                    };
+                    foundMenuRoleInsert.Add(searchItem);
+                }
+                #endregion
+
+                #region 建立 MenuData
+                var itemMenuData = new MenuData()
+                {
+                    CodeName = item.路由作業,
+                    Enable = item.啟用 == "1" ? true : false,
+                    ForceLoad = item.強制導航 == "1" ? true : false,
+                    Icon = item.Icon名稱,
+                    IsGroup = item.子功能表 == "1" ? true : false,
+                    Level = Convert.ToInt32(item.層級),
+                    Name = item.名稱,
+                    Sequence = Convert.ToInt32(item.排序值),
+                };
+                searchItem.MenuData.Add(itemMenuData);
+                #endregion
+            }
+            #endregion
+
+            #region 產生要更新資料庫的紀錄
+            //List<MenuRole> needMenuRoleInsert = new List<MenuRole>();
+            //List<MenuData> needMenuDataInsert = new List<MenuData>();
+            CleanTrackingHelper.Clean<MenuRole>(Context);
+            foreach (var item in foundMenuRoleInsert)
+            {
+                var searchItem = await Context.MenuRole
+                    .FirstOrDefaultAsync(x => x.Name == item.Name);
+                if(searchItem==null)
+                {
+                    await Context.AddAsync(item);
+                    await Context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<MenuRole>(Context);
+                    CleanTrackingHelper.Clean<MenuData>(Context);
+                }
+                else
+                {
+                    foreach (var itemData in item.MenuData)
+                    {
+                        itemData.MenuRoleId = searchItem.Id;
+                        needMenuDataInsert.Add(itemData);
+                    }
+                }
+            }
+            if (needMenuDataInsert.Count > 0)
+            {
+                await Context.BulkInsertAsync(needMenuDataInsert);
+            }
+            #endregion
+            CleanTrackingHelper.Clean<MenuRole>(Context);
+            CleanTrackingHelper.Clean<MenuData>(Context);
+            #endregion
+
+            IsLoad = false;
+            workbook = null;
+            sheet = null;
+            ShowStatusHandler?.Invoke($"");
+
+            await Task.Yield();
+        }
+        #endregion
+        #endregion
     }
 }

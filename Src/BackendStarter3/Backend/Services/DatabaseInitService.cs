@@ -431,7 +431,7 @@ namespace Backend.Services
 
             defaultMenuData
                 .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.管理者專用功能名稱));
+                .FirstOrDefault(x => x.Name == MagicHelper.一般使用者使用功能名稱));
             #endregion
 
             #region 建立 系統管理員 功能表項目清單 
