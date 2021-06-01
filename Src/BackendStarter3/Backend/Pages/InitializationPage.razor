@@ -11,6 +11,7 @@
 @inject IWebHostEnvironment env
 @inject IConfiguration configuration
 @inject IJSRuntime JSRuntime
+@inject IWebHostEnvironment env
 
 @implements IDisposable
 @layout EmptyLayout
@@ -20,20 +21,42 @@
 @using Microsoft.Extensions.Hosting
 @using Syncfusion.Blazor.Spinner
 
-<h1>Hello 你好, 超全端程式設計 Blazor 專案範本!</h1>
+<h1 class="bg-primary text-white-50 my-1">資料庫初始化作業!</h1>
 
-<div class="card mb-4">
-    <div class="card mb-4">
-        <div class="card-header bg-danger text-white">
-            <span class="h2">資料庫初始化</span>
-        </div>
-        <article class="card-body bg-light">
-            <div>
-                <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
-            </div>
-        </article>
+@if (verified == false)
+{
+<div>
+    <div class="h2 text-success">@Question</div>
+    <p>請輸入驗證碼</p>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control"
+               placeholder="驗證碼" aria-label="Username" aria-describedby="basic-addon1"
+               @bind="verifyCode">
+    </div>
+    <div class="input-group mb-3">
+        <button class="btn btn-primary"
+                @onclick="OnVerifyCode">
+            送出
+        </button>
     </div>
 </div>
+}
+
+@if (verified)
+{
+    <div class="card mb-4">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <span class="h2">資料庫初始化</span>
+            </div>
+            <article class="card-body bg-light">
+                <div>
+                    <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
+                </div>
+            </article>
+        </div>
+    </div>
+}
 
 <div id="container">
     <SfSpinner @bind-Visible="@VisibleProperty">
@@ -49,9 +72,13 @@
     string EmergenceDebugMessage = "";
     long latency = 0;
     CancellationTokenSource cts;
+    bool verified = false;
+    string verifyCode = "";
+    int Question = 0;
 
     protected override async Task OnInitializedAsync()
     {
+        Question = new Random().Next(10000, 90000);
         cts = new CancellationTokenSource();
         bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
         EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
@@ -125,6 +152,29 @@
     }
     void IDisposable.Dispose()
     {
-        cts.Cancel();
+        cts?.Cancel();
+    }
+    void OnVerifyCode()
+    {
+        try
+        {
+            int verifyNumber = 0;
+            int answer = 0;
+            if (env.IsDevelopment())
+            {
+                verifyNumber = Convert.ToInt32(verifyCode);
+                answer = 945973;
+            }
+            else
+            {
+                verifyNumber = Convert.ToInt32(verifyCode);
+                answer = 98765 - Question;
+            }
+            if (verifyNumber == answer)
+            {
+                verified = true;
+            }
+        }
+        catch { }
     }
 }
