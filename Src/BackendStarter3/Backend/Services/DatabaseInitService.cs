@@ -312,14 +312,12 @@ namespace Backend.Services
                 Name = ShareBusiness.Helpers.MagicHelper.首頁功能名稱,
                 CodeName = "/",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-home",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 
@@ -330,14 +328,12 @@ namespace Backend.Services
                 Name = ShareBusiness.Helpers.MagicHelper.帳號管理功能名稱,
                 CodeName = "MyUser",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-clipboard-account",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 
@@ -348,14 +344,12 @@ namespace Backend.Services
                 Name = ShareBusiness.Helpers.MagicHelper.變更密碼,
                 CodeName = "ChangePassword",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-form-textbox-password",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 
@@ -366,14 +360,12 @@ namespace Backend.Services
                 Name = MagicHelper.訂單管理功能名稱,
                 CodeName = "Order",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-shopping",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 
@@ -384,14 +376,12 @@ namespace Backend.Services
                 Name = MagicHelper.商品管理功能名稱,
                 CodeName = "Product",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-gift",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 
@@ -402,14 +392,12 @@ namespace Backend.Services
                 Name = MagicHelper.管理者專用功能名稱,
                 CodeName = "OnlyAdministrator",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-hand-pointing-up",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 
@@ -420,14 +408,12 @@ namespace Backend.Services
                 Name = MagicHelper.一般使用者使用功能名稱,
                 CodeName = "OnlyUser",
                 Enable = true,
-                Guid = Guid.NewGuid(),
                 Icon = "mdi-head-heart",
                 IsGroup = false,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
-            menuData.VerifyCode = MenuHelper.MakeMenuDataHash(menuData);
             context.Add(menuData);
             #endregion
 

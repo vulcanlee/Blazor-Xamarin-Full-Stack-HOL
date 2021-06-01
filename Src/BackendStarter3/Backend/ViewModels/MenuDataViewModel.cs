@@ -251,9 +251,6 @@ namespace Backend.ViewModels
 
         public async Task OnRecordEditConfirm()
         {
-            CurrentRecord.VerifyCode =
-            MenuHelper.MakeMenuDataHash(mapper.Map<MenuData>(CurrentRecord));
-
             #region 進行 Form Validation 檢查驗證作業
             if (LocalEditContext.Validate() == false)
             {

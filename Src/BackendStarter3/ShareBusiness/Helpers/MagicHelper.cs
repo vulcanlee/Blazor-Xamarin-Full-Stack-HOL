@@ -22,7 +22,6 @@ namespace ShareBusiness.Helpers
         public static readonly string MyUserUserMode = "MyUser";
         public static readonly string AgentUserMode = "Agent";
         public static readonly int GridPageSize = 12;
-        public static readonly string 功能表項目數位簽名添加內容 = "TT!hf0Q}]Jti+;rax<@u6P]j3CsT.Nm7V>DdX+mX=XE6K1Jx!z6>#0;FR+'R_N";
         public static readonly string MenuRoleClaim = "MenuRole";
         public static readonly string SystemAdminClaim = "Administrator";
         #endregion

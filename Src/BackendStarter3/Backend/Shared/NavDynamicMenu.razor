@@ -104,10 +104,8 @@
 
     }
 
-
     void MenuDataClicked(MainMenu currentMenuData)
     {
-        var guid = currentMenuData.MenuData.Guid;
         foreach (var item in mainMenus)
         {
             item.IsClicked = false;
@@ -130,7 +128,6 @@
 
     void SubMenuDataClicked(SubMenu currentMenuData)
     {
-        var guid = currentMenuData.MenuData.Guid;
         foreach (var item in mainMenus)
         {
             item.IsClicked = false;

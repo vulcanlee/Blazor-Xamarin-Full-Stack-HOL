@@ -21,8 +21,6 @@ namespace Entities.Models
         public string CodeName { get; set; }
         public bool Enable { get; set; }
         [Required(ErrorMessage = "驗證碼 不可為空白")]
-        public string VerifyCode { get; set; }
-        public Guid Guid { get; set; }
         public bool ForceLoad { get; set; }
         public int MenuRoleId { get; set; }
         public virtual MenuRole MenuRole { get; set; }

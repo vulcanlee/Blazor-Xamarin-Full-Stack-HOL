@@ -104,7 +104,6 @@ namespace Backend.Helpers
                         Name = ShareBusiness.Helpers.MagicHelper.功能表角色功能名稱,
                         CodeName = "MenuRole",
                         Enable = true,
-                        Guid = Guid.NewGuid(),
                         Icon = "mdi-menu",
                         IsGroup = false,
                         Level = 1,
@@ -118,7 +117,6 @@ namespace Backend.Helpers
                         Name = ShareBusiness.Helpers.MagicHelper.系統日誌功能名稱,
                         CodeName = "SystemLog",
                         Enable = true,
-                        Guid = Guid.NewGuid(),
                         Icon = "mdi-message-processing",
                         IsGroup = false,
                         Level = 1,
@@ -154,24 +152,6 @@ namespace Backend.Helpers
             return mainMenus;
         }
 
-        public static string MakeMenuDataHash(MenuData menuData)
-        {
-            string result = $"{menuData.CodeName} {MagicHelper.功能表項目數位簽名添加內容} {menuData.Guid}";
-            using (SHA256 sha256Hash = SHA256.Create())
-            {
-                // ComputeHash - returns byte array  
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(result));
-
-                // Convert byte array to a string   
-                StringBuilder builder = new();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2"));
-                }
-                result = builder.ToString();
-            }
-            return result;
-        }
     }
     public class MainMenu
     {
