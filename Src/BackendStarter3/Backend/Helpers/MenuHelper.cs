@@ -123,6 +123,19 @@ namespace Backend.Helpers
                     }
                 };
                 mainMenu.SubMenus.Add(subMenu);
+                subMenu = new SubMenu()
+                {
+                    MenuData = new MenuDataAdapterModel()
+                    {
+                        Name = ShareBusiness.Helpers.MagicHelper.Excel匯入功能名稱,
+                        CodeName = "Import",
+                        Enable = true,
+                        Icon = "mdi-database-import",
+                        IsGroup = false,
+                        Level = 1,
+                    }
+                };
+                mainMenu.SubMenus.Add(subMenu);
                 #endregion
             }
             #endregion  

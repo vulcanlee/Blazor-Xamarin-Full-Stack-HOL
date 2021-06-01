@@ -1,0 +1,63 @@
+﻿@page "/Import"
+@using Syncfusion.Blazor.Inputs
+@using Microsoft.Extensions.Logging
+@inject ImportDataHelper DataHelper
+@inject ILogger<ImportPage> Loggr
+
+<h1>Excel 資料匯入</h1>
+
+<div class="form-row">
+    <div class="form-group col">
+        <label class="control-label">上傳檔案</label>
+        <SfUploader @ref="upload1" AutoUpload="true">
+            <UploaderEvents ValueChange="UploaderChange"></UploaderEvents>
+        </SfUploader>
+    </div>
+</div>
+@if (DataHelper.IsLoad)
+{
+    <div>
+        <div>
+            <button class="btn btn-primary" @onclick="ImportAsync">開始匯入 @DataHelper.ImportName</button>
+        </div>
+        <div class="display-4 text-danger">
+            @Message
+        </div>
+        <div class="text-primary">
+            @ProcessingLog
+        </div>
+    </div>
+}
+
+@code {
+    SfUploader upload1;
+    string Message = "";
+    string ProcessingLog = "";
+
+    public async Task UploaderChange(UploadChangeEventArgs args)
+    {
+        Loggr.LogInformation("call - UploaderChange");
+        DataHelper.IsLoad = false;
+        if (args.Files.Count > 0)
+        {
+            await DataHelper.GetUploadFileAsync(args.Files[0].Stream);
+        }
+        await upload1.ClearAll();
+    }
+    public async Task ImportAsync()
+    {
+        Loggr.LogInformation("call - Import");
+        DataHelper.ShowStatusHandler = null;
+        DataHelper.ShowStatusHandler = (x) =>
+        {
+            InvokeAsync(() =>
+            {
+                ProcessingLog = x;
+                StateHasChanged();
+            });
+        };
+        Message = "匯入中，請稍後";
+        await DataHelper.ImportAsync();
+        Message = "";
+    }
+}
