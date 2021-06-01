@@ -62,6 +62,7 @@ namespace ShareBusiness.Helpers
             ErrorMessages.Add(ErrorMessageEnum.舊密碼不正確, "舊密碼不正確");
             ErrorMessages.Add(ErrorMessageEnum.新密碼須和舊密碼不同, "新密碼須和舊密碼不同");
             ErrorMessages.Add(ErrorMessageEnum.密碼已經變更成功, "密碼已經變更成功");
+            ErrorMessages.Add(ErrorMessageEnum.開發者帳號不可以被新增, "開發者帳號不可以被新增");
             ErrorMessages.Add(ErrorMessageEnum.開發者帳號不可以被修改, "開發者帳號不可以被修改");
             ErrorMessages.Add(ErrorMessageEnum.開發者帳號不可以被刪除, "開發者帳號不可以被刪除");
             ErrorMessages.Add(ErrorMessageEnum.使用者不存在, "使用者不存在");

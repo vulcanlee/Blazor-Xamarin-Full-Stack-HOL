@@ -200,6 +200,11 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MyUserAdapterModel paraObject)
         {
+            if (paraObject.Account.ToLower() == MagicHelper.開發者帳號)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被新增);
+            }
+
             var searchItem = await context.MyUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Account == paraObject.Account);
@@ -220,6 +225,11 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MyUserAdapterModel paraObject)
         {
+            if(paraObject.Account.ToLower() == MagicHelper.開發者帳號)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
+            }
+
             CleanTrackingHelper.Clean<MyUser>(context);
             var searchItem = await context.MyUser
              .AsNoTracking()
@@ -234,8 +244,7 @@ namespace Backend.Services
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem != null)
             {
-                if (searchItem.Account.ToLower() == MagicHelper.開發者帳號 &&
-                    paraObject.Account.ToLower() != MagicHelper.開發者帳號)
+                if (searchItem.Account.ToLower() == MagicHelper.開發者帳號)
                 {
                     return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
                 }
@@ -259,6 +268,11 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserAdapterModel paraObject)
         {
+            if (paraObject.Account.ToLower() == MagicHelper.開發者帳號)
+            {
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被刪除);
+            }
+
             CleanTrackingHelper.Clean<MyUser>(context);
             var searchItem = await context.MyUser
              .AsNoTracking()

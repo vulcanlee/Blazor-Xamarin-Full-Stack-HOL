@@ -176,6 +176,12 @@ namespace Backend.Services
                 }
                 else
                 {
+                    if(item.Name == MagicHelper.開發者功能表角色 ||
+                        item.Name == MagicHelper.系統管理員功能表角色)
+                    {
+                        return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄);
+                    }
+
                     CleanTrackingHelper.Clean<MenuRole>(context);
                     context.Entry(item).State = EntityState.Deleted;
                     await context.SaveChangesAsync();
