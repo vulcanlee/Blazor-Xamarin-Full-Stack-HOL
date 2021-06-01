@@ -4,12 +4,13 @@
 @inject ImportDataHelper DataHelper
 @inject ILogger<ImportPage> Loggr
 
-<h1>Excel 資料匯入</h1>
+<div class="page-title">Excel 資料匯入</div>
 
 <div class="form-row">
     <div class="form-group col">
         <label class="control-label">上傳檔案</label>
-        <SfUploader @ref="upload1" AutoUpload="true">
+        <SfUploader @ref="upload1" AutoUpload="true"
+                    AllowedExtensions=".xls, .xlsx">
             <UploaderEvents ValueChange="UploaderChange"></UploaderEvents>
         </SfUploader>
     </div>
