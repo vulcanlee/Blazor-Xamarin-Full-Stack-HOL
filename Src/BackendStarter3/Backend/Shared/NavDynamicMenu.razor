@@ -80,28 +80,35 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
+        if (firstRender)
         {
-            int menuRoleId = Convert.ToInt32(user
-                .FindFirst(c => c.Type == MagicHelper.MenuRoleClaim)?.Value);
-            if (menuRoleId > 0)
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
             {
-                var foo = user
-                    .FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Role
-                    && c.Value == MagicHelper.開發者的角色聲明); // 確認這個使用者為系統管理者
-                MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
-                mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
+                int menuRoleId = Convert.ToInt32(user
+                    .FindFirst(c => c.Type == MagicHelper.MenuRoleClaim)?.Value);
+                if (menuRoleId > 0)
+                {
+                    var foo = user
+                        .FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Role
+                        && c.Value == MagicHelper.開發者的角色聲明); // 確認這個使用者為系統管理者
+                    MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
+                    mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
+                }
+                StateHasChanged();
+            }
+            else
+            {
             }
         }
-        else
-        {
-        }
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
     }
 
     void MenuDataClicked(MainMenu currentMenuData)

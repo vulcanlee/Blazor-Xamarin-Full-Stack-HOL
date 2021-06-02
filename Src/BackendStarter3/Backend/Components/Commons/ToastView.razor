@@ -3,13 +3,13 @@
 @using Prism.Events
 @implements IDisposable
 @inject IEventAggregator EventAggregator
+
 @*<button @onclick="click">Send</button>*@
 <SfToast @ref="ToastObj"
          Title="@ToastModel.Title" Content="@ToastModel.Content"
          Timeout="@ToastModel.Timeout">
     <ToastPosition X="Right" Y="Top"></ToastPosition>
 </SfToast>
-@*Title="@ToastModel.Title" Content="@ToastModel.Content"*@
 
 <style>
     /* To change background color */
@@ -65,6 +65,7 @@
              });
         }
     }
+    
     public void Dispose()
     {
         if (SubscriptionToken != null)
