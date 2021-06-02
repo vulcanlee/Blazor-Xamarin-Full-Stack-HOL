@@ -46,6 +46,20 @@
     }
 }
 
+
+
+.top-row-start {
+    background-color: #4d4d4d;
+    border-bottom: 1px solid #d6d5d5;
+    justify-content: flex-start;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+
+
+
 @media (min-width: 640.1px) {
     .page {
         flex-direction: row;

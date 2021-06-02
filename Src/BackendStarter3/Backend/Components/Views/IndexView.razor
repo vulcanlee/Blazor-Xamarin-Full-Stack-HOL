@@ -3,6 +3,7 @@
 @using System.Threading.Tasks
 @using System.Threading
 @using System.Diagnostics
+@using Microsoft.AspNetCore.Http
 
 @inject DatabaseInitService DatabaseInitService
 @inject BackendDBContext context
@@ -11,6 +12,7 @@
 @inject IConfiguration configuration
 @inject IJSRuntime JSRuntime
 @inject BlazorAppContext BlazorAppContext
+@inject IHttpContextAccessor httpContextAccessor
 
 @implements IDisposable
 
@@ -167,38 +169,46 @@
     string rawPassword;
     string IP;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IP = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
+            rawPassword = configuration["AdministratorPassword"];
+            cts = new CancellationTokenSource();
+            bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
+            EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
+            Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+            versionNumber = version.ToString();
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                authMessage = $"現在登入的使用者為 {user.Identity.Name}";
+                IEnumerable<Claim> _claims = user.Claims;
+                userId =
+                $"該使用者在資料庫內的 Id 為: {user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value}";
+            }
+            else
+            {
+                authMessage = "沒有任何使用者登入";
+                userId = "";
+            }
+
+            #region 測試緊急除錯功能
+            if (EmergenceDebugStatus == true)
+            {
+                var users = await context.MyUser.ToListAsync();
+            }
+            #endregion
+            StateHasChanged();
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
-        IP = BlazorAppContext.CurrentUserIP;
-        rawPassword = configuration["AdministratorPassword"];
-        cts = new CancellationTokenSource();
-        bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
-        EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
-        Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
-        versionNumber = version.ToString();
-
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
-        {
-            authMessage = $"現在登入的使用者為 {user.Identity.Name}";
-            IEnumerable<Claim> _claims = user.Claims;
-            userId =
-            $"該使用者在資料庫內的 Id 為: {user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value}";
-        }
-        else
-        {
-            authMessage = "沒有任何使用者登入";
-            userId = "";
-        }
-
-        #region 測試緊急除錯功能
-        if (EmergenceDebugStatus == true)
-        {
-            var users = await context.MyUser.ToListAsync();
-        }
-        #endregion
+        await Task.Yield();
     }
     public async Task Init()
     {
@@ -244,6 +254,7 @@
     }
     void IDisposable.Dispose()
     {
-        cts.Cancel();
+        if (cts != null)
+            cts.Cancel();
     }
 }

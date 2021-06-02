@@ -160,6 +160,10 @@ namespace Backend
             #region 加入背景服務
             services.AddHostedService<KeepAliveHostedService>();
             #endregion
+
+            #region 使用 HttpContext
+            services.AddHttpContextAccessor();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
