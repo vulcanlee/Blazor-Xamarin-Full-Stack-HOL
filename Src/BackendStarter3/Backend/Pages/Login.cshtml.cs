@@ -46,6 +46,10 @@ namespace Backend.Pages
         public string Version { get; set; } = "";
         public string PasswordType { get; set; } = "password";
         public string Msg { get; set; }
+        public string ReturnUrl { get; set; }
+        public SystemLogHelper SystemLogHelper { get; }
+        public IHttpContextAccessor HttpContextAccessor { get; }
+
         public async Task OnGetAsync()
         {
             Version version = Assembly.GetEntryAssembly().GetName().Version;
@@ -59,9 +63,6 @@ namespace Backend.Pages
             }
             catch { }
         }
-        public string ReturnUrl { get; set; }
-        public SystemLogHelper SystemLogHelper { get; }
-        public IHttpContextAccessor HttpContextAccessor { get; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -70,6 +71,7 @@ namespace Backend.Pages
 
             if (user == null)
             {
+                #region 身分驗證失敗，使用者不存在
                 Msg = $"身分驗證失敗，使用者({Username}不存在 : {message})";
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
                 {
@@ -84,10 +86,12 @@ namespace Backend.Pages
                     logger.LogInformation("使用者登出");
                 });
                 return Page();
+                #endregion
             }
 
             if (user.Status == false)
             {
+                #region 使用者已經被停用，無法登入
                 Msg = $"使用者 {user.Account} 已經被停用，無法登入";
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
                 {
@@ -102,6 +106,7 @@ namespace Backend.Pages
                     logger.LogInformation($"{Msg}");
                 });
                 return Page();
+                #endregion
             }
 
             string returnUrl = Url.Content("~/");
@@ -132,11 +137,14 @@ namespace Backend.Pages
             {
                 if (item.IsGroup == false)
                 {
-                    // 避免使用者自己加入一個 開發人員專屬 的角色
-                    if (item.CodeName != "/" &&
-                        item.CodeName.ToLower() != MagicHelper.開發者的角色聲明)
+                    if (item.CodeName.ToLower() != MagicHelper.開發者的角色聲明)
                     {
-                        claims.Add(new Claim(ClaimTypes.Role, item.CodeName));
+                        // 避免使用者自己加入一個 開發人員專屬 的角色
+                        if (!((item.CodeName.Contains("/") == true ||
+                            item.CodeName.ToLower().Contains("http") == true)))
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, item.CodeName));
+                        }
                     }
                 }
             }
