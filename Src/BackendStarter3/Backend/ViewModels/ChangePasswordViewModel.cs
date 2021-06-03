@@ -57,13 +57,6 @@ namespace Backend.ViewModels
                     ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.新密碼2次輸入須相同));
                 return;
             }
-            else if (ChangePasswordModel.CurrentPassword == ChangePasswordModel.NewPassword)
-            {
-                MessageBox.Show("400px", "200px",
-                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),
-                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.新密碼須和舊密碼不同));
-                return;
-            }
             else
             {
                 myUserAdapterModel = await ChangePasswordService.GetCurrentUser();
