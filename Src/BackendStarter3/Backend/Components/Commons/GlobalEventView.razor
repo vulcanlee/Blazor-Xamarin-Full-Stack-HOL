@@ -11,10 +11,18 @@
     {
         if (firstRender)
         {
+            await Task.Yield();
             //Logger.LogDebug("GlobalEventView OnAfterRenderAsync");
+            SystemBroadcast.Unsubscribe(OnMessageConnection);
+            SystemBroadcast.Subscribe(OnMessageConnection);
             SystemBroadcast.UnsubscribeConcurrentConnection(OnConnection);
             SystemBroadcast.SubscribeConcurrentConnection(OnConnection);
             SystemBroadcast.PublishConcurrentConnection();
+
+            EventAggregator.GetEvent<BroadcastEvent>().Subscribe(x =>
+            {
+                SystemBroadcast.Publish(x.Content);
+            });
         }
     }
 
@@ -28,8 +36,19 @@
             Color = "Green",
         });
     }
+    public void OnMessageConnection(string foo)
+    {
+        EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+        {
+            Title = "通知",
+            Content = $"{foo}",
+            Timeout = 4000,
+        });
+    }
     public void Dispose()
     {
+        SystemBroadcast.Unsubscribe(OnMessageConnection);
+        SystemBroadcast.Unsubscribe(OnMessageConnection);
         SystemBroadcast.UnsubscribeConcurrentConnection(OnConnection);
         SystemBroadcast.UnsubscribeConcurrentConnection(OnConnection);
         SystemBroadcast.PublishConcurrentConnection();

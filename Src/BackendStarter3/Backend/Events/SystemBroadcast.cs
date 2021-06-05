@@ -9,7 +9,7 @@ namespace Backend.Events
 {
     public class SystemBroadcast
     {
-        public ConcurrentBag<Action<string>> AllNewQuestionEvent { get; set; } = new ConcurrentBag<Action<string>>();
+        public ConcurrentBag<Action<string>> AllMessageEvent { get; set; } = new ConcurrentBag<Action<string>>();
         public ConcurrentBag<Action<int>> ConcurrentConnectionEvent { get; set; } = new ConcurrentBag<Action<int>>();
         public ILogger<SystemBroadcast> Logger { get; }
 
@@ -19,21 +19,21 @@ namespace Backend.Events
         }
         public void Subscribe(Action<string> action)
         {
-            AllNewQuestionEvent.Add(action);
+            AllMessageEvent.Add(action);
             return;
         }
         public void Unsubscribe(Action<string> action)
         {
-            var foo = AllNewQuestionEvent.FirstOrDefault(x => x == action);
+            var foo = AllMessageEvent.FirstOrDefault(x => x == action);
             if (foo != null)
             {
-                AllNewQuestionEvent.TryTake(out foo);
+                AllMessageEvent.TryTake(out foo);
             }
             return;
         }
         public void Publish(string message)
         {
-            foreach (var item in AllNewQuestionEvent)
+            foreach (var item in AllMessageEvent)
             {
                 try
                 {
@@ -48,7 +48,7 @@ namespace Backend.Events
         }
         public int GetAllSubscriber()
         {
-            int all = AllNewQuestionEvent.Count();
+            int all = AllMessageEvent.Count();
             return all;
         }
         public void SubscribeConcurrentConnection(Action<int> action)
