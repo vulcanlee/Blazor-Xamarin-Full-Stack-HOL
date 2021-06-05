@@ -15,64 +15,64 @@
 
         @if (mainMenus.Count == 0)
         {
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <span class="mdi mdi-48px mdi-spin mdi-reload m-4 text-white" />
-        </div>
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <span class="mdi mdi-48px mdi-spin mdi-reload m-4 text-white" />
+            </div>
         }
         else
         {
-        <ul class="nav flex-column">
-            @foreach (var item in mainMenus)
+            <ul class="nav flex-column">
+                @foreach (var item in mainMenus)
                 {
                     var currentMenuData = item;
                     if (currentMenuData.MenuData.CodeName == "/")
                     {
-            <li class="@currentMenuData.MenuClass nav-item px-3">
-                <div @onclick="() => { MenuDataClicked(currentMenuData); }">
-                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
-                    <span class="text-white">@currentMenuData.MenuData.Name</span>
-                </div>
-            </li>
+                        <li class="@currentMenuData.MenuClass nav-item px-3">
+                            <div @onclick="() => { MenuDataClicked(currentMenuData); }">
+                                <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                <span class="text-white">@currentMenuData.MenuData.Name</span>
+                            </div>
+                        </li>
                     }
                     else
                     {
                         if (currentMenuData.MenuData.IsGroup == false)
                         {
-            <li class="@currentMenuData.MenuClass nav-item px-3">
-                <div @onclick="()=> { MenuDataClicked(currentMenuData); }">
-                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
-                    <span class="text-white">@currentMenuData.MenuData.Name</span>
-                </div>
-            </li>
+                            <li class="@currentMenuData.MenuClass nav-item px-3">
+                                <div @onclick="()=> { MenuDataClicked(currentMenuData); }">
+                                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                </div>
+                            </li>
                         }
                         else
                         {
-            <li class="@currentMenuData.MenuClass nav-item px-3">
-                <div @onclick="()=> {
+                            <li class="@currentMenuData.MenuClass nav-item px-3">
+                                <div @onclick="()=> {
                                            currentMenuData.IsExpand=!currentMenuData.IsExpand;
                                        }">
-                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
-                    <span class="text-white">@currentMenuData.MenuData.Name</span>
-                </div>
-            </li>
+                                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                </div>
+                            </li>
                             if (currentMenuData.IsExpand)
                             {
                                 foreach (var itemSub in item.SubMenus)
                                 {
                                     var currentSubMenuData = itemSub;
-            <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-1">
-                <div @onclick="()=> { SubMenuDataClicked(currentSubMenuData); }">
-                    <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
-                    <span class="text-white">@currentSubMenuData.MenuData.Name</span>
-                </div>
-            </li>
+                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-1">
+                                        <div @onclick="()=> { SubMenuDataClicked(currentSubMenuData); }">
+                                            <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
+                                            <span class="text-white">@currentSubMenuData.MenuData.Name</span>
+                                        </div>
+                                    </li>
                                 }
                             }
                         }
                     }
                 }
-        </ul>
-        <div class="menu-extend"></div>
+            </ul>
+            <div class="menu-extend"></div>
         }
 
     </div>

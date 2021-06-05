@@ -3,7 +3,6 @@
 @using Prism.Events
 @implements IDisposable
 @inject IEventAggregator EventAggregator
-
 @*<button @onclick="click">Send</button>*@
 <SfToast @ref="ToastObj"
          Title="@ToastModel.Title" Content="@ToastModel.Content"
@@ -41,31 +40,27 @@
     {
         ToastModel.Title = "重要通知~~";
         ToastModel.Content = "使用者已經被停用，5秒鐘後，將會強制登出~~";
-        ToastObj.Title = ToastModel.Title;
-        ToastObj.Content = ToastModel.Content;
         await ToastObj.Show();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
             SubscriptionToken = EventAggregator.GetEvent<ToastEvent>().Subscribe(async x =>
-             {
-                 ToastModel.Title = x.Title;
-                 ToastModel.Content = x.Content;
-                 ToastModel.Timeout = x.Timeout;
-                 ToastModel.Color = x.Color;
-             //ToastObj.Title = x.Title;
-             //ToastObj.Content = x.Content;
-             //ToastObj.Timeout = x.Timeout;
+            {
+                ToastModel.Title = x.Title;
+                ToastModel.Content = x.Content;
+                ToastModel.Timeout = x.Timeout;
+                ToastModel.Color = x.Color;
 
-             await InvokeAsync(() => StateHasChanged());
-                 await ToastObj.Show();
-             });
+                await InvokeAsync(() => StateHasChanged());
+                await Task.Yield();
+                await ToastObj.Show();
+            });
         }
     }
-    
+
     public void Dispose()
     {
         if (SubscriptionToken != null)

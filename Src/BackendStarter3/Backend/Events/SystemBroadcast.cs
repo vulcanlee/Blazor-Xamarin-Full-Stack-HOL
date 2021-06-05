@@ -9,25 +9,34 @@ namespace Backend.Events
 {
     public class SystemBroadcast
     {
-        public ConcurrentBag<Action<string>> AllMessageEvent { get; set; } = new ConcurrentBag<Action<string>>();
-        public ConcurrentBag<Action<int>> ConcurrentConnectionEvent { get; set; } = new ConcurrentBag<Action<int>>();
+        public ConcurrentDictionary<Guid, Action<string>> AllMessageEvent { get; set; } = new ConcurrentDictionary<Guid, Action<string>>();
         public ILogger<SystemBroadcast> Logger { get; }
 
         public SystemBroadcast(ILogger<SystemBroadcast> logger)
         {
             Logger = logger;
         }
-        public void Subscribe(Action<string> action)
+        public void Subscribe(Guid guid, Action<string> action)
         {
-            AllMessageEvent.Add(action);
+            AllMessageEvent.TryAdd(guid, action);
             return;
         }
-        public void Unsubscribe(Action<string> action)
+        public void Unsubscribe(Guid guid)
         {
-            var foo = AllMessageEvent.FirstOrDefault(x => x == action);
-            if (foo != null)
+            Action<string> action;
+            var foo = AllMessageEvent.TryGetValue(guid, out action);
+            if (foo == true)
             {
-                AllMessageEvent.TryTake(out foo);
+               var success =  AllMessageEvent.TryRemove(guid, out action);
+                if(success == false)
+                {
+                    //Logger.LogError($"移除 AllMessageEvent ({guid}) 失敗");
+                }
+            }
+            else
+            {
+                //Logger.LogError($"沒有發現要移除 AllMessageEvent ({guid})");
+
             }
             return;
         }
@@ -37,7 +46,7 @@ namespace Backend.Events
             {
                 try
                 {
-                    item?.Invoke(message);
+                    item.Value?.Invoke(message);
                 }
                 catch (Exception ex)
                 {
@@ -50,33 +59,6 @@ namespace Backend.Events
         {
             int all = AllMessageEvent.Count();
             return all;
-        }
-        public void SubscribeConcurrentConnection(Action<int> action)
-        {
-            ConcurrentConnectionEvent.Add(action);
-            return;
-        }
-        public void UnsubscribeConcurrentConnection(Action<int> action)
-        {
-            var foo = ConcurrentConnectionEvent.FirstOrDefault(x => x == action);
-            if (foo != null)
-            {
-                ConcurrentConnectionEvent.TryTake(out foo);
-            }
-            return;
-        }
-        public void PublishConcurrentConnection()
-        {
-            int concurrentConnection = ConcurrentConnectionEvent.Count();
-            foreach (var item in ConcurrentConnectionEvent)
-            {
-                try
-                {
-                    item?.Invoke(concurrentConnection);
-                }
-                catch { }
-            }
-            return;
         }
     }
 }
