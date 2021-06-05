@@ -2,6 +2,7 @@
 using Backend.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
+using Backend.Events;
 
 namespace Backend.Helpers
 {
@@ -36,6 +37,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 其他服務註冊
+            services.AddSingleton<SystemBroadcast>();
             services.AddTransient<ImportDataHelper>();
             services.AddTransient<TranscationResultHelper>();
             services.AddTransient<SystemLogHelper>();

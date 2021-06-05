@@ -1,0 +1,38 @@
+﻿@using Microsoft.Extensions.Logging
+@using Prism.Events
+@inject IEventAggregator EventAggregator
+@inject ILogger<GlobalEventView> Logger
+@inject SystemBroadcast SystemBroadcast
+@implements IDisposable
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            //Logger.LogDebug("GlobalEventView OnAfterRenderAsync");
+            SystemBroadcast.UnsubscribeConcurrentConnection(OnConnection);
+            SystemBroadcast.SubscribeConcurrentConnection(OnConnection);
+            SystemBroadcast.PublishConcurrentConnection();
+        }
+    }
+
+    public void OnConnection(int foo)
+    {
+        EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+        {
+            Title = "通知",
+            Content = $"使用者連線數量 {foo}",
+            Timeout = 4000,
+            Color = "Green",
+        });
+    }
+    public void Dispose()
+    {
+        SystemBroadcast.UnsubscribeConcurrentConnection(OnConnection);
+        SystemBroadcast.UnsubscribeConcurrentConnection(OnConnection);
+        SystemBroadcast.PublishConcurrentConnection();
+        //Logger.LogDebug("GlobalEventView Dispose");
+    }
+}
