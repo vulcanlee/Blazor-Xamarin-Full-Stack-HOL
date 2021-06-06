@@ -205,7 +205,6 @@ namespace Backend
             if (emergenceDebugStatus == true)
             {
                 app.UseDeveloperExceptionPage();
-                app.UseHsts();
                 logger.LogInformation("ºò«æ°£¿ù¼Ò¦¡ : ±Ò¥Î");
             }
             else
