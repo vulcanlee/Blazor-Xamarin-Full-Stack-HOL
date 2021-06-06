@@ -44,7 +44,22 @@ namespace Backend
         {
             #region Blazor & Razor Page 用到服務
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            #region Blazor Server 註冊服務，正式部署下，是否要顯示明確的例外異常資訊
+            bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
+            if (emergenceDebugStatus == true)
+            {
+                Console.WriteLine($"啟用正式部署可以顯示錯誤詳細資訊");
+                services.AddServerSideBlazor()
+                    .AddCircuitOptions(e =>
+                    {
+                        e.DetailedErrors = true;
+                    });
+            }
+            else
+            {
+                services.AddServerSideBlazor();
+            }
+            #endregion
             #endregion
 
             #region Syncfusion 元件與多國語言服務
@@ -167,7 +182,7 @@ namespace Backend
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             #region 宣告 NLog 要使用到的變數內容
             var logRootPath = Configuration["CustomNLog:LogRootPath"];
@@ -200,33 +215,23 @@ namespace Backend
             });
             #endregion
 
-            #region 是否要啟用詳細除錯資訊
-            bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
-            if (emergenceDebugStatus == true)
+            #region 開發模式的設定
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                logger.LogInformation("緊急除錯模式 : 啟用");
             }
             else
             {
-                if (env.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                }
-                else
-                {
-                    app.UseExceptionHandler("/Error");
-                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                    app.UseHsts();
-                }
-                logger.LogInformation("緊急除錯模式 : 停用");
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
-            #endregion
 
             if (!env.IsDevelopment())
             {
                 app.UseHttpsRedirection();
             }
+            #endregion
             app.UseStaticFiles();
 
             #region 啟用 Swagger 中介軟體
