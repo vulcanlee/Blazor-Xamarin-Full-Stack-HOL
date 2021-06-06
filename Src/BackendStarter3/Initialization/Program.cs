@@ -62,7 +62,6 @@ namespace Initialization
                     Name = $"user{i}",
                     Password = "pw",
                 };
-                if (i == 9) MyUser.IsManager = true;
                 users.Add(MyUser);
             }
             await context.BulkInsertAsync(users);
