@@ -37,6 +37,7 @@
                     <hr>
                     <p class="text-danger text-center">@Model.Msg</p>
                     <form method="post">
+
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -45,14 +46,33 @@
                                 <input class="form-control m-auto" asp-for="Username" placeholder="使用者的帳號">
                             </div>
                         </div> <!-- form-group// -->
+
                         <div class="form-group mt-2">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text mdi mdi-18px mdi-shield-lock"> </span>
                                 </div>
-                                    <input class="form-control m-auto" asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
+                                <input class="form-control m-auto" asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
                             </div>
                         </div> <!-- form-group// -->
+
+                        <div class="row">
+                            <div class="col-7 mt-2">
+                                <div class="form-group mt-2">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text mdi mdi-18px mdi-shield-lock"> </span>
+                                        </div>
+                                        <input class="form-control m-auto" asp-for="Captcha" value="@Model.Captcha" placeholder="驗證碼" autocomplete="off">
+                                        <input type="hidden" asp-for="CaptchaOrigin" value="@Model.CaptchaOrigin" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5 captcha">
+                                <img src="@Model.CaptchaImage" />
+                            </div>
+                        </div>
+
                         <div class="form-group mt-2">
                             <button type="submit" class="btn btn-primary btn-block"> 登入  </button>
                         </div> <!-- form-group// -->
