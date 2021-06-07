@@ -216,6 +216,8 @@ namespace Backend
             #endregion
 
             #region 開發模式的設定
+            bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
+            if(emergenceDebugStatus == true) logger.LogInformation("緊急除錯模式 : 啟用");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -232,6 +234,7 @@ namespace Backend
                 app.UseHttpsRedirection();
             }
             #endregion
+
             app.UseStaticFiles();
 
             #region 啟用 Swagger 中介軟體
