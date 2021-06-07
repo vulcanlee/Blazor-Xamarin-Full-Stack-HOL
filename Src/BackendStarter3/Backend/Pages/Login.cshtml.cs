@@ -107,10 +107,8 @@ namespace Backend.Pages
                         LogLevel = LogLevels.Information,
                         Updatetime = DateTime.Now,
                         IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                    }, () =>
-                    {
-                        logger.LogInformation("使用者登出");
                     });
+                    logger.LogInformation($"{Msg}");
                     return Page();
                     #endregion
                 }
@@ -127,10 +125,8 @@ namespace Backend.Pages
                         LogLevel = LogLevels.Information,
                         Updatetime = DateTime.Now,
                         IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                    }, () =>
-                    {
-                        logger.LogInformation($"{Msg}");
                     });
+                    logger.LogInformation($"{Msg}");
                     return Page();
                     #endregion
                 }
@@ -214,12 +210,9 @@ namespace Backend.Pages
                     LogLevel = LogLevels.Information,
                     Updatetime = DateTime.Now,
                     IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                }, () =>
-                {
-                    logger.LogInformation($"{Msg}");
                 });
+                logger.LogInformation($"{Msg}");
                 return LocalRedirect(returnUrl);
-                return Page();
             }
             GetCaptchaImage();
             return Page();
@@ -260,8 +253,8 @@ namespace Backend.Pages
                     graphics.Clear(Color.DarkGray);
                     for (int i = 0; i < 10; i++)
                     {
-                        Pen whitePen = new Pen(Brushes.White, 
-                            random.Next(1,4));
+                        Pen whitePen = new Pen(Brushes.White,
+                            random.Next(1, 4));
                         int x1 = random.Next(bitmap.Width);
                         int x2 = random.Next(bitmap.Width);
                         int y1 = random.Next(bitmap.Height);

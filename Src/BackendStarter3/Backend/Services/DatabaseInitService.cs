@@ -60,10 +60,8 @@ namespace Backend.Services
                 LogLevel = LogLevels.Information,
                 Updatetime = DateTime.Now,
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            }, () =>
-            {
-                Logger.LogInformation($"{Msg}");
             });
+            Logger.LogInformation($"{Msg}");
             #endregion
 
             #region 建立開發環境要用到的測試紀錄
@@ -77,10 +75,8 @@ namespace Backend.Services
                 LogLevel = LogLevels.Information,
                 Updatetime = DateTime.Now,
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            }, () =>
-            {
-                Logger.LogInformation($"{Msg}");
             });
+            Logger.LogInformation($"{Msg}");
             await 建立使用者紀錄Async();
             Msg = $"建立使用者紀錄";
             await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -91,10 +87,8 @@ namespace Backend.Services
                 LogLevel = LogLevels.Information,
                 Updatetime = DateTime.Now,
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            }, () =>
-            {
-                Logger.LogInformation($"{Msg}");
             });
+            Logger.LogInformation($"{Msg}");
             List<Product> products = await 建立產品紀錄Async();
             Msg = $"建立產品紀錄";
             await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -105,10 +99,8 @@ namespace Backend.Services
                 LogLevel = LogLevels.Information,
                 Updatetime = DateTime.Now,
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            }, () =>
-            {
-                Logger.LogInformation($"{Msg}");
             });
+            Logger.LogInformation($"{Msg}");
             await 建立訂單紀錄Async(random, products);
             Msg = $"建立訂單紀錄";
             await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -119,10 +111,8 @@ namespace Backend.Services
                 LogLevel = LogLevels.Information,
                 Updatetime = DateTime.Now,
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            }, () =>
-            {
-                Logger.LogInformation($"{Msg}");
             });
+            Logger.LogInformation($"{Msg}");
             #endregion
         }
 
