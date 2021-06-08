@@ -179,18 +179,24 @@ namespace Backend
             #region 使用 HttpContext
             services.AddHttpContextAccessor();
             #endregion
+
+            #region 相關選項模式
+            services.Configure<CustomNLog>(Configuration
+                .GetSection(nameof(CustomNLog)));
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            ILogger<Startup> logger, IOptions<CustomNLog> optionsCustomNLog)
         {
             #region 宣告 NLog 要使用到的變數內容
-            var logRootPath = Configuration["CustomNLog:LogRootPath"];
-            var allLogMessagesFilename = Configuration["CustomNLog:AllLogMessagesFilename"];
-            var allWebDetailsLogMessagesFilename = Configuration["CustomNLog:AllWebDetailsLogMessagesFilename"];
-            LogManager.Configuration.Variables["LogRootPath"] = logRootPath;
-            LogManager.Configuration.Variables["AllLogMessagesFilename"] = allLogMessagesFilename;
-            LogManager.Configuration.Variables["AllWebDetailsLogMessagesFilename"] = allWebDetailsLogMessagesFilename;
+            LogManager.Configuration.Variables["LogRootPath"] =
+                optionsCustomNLog.Value.LogRootPath;
+            LogManager.Configuration.Variables["AllLogMessagesFilename"] =
+                optionsCustomNLog.Value.AllLogMessagesFilename;
+            LogManager.Configuration.Variables["AllWebDetailsLogMessagesFilename"] =
+                optionsCustomNLog.Value.AllWebDetailsLogMessagesFilename;
             #endregion
 
             #region Syncfusion License Registration
@@ -217,7 +223,7 @@ namespace Backend
 
             #region 開發模式的設定
             bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
-            if(emergenceDebugStatus == true) logger.LogInformation("緊急除錯模式 : 啟用");
+            if (emergenceDebugStatus == true) logger.LogInformation("緊急除錯模式 : 啟用");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
