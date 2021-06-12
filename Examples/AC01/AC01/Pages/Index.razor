@@ -1,0 +1,26 @@
+﻿@page "/"
+
+<h1>Hello, 這是從空白 ASP.NET Core 專案範本來建立一個 Blazor 專案!</h1>
+
+<h2>體驗 ASP.NET Core 與 Blazor UI 開發框架的關係</h2>
+
+<div>
+    <span>你的名字</span>
+    <input @bind="Name"/>
+</div>
+<div>
+    <button @onclick="Submit">送出</button>
+</div>
+<div>
+    @Message
+</div>
+
+@code{
+    public string Name { get; set; }
+    public string Message { get; set; }
+    void Submit()
+    {
+        Message = $"你好 {Name}";
+    }
+
+}
