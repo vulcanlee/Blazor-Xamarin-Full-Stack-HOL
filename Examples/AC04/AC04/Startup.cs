@@ -32,7 +32,7 @@ namespace AC04
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            #region 自行客製中介軟體 1
+            #region Case 1 自行客製中介軟體 1
             app.Use(async (context, next) =>
             {
                 // 呼叫下一個中介軟體要執行的內容，在這裡不要寫入任何內容到 HTTP Responet 回應內
@@ -62,7 +62,7 @@ namespace AC04
 
             app.UseStaticFiles();
 
-            #region 加入額外的提供靜態檔案的選項 StaticFileOptions 
+            #region Case 2 加入額外的提供靜態檔案的選項 StaticFileOptions 
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(
@@ -75,12 +75,13 @@ namespace AC04
 
             app.UseAuthorization();
 
-            #region 自行客製中介軟體 2
+            #region Case 3 自行客製中介軟體 2
             app.Use(async (context, next) =>
             {
                 Console.WriteLine($"呼叫第 2 個客製化中介軟體");
                 Console.WriteLine($"路由路徑 {context.Request.Path}");
 
+                // 限制這個 端點 僅能夠看到 "Hello World!" 文字
                 if (context.Request.Path == "/Vulcan")
                 {
                     await context.Response.WriteAsync("Hello World!");
@@ -94,18 +95,8 @@ namespace AC04
             });
             #endregion
 
-            #region 自行客製中介軟體 3
-            app.Use(async (context, next) =>
-            {
-                // 呼叫下一個中介軟體要執行的內容，在這裡不要寫入任何內容到 HTTP Responet 回應內
-                Console.WriteLine($"呼叫第 3 個客製化中介軟體");
-
-                await next.Invoke();
-
-                // 自這裡進行寫入日誌或其他工作，在這裡不要寫入任何內容到 HTTP Responet 回應內
-                Console.WriteLine($"結束執行第 3 個客製化中介軟體");
-                Console.WriteLine();
-            });
+            #region Case 4 自行客製中介軟體 3
+            app.UseCustomMiddleware();
             #endregion
 
             app.UseEndpoints(endpoints =>
