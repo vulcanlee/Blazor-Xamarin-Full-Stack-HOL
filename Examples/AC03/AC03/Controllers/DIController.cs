@@ -37,26 +37,26 @@ namespace AC03.Controllers
         {
             StringBuilder result = new StringBuilder();
 
-            result.Append($"myServiceTransient1 " +
-                $"Guid:{myServiceTransient1.Guid} , HashCode :{myServiceTransient1.HashCode}"+
+            result.Append($"注入暫時性物件1 " + Environment.NewLine);
+            result.Append($"Guid:{myServiceTransient1.Guid} , HashCode :{myServiceTransient1.HashCode}" +
                 Environment.NewLine);
-            result.Append($"myServiceTransient2 " +
-                $"Guid:{myServiceTransient2.Guid} , HashCode :{myServiceTransient2.HashCode}" +
+            result.Append($"注入暫時性物件2 " + Environment.NewLine);
+            result.Append($"Guid:{myServiceTransient2.Guid} , HashCode :{myServiceTransient2.HashCode}" +
+                Environment.NewLine + Environment.NewLine);
+            result.Append($"注入範圍性物件1 " + Environment.NewLine);
+            result.Append($"Guid:{myServiceScoped1.Guid} , HashCode :{myServiceScoped1.HashCode}" +
                 Environment.NewLine);
-            result.Append($"myServiceScoped1 " +
-                $"Guid:{myServiceScoped1.Guid} , HashCode :{myServiceScoped1.HashCode}" +
+            result.Append($"注入範圍性物件2 " + Environment.NewLine);
+            result.Append($"Guid:{myServiceScoped2.Guid} , HashCode :{myServiceScoped2.HashCode}" +
+                Environment.NewLine + Environment.NewLine);
+            result.Append($"注入永久性物件1 " + Environment.NewLine);
+            result.Append($"Guid:{myServiceSingleton1.Guid} , HashCode :{myServiceSingleton1.HashCode}" +
                 Environment.NewLine);
-            result.Append($"myServiceScoped2 " +
-                $"Guid:{myServiceScoped2.Guid} , HashCode :{myServiceScoped2.HashCode}" +
-                Environment.NewLine);
-            result.Append($"myServiceSingleton1 " +
-                $"Guid:{myServiceSingleton1.Guid} , HashCode :{myServiceSingleton1.HashCode}" +
-                Environment.NewLine);
-            result.Append($"myServiceSingleton2 " +
-                $"Guid:{myServiceSingleton2.Guid} , HashCode :{myServiceSingleton2.HashCode}" +
+            result.Append($"注入永久性物件2 " + Environment.NewLine);
+            result.Append($"Guid:{myServiceSingleton2.Guid} , HashCode :{myServiceSingleton2.HashCode}" +
                 Environment.NewLine);
 
             return result.ToString();
         }
-}
+    }
 }
