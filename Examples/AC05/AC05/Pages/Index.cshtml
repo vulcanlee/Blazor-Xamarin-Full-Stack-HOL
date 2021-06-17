@@ -1,0 +1,29 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+    @foreach (var item in Model.AllConfigurationProvider)
+    {
+        <span class="mx-3 bg-secondary text-white">@item</span>
+    }
+</div>
+<div>
+    <span class="mx-3">MyEnglishName : @Model.MyEnglishName</span>
+    <span class="mx-3">MyChineseName : @Model.MyChineseName</span>
+
+</div>
+<div>
+    <span class="mx-3">IsNETDeveloper : @Model.IsNETDeveloper</span>
+    <span class="mx-3">NETDeveloperYear : @Model.NETDeveloperYear</span>
+</div>
+<div>
+    <span class="mx-3">ProjectName : @Model.ProjectName</span>
+</div>
