@@ -38,6 +38,7 @@ namespace AC03
             services.AddTransient<IMyServiceTransient, MyService>();
             services.AddScoped<IMyServiceScoped, MyService>();
             services.AddSingleton<IMyServiceSingleton, MyService>();
+            services.AddTransient<MyService>();
             #endregion
         }
 

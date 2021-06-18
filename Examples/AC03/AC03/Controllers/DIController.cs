@@ -1,11 +1,7 @@
 ﻿using AC03.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AC03.Controllers
 {
@@ -19,10 +15,11 @@ namespace AC03.Controllers
         private readonly IMyServiceScoped myServiceScoped2;
         private readonly IMyServiceSingleton myServiceSingleton1;
         private readonly IMyServiceSingleton myServiceSingleton2;
+        private readonly MyService myService;
 
         public DIController(IMyServiceTransient myServiceTransient1, IMyServiceTransient myServiceTransient2,
             IMyServiceScoped myServiceScoped1, IMyServiceScoped myServiceScoped2,
-            IMyServiceSingleton myServiceSingleton1, IMyServiceSingleton myServiceSingleton2)
+            IMyServiceSingleton myServiceSingleton1, IMyServiceSingleton myServiceSingleton2, MyService myService)
         {
             this.myServiceTransient1 = myServiceTransient1;
             this.myServiceTransient2 = myServiceTransient2;
@@ -30,6 +27,7 @@ namespace AC03.Controllers
             this.myServiceScoped2 = myServiceScoped2;
             this.myServiceSingleton1 = myServiceSingleton1;
             this.myServiceSingleton2 = myServiceSingleton2;
+            this.myService = myService;
         }
 
         [HttpGet]
@@ -37,6 +35,9 @@ namespace AC03.Controllers
         {
             StringBuilder result = new StringBuilder();
 
+            result.Append($"注入 [類別] 暫時性物件1 " + Environment.NewLine);
+            result.Append($"Guid:{myService.Guid} , HashCode :{myService.HashCode}" +
+                Environment.NewLine);
             result.Append($"注入暫時性物件1 " + Environment.NewLine);
             result.Append($"Guid:{myServiceTransient1.Guid} , HashCode :{myServiceTransient1.HashCode}" +
                 Environment.NewLine);
