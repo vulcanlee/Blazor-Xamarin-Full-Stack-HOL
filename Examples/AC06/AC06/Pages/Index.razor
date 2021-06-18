@@ -1,0 +1,29 @@
+﻿@page "/"
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Options
+@using Data
+@inject IConfiguration configuration
+@inject IOptions<CustomMapClass> customMapClassOption
+
+<h1>Hello, 選項模式!</h1>
+<h2 class="text-primary">@Message1</h2>
+<h2 class="text-success">@Message2</h2>
+
+@code{
+
+    public string Message1 { get; set; }
+    public string Message2 { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        var customMapClass = new CustomMapClass();
+        configuration.GetSection("Custom").Bind(customMapClass);
+        Message1 = $"{customMapClass.MyEnglishName} is .NET Developer :" +
+                $"{customMapClass.Nest.IsNETDeveloper}";
+        var customMapOption = customMapClassOption.Value;
+        Message2 = $"{customMapOption.MyEnglishName} is .NET Developer :" +
+            $"{customMapOption.Nest.IsNETDeveloper}";
+        StateHasChanged();
+    }
+}
+
