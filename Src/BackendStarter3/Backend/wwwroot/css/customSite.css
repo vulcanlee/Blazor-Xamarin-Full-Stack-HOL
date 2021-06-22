@@ -83,6 +83,15 @@
 }
 
 @media (max-width: 640px) {
+
+    .navbar {
+        justify-content: start;
+    }
+
+    .navbar-brand {
+        margin-left: 1rem;
+    }
+
     .confirm-box-width {
         width: 90vw !important;
     }
