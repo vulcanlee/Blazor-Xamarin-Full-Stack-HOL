@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<h1>Hello, Blazor 生命週期事件!</h1>
+
+<LifeCycleView Message="@MyMessage" />
+<br />
+<button class="btn btn-primary"
+        @onclick="OnClick">
+    進行資料綁定變更
+</button>
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code{
+    public string MyMessage { get; set; } = "First";
+
+    void OnClick()
+    {
+        Console.WriteLine();
+        MyMessage = "文字變更了";
+    }
+}

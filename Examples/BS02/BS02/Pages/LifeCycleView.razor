@@ -1,0 +1,49 @@
+﻿<div class="card">
+    <h5 class="card-header">LifeCycleView.razor</h5>
+    <div class="card-body">
+        <h3 class="text-primary">@Message</h3>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Message { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine($"執行 OnInitialized");
+    }
+    protected override Task OnInitializedAsync()
+    {
+        Console.WriteLine($"執行 OnInitializedAsync");
+        return Task.FromResult(0);
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine($"執行 OnAfterRender - {firstRender}");
+    }
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine($"執行 OnAfterRenderAsync - {firstRender}");
+        return Task.FromResult(0);
+    }
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine($"執行 OnParametersSet");
+    }
+    protected override Task OnParametersSetAsync()
+    {
+        Console.WriteLine($"執行 OnParametersSetAsync");
+        return Task.FromResult(0);
+    }
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        Console.WriteLine($"執行 SetParametersAsync");
+        return base.SetParametersAsync(parameters);
+    }
+    protected override bool ShouldRender()
+    {
+        Console.WriteLine($"執行 ShouldRender");
+        return base.ShouldRender();
+    }
+}
