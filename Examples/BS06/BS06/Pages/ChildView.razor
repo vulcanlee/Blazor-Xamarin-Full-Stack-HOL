@@ -1,0 +1,20 @@
+﻿<div class="card">
+    <div class="card-header">
+        子元件對話窗
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">警告，請輸入你的回應</h5>
+        <input class="card-text" @bind="Para1" />
+        <button class="btn btn-primary" @onclick="CloseDialog">確定</button>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Para1 { get; set; }
+    [Parameter]
+    public EventCallback<string> OnBtnCloseCallback { get; set; }
+    void CloseDialog()
+    {
+        OnBtnCloseCallback.InvokeAsync($"你的選擇是 {Para1}");
+    }
+}

@@ -1,0 +1,35 @@
+﻿@page "/"
+
+<h1>Hello, 元件間的參數傳遞與回應事件!</h1>
+
+@if (ShowMessagebox == false)
+{
+    <div>
+        <button class="btn btn-primary"
+                @onclick="OnShowMessagebox">
+            Show Message
+        </button>
+        <p>@ResponseMessage</p>
+    </div>
+}
+else
+{
+    <ChildView Para1="@PassArgument" OnBtnCloseCallback="BtnCloseCallback" />
+}
+
+@code{
+    public bool ShowMessagebox { get; set; } = false;
+    public string PassArgument { get; set; }
+    public string ResponseMessage { get; set; }
+    void OnShowMessagebox()
+    {
+        PassArgument = DateTime.Now.ToString();
+        ShowMessagebox = true;
+    }
+    void BtnCloseCallback(string message)
+    {
+        ShowMessagebox = false;
+        ResponseMessage = message;
+    }
+}
+
