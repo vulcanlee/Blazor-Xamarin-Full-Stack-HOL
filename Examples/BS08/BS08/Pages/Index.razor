@@ -1,0 +1,49 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+
+<h1>Hello, 表單和驗證!</h1>
+
+<EditForm Model="@User" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-row">
+        <div class="form-group col">
+            <label class="control-label">姓名</label>
+            <input class="form-control" @bind="@User.Name"
+                   Placeholder="請輸入姓名" />
+            <ValidationMessage For="@(() => User.Name)" />
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col">
+            <label class="control-label">年紀</label>
+            <input class="form-control" @bind="@User.Age"
+                   Placeholder="請輸入Age" />
+            <ValidationMessage For="@(() => User.Age)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+</EditForm>
+
+<div class="display-1 text-success">@Message</div>
+@code{
+    public UserData User { get; set; } = new();
+    public string Message { get; set; }
+    void HandleValidSubmit()
+    {
+        Message = $"{User.Name} , {User.Age}";
+    }
+
+    public class UserData
+    {
+        [Required(ErrorMessage = "姓名不可為空白")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "年紀不可為空白")]
+        [Range(minimum:0, maximum:120, ErrorMessage ="年紀數值必須介於 0~120")]
+        public string Age { get; set; }
+    }
+}
+
