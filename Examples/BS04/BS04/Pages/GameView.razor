@@ -1,0 +1,89 @@
+﻿@using System.Threading
+@using System.Threading.Tasks
+
+<div>
+    <div>請選擇 剪刀、石頭、布</div>
+    <div>
+        @for (int i = 1; i <= 3; i++)
+        {
+            int idx = i;
+            <img src="@allItems[idx].Image" class="@allItems[idx].Background" style="width:7em;height:7em;"
+                 @onclick="async ()=>{await Choose(allItems[idx]); }">
+        }
+    </div>
+    <div class="my-5">
+        <span>
+            <img src="@allItems[You].Image" style="width:7em;height:7em;">
+            你
+        </span>
+        <span class="mx-4"> vs </span>
+        <span>
+            電腦
+            <img src="@allItems[Computer].Image" style="width:7em;height:7em;">
+        </span>
+    </div>
+</div>
+@code {
+    string GameMessage = "";
+    List<GameItem> allItems = new List<GameItem>()
+{
+        new GameItem { Name = "Empty" },
+        new GameItem { Name = "Scissors" },
+        new GameItem { Name = "Rock" },
+        new GameItem { Name = "Paper" },
+    };
+    int Computer = 1;
+    int You = 0;
+
+    async Task Choose(GameItem item)
+    {
+        for (int i = 1; i < allItems.Count; i++)
+        {
+            if (allItems[i].Name == item.Name)
+            {
+                allItems[i].Selected = true;
+                You = i;
+            }
+            else
+                allItems[i].Selected = false;
+        }
+
+        Random random = new Random();
+        var count = random.Next(20, 35);
+
+        for (int i = 0; i < count; i++)
+        {
+            Computer = (i % 3) + 1;
+            await Task.Delay(100);
+            //StateHasChanged();
+        }
+    }
+
+    public class GameItem
+    {
+        public string Name { get; set; }
+
+        public string Image
+        {
+            get
+            {
+                return $"/Images/{Name}.png";
+            }
+        }
+        public bool Selected { get; set; }
+        public string Background
+        {
+            get
+            {
+                if (Selected == true)
+                {
+                    return "bg-secondary";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+    }
+}
