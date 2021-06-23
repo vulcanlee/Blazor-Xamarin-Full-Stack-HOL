@@ -1,0 +1,35 @@
+﻿@page "/"
+
+<h1>Hello, 互動頁面與事件設計!</h1>
+
+<div>
+    <label>姓</label>
+</div><div>
+    <input @bind="@LastName" />
+</div>
+
+<div>
+    <label>名</label>
+</div><div>
+    <input @bind="@FirstName" />
+</div>
+
+<div>
+    <button class="btn btn-primary" @onclick="SayHello">Say Hello</button>
+</div>
+
+<div class="my-5 display-1 text-success">
+    @FullName
+</div>
+
+@code{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string FullName { get; set; }
+
+    void SayHello()
+    {
+        FullName = $"{LastName} {FirstName} 你好";
+    }
+}
+
