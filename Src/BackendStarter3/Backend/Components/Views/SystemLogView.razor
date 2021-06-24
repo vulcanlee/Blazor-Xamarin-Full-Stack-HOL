@@ -33,8 +33,7 @@
             </ToolbarItems>
         </SfToolbar>
         <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="SystemLogAdapterModel"
-                    OnToolbarClick="RazorModel.ToolbarClickHandler"
-                    RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+                    OnToolbarClick="RazorModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(SystemLogAdapterModel.Message)
@@ -202,29 +201,4 @@
     }
     #endregion
 
-
-    #region 選取紀錄異動的事件處理
-    public async Task RowSelectHandler(RowSelectEventArgs<SystemLogAdapterModel> args)
-    {
-        //if (OnRecordChanged.HasDelegate)
-        //{
-        //    await OnRecordChanged.InvokeAsync(new MasterRecord()
-        //    {
-        //        Id = args.Data.Id,
-        //        Title = MagicHelper.確認有表頭預設文字
-        //    });
-        //}
-    }
-    public async Task RowDeselectHandler(RowDeselectEventArgs<SystemLogAdapterModel> args)
-    {
-        //if (OnRecordChanged.HasDelegate)
-        //{
-        //    await OnRecordChanged.InvokeAsync(new MasterRecord()
-        //    {
-        //        Id = -2,
-        //        Title = "",
-        //    });
-        //}
-    }
-    #endregion
 }

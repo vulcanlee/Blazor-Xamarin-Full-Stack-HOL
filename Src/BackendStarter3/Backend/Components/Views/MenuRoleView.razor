@@ -33,8 +33,7 @@
             </ToolbarItems>
         </SfToolbar>
         <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="MenuRoleAdapterModel"
-                    OnToolbarClick="ViewModel.ToolbarClickHandler"
-                    RowSelected="RowSelectHandler" RowDeselected="RowDeselectHandler" />
+                    OnToolbarClick="ViewModel.ToolbarClickHandler"/>
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(MenuRoleAdapterModel.Name) HeaderText="名稱" />
@@ -166,28 +165,4 @@
     }
     #endregion
 
-    #region 選取紀錄異動的事件處理
-    public async Task RowSelectHandler(RowSelectEventArgs<MenuRoleAdapterModel> args)
-    {
-        if (OnRecordChanged.HasDelegate)
-        {
-            await OnRecordChanged.InvokeAsync(new MasterRecord()
-            {
-                Id = args.Data.Id,
-                Title = MagicHelper.確認有表頭預設文字
-            });
-        }
-    }
-    public async Task RowDeselectHandler(RowDeselectEventArgs<MenuRoleAdapterModel> args)
-    {
-        if (OnRecordChanged.HasDelegate)
-        {
-            await OnRecordChanged.InvokeAsync(new MasterRecord()
-            {
-                Id = -2,
-                Title = "",
-            });
-        }
-    }
-    #endregion
 }
