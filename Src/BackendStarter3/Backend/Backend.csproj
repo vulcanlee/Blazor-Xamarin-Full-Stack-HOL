@@ -32,8 +32,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Entities\Entities.csproj" />
-		<ProjectReference Include="..\DataTransferObject\DataTransferObject.csproj" />
+		<ProjectReference Include="..\Entities\DataAccessLayers.csproj" />
+		<ProjectReference Include="..\DataTransferObject\DataTransferObjects.csproj" />
 		<ProjectReference Include="..\EventAggreators\EventAggreators.csproj" />
 		<ProjectReference Include="..\ShareBusiness\ShareBusiness.csproj" />
 		<ProjectReference Include="..\ShareDomain\ShareDomain.csproj" />
