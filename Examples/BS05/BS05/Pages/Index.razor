@@ -4,14 +4,18 @@
 
 <div>
     <label>姓</label>
-</div><div>
+</div>
+<div>
     <input @bind="@LastName" />
+    @LastName
 </div>
 
 <div>
     <label>名</label>
-</div><div>
-    <input @bind="@FirstName" />
+</div>
+<div>
+    <input @bind-value="@FirstName" @bind-value:event="oninput" />
+    @FirstName
 </div>
 
 <div>
