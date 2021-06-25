@@ -31,7 +31,9 @@ namespace BS03
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
+            #region 宣告要注入的 ViewModel 類別
             services.AddTransient<CounterViewModel>();
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
