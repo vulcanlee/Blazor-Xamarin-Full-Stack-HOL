@@ -173,7 +173,11 @@ namespace Backend
             #endregion
 
             #region 加入背景服務
-            services.AddHostedService<KeepAliveHostedService>();
+            var EnableKeepAliveEndpoint = Convert.ToBoolean(Configuration["EnableKeepAliveEndpoint"]);
+            if (EnableKeepAliveEndpoint == true)
+            {
+                services.AddHostedService<KeepAliveHostedService>();
+            }
             #endregion
 
             #region 使用 HttpContext
