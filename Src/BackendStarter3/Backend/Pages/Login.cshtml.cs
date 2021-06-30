@@ -109,6 +109,7 @@ namespace Backend.Pages
                         IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
                     });
                     logger.LogInformation($"{Msg}");
+                    GetCaptchaImage();
                     return Page();
                     #endregion
                 }
@@ -127,6 +128,7 @@ namespace Backend.Pages
                         IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
                     });
                     logger.LogInformation($"{Msg}");
+                    GetCaptchaImage();
                     return Page();
                     #endregion
                 }
