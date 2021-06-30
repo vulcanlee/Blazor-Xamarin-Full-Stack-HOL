@@ -31,6 +31,7 @@ namespace Backend
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,6 +43,14 @@ namespace Backend
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region 顯示所讀取的 Configuration 內容值
+            bool showImportanceConfigurationInforation = Convert.ToBoolean(Configuration["ShowImportanceConfigurationInforation"]);
+            if (showImportanceConfigurationInforation)
+            {
+                AllConfigurationHelper.Show(Configuration);
+            }
+            #endregion
+
             #region Blazor & Razor Page 用到服務
             services.AddRazorPages();
             #region Blazor Server 註冊服務，正式部署下，是否要顯示明確的例外異常資訊
@@ -86,7 +95,7 @@ namespace Backend
             #endregion
 
             #region EF Core & AutoMapper 使用的宣告
-            string foo = Configuration.GetConnectionString(MagicHelper.DefaultConnectionString);
+            string connectionString = Configuration.GetConnectionString(MagicHelper.DefaultConnectionString);
             services.AddDbContext<BackendDBContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString(
                 MagicHelper.DefaultConnectionString)));
