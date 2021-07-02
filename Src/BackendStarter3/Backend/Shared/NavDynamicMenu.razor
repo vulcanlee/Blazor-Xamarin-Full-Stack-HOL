@@ -28,7 +28,7 @@
                     if (currentMenuData.MenuData.CodeName == "/")
                     {
                         <li class="@currentMenuData.MenuClass nav-item px-3">
-                            <div @onclick="() => { MenuDataClicked(currentMenuData); }">
+                            <div @onclick="() => { MenuDataClicked(currentMenuData); }" class="noselect">
                                 <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
                                 <span class="text-white">@currentMenuData.MenuData.Name</span>
                             </div>
@@ -38,7 +38,7 @@
                     {
                         if (currentMenuData.MenuData.IsGroup == false)
                         {
-                            <li class="@currentMenuData.MenuClass nav-item px-3">
+                            <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
                                 <div @onclick="()=> { MenuDataClicked(currentMenuData); }">
                                     <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
                                     <span class="text-white">@currentMenuData.MenuData.Name</span>
@@ -47,7 +47,7 @@
                         }
                         else
                         {
-                            <li class="@currentMenuData.MenuClass nav-item px-3">
+                            <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
                                 <div @onclick="()=> {
                                            currentMenuData.IsExpand=!currentMenuData.IsExpand;
                                        }">
@@ -60,7 +60,7 @@
                                 foreach (var itemSub in item.SubMenus)
                                 {
                                     var currentSubMenuData = itemSub;
-                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-1">
+                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-1 noselect">
                                         <div @onclick="()=> { SubMenuDataClicked(currentSubMenuData); }">
                                             <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
                                             <span class="text-white">@currentSubMenuData.MenuData.Name</span>
