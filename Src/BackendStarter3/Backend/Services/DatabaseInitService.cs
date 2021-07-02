@@ -8,12 +8,12 @@ namespace Backend.Services
     using Backend.Helpers;
     using Backend.Models;
     using EFCore.BulkExtensions;
-    using Entities.Models;
+    using Domains.Models;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
-    using ShareBusiness.Helpers;
+    using BAL.Helpers;
     using System;
     using System.Linq;
 
@@ -299,7 +299,7 @@ namespace Backend.Services
             cc += 10;
             MenuData menuData = new MenuData()
             {
-                Name = ShareBusiness.Helpers.MagicHelper.首頁功能名稱,
+                Name = BAL.Helpers.MagicHelper.首頁功能名稱,
                 CodeName = "/",
                 Enable = true,
                 Icon = "mdi-home",
@@ -315,7 +315,7 @@ namespace Backend.Services
             cc += 10;
             menuData = new MenuData()
             {
-                Name = ShareBusiness.Helpers.MagicHelper.帳號管理功能名稱,
+                Name = BAL.Helpers.MagicHelper.帳號管理功能名稱,
                 CodeName = "MyUser",
                 Enable = true,
                 Icon = "mdi-clipboard-account",
@@ -331,7 +331,7 @@ namespace Backend.Services
             cc += 10;
             menuData = new MenuData()
             {
-                Name = ShareBusiness.Helpers.MagicHelper.變更密碼,
+                Name = BAL.Helpers.MagicHelper.變更密碼,
                 CodeName = "ChangePassword",
                 Enable = true,
                 Icon = "mdi-form-textbox-password",

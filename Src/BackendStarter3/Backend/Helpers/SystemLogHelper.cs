@@ -2,9 +2,9 @@
 using Backend.AdapterModels;
 using Backend.Services;
 using Backend.SortModels;
-using Entities.Models;
-using ShareBusiness.Helpers;
-using ShareDomain.DataModels;
+using Domains.Models;
+using BAL.Helpers;
+using CommonDomain.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,8 +1,8 @@
-﻿using Entities.Models;
+﻿using Domains.Models;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ShareBusiness.Helpers;
+using BAL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

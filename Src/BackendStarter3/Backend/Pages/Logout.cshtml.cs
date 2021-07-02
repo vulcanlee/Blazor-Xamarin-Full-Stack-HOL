@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ShareBusiness.Helpers;
+using BAL.Helpers;
 using System.Threading.Tasks;
 
 namespace Backend.Pages

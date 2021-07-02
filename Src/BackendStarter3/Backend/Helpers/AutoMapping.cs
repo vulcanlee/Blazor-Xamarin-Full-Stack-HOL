@@ -2,8 +2,8 @@
 {
     using AutoMapper;
     using Backend.AdapterModels;
-    using DataTransferObject.DTOs;
-    using Entities.Models;
+    using DTOs.DataModels;
+    using Domains.Models;
 
     public class AutoMapping : Profile
     {

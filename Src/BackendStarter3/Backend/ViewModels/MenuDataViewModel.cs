@@ -11,10 +11,10 @@ namespace Backend.ViewModels
     using Backend.Interfaces;
     using Backend.Services;
     using Backend.SortModels;
-    using Entities.Models;
+    using Domains.Models;
     using Microsoft.AspNetCore.Components.Forms;
-    using ShareBusiness.Helpers;
-    using ShareDomain.DataModels;
+    using BAL.Helpers;
+    using CommonDomain.DataModels;
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 

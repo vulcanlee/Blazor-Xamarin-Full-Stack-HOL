@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
-using Entities.Models;
+using Domains.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
-using ShareBusiness.Helpers;
+using BAL.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

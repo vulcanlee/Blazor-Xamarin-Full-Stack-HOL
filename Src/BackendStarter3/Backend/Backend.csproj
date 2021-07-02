@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<UserSecretsId>26b0a3e6-39cb-48fa-88e4-8a4c3455015c</UserSecretsId>
-		<Version>1.3.47.1940</Version>
+		<Version>1.3.48.1920</Version>
 		<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
 	</PropertyGroup>
 
@@ -32,11 +32,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Entities\DataAccessLayers.csproj" />
-		<ProjectReference Include="..\DataTransferObject\DataTransferObjects.csproj" />
-		<ProjectReference Include="..\EventAggreators\EventAggreators.csproj" />
-		<ProjectReference Include="..\ShareBusiness\ShareBusiness.csproj" />
-		<ProjectReference Include="..\ShareDomain\ShareDomain.csproj" />
+		<ProjectReference Include="..\BAL\BAL.csproj" />
+		<ProjectReference Include="..\CommonDomain\CommonDomain.csproj" />
+		<ProjectReference Include="..\Domains\Domains.csproj" />
+		<ProjectReference Include="..\DTOs\DTOs.csproj" />
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

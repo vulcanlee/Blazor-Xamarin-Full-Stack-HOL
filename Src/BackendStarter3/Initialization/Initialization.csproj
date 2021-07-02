@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -20,8 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Entities\DataAccessLayers.csproj" />
-    <ProjectReference Include="..\ShareBusiness\ShareBusiness.csproj" />
+    <ProjectReference Include="..\BAL\BAL.csproj" />
+    <ProjectReference Include="..\CommonDomain\CommonDomain.csproj" />
+    <ProjectReference Include="..\Domains\Domains.csproj" />
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
   </ItemGroup>
 
 </Project>

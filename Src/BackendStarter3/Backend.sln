@@ -5,17 +5,17 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.csproj", "{9B994EFD-B5CC-4763-AEC8-7AD35D95D511}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransferObjects", "DataTransferObject\DataTransferObjects.csproj", "{0F677EF5-0782-4B5F-8EDB-ECD7C376A717}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "DTOs\DTOs.csproj", "{0F677EF5-0782-4B5F-8EDB-ECD7C376A717}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareBusiness", "ShareBusiness\ShareBusiness.csproj", "{0B2DD137-6171-4A60-A472-33A9B3C57682}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BAL", "BAL\BAL.csproj", "{0B2DD137-6171-4A60-A472-33A9B3C57682}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareDomain", "ShareDomain\ShareDomain.csproj", "{F9D0CEB4-924C-4B2A-86CC-48563032666C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonDomain", "CommonDomain\CommonDomain.csproj", "{F9D0CEB4-924C-4B2A-86CC-48563032666C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayers", "Entities\DataAccessLayers.csproj", "{E25AFC01-2A96-497F-A3E8-F46907B89341}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domains", "Domains\Domains.csproj", "{E25AFC01-2A96-497F-A3E8-F46907B89341}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Initialization", "Initialization\Initialization.csproj", "{725DC61E-2CCB-4C7D-A77C-41178A8B61F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventAggreators", "EventAggreators\EventAggreators.csproj", "{676C278B-84D4-44D1-B02F-7EDC806B9A29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{676C278B-84D4-44D1-B02F-7EDC806B9A29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

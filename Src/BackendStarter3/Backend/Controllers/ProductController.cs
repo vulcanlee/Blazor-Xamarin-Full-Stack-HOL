@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
 using Backend.Services;
-using DataTransferObject.DTOs;
+using DTOs.DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShareBusiness.Factories;
-using ShareBusiness.Helpers;
-using ShareDomain.DataModels;
-using ShareDomain.Enums;
+using BAL.Factories;
+using BAL.Helpers;
+using CommonDomain.DataModels;
+using CommonDomain.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
 using Microsoft.Extensions.Configuration;
-using ShareDomain.DataModels;
+using CommonDomain.DataModels;
 using System.Threading.Tasks;
 
 namespace Backend.Services

@@ -1,10 +1,10 @@
-﻿using DataTransferObject.DTOs;
+﻿using DTOs.DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShareBusiness.Factories;
-using ShareBusiness.Helpers;
-using ShareDomain.Enums;
+using BAL.Factories;
+using BAL.Helpers;
+using CommonDomain.Enums;
 
 namespace Backend.Controllers
 {

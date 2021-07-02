@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Backend.Models;
 using EFCore.BulkExtensions;
-using Entities.Models;
+using Domains.Models;
 using Microsoft.EntityFrameworkCore;
-using ShareBusiness.Helpers;
+using BAL.Helpers;
 using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;

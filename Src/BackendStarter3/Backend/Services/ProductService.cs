@@ -7,13 +7,13 @@ namespace Backend.Services
     using AutoMapper;
     using Backend.AdapterModels;
     using Backend.SortModels;
-    using Entities.Models;
+    using Domains.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-    using ShareBusiness.Factories;
-    using ShareBusiness.Helpers;
-    using ShareDomain.DataModels;
-    using ShareDomain.Enums;
+    using BAL.Factories;
+    using BAL.Helpers;
+    using CommonDomain.DataModels;
+    using CommonDomain.Enums;
     using System;
 
     public class ProductService : IProductService

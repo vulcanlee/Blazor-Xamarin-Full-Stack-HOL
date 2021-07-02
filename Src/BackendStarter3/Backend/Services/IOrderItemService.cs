@@ -1,5 +1,5 @@
 ﻿using Backend.AdapterModels;
-using ShareDomain.DataModels;
+using CommonDomain.DataModels;
 using System.Threading.Tasks;
 
 namespace Backend.Services

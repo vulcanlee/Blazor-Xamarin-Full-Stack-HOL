@@ -1,7 +1,7 @@
 ﻿using Backend.Events;
 using Backend.ViewModels;
 using Prism.Events;
-using ShareDomain.DataModels;
+using CommonDomain.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -27,7 +27,7 @@ namespace Backend.Helpers
         {
             if(verifyRecordResult.Success == false)
             {
-                if(verifyRecordResult.MessageId == ShareDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
+                if(verifyRecordResult.MessageId == CommonDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
                 {
                     string message;
                     if(verifyRecordResult.Exception==null)

@@ -1,9 +1,9 @@
 ﻿using Backend.AdapterModels;
 using Backend.Services;
 using Backend.SortModels;
-using Entities.Models;
-using ShareBusiness.Helpers;
-using ShareDomain.DataModels;
+using Domains.Models;
+using BAL.Helpers;
+using CommonDomain.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +101,7 @@ namespace Backend.Helpers
                 {
                     MenuData = new MenuDataAdapterModel()
                     {
-                        Name = ShareBusiness.Helpers.MagicHelper.功能表角色功能名稱,
+                        Name = BAL.Helpers.MagicHelper.功能表角色功能名稱,
                         CodeName = "MenuRole",
                         Enable = true,
                         Icon = "mdi-menu",
@@ -114,7 +114,7 @@ namespace Backend.Helpers
                 {
                     MenuData = new MenuDataAdapterModel()
                     {
-                        Name = ShareBusiness.Helpers.MagicHelper.系統日誌功能名稱,
+                        Name = BAL.Helpers.MagicHelper.系統日誌功能名稱,
                         CodeName = "SystemLog",
                         Enable = true,
                         Icon = "mdi-message-processing",
@@ -127,7 +127,7 @@ namespace Backend.Helpers
                 {
                     MenuData = new MenuDataAdapterModel()
                     {
-                        Name = ShareBusiness.Helpers.MagicHelper.Excel匯入功能名稱,
+                        Name = BAL.Helpers.MagicHelper.Excel匯入功能名稱,
                         CodeName = "Import",
                         Enable = true,
                         Icon = "mdi-database-import",

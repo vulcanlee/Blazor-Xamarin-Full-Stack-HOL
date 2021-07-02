@@ -1,4 +1,4 @@
-﻿using ShareDomain.DataModels;
+﻿using CommonDomain.DataModels;
 using System.Collections.Generic;
 
 namespace Backend.SortModels
