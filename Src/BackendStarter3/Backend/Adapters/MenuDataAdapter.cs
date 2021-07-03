@@ -9,22 +9,8 @@
     using Newtonsoft.Json;
     using Syncfusion.Blazor;
     using Syncfusion.Blazor.Data;
-    public partial class MenuDataCSAdapter : DataAdaptor<IMenuDataService>
+    public partial class MenuDataAdapter : DataAdaptor<IMenuDataService>
     {
-#pragma warning disable 1998
-        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
-        {
-            __Blazor.Backend.Adapters.MenuDataCSAdapter.TypeInference.CreateCascadingValue_0(
-                __builder, 0, 1, this, 2, (__builder2) =>
-                {
-                    __builder2.AddContent(3, ChildContent);
-                });
-        }
-
-        [Parameter]
-        [JsonIgnore]
-        public RenderFragment ChildContent { get; set; }
-
         [Parameter]
         public int HeaderID { get; set; }
 
@@ -66,21 +52,6 @@
             await Task.Yield();
             return item;
             #endregion
-        }
-
-        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IMapper Mapper { get; set; }
-    }
-}
-namespace __Blazor.Backend.Adapters.MenuDataCSAdapter
-{
-    internal static class TypeInference
-    {
-        public static void CreateCascadingValue_0<TValue>(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, TValue __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1)
-        {
-            __builder.OpenComponent<global::Microsoft.AspNetCore.Components.CascadingValue<TValue>>(seq);
-            __builder.AddAttribute(__seq0, "Value", __arg0);
-            __builder.AddAttribute(__seq1, "ChildContent", __arg1);
-            __builder.CloseComponent();
         }
     }
 }
