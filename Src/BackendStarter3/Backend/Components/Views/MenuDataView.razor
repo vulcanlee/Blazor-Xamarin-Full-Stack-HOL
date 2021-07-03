@@ -66,9 +66,11 @@
             </GridColumn>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
+                                       ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameDelete"
+                                       ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
                 </GridCommandColumns>
             </GridColumn>

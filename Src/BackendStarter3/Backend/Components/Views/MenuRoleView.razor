@@ -41,11 +41,14 @@
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowDetailOfMaster"
+                                       ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowDetailOfMaster})" />
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
+                                       ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameDelete"
+                                       ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
                 </GridCommandColumns>
             </GridColumn>

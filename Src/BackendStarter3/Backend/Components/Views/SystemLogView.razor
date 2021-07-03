@@ -51,10 +51,9 @@
                         HeaderText="時間" Format="yyyyMMdd HHmmss" />
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
-                    <GridCommandColumn ButtonOption="@(new CommandButtonOptions()
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameRead"
+                                       ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdRead})" />
-                    @*<GridCommandColumn ButtonOption="@(new CommandButtonOptions()
-                { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />*@
                 </GridCommandColumns>
             </GridColumn>
         </GridColumns>
