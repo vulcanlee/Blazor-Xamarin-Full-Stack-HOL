@@ -16,8 +16,8 @@
             AllowPaging="true"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <MenuDataAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
-                             HeaderID="@ViewModel.Header.Id"></MenuDataAdapter>
+            <MenuDataCSAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
+                             HeaderID="@ViewModel.Header.Id"></MenuDataCSAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -194,9 +194,6 @@
     public EventCallback<MasterRecord> OnRecordChanged { get; set; }
     [Parameter]
     public EventCallback<object> OnViewRender { get; set; }
-
-    bool fooa = false;
-
 
     #region 生命週期事件
     protected override void OnInitialized()
