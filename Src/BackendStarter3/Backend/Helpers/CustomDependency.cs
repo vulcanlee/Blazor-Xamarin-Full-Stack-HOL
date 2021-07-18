@@ -24,7 +24,7 @@ namespace Backend.Helpers
 
             #endregion
 
-            #region 註冊 Razor Model
+            #region 註冊 ViewModel
             services.AddTransient<SystemLogViewModel>();
             services.AddTransient<ChangePasswordViewModel>();
             services.AddTransient<MenuRoleViewModel>();
