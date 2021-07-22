@@ -3,6 +3,7 @@ using Backend.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;
 using Backend.Events;
+using Backend.Models;
 
 namespace Backend.Helpers
 {
