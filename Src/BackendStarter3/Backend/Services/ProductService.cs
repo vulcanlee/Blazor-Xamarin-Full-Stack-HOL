@@ -18,11 +18,13 @@ namespace Backend.Services
 
     public class ProductService : IProductService
     {
+        #region 欄位與屬性
         private readonly BackendDBContext context;
-
         public IMapper Mapper { get; }
         public ILogger<ProductService> Logger { get; }
+        #endregion
 
+        #region 建構式
         public ProductService(BackendDBContext context, IMapper mapper,
             ILogger<ProductService> logger)
         {
@@ -30,11 +32,13 @@ namespace Backend.Services
             Mapper = mapper;
             Logger = logger;
         }
+        #endregion
 
+        #region CRUD 服務
         public async Task<DataRequestResult<ProductAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<ProductAdapterModel> data = new List<ProductAdapterModel>();
-            DataRequestResult<ProductAdapterModel> result = new DataRequestResult<ProductAdapterModel>();
+            List<ProductAdapterModel> data = new();
+            DataRequestResult<ProductAdapterModel> result = new();
             var DataSource = context.Product
                 .AsNoTracking();
             #region 進行搜尋動作
@@ -175,7 +179,9 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+        #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(ProductAdapterModel paraObject)
         {
             var searchItem = await context.Product
@@ -229,10 +235,13 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+        #endregion
 
+        #region 其他服務方法
         Task OhterDependencyData(ProductAdapterModel data)
         {
             return Task.FromResult(0);
         }
+        #endregion
     }
 }

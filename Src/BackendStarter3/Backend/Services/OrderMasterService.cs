@@ -18,11 +18,13 @@ namespace Backend.Services
 
     public class OrderMasterService : IOrderMasterService
     {
+        #region 欄位與屬性
         private readonly BackendDBContext context;
-
         public IMapper Mapper { get; }
         public ILogger<OrderMasterService> Logger { get; }
+        #endregion
 
+        #region 建構式
         public OrderMasterService(BackendDBContext context, IMapper mapper,
             ILogger<OrderMasterService> logger)
         {
@@ -30,11 +32,13 @@ namespace Backend.Services
             Mapper = mapper;
             Logger = logger;
         }
+        #endregion
 
+        #region CRUD 服務
         public async Task<DataRequestResult<OrderMasterAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<OrderMasterAdapterModel> data = new List<OrderMasterAdapterModel>();
-            DataRequestResult<OrderMasterAdapterModel> result = new DataRequestResult<OrderMasterAdapterModel>();
+            List<OrderMasterAdapterModel> data = new();
+            DataRequestResult<OrderMasterAdapterModel> result = new();
             var DataSource = context.OrderMaster
                 .AsNoTracking();
             #region 進行搜尋動作
@@ -175,7 +179,9 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+        #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderMasterAdapterModel paraObject)
         {
             var searchItem = await context.OrderMaster
@@ -239,10 +245,13 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+        #region 其他服務方法
         Task OhterDependencyData(OrderMasterAdapterModel data)
         {
             return Task.FromResult(0);
         }
+        #endregion
     }
 }

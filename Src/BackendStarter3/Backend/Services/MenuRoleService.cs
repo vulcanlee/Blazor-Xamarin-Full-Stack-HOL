@@ -18,11 +18,13 @@ namespace Backend.Services
 
     public class MenuRoleService : IMenuRoleService
     {
+        #region 欄位與屬性
         private readonly BackendDBContext context;
-
         public IMapper Mapper { get; }
         public ILogger<MenuRoleService> Logger { get; }
+        #endregion
 
+        #region 建構式
         public MenuRoleService(BackendDBContext context, IMapper mapper,
             ILogger<MenuRoleService> logger)
         {
@@ -30,11 +32,13 @@ namespace Backend.Services
             Mapper = mapper;
             Logger = logger;
         }
+        #endregion
 
+        #region CRUD 服務
         public async Task<DataRequestResult<MenuRoleAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<MenuRoleAdapterModel> data = new List<MenuRoleAdapterModel>();
-            DataRequestResult<MenuRoleAdapterModel> result = new DataRequestResult<MenuRoleAdapterModel>();
+            List<MenuRoleAdapterModel> data = new();
+            DataRequestResult<MenuRoleAdapterModel> result = new();
             var DataSource = context.MenuRole
                 .AsNoTracking();
             #region 進行搜尋動作
@@ -195,7 +199,9 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+        #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MenuRoleAdapterModel paraObject)
         {
             var searchItem = await context.MenuRole
@@ -251,7 +257,9 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+        #endregion
 
+        #region 其他服務方法
         Task OhterDependencyData(MenuRoleAdapterModel data)
         {
             return Task.FromResult(0);
@@ -263,7 +271,7 @@ namespace Backend.Services
                 .AsNoTracking()
                 .ToListAsync();
 
-            List<MenuRoleAdapterModel> menuRoleAdapterModels = new List<MenuRoleAdapterModel>();
+            List<MenuRoleAdapterModel> menuRoleAdapterModels = new();
             foreach (var item in result)
             {
                 menuRoleAdapterModels.Add(new MenuRoleAdapterModel
@@ -275,5 +283,6 @@ namespace Backend.Services
 
             return menuRoleAdapterModels;
         }
+        #endregion
     }
 }

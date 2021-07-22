@@ -18,11 +18,13 @@ namespace Backend.Services
 
     public class MenuDataService : IMenuDataService
     {
+        #region 欄位與屬性
         private readonly BackendDBContext context;
-
         public IMapper Mapper { get; }
         public ILogger<MenuDataService> Logger { get; }
+        #endregion
 
+        #region 建構式
         public MenuDataService(BackendDBContext context, IMapper mapper,
             ILogger<MenuDataService> logger)
         {
@@ -30,11 +32,13 @@ namespace Backend.Services
             Mapper = mapper;
             Logger = logger;
         }
+        #endregion
 
+        #region CRUD 服務
         public async Task<DataRequestResult<MenuDataAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<MenuDataAdapterModel> data = new List<MenuDataAdapterModel>();
-            DataRequestResult<MenuDataAdapterModel> result = new DataRequestResult<MenuDataAdapterModel>();
+            List<MenuDataAdapterModel> data = new();
+            DataRequestResult<MenuDataAdapterModel> result = new();
             var DataSource = context.MenuData
                 .AsNoTracking()
                 .Include(x => x.MenuRole)
@@ -97,8 +101,8 @@ namespace Backend.Services
 
         public async Task<DataRequestResult<MenuDataAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
         {
-            List<MenuDataAdapterModel> data = new List<MenuDataAdapterModel>();
-            DataRequestResult<MenuDataAdapterModel> result = new DataRequestResult<MenuDataAdapterModel>();
+            List<MenuDataAdapterModel> data = new();
+            DataRequestResult<MenuDataAdapterModel> result = new();
             var DataSource = context.MenuData
                 .AsNoTracking()
                 .Include(x => x.MenuRole)
@@ -244,7 +248,9 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+        #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MenuDataAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<MenuData>(context);
@@ -301,7 +307,9 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+        #endregion
 
+        #region 其他服務方法
         Task OhterDependencyData(MenuDataAdapterModel data)
         {
             if (data.IsGroup == true)
@@ -323,6 +331,27 @@ namespace Backend.Services
             return Task.FromResult(0);
         }
 
+        public async Task ReorderByHeaderIDAsync(int id)
+        {
+            var DataSource = context.MenuData
+                .Include(x => x.MenuRole)
+                .OrderBy(x => x.Sequence)
+                .Where(x => x.MenuRoleId == id);
+
+            var allMenuData = await DataSource.ToListAsync();
+            int orderid = 10;
+            foreach (var item in allMenuData)
+            {
+                item.Sequence = orderid;
+                orderid += 10;
+            }
+            await context.SaveChangesAsync();
+            CleanTrackingHelper.Clean<MenuData>(context);
+            return;
+        }
+        #endregion
+
+        #region 紀錄啟用或停用
         public async Task DisableIt(MenuDataAdapterModel paraObject)
         {
             MenuData itemData = Mapper.Map<MenuData>(paraObject);
@@ -360,25 +389,7 @@ namespace Backend.Services
                 CleanTrackingHelper.Clean<MenuData>(context);
             }
         }
-
-        public async Task ReorderByHeaderIDAsync(int id)
-        {
-            var DataSource = context.MenuData
-                .Include(x => x.MenuRole)
-                .OrderBy(x => x.Sequence)
-                .Where(x => x.MenuRoleId == id);
-
-            var allMenuData = await DataSource.ToListAsync();
-            int orderid = 10;
-            foreach (var item in allMenuData)
-            {
-                item.Sequence = orderid;
-                orderid += 10;
-            }
-            await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<MenuData>(context);
-            return;
-        }
+        #endregion
 
     }
 }

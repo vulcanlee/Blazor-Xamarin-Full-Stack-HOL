@@ -18,11 +18,13 @@ namespace Backend.Services
 
     public class OrderItemService : IOrderItemService
     {
+        #region 欄位與屬性
         private readonly BackendDBContext context;
-
         public IMapper Mapper { get; }
         public ILogger<OrderItemService> Logger { get; }
+        #endregion
 
+        #region 建構式
         public OrderItemService(BackendDBContext context, IMapper mapper,
             ILogger<OrderItemService> logger)
         {
@@ -30,11 +32,13 @@ namespace Backend.Services
             Mapper = mapper;
             Logger = logger;
         }
+        #endregion
 
+        #region CRUD 服務
         public async Task<DataRequestResult<OrderItemAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
-            DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
+            List<OrderItemAdapterModel> data = new();
+            DataRequestResult<OrderItemAdapterModel> result = new();
             var DataSource = context.OrderItem
                 .AsNoTracking()
                 .Include(x => x.Product)
@@ -94,8 +98,8 @@ namespace Backend.Services
 
         public async Task<DataRequestResult<OrderItemAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
         {
-            List<OrderItemAdapterModel> data = new List<OrderItemAdapterModel>();
-            DataRequestResult<OrderItemAdapterModel> result = new DataRequestResult<OrderItemAdapterModel>();
+            List<OrderItemAdapterModel> data = new();
+            DataRequestResult<OrderItemAdapterModel> result = new();
             var DataSource = context.OrderItem
                 .AsNoTracking()
                 .Include(x => x.Product)
@@ -239,7 +243,9 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+        #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(OrderItemAdapterModel paraObject)
         {
             CleanTrackingHelper.Clean<OrderItem>(context);
@@ -299,11 +305,14 @@ namespace Backend.Services
 
             return VerifyRecordResultFactory.Build(true);
         }
+        #endregion
 
+        #region 其他服務方法
         Task OhterDependencyData(OrderItemAdapterModel data)
         {
             data.ProductName = data.Product.Name;
             return Task.FromResult(0);
         }
+        #endregion
     }
 }

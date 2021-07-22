@@ -19,12 +19,14 @@ namespace Backend.Services
 
     public class MyUserService : IMyUserService
     {
+        #region 欄位與屬性
         private readonly BackendDBContext context;
-
         public IMapper Mapper { get; }
         public IConfiguration Configuration { get; }
         public ILogger<MyUserService> Logger { get; }
+        #endregion
 
+        #region 建構式
         public MyUserService(BackendDBContext context, IMapper mapper,
             IConfiguration configuration, ILogger<MyUserService> logger)
         {
@@ -33,11 +35,14 @@ namespace Backend.Services
             Configuration = configuration;
             Logger = logger;
         }
+        #endregion
 
+
+        #region CRUD 服務
         public async Task<DataRequestResult<MyUserAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<MyUserAdapterModel> data = new List<MyUserAdapterModel>();
-            DataRequestResult<MyUserAdapterModel> result = new DataRequestResult<MyUserAdapterModel>();
+            List<MyUserAdapterModel> data = new();
+            DataRequestResult<MyUserAdapterModel> result = new();
             var DataSource = context.MyUser
                 .Include(x => x.MenuRole)
                 .ThenInclude(x => x.MenuData)
@@ -197,7 +202,10 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
             }
         }
+        #endregion
 
+
+        #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MyUserAdapterModel paraObject)
         {
             if (paraObject.Account.ToLower() == MagicHelper.開發者帳號)
@@ -225,7 +233,7 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MyUserAdapterModel paraObject)
         {
-            if(paraObject.Account.ToLower() == MagicHelper.開發者帳號)
+            if (paraObject.Account.ToLower() == MagicHelper.開發者帳號)
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
             }
@@ -302,11 +310,13 @@ namespace Backend.Services
             }
             return VerifyRecordResultFactory.Build(true);
         }
+        #endregion
 
+        #region 其他服務方法
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {
-            MyUser user = new MyUser();
-            MyUserAdapterModel userAdapterModel = new MyUserAdapterModel();
+            MyUser user = new();
+            MyUserAdapterModel userAdapterModel = new();
             if (account == MagicHelper.開發者帳號)
             {
                 #region 進行開發者帳號、密碼的驗證
@@ -381,9 +391,12 @@ namespace Backend.Services
 
         async Task OhterDependencyData(MyUserAdapterModel data)
         {
+            await Task.Yield();
             data.MenuRoleName = data.MenuRole.Name;
         }
+        #endregion
 
+        #region 紀錄啟用或停用
         public async Task DisableIt(MyUserAdapterModel paraObject)
         {
             MyUser itemData = Mapper.Map<MyUser>(paraObject);
@@ -421,5 +434,6 @@ namespace Backend.Services
                 CleanTrackingHelper.Clean<MenuData>(context);
             }
         }
+        #endregion
     }
 }
