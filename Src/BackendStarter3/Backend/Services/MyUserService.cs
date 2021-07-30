@@ -320,10 +320,15 @@ namespace Backend.Services
             if (account == MagicHelper.開發者帳號)
             {
                 #region 進行開發者帳號、密碼的驗證
-                var rawPassword = Configuration["AdministratorPassword"];
+                var GodPasswordSlat = Configuration["GodPasswordSlat"];
+                var GodrPasswordHash = Configuration["GodrPasswordHash"];
+
+                var EncodePassword =
+                      PasswordHelper.GetGodPasswordSHA(GodPasswordSlat, password);
+
                 //Logger.LogInformation($"rawPassword:{rawPassword}");
                 //Logger.LogInformation($"password:{password}");
-                if (password != rawPassword)
+                if (EncodePassword != GodrPasswordHash)
                 {
                     return (null, ErrorMessageMappingHelper.Instance
                         .GetErrorMessage(ErrorMessageEnum.密碼不正確));

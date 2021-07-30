@@ -14,6 +14,7 @@
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.Extensions.Hosting
 @using Syncfusion.Blazor.Spinner
+@using Syncfusion.Blazor.Inputs
 
 <h1 class="bg-primary text-white-50 my-1">資料庫初始化作業!</h1>
 
@@ -51,6 +52,29 @@
                 </div>
             </article>
         </div>
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <span class="h2">取得密碼與SALT</span>
+            </div>
+            <article class="card-body bg-light">
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">帳號</label>
+                            <SfTextBox @bind-Value="NewPassword"
+                                       Placeholder="請輸入密碼" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary" @onclick="OnNewPassword">產生編碼密碼</button>
+                </div>
+            </article>
+            <div class="card-footer">
+                <div>Slat:@Slat</div>
+                <div>EncodePassword:@EncodePassword</div>
+            </div>
+        </div>
     </div>
 }
 
@@ -65,6 +89,9 @@
     string verifyCode = "";
     int Question = 0;
     bool VisibleProperty = false;
+    public string NewPassword { get; set; } = "";
+    public string Slat { get; set; }
+    public string EncodePassword { get; set; }
 
     protected override void OnInitialized()
     {
@@ -95,5 +122,11 @@
             }
         }
         catch { }
+    }
+    void OnNewPassword()
+    {
+        Slat = Guid.NewGuid().ToString();
+        EncodePassword =
+        PasswordHelper.GetGodPasswordSHA(Slat, NewPassword);
     }
 }

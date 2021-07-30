@@ -196,9 +196,8 @@ namespace Backend.Services
                 Salt = Guid.NewGuid().ToString()
             };
 
-            var rawPassword = Configuration["AdministratorPassword"];
-            myUser.Password =
-                PasswordHelper.GetPasswordSHA(myUser.Salt, rawPassword);
+            myUser.Salt = Configuration["GodPasswordSlat"];
+            myUser.Password = Configuration["GodrPasswordHash"];
 
             context.Add(myUser);
             await context.SaveChangesAsync();

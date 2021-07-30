@@ -22,5 +22,18 @@ namespace BAL.Helpers
             password = builder.ToString();
             return password;
         }
+        public static string GetGodPasswordSHA(string salt, string password)
+        {
+            string assemblyPassword = $"{password}-{salt}@VulcanHttc";
+            SHA256 sha = SHA256.Create();
+            byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(assemblyPassword));
+            StringBuilder builder = new StringBuilder();
+            for (int j = 0; j < bytes.Length; j++)
+            {
+                builder.Append(bytes[j].ToString("x2"));
+            }
+            password = builder.ToString();
+            return password;
+        }
     }
 }
