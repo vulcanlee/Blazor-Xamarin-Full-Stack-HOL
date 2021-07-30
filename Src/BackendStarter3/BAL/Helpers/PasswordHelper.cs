@@ -24,7 +24,7 @@ namespace BAL.Helpers
         }
         public static string GetGodPasswordSHA(string salt, string password)
         {
-            string assemblyPassword = $"{password}-{salt}@VulcanHttc";
+            string assemblyPassword = $"{password}-{salt}@Vulcan-Backend";
             SHA256 sha = SHA256.Create();
             byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(assemblyPassword));
             StringBuilder builder = new StringBuilder();

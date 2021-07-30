@@ -147,7 +147,7 @@ namespace Backend.Pages
                 };
 
                 #region 若為 開發人員，加入 開發人員 專屬的角色
-                if (MagicHelper.開發者帳號 == Username.ToLower())
+                if (MagicHelper.開發者帳號.ToString() == Username.ToLower())
                 {
                     claims.Add(new Claim(ClaimTypes.Role, MagicHelper.開發者的角色聲明));
                 }
