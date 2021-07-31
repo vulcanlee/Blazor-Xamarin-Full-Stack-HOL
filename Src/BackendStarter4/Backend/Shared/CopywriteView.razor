@@ -1,0 +1,19 @@
+﻿<div class="text-white">
+    <span class="mr-1">  Vulcan Lee  </span>
+    <span class="mr-1">© 2021 </span>
+    <span class="mr-1">@versionNumber</span>
+</div>
+
+@code{
+    string versionNumber = "";
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            versionNumber = " 版本: "+
+                System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+            StateHasChanged();
+        }
+    }
+}

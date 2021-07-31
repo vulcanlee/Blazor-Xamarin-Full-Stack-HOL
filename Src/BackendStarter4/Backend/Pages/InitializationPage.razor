@@ -1,0 +1,132 @@
+﻿@page "/Initialization"
+@using Microsoft.Extensions.Configuration;
+@using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks
+@using System.Threading
+@using System.Diagnostics
+
+@inject IWebHostEnvironment env
+@inject DatabaseInitService DatabaseInitService
+
+@layout EmptyLayout
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@using Syncfusion.Blazor.Spinner
+@using Syncfusion.Blazor.Inputs
+
+<h1 class="bg-primary text-white-50 my-1">資料庫初始化作業!</h1>
+
+<environment include="Staging,Production">
+    @if (verified == false)
+    {
+        <div>
+            <div class="h2 text-success">@Question</div>
+            <p>請輸入驗證碼</p>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control"
+                       placeholder="驗證碼" aria-label="Username" aria-describedby="basic-addon1"
+                       @bind="verifyCode">
+            </div>
+            <div class="input-group mb-3">
+                <button class="btn btn-primary"
+                        @onclick="OnVerifyCode">
+                    送出
+                </button>
+            </div>
+        </div>
+    }
+</environment>
+
+@if (verified)
+{
+    <div class="card mb-4">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <span class="h2">資料庫初始化</span>
+            </div>
+            <article class="card-body bg-light">
+                <div>
+                    <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
+                </div>
+            </article>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <span class="h2">取得密碼與SALT</span>
+            </div>
+            <article class="card-body bg-light">
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">帳號</label>
+                            <SfTextBox @bind-Value="NewPassword"
+                                       Placeholder="請輸入密碼" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary" @onclick="OnNewPassword">產生編碼密碼</button>
+                </div>
+            </article>
+            <div class="card-footer">
+                <div>Slat&nbsp;:&nbsp;@Slat</div>
+                <div>EncodePassword&nbsp;:&nbsp;@EncodePassword</div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="container">
+    <SfSpinner @bind-Visible="@VisibleProperty">
+    </SfSpinner>
+</div>
+
+
+@code {
+    bool verified = false;
+    string verifyCode = "";
+    int Question = 0;
+    bool VisibleProperty = false;
+    public string NewPassword { get; set; } = "";
+    public string Slat { get; set; }
+    public string EncodePassword { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Question = new Random().Next(10000, 90000);
+        if (env.IsDevelopment())
+        {
+            verified = true;
+            verifyCode = Question.ToString();
+        }
+    }
+    public async Task Init()
+    {
+        this.VisibleProperty = true;
+        await DatabaseInitService.InitDataAsync();
+        this.VisibleProperty = false;
+    }
+    void OnVerifyCode()
+    {
+        try
+        {
+            int verifyNumber = 0;
+            int answer = 0;
+            verifyNumber = Convert.ToInt32(verifyCode);
+            answer = 98765 - Question;
+            if (verifyNumber == answer)
+            {
+                verified = true;
+            }
+        }
+        catch { }
+    }
+    void OnNewPassword()
+    {
+        Slat = Guid.NewGuid().ToString();
+        EncodePassword =
+        PasswordHelper.GetGodPasswordSHA(Slat, NewPassword);
+    }
+}

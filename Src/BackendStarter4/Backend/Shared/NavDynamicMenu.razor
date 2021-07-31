@@ -1,0 +1,159 @@
+﻿@inject IMenuDataService menuDataService
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager NavigationManager
+
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="">@BAL.Helpers.MagicHelper.MenuMainTitle</a>
+</div>
+
+<div class="@NavMenuCssClass">
+    <div class="fixSidebar">
+
+        @if (mainMenus.Count == 0)
+        {
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <span class="mdi mdi-48px mdi-spin mdi-reload m-4 text-white" />
+            </div>
+        }
+        else
+        {
+            <ul class="nav flex-column">
+                @foreach (var item in mainMenus)
+                {
+                    var currentMenuData = item;
+                    if (currentMenuData.MenuData.CodeName == "/")
+                    {
+                        <li class="@currentMenuData.MenuClass nav-item px-3">
+                            <div @onclick="() => { MenuDataClicked(currentMenuData); }" class="noselect">
+                                <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                <span class="text-white">@currentMenuData.MenuData.Name</span>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        if (currentMenuData.MenuData.IsGroup == false)
+                        {
+                            <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
+                                <div @onclick="()=> { MenuDataClicked(currentMenuData); }">
+                                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
+                                <div @onclick="()=> {
+                                           currentMenuData.IsExpand=!currentMenuData.IsExpand;
+                                       }">
+                                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                </div>
+                            </li>
+                            if (currentMenuData.IsExpand)
+                            {
+                                foreach (var itemSub in item.SubMenus)
+                                {
+                                    var currentSubMenuData = itemSub;
+                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-1 noselect">
+                                        <div @onclick="()=> { SubMenuDataClicked(currentSubMenuData); }">
+                                            <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
+                                            <span class="text-white">@currentSubMenuData.MenuData.Name</span>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        }
+                    }
+                }
+            </ul>
+            <div class="menu-extend"></div>
+        }
+
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    List<MainMenu> mainMenus = new List<MainMenu>();
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                int menuRoleId = Convert.ToInt32(user
+                    .FindFirst(c => c.Type == MagicHelper.MenuRoleClaim)?.Value);
+                if (menuRoleId > 0)
+                {
+                    var foo = user
+                        .FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Role
+                        && c.Value == MagicHelper.開發者的角色聲明); // 確認這個使用者為系統管理者
+                    MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
+                    mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
+                }
+                StateHasChanged();
+            }
+            else
+            {
+            }
+        }
+    }
+
+    void MenuDataClicked(MainMenu currentMenuData)
+    {
+        foreach (var item in mainMenus)
+        {
+            item.IsClicked = false;
+            item.MenuClass = "";
+            foreach (var subItem in item.SubMenus)
+            {
+                subItem.IsClicked = false;
+                subItem.MenuClass = "";
+            }
+        }
+
+        currentMenuData.IsClicked = true;
+        currentMenuData.MenuClass = "clicked";
+        if (currentMenuData.IsSubMenu == false)
+        {
+            ToggleNavMenu();
+        }
+        NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+    }
+
+    void SubMenuDataClicked(SubMenu currentMenuData)
+    {
+        foreach (var item in mainMenus)
+        {
+            item.IsClicked = false;
+            item.MenuClass = "";
+            foreach (var subItem in item.SubMenus)
+            {
+                subItem.IsClicked = false;
+                subItem.MenuClass = "";
+            }
+        }
+
+        currentMenuData.IsClicked = true;
+        currentMenuData.MenuClass = "clicked";
+        ToggleNavMenu();
+        NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+    }
+}

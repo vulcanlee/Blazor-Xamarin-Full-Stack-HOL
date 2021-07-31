@@ -1,0 +1,105 @@
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">@BAL.Helpers.MagicHelper.MenuMainTitle</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <div class="fixSidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="mr-2 mdi mdi-18px mdi-home" aria-hidden="true"></span>
+                    @BAL.Helpers.MagicHelper.首頁功能名稱
+                </NavLink>
+            </li>
+            @if (IsAuthenticated == false)
+            {
+                <li class="nav-item px-3">
+                    @*https://docs.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-3.1#lambda-expressions*@
+                    <NavLink class="nav-link" @onclick="@(()=>{Navigate("/login");})">
+                        <span class="mr-2 mdi mdi-18px mdi-login" aria-hidden="true"></span>
+                        @BAL.Helpers.MagicHelper.登入
+                    </NavLink>
+                </li>
+            }
+            @if (IsAuthenticated == true)
+            {
+                <li class="nav-item px-3">
+                    @*https://docs.microsoft.com/en-us/aspnet/core/blazor/components/event-handling?view=aspnetcore-3.1#lambda-expressions*@
+                    <NavLink class="nav-link" @onclick="@(()=>{Navigate("/logout");})">
+                        <span class="mr-2 mdi mdi-18px mdi-logout" aria-hidden="true"></span>
+                        @BAL.Helpers.MagicHelper.登出
+                    </NavLink>
+                </li>
+            }
+
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="MyUser">
+                    <span class="mr-2 mdi mdi-18px mdi-clipboard-account" aria-hidden="true"></span>
+                    @BAL.Helpers.MagicHelper.帳號管理功能名稱
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="MenuRole">
+                    <span class="mr-2 mdi mdi-18px mdi-clipboard-account" aria-hidden="true"></span>
+                    @BAL.Helpers.MagicHelper.功能表角色功能名稱
+                </NavLink>
+            </li>
+            @if (IsAuthenticated == true)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="Order">
+                        <span class="mr-2 mdi mdi-18px mdi-gift" aria-hidden="true"></span> @BAL.Helpers.MagicHelper.訂單管理功能名稱
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="Product">
+                        <span class="mr-2 mdi mdi-18px mdi-wallet-giftcard" aria-hidden="true"></span> @BAL.Helpers.MagicHelper.商品管理功能名稱
+                    </NavLink>
+                </li>
+            }
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="OnlyAdministrator">
+                    <span class="mr-2 mdi mdi-18px mdi-test-tube" aria-hidden="true"></span> 管理者專用
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="OnlyUser">
+                    <span class="mr-2 mdi mdi-18px mdi-test-tube" aria-hidden="true"></span> 一般使用者使用
+                </NavLink>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    bool IsAuthenticated = false;
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthenticated = false;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IsAuthenticated = true;
+        }
+    }
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+    void Navigate(string path)
+    {
+        NavigationManager.NavigateTo(path, true);
+    }
+}

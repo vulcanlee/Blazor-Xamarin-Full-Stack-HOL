@@ -1,0 +1,7 @@
+﻿@page "/MyUser"
+@attribute [Authorize(Roles = "MyUser")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.帳號管理功能名稱</div>
+    <MyUserView PageSize="@MagicHelper.GridPageSize" />
+</div>
