@@ -67,7 +67,7 @@
                                         </div>
                                         <input class="form-control m-auto" asp-for="Captcha" value="@Model.Captcha" placeholder="驗證碼" autocomplete="off">
                                         <input type="hidden" asp-for="CaptchaOrigin" value="@Model.CaptchaOrigin" />
-                                        <button type="submit" asp-page-handler="RefreshCode" class="btn btn-link"><i class="mdi mdi-refresh mdi-24px"></i></button>
+                                        <button asp-page-handler="RefreshCode" class="btn btn-link"><i class="mdi mdi-refresh mdi-24px"></i></button>
                                         <img class="captcha align-middle" src="@Model.CaptchaImage" />
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                         <div class="row">
                             <div class="col-12 mt-2">
                                 <div class="form-group ">
-                                    <button type="submit" class="btn btn-primary btn-block text-center"> 登入  </button>
+                                    <button type="submit" asp-page-handler="" class="btn btn-primary btn-block text-center"> 登入  </button>
                                 </div>
                             </div>
                         </div>
