@@ -33,8 +33,8 @@ namespace Backend.Pages
             SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor)
         {
 #if DEBUG
-            Username = "god";
-            Password = "123";
+            //Username = "god";
+            //Password = "123";
             PasswordType = "";
 #endif
             this.myUserService = myUserService;
@@ -216,6 +216,13 @@ namespace Backend.Pages
                 logger.LogInformation($"{Msg}");
                 return LocalRedirect(returnUrl);
             }
+            GetCaptchaImage();
+            return Page();
+        }
+
+        public IActionResult OnPostRefreshCode()
+        {
+            Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
             GetCaptchaImage();
             return Page();
         }
