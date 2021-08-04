@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Backend
 {
@@ -171,9 +172,9 @@ namespace Backend
                 {
                     options.SuppressModelStateInvalidFilter = true;
                 })
-                .AddJsonOptions(config =>
+                .AddNewtonsoftJson(options =>
                 {
-                    config.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
             #endregion
 

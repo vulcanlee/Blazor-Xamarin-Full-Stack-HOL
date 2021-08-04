@@ -22,7 +22,7 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            await Task.Delay(TimeSpan.FromSeconds(20));
+            await Task.Yield();
             return Ok(APIResultFactory.Build(true, StatusCodes.Status201Created,
                         ErrorMessageEnum.None, payload: new OnlyUserDto()
                         { Message = "Hello User~~" }));
