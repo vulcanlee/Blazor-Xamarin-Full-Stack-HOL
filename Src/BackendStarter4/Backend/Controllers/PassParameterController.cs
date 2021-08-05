@@ -14,10 +14,27 @@ namespace Backend.Controllers
     [ApiController]
     public class PassParameterController : ControllerBase
     {
-        [AllowAnonymous]
+        [Route("FromRoute")]
+        [HttpPost]
+        public async Task<IActionResult> PostFromRoute([FromRoute] LoginRequestDto loginRequestDTO)
+        {
+            await Task.Yield();
+            loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
+            return Ok(loginRequestDTO);
+        }
+
+        [Route("FromQuery")]
+        [HttpGet]
+        public async Task<IActionResult> GetFromQuery([FromQuery] LoginRequestDto loginRequestDTO)
+        {
+            await Task.Yield();
+            loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
+            return Ok(loginRequestDTO);
+        }
+
         [Route("FromBody")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] LoginRequestDto loginRequestDTO)
+        public async Task<IActionResult> PostFromBody([FromBody] LoginRequestDto loginRequestDTO)
         {
             await Task.Yield();
             loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
