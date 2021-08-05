@@ -14,9 +14,8 @@ namespace Backend.Controllers
     [ApiController]
     public class PassParameterController : ControllerBase
     {
-        [Route("FromRoute")]
-        [HttpPost]
-        public async Task<IActionResult> PostFromRoute([FromRoute] LoginRequestDto loginRequestDTO)
+        [HttpGet("FromRoute/{Account}/{Password}")]
+        public async Task<IActionResult> GetFromRoute([FromRoute] LoginRequestDto loginRequestDTO)
         {
             await Task.Yield();
             loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
