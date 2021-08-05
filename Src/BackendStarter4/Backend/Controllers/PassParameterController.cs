@@ -15,10 +15,12 @@ namespace Backend.Controllers
     public class PassParameterController : ControllerBase
     {
         [AllowAnonymous]
+        [Route("FromBody")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] LoginRequestDto loginRequestDTO)
         {
             await Task.Yield();
+            loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
             return Ok(loginRequestDTO);
         }
 
