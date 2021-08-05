@@ -10,14 +10,14 @@ namespace AA06
     {
         static async Task Main(string[] args)
         {
-            var result = await LoginPostAsync(new LoginRequestDto()
+            var result = await LoginAsync(new LoginRequestDto()
             {
                 Account = "user1",
                 Password = "123"
             });
             Console.WriteLine(result);
         }
-        private static async Task<string> LoginPostAsync(LoginRequestDto loginRequestDto)
+        private static async Task<string> LoginAsync(LoginRequestDto loginRequestDto)
         {
             string result = "";
             using (HttpClient client = new HttpClient())
