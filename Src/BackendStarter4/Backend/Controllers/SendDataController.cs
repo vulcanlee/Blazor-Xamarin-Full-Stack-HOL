@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -76,7 +77,6 @@ namespace Backend.Controllers
                 Secure = true,
             };
             HttpContext.Response.Cookies.Append("YourName", "Vulcan", cookieOptions);
-
             return Ok("Cookie");
         }
 
