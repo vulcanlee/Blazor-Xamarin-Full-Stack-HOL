@@ -18,18 +18,55 @@ namespace Backend.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class GetDataController : ControllerBase
+    public class SendDataController : ControllerBase
     {
         private readonly IWebHostEnvironment environment;
 
-        public GetDataController(IWebHostEnvironment webHostEnvironment)
+        public SendDataController(IWebHostEnvironment webHostEnvironment)
         {
             this.environment = webHostEnvironment;
         }
-        [HttpGet("Cookie")]
-        public async Task<IActionResult> GetCookie()
+
+        [HttpGet("String")]
+        public string GetString()
+        {
+            return $"Hi Vulcan Lee";
+        }
+
+        [HttpGet("StringAsync")]
+        public async Task<string> GetStringAsync()
         {
             await Task.Yield();
+            return $"Hi Vulcan Lee";
+        }
+
+        [HttpGet("Object")]
+        public LoginRequestDto GetObject()
+        {
+            LoginRequestDto loginRequestDto = new()
+            {
+                Account = "Vulcan",
+                Password = "Lee",
+            };
+
+            return loginRequestDto;
+        }
+
+        [HttpGet("ObjectWithStatus")]
+        public IActionResult GetObjectWithStatus()
+        {
+            LoginRequestDto loginRequestDto = new()
+            {
+                Account = "Vulcan",
+                Password = "Lee",
+            };
+
+            return Ok(loginRequestDto);
+        }
+
+        [HttpGet("Cookie")]
+        public IActionResult GetCookie()
+        {
             var cookieOptions = new CookieOptions()
             {
                 Path = "/",
@@ -42,53 +79,18 @@ namespace Backend.Controllers
 
             return Ok("Cookie");
         }
-        [HttpGet("Header")]
-        public async Task<IActionResult> GetHeader()
-        {
-            await Task.Yield();
 
+        [HttpGet("Header")]
+        public IActionResult GetHeader()
+        {
             Response.Headers.Add("X-Total-Count", "20");
 
             return Ok("Header");
         }
-        [HttpGet("String")]
-        public async Task<string> GetString()
-        {
-            await Task.Yield();
 
-            return $"Hi Vulcan Lee";
-        }
-        [HttpGet("Object")]
-        public async Task<LoginRequestDto> GetObject()
-        {
-            await Task.Yield();
-
-            LoginRequestDto loginRequestDto = new()
-            {
-                Account = "Vulcan",
-                Password = "Lee",
-            };
-
-            return loginRequestDto;
-        }
-        [HttpGet("ObjectWithStatus")]
-        public async Task<IActionResult> GetObjectWithStatus()
-        {
-            await Task.Yield();
-
-            LoginRequestDto loginRequestDto = new()
-            {
-                Account = "Vulcan",
-                Password = "Lee",
-            };
-
-            return Ok(loginRequestDto);
-        }
         [HttpGet("File")]
-        public async Task<IActionResult> GetFile()
+        public IActionResult GetFile()
         {
-            await Task.Yield();
-
             string wwwPath = environment.WebRootPath;
             string contentPath = environment.ContentRootPath;
             string fileName = "site.css";

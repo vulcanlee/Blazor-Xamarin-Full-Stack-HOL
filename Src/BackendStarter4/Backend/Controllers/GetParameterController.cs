@@ -12,57 +12,51 @@ namespace Backend.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class PassParameterController : ControllerBase
+    public class GetParameterController : ControllerBase
     {
         [HttpGet("FromRoute/{Account}/{Password}")]
-        public async Task<IActionResult> GetFromRoute([FromRoute] LoginRequestDto loginRequestDTO)
+        public IActionResult GetFromRoute([FromRoute] LoginRequestDto loginRequestDTO)
         {
-            await Task.Yield();
             loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
             return Ok(loginRequestDTO);
         }
 
         [Route("FromQuery")]
         [HttpGet]
-        public async Task<IActionResult> GetFromQuery([FromQuery] LoginRequestDto loginRequestDTO)
+        public IActionResult GetFromQuery([FromQuery] LoginRequestDto loginRequestDTO)
         {
-            await Task.Yield();
             loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
             return Ok(loginRequestDTO);
         }
 
         [Route("FromBody")]
         [HttpPost]
-        public async Task<IActionResult> PostFromBody([FromBody] LoginRequestDto loginRequestDTO)
+        public IActionResult PostFromBody([FromBody] LoginRequestDto loginRequestDTO)
         {
-            await Task.Yield();
             loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
             return Ok(loginRequestDTO);
         }
 
         [HttpPost]
         [Route("FromForm")]
-        public async Task<IActionResult> PostFromForm([FromForm] LoginRequestDto loginRequestDTO)
+        public IActionResult PostFromForm([FromForm] LoginRequestDto loginRequestDTO)
         {
-            await Task.Yield();
             loginRequestDTO.Account = $"Hi {loginRequestDTO.Account}";
             return Ok(loginRequestDTO);
         }
 
         [HttpPost]
         [Route("ByCookie")]
-        public async Task<IActionResult> PostByCookie()
+        public IActionResult PostByCookie()
         {
-            await Task.Yield();
             string cookieValueFromReq = Request.Cookies["WhoAreYou"];
             return Ok($"Nice to meet you, {cookieValueFromReq}");
         }
 
         [HttpPost]
         [Route("ByHeader")]
-        public async Task<IActionResult> PostByHeader()
+        public IActionResult PostByHeader()
         {
-            await Task.Yield();
             string cookieValueFromReq = Request.Headers["WhoAreYou"];
             return Ok($"Nice to meet you, {cookieValueFromReq}");
         }
