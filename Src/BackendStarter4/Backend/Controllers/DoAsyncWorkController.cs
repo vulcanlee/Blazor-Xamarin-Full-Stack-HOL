@@ -12,6 +12,7 @@ namespace Backend.Controllers
         public async Task<string> GetAsync([FromRoute] int waitPeriodOfTime)
         {
             await Task.Delay(waitPeriodOfTime);
+            System.Console.WriteLine($" DoAsyncWork 將要完成");
             return "Hello~~";
         }
     }
