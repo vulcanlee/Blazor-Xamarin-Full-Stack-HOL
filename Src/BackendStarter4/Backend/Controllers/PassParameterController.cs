@@ -49,5 +49,22 @@ namespace Backend.Controllers
             return Ok(loginRequestDTO);
         }
 
+        [HttpPost]
+        [Route("ByCookie")]
+        public async Task<IActionResult> PostByCookie()
+        {
+            await Task.Yield();
+            string cookieValueFromReq = Request.Cookies["WhoAreYou"];
+            return Ok($"Nice to meet you, {cookieValueFromReq}");
+        }
+
+        [HttpPost]
+        [Route("ByHeader")]
+        public async Task<IActionResult> PostByHeader()
+        {
+            await Task.Yield();
+            string cookieValueFromReq = Request.Headers["WhoAreYou"];
+            return Ok($"Nice to meet you, {cookieValueFromReq}");
+        }
     }
 }
