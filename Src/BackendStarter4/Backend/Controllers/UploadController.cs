@@ -1,5 +1,6 @@
 ﻿using DTOs.DataModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,10 +16,19 @@ namespace Backend.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
+        private readonly IWebHostEnvironment environment;
+
+        public UploadController(IWebHostEnvironment webHostEnvironment)
+        {
+            this.environment = webHostEnvironment;
+        }
         [HttpPost]
         public IActionResult PostAsync(IFormFile file, [FromForm] string description)
         {
-            return Ok($"你得到 Ok 狀態");
+            string wwwPath = environment.WebRootPath;
+            string contentPath = environment.ContentRootPath;
+
+            return Ok($"{file.FileName} 已經上傳成功");
         }
     }
 }

@@ -19,11 +19,11 @@ namespace Backend.Controllers
     [ApiController]
     public class GetDataController : ControllerBase
     {
-        private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment environment;
 
-        public GetDataController(IWebHostEnvironment hostingEnvironment)
+        public GetDataController(IWebHostEnvironment webHostEnvironment)
         {
-            this.hostingEnvironment = hostingEnvironment;
+            this.environment = webHostEnvironment;
         }
         [HttpGet("Cookie")]
         public async Task<IActionResult> GetCookie()
@@ -68,8 +68,8 @@ namespace Backend.Controllers
         {
             await Task.Yield();
 
-            string wwwPath = hostingEnvironment.WebRootPath;
-            string contentPath = hostingEnvironment.ContentRootPath;
+            string wwwPath = environment.WebRootPath;
+            string contentPath = environment.ContentRootPath;
             string fileName = "site.css";
             string filePath = Path.Combine(wwwPath, "css", fileName);
             // https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Basics_of_HTTP/MIME_types#%E9%87%8D%E8%A6%81%E7%9A%84mime%E9%A1%9E%E5%88%A5
