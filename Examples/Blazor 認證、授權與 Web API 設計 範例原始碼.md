@@ -22,7 +22,7 @@
 * AA20 HttpClient 使用 取消權杖 的程式設計方法
 * AA21 使用 取消權杖 的 時間逾期 程式設計方法
 * AA22 HttpClient 讀取不同狀態碼與訊息內容
-* AA23 
+* AA23 HttpClient 直接讀取回應字串
 * AA24 
 * AA25 
 * AA26 
