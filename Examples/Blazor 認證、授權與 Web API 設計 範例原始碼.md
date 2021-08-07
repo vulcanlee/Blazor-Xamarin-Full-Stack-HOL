@@ -19,7 +19,14 @@
 * AA17 Web API 送出不同資料之 HttpClient 作法 4 (文字檔)
 * AA18 Web API 送出不同資料之 HttpClient 作法 5 (圖片檔)
 * AA19 HttpClient 送出不同資料作法 8 (圖片檔)
-* AA1 
-* AA1 
-* AA1 
+* AA20 HttpClient 使用 取消權杖 的程式設計方法
+* AA21 
+* AA22 
+* AA23 
+* AA24 
+* AA25 
+* AA26 
+* AA27 
+* AA28 
+* AA29 
 
