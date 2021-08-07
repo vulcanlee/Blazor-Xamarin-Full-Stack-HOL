@@ -4,7 +4,7 @@
 * AA02 使用 HttpClient 來取得 存取權杖 Token (設計版)
 * AA03 HttpClient 送出不同資料作法 1 (Form UrlEncoded)
 * AA04 HttpClient 送出不同資料作法 2(Multipart/Form Data)
-* AA05 使用 JSON (Raw > JSON) 產生要 Post 的資料
+* AA05 HttpClient 送出不同資料作法 3 (JSON 編碼)
 * AA06 使用 QueryString
 * AA07 使用 Route 資料
 * AA08 使用 POST 要求與使用 Header 進行傳送與接收 呼叫 Web API

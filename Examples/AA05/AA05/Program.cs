@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace AA05
 {
+    /// <summary>
+    /// HttpClient 送出不同資料作法 3 (JSON 編碼)
+    /// </summary>
     class Program
     {
         static async Task Main(string[] args)
