@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AA03
 {
+    /// <summary>
+    /// HttpClient 送出不同資料作法 1 (Form UrlEncoded)
+    /// </summary>
     class Program
     {
         static async Task Main(string[] args)

@@ -2,7 +2,7 @@
 
 * AA01 使用 HttpClient 來取得 存取權杖 Token(精簡版)
 * AA02 使用 HttpClient 來取得 存取權杖 Token (設計版)
-* AA03 使用 FormUrlEncodedContent (x-www-form-urlencoded) 產生要 Post 的資料
+* AA03 HttpClient 送出不同資料作法 1 (Form UrlEncoded)
 * AA04 使用 MultipartFormDataContent (form-data) 產生要 Post 的資料
 * AA05 使用 JSON (Raw > JSON) 產生要 Post 的資料
 * AA06 使用 QueryString
@@ -16,8 +16,8 @@
 * AA14 Web API 送出不同資料之 HttpClient 作法 1 (Body)
 * AA15 Web API 送出不同資料之 HttpClient 作法 2 (Cookie)
 * AA16 Web API 送出不同資料之 HttpClient 作法 3 (Header)
-* AA17
-* AA18
+* AA17 Web API 送出不同資料之 HttpClient 作法 4 (文字檔)
+* AA18 Web API 送出不同資料之 HttpClient 作法 5 (圖片檔)
 * AA19
 * AA1 
 * AA1 
