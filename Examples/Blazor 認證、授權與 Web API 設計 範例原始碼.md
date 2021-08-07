@@ -18,7 +18,7 @@
 * AA16 Web API 送出不同資料之 HttpClient 作法 3 (Header)
 * AA17 Web API 送出不同資料之 HttpClient 作法 4 (文字檔)
 * AA18 Web API 送出不同資料之 HttpClient 作法 5 (圖片檔)
-* AA19
+* AA19 HttpClient 送出不同資料作法 8 (圖片檔)
 * AA1 
 * AA1 
 * AA1 
