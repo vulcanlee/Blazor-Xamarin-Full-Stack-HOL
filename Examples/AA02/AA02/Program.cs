@@ -12,16 +12,19 @@ namespace AA02
     {
         static async Task Main(string[] args)
         {
-            var result = await LoginPostAsync(new LoginRequestDto()
+            (APIResult apiResult, LoginResponseDto response) = await LoginPostAsync(new LoginRequestDto()
             {
                 Account = "user1",
                 Password = "123"
             });
-            Console.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
+            Console.WriteLine($"存取權杖 : {response.Token}");
+            Console.WriteLine($"");
+            Console.WriteLine($"更新權杖 : {response.RefreshToken}");
         }
-        private static async Task<APIResult> LoginPostAsync(LoginRequestDto loginRequestDto)
+        private static async Task<(APIResult, LoginResponseDto)> LoginPostAsync(LoginRequestDto loginRequestDto)
         {
-            APIResult fooAPIResult;
+            APIResult apiResult;
+            LoginResponseDto loginResponseDto=null;
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -52,11 +55,14 @@ namespace AA02
                         {
                             // 取得呼叫完成 API 後的回報內容
                             String strResult = await response.Content.ReadAsStringAsync();
-                            fooAPIResult = JsonConvert.DeserializeObject<APIResult>(strResult, new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            apiResult = JsonConvert.DeserializeObject<APIResult>(strResult,
+                                new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
+                            loginResponseDto = JsonConvert.DeserializeObject<LoginResponseDto>(apiResult.Payload.ToString(), 
+                                new JsonSerializerSettings { MetadataPropertyHandling = MetadataPropertyHandling.Ignore });
                         }
                         else
                         {
-                            fooAPIResult = new APIResult
+                            apiResult = new APIResult
                             {
                                 Status = false,
                                 Message = string.Format("Error Code:{0}, Error Message:{1}", response.StatusCode, response.RequestMessage),
@@ -66,7 +72,7 @@ namespace AA02
                     }
                     else
                     {
-                        fooAPIResult = new APIResult
+                        apiResult = new APIResult
                         {
                             Status = false,
                             Message = $"應用程式呼叫 API ({endPoint}) 發生異常",
@@ -77,7 +83,7 @@ namespace AA02
                 }
                 catch (Exception ex)
                 {
-                    fooAPIResult = new APIResult
+                    apiResult = new APIResult
                     {
                         Status = false,
                         Message = ex.Message,
@@ -86,7 +92,7 @@ namespace AA02
                 }
             }
 
-            return fooAPIResult;
+            return (apiResult, loginResponseDto);
         }
     }
 
