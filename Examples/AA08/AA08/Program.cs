@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AA07
+namespace AA08
 {
     /// <summary>
-    /// HttpClient 送出不同資料作法 5 (路由)
+    /// HttpClient 送出不同資料作法 6 (Cookie)
     /// </summary>
     class Program
     {
@@ -25,18 +24,17 @@ namespace AA07
             string result = "";
             using (HttpClient client = new HttpClient())
             {
-                string endPoint = $"https://localhost:5001/api/PassParameter/FromRoute";
+                string endPoint = $"https://localhost:5001/api/GetParameter/ByCookie";
                 HttpResponseMessage response = null;
 
-                #region 使用 Route 資料
-                endPoint = $"{endPoint}/{loginRequestDto.Account}/{loginRequestDto.Password}";
+                #region 使用 Cookie 資料
+                client.DefaultRequestHeaders.Add("Cookie", $"WhoAreYou=Vulcan");
                 #endregion
 
-                response = await client.GetAsync(endPoint);
+                response = await client.PostAsync(endPoint, null);
 
                 result = await response.Content.ReadAsStringAsync();
             }
-
             return result;
         }
     }
