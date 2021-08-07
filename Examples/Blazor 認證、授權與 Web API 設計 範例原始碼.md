@@ -8,7 +8,7 @@
 * AA06 HttpClient 送出不同資料作法 4 (Query String)
 * AA07 HttpClient 送出不同資料作法 5 (路由)
 * AA08 HttpClient 送出不同資料作法 6 (Cookie)
-* AA09 使用 POST 要求與使用 Cookie 進行傳送與接收 呼叫 Web API
+* AA09 HttpClient 送出不同資料作法 7 (Header)
 * AA10 記錄下 HttpClient 的傳輸協定內容
 * AA11
 * AA12 沒有經過身分驗證，呼叫有授權才能存取的 API
