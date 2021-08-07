@@ -5,7 +5,7 @@
 * AA03 HttpClient 送出不同資料作法 1 (Form UrlEncoded)
 * AA04 HttpClient 送出不同資料作法 2(Multipart/Form Data)
 * AA05 HttpClient 送出不同資料作法 3 (JSON 編碼)
-* AA06 使用 QueryString
+* AA06 HttpClient 送出不同資料作法 4 (Query String)
 * AA07 使用 Route 資料
 * AA08 使用 POST 要求與使用 Header 進行傳送與接收 呼叫 Web API
 * AA09 使用 POST 要求與使用 Cookie 進行傳送與接收 呼叫 Web API

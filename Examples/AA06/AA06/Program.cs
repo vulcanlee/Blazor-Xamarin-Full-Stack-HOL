@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AA06
 {
+    /// <summary>
+    /// HttpClient 送出不同資料作法 4 (Query String)
+    /// </summary>
     class Program
     {
         static async Task Main(string[] args)
