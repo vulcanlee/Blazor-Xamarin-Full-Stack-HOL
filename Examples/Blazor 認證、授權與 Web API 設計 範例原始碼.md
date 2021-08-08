@@ -24,7 +24,7 @@
 * AA22 HttpClient 讀取不同狀態碼與訊息內容
 * AA23 HttpClient 直接讀取回應字串
 * AA24 使用更新權杖來更新存取權杖
-* AA25 
+* AA25 使用 BaseWebAPI 設計 Product CRUD 存取服務
 * AA26 
 * AA27 
 * AA28 
