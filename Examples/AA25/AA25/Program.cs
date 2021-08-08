@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AA25
 {
+    /// <summary>
+    /// 使用 BaseWebAPI 設計 Product CRUD 存取服務
+    /// </summary>
     class Program
     {
         static async Task Main(string[] args)
