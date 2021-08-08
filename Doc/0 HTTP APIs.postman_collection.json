@@ -1,0 +1,614 @@
+{
+	"info": {
+		"_postman_id": "8bbaefe4-df32-43d1-95bb-20c3617e2e3a",
+		"name": "0 HTTP APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "送出狀態碼",
+			"item": [
+				{
+					"name": "OK",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/SendStatus/Ok",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"SendStatus",
+								"Ok"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NoContent",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendStatus/NoContent",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendStatus",
+								"NoContent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "NotFound",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendStatus/NotFound",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendStatus",
+								"NotFound"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BadRequest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendStatus/BadRequest",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendStatus",
+								"BadRequest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendStatus/Unauthorized",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendStatus",
+								"Unauthorized"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CustomStausCode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendStatus/CustomStausCode",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendStatus",
+								"CustomStausCode"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "送出資料",
+			"item": [
+				{
+					"name": "SendData",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/String",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"String"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "StringAsync",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/StringAsync",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"StringAsync"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/Object",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"Object"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObjectWithStatus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/ObjectWithStatus",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"ObjectWithStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cookie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/Cookie",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"Cookie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Header",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/Header",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"Header"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CssFile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/CssFile",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"CssFile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ImageFile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendData/ImageFile",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendData",
+								"ImageFile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "取得資料",
+			"item": [
+				{
+					"name": "FromForm (Form Urlencoded)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "Account",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/FromForm",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"FromForm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FromForm (Form Data - MultiPart / MIME)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Account",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/FromForm",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"FromForm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FromBody",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"account\": \"Hi user1\",\r\n    \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/FromBody",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"FromBody"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FromQuery Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "Account",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/FromQuery?Account=user1&Password=123",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"FromQuery"
+							],
+							"query": [
+								{
+									"key": "Account",
+									"value": "user1"
+								},
+								{
+									"key": "Password",
+									"value": "123"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FromRoute",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "Account",
+									"value": "user1",
+									"type": "text"
+								},
+								{
+									"key": "Password",
+									"value": "123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/FromRoute/user1/123",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"FromRoute",
+								"user1",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ByCookie",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"account\": \"Hi user1\",\r\n    \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/ByCookie",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"ByCookie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ByHeader",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "WhoAreYou",
+								"value": "Vulcan Lee",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"account\": \"Hi user1\",\r\n    \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/GetParameter/ByHeader",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"GetParameter",
+								"ByHeader"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "檔案上傳",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "MyImage.png",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/vulca/Downloads/Blazor.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/Upload",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

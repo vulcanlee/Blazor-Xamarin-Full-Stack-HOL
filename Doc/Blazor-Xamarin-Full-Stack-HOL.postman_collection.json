@@ -10,56 +10,28 @@
 			"name": "認證與授權",
 			"item": [
 				{
-					"name": "OnlyUser",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/OnlyUser",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"OnlyUser"
-							]
-						}
+					"name": "Login 使用者登入 User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
 					},
-					"response": []
-				},
-				{
-					"name": "OnlyAdministrator",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Account\" :\"user1\",\r\n    \"password\" : \"123\"\r\n}"
+						},
 						"url": {
-							"raw": "{{Host}}/api/OnlyAdministrator",
+							"raw": "https://localhost:5001/api/SendStatus/NoContent",
+							"protocol": "https",
 							"host": [
-								"{{Host}}"
+								"localhost"
 							],
+							"port": "5001",
 							"path": [
 								"api",
-								"OnlyAdministrator"
+								"SendStatus",
+								"NoContent"
 							]
 						}
 					},
@@ -73,33 +45,6 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"Account\" :\"user9\",\r\n    \"Password\" :\"pw\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{Host}}/api/Login",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login 使用者登入 User",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Account\" :\"user1\",\r\n    \"Password\" :\"pw\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -143,6 +88,62 @@
 								"api",
 								"login",
 								"RefreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OnlyAdministrator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnlyAdministrator",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnlyAdministrator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OnlyUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/OnlyUser",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"OnlyUser"
 							]
 						}
 					},
@@ -268,35 +269,6 @@
 					"response": []
 				},
 				{
-					"name": "Delete 刪除使用者",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/myuser/11",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"myuser",
-								"11"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Put 修改使用者",
 					"request": {
 						"auth": {
@@ -329,6 +301,35 @@
 								"api",
 								"myuser",
 								"30"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除使用者",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/myuser/11",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"myuser",
+								"11"
 							]
 						}
 					},
@@ -2184,35 +2185,6 @@
 					"response": []
 				},
 				{
-					"name": "Delete 刪除產品",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{Host}}/api/Product/1",
-							"host": [
-								"{{Host}}"
-							],
-							"path": [
-								"api",
-								"Product",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Put 修改產品",
 					"request": {
 						"auth": {
@@ -2245,6 +2217,35 @@
 								"api",
 								"Product",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete 刪除產品",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Host}}/api/Product/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"api",
+								"Product",
+								"1"
 							]
 						}
 					},
@@ -2310,35 +2311,6 @@
 										"api",
 										"Order",
 										"5"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete 刪除訂單表單",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{Token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{Host}}/api/Order/4",
-									"host": [
-										"{{Host}}"
-									],
-									"path": [
-										"api",
-										"Order",
-										"4"
 									]
 								}
 							},
@@ -2414,6 +2386,35 @@
 										"api",
 										"Order",
 										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete 刪除訂單表單",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Host}}/api/Order/4",
+									"host": [
+										"{{Host}}"
+									],
+									"path": [
+										"api",
+										"Order",
+										"4"
 									]
 								}
 							},
@@ -2683,7 +2684,7 @@
 	"variable": [
 		{
 			"key": "Token",
-			"value": ""
+			"value": "s"
 		},
 		{
 			"key": "RefreshToken",
@@ -2695,8 +2696,7 @@
 		},
 		{
 			"key": "Host",
-			"value": "https://localhost:5001",
-			"disabled": true
+			"value": "https://backendhol.azurewebsites.net/"
 		}
 	]
 }
