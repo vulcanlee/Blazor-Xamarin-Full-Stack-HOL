@@ -607,6 +607,127 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "CRUDController 新增 API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"id\": 0,\r\n            \"name\": \"CRUD1\",\r\n            \"price\": 100.0,\r\n            \"updatetime\": \"2021-08-09T11:07:40.0347528+08:00\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/CRUD",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"CRUD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CRUDController 查詢全部 API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/CRUD",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"CRUD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CRUDController 查詢單一 API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/CRUD/168",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"CRUD",
+								"168"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CRUDController 更新 API",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"id\": 1,\r\n            \"name\": \"CRUD1\",\r\n            \"price\": 100.0,\r\n            \"updatetime\": \"2021-08-09T11:07:40.0347528+08:00\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/CRUD/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"CRUD",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CRUDController 刪除 API",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/CRUD/168",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"CRUD",
+								"168"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
