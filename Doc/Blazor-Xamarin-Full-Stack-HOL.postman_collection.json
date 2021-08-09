@@ -11,27 +11,26 @@
 			"item": [
 				{
 					"name": "Login 使用者登入 User",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Account\" :\"user1\",\r\n    \"password\" : \"123\"\r\n}"
+							"raw": "{\r\n    \"Account\" :\"user1\",\r\n    \"password\" : \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/api/SendStatus/NoContent",
-							"protocol": "https",
+							"raw": "{{Host}}/api/Login",
 							"host": [
-								"localhost"
+								"{{Host}}"
 							],
-							"port": "5001",
 							"path": [
 								"api",
-								"SendStatus",
-								"NoContent"
+								"Login"
 							]
 						}
 					},
@@ -2696,7 +2695,8 @@
 		},
 		{
 			"key": "Host",
-			"value": "https://backendhol.azurewebsites.net/"
+			"value": "https://backendhol.azurewebsites.net/",
+			"disabled": true
 		}
 	]
 }
