@@ -27,6 +27,7 @@ using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json.Serialization;
 
 namespace Backend
 {
@@ -167,15 +168,19 @@ namespace Backend
             #endregion
 
             #region 修正 Web API 的 JSON 處理
-            services.AddControllers()
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.SuppressModelStateInvalidFilter = true;
-                })
+            services.AddMvc()
                 .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(options =>
+                    {
+                        options.SuppressModelStateInvalidFilter = true;
+                    })
+                    .AddNewtonsoftJson(options =>
+                    {
+                        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    });
             #endregion
 
             #region 設定 Swagger 中介軟體

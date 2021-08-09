@@ -25,8 +25,19 @@
 * AA23 HttpClient 直接讀取回應字串
 * AA24 使用更新權杖來更新存取權杖
 * AA25 使用 BaseWebAPI 設計 Product CRUD 存取服務
-* AA26 
-* AA27 
-* AA28 
-* AA29 
+* AA26 HttpClient 呼叫 CRUDController 新增 API
+* AA27 HttpClient 呼叫 CRUDController 查詢 API
+* AA28 HttpClient 呼叫 CRUDController 修改 API
+* AA29 HttpClient 呼叫 CRUDController 刪除 API
+* AA30 
+* AA31 
+* AA32 
+* AA33 
+* AA34 
+* AA35 
+* AA36 
+* AA37 
+* AA38 
+* AA39 
+
 
