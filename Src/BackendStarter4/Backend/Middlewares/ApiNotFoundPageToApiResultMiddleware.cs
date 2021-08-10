@@ -51,12 +51,14 @@ namespace Backend.Middlewares
                         if (responseContent.Contains("<!DOCTYPE html>"))
                         {
                             #region 呼叫此 API，回傳一個 網頁 對不起，未能找到您要的網頁。可能該網頁已被移除或被移到其他的網址
+                            var url = $"{context.Request.Scheme}://{context.Request.Host.Value}" +
+                                $"{context.Request.Path.Value}";
                             APIResult apiResult = new APIResult()
                             {
                                 Status = false,
                                 ErrorCode = (int)ErrorMessageEnum.客製化文字錯誤訊息,
                                 HTTPStatus = StatusCodes.Status404NotFound,
-                                Message = "對不起，未能找到您要的網頁。可能該網頁已被移除或被移到其他的網址",
+                                Message = $"對不起，未能找到您要的網頁。{url}",
                                 Payload = null
                             };
                             memoryStream.Seek(0, SeekOrigin.Begin);

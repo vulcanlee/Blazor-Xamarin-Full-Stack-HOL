@@ -210,7 +210,7 @@ namespace Backend
             ILogger<Startup> logger, IOptions<CustomNLog> optionsCustomNLog)
         {
             #region 當呼叫 API ( /api/someController ) 且該服務端點不存在的時候，將會替換網頁為 404 的 APIResult 訊息
-            app.UseApiNotFoundPageToAPIResult();
+            //app.UseApiNotFoundPageToAPIResult();
             #endregion
 
             #region 宣告 NLog 要使用到的變數內容
