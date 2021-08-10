@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DTOs.DataModels
 {
-    public partial class OrderMasterDto
+    public partial class OrderMasterDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,5 +13,18 @@ namespace DTOs.DataModels
         public DateTime OrderDate { get; set; }
         public DateTime RequiredDate { get; set; }
         public DateTime? ShippedDate { get; set; }
+
+        #region 介面實作
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public OrderMasterDto Clone()
+        {
+            return ((ICloneable)this).Clone() as OrderMasterDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        #endregion
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DTOs.DataModels
 {
-    public class OrderItemDto
+    public class OrderItemDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         public int OrderMasterId { get; set; }
@@ -21,5 +20,18 @@ namespace DTOs.DataModels
 
         public OrderMasterDto OrderMaster { get; set; }
         public ProductDto Product { get; set; }
+
+        #region 介面實作
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public OrderItemDto Clone()
+        {
+            return ((ICloneable)this).Clone() as OrderItemDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        #endregion
     }
 }

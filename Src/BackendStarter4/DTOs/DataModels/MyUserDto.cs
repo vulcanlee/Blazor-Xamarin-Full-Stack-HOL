@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DTOs.DataModels
 {
-    public class MyUserDto
+    public class MyUserDto : ICloneable, INotifyPropertyChanged
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]
@@ -23,5 +22,18 @@ namespace DTOs.DataModels
         public bool Status { get; set; }
         public int MenuRoleId { get; set; }
         public virtual MenuRoleDto MenuRole { get; set; }
+
+        #region 介面實作
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public MyUserDto Clone()
+        {
+            return ((ICloneable)this).Clone() as MyUserDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        #endregion
     }
 }

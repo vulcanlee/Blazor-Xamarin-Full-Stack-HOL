@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTOs.DataModels
 {
-    public partial class MenuRoleDto
+    public partial class MenuRoleDto : ICloneable, INotifyPropertyChanged
     {
         public MenuRoleDto()
         {
@@ -20,5 +18,18 @@ namespace DTOs.DataModels
         public string Remark { get; set; }
 
         public virtual ICollection<MenuDataDto> MenuData { get; set; }
+
+        #region 介面實作
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public MenuRoleDto Clone()
+        {
+            return ((ICloneable)this).Clone() as MenuRoleDto;
+        }
+        object ICloneable.Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        #endregion
     }
 }
