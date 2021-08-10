@@ -264,7 +264,9 @@ namespace Backend
             }
             #endregion
 
+            #region 針對目前的要求路徑啟用靜態檔案服務
             app.UseStaticFiles();
+            #endregion
 
             #region 啟用 Swagger 中介軟體
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -278,9 +280,11 @@ namespace Backend
             });
             #endregion
 
+            #region 將路由對應新增至中介軟體管線
             app.UseRouting();
+            #endregion
 
-            #region 指定要使用 Cookie & 使用者認證的中介軟體
+            #region 指定要使用使用者認證的中介軟體
             app.UseCookiePolicy();
             app.UseAuthentication();
             #endregion
@@ -293,6 +297,7 @@ namespace Backend
             app.UseMyMiddleware();
             #endregion
 
+            #region 將端點執行新增至中介軟體管線
             app.UseEndpoints(endpoints =>
             {
                 #region Adds endpoints for controller actions to the IEndpointRouteBuilder without specifying any routes.
@@ -302,6 +307,7 @@ namespace Backend
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+            #endregion
         }
     }
 }
