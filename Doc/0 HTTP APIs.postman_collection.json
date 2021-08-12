@@ -131,6 +131,36 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				},
+				{
+					"name": "OK test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/SendStatus/OK",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"SendStatus",
+								"OK"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -300,6 +330,41 @@
 								"api",
 								"SendData",
 								"ImageFile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "文字檔案 (觀察 MultipPart 封包格式)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Description",
+									"value": "Blazor.txt",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/D:/Vulcan/GitHub/Blazor-Xamarin-Full-Stack-HOL/Examples/Blazor 認證、授權與 Web API 設計 範例原始碼.md"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/Upload",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Upload"
 							]
 						}
 					},
@@ -730,6 +795,32 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Host",
+			"value": "https://localhost:5001"
 		}
 	]
 }
