@@ -297,6 +297,15 @@ namespace Backend
             app.UseMyMiddleware();
             #endregion
 
+            #region 自訂一個Middleware
+            app.Use(async (context, next) =>
+            {
+                //Doworkthatdoesn'twritetotheResponse.
+                await next.Invoke();
+                //Dologgingorotherworkthatdoesn'twritetotheResponse.
+            });
+            #endregion
+
             #region 將端點執行新增至中介軟體管線
             app.UseEndpoints(endpoints =>
             {
