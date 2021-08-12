@@ -31,7 +31,7 @@
 * AA29 HttpClient 呼叫 CRUDController 刪除 API
 * AA30 RestSharp 讀取不同狀態碼與訊息內容
 * AA31 RestSharp 直接讀取回應字串
-* AA32 
+* AA32 HttpClient 讀取不同狀態碼與訊息內容 (對應 HTTP)
 * AA33 
 * AA34 
 * AA35 
