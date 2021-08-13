@@ -42,10 +42,16 @@ namespace AA19
                     using (var fs = File.Open(path, FileMode.Open))
                     {
                         var streamContent = new StreamContent(fs);
+                        #region 複雜作法
                         streamContent.Headers.Add("Content-Type", "application/octet-stream");
                         streamContent.Headers.Add("Content-Disposition",
                             "form-data; name=\"file\"; filename=\"" + filename + "\"");
-                        content.Add(streamContent, "file", filename);
+                        content.Add(streamContent);
+                        #endregion
+                    
+                        #region 精簡作法
+                        //content.Add(streamContent, "file1", filename);
+                        #endregion
 
                         // 上傳到遠端伺服器上
                         response = await client.PostAsync(endPoint, content);
