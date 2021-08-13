@@ -301,6 +301,9 @@ namespace Backend
             app.Use(async (context, next) =>
             {
                 //Doworkthatdoesn'twritetotheResponse.
+                var url = $"[{context.Request.Method}] {context.Request.Scheme}://" +
+                $"{context.Request.Host.Value}{context.Request.Path.Value}";
+                Console.WriteLine(url);
                 await next.Invoke();
                 //Dologgingorotherworkthatdoesn'twritetotheResponse.
             });
