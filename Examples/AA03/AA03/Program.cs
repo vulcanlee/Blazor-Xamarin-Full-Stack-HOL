@@ -25,7 +25,7 @@ namespace AA03
             string result = "";
             using (HttpClient client = new HttpClient())
             {
-                string endPoint = $"https://localhost:5001/api/PassParameter/FromForm";
+                string endPoint = $"https://localhost:5001/api/GetParameter/FromForm";
                 HttpResponseMessage response = null;
 
                 #region 使用 FormUrlEncodedContent (x-www-form-urlencoded) 產生要 Post 的資料

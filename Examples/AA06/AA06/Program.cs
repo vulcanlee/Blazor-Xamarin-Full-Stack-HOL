@@ -25,7 +25,7 @@ namespace AA06
             string result = "";
             using (HttpClient client = new HttpClient())
             {
-                string endPoint = $"https://localhost:5001/api/PassParameter/FromQuery";
+                string endPoint = $"https://localhost:5001/api/GetParameter/FromQuery";
                 HttpResponseMessage response = null;
 
                 #region 使用 QueryString

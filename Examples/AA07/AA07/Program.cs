@@ -25,7 +25,7 @@ namespace AA07
             string result = "";
             using (HttpClient client = new HttpClient())
             {
-                string endPoint = $"https://localhost:5001/api/PassParameter/FromRoute";
+                string endPoint = $"https://localhost:5001/api/GetParameter/FromRoute";
                 HttpResponseMessage response = null;
 
                 #region 使用 Route 資料

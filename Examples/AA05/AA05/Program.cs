@@ -28,7 +28,7 @@ namespace AA05
             string result = "";
             using (HttpClient client = new HttpClient())
             {
-                string endPoint = $"https://localhost:5001/api/PassParameter/FromBody";
+                string endPoint = $"https://localhost:5001/api/GetParameter/FromBody";
                 HttpResponseMessage response = null;
 
                 #region 使用 JSON (Raw > JSON) 產生要 Post 的資料
