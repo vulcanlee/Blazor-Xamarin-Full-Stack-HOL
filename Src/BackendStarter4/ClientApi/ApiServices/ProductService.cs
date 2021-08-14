@@ -32,7 +32,7 @@ namespace ClientApi.ApiServices
             #region 指定此次呼叫 Web API 要執行參數
             Token = LOBGlobal.AccessToken;
             ApiResultIsCollection = true;
-            EnctypeMethod = EnctypeMethod.JSON;
+            EnctypeMethod = EnctypeMethod.None;
             Route = $"";
             #endregion
 
@@ -93,7 +93,7 @@ namespace ClientApi.ApiServices
             #region 指定此次呼叫 Web API 要執行參數
             Token = LOBGlobal.AccessToken;
             ApiResultIsCollection = false;
-            EnctypeMethod = EnctypeMethod.JSON;
+            EnctypeMethod = EnctypeMethod.None;
             Route = $"{item.Id}";
             #endregion
 

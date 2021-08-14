@@ -133,6 +133,10 @@ namespace ClientApi.CommonApiServices
             this.ServiceResult = new APIResult();
             APIResult apiResult = this.ServiceResult;
             string jsonPayload = "";
+            string queryString = "";
+            string endPoint = "";
+            HttpRequestMessage request = null;
+            HttpResponseMessage response = null;
 
             #region 確認網路已經連線
             #endregion
@@ -150,65 +154,33 @@ namespace ClientApi.CommonApiServices
                 try
                 {
                     //client.Timeout = TimeSpan.FromSeconds(5);
-                    string queryString = dic.ToQueryString();
-                    string endPoint = $"{Host}{Url}/{Route}" + queryString;
-                    UriBuilder ub = new UriBuilder(endPoint);
-                    HttpResponseMessage response = null;
+                    queryString = dic.ToQueryString();
+                    endPoint = $"{Host}{Url}/{Route}" + queryString;
 
+                    #region 填入存取權杖物件
                     if (string.IsNullOrEmpty(this.Token) == false)
                     {
                         client.DefaultRequestHeaders.Authorization =
                             new AuthenticationHeaderValue("Bearer", this.Token);
                     }
+                    #endregion
 
-                    #region  Get Or Post
-                    if (httpMethod == HttpMethod.Get)
+                    #region 根據 HttpMethod 來建立相關 Request 與 HttpContent
+                    request = new HttpRequestMessage(httpMethod, endPoint);
+                    if (EnctypeMethod == EnctypeMethod.FORMURLENCODED)
                     {
-                        // 使用 Get 方式來呼叫
-                        response = await client.GetAsync(ub.Uri, cancellationTokentoken);
+                        request.Content = dic.ToFormUrlEncodedContent();
                     }
-                    else if (httpMethod == HttpMethod.Post)
+                    else if (EnctypeMethod == EnctypeMethod.JSON)
                     {
-                        // 使用 Post 方式來呼叫
-                        if (EnctypeMethod == EnctypeMethod.FORMURLENCODED)
-                        {
-                            // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
-                            response = await client.PostAsync(ub.Uri, dic.ToFormUrlEncodedContent(), cancellationTokentoken);
-                        }
-                        else if (EnctypeMethod == EnctypeMethod.JSON)
-                        {
-                            client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
-                            response = await client.PostAsync(ub.Uri,
-                                new StringContent(jsonPayload, Encoding.UTF8, "application/json"), cancellationTokentoken);
-                        }
-                    }
-                    else if (httpMethod == HttpMethod.Put)
-                    {
-                        // 使用 Post 方式來呼叫
-                        if (EnctypeMethod == EnctypeMethod.FORMURLENCODED)
-                        {
-                            // 使用 FormUrlEncoded 方式來進行傳遞資料的編碼
-                            response = await client.PutAsync(ub.Uri,
-                                dic.ToFormUrlEncodedContent(), cancellationTokentoken);
-                        }
-                        else if (EnctypeMethod == EnctypeMethod.JSON)
-                        {
-                            client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
-                            response = await client.PutAsync(ub.Uri,
-                                new StringContent(jsonPayload, Encoding.UTF8, "application/json"), cancellationTokentoken);
-                        }
-                    }
-                    else if (httpMethod == HttpMethod.Delete)
-                    {
-                        response = await client.DeleteAsync(ub.Uri, cancellationTokentoken);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException("Not Found HttpMethod");
+                        client.DefaultRequestHeaders.Accept.TryParseAdd("application/json");
+                        request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
                     }
                     #endregion
 
                     #region Response
+                    response = await client.SendAsync(request, cancellationTokentoken);
+
                     if (response != null)
                     {
                         String strResult = await response.Content.ReadAsStringAsync();
@@ -380,6 +352,7 @@ namespace ClientApi.CommonApiServices
         /// <summary>
         /// 使用 application/json 方式來進行傳遞參數的編碼
         /// </summary>
-        JSON
+        JSON,
+        None,
     }
 }
