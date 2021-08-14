@@ -155,7 +155,8 @@ namespace ClientApi.CommonApiServices
                 {
                     //client.Timeout = TimeSpan.FromSeconds(5);
                     queryString = dic.ToQueryString();
-                    endPoint = $"{Host}{Url}/{Route}" + queryString;
+                    client.BaseAddress = new Uri(Host);
+                    endPoint = $"{Url}/{Route}" + queryString;
 
                     #region 填入存取權杖物件
                     if (string.IsNullOrEmpty(this.Token) == false)
