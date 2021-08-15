@@ -13,7 +13,15 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task<string> GetAsync()
         {
-            await Task.Delay(3000);
+            try
+            {
+                await Task.Delay(3000, HttpContext.RequestAborted);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+
             return "Hello~~";
         }
 
@@ -44,7 +52,15 @@ namespace Backend.Controllers
         [HttpGet]
         public async Task MethodAsync()
         {
-            await Task.Delay(10000);
+            try
+            {
+                await Task.Delay(10000, HttpContext.RequestAborted);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+
         }
     }
 }

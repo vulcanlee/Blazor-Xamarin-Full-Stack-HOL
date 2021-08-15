@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Backend.Controllers
@@ -11,8 +12,15 @@ namespace Backend.Controllers
         [HttpGet("{waitPeriodOfTime}")]
         public async Task<string> GetAsync([FromRoute] int waitPeriodOfTime)
         {
-            await Task.Delay(waitPeriodOfTime);
-            System.Console.WriteLine($" DoAsyncWork 將要完成");
+            try
+            {
+                await Task.Delay(waitPeriodOfTime, HttpContext.RequestAborted);
+                System.Console.WriteLine($" DoAsyncWork 將要完成");
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
             return "Hello~~";
         }
     }

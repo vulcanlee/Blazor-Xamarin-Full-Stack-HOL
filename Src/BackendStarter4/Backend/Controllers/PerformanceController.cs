@@ -24,7 +24,16 @@ namespace Backend.Controllers
         public async Task<int> AddAsync([FromRoute] int value1, int value2, int cost)
         {
             int sum = value1 + value2;
-            await Task.Delay(cost);
+
+            try
+            {
+                await Task.Delay(cost, HttpContext.RequestAborted);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+
             return sum;
         }
 
@@ -46,7 +55,16 @@ namespace Backend.Controllers
             byte[] source = Encoding.Default.GetBytes(value.ToString());
             byte[] crypto = md5.ComputeHash(source);
             string result = Convert.ToBase64String(crypto);
-            await Task.Delay(cost);
+
+            try
+            {
+                await Task.Delay(cost, HttpContext.RequestAborted);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
+
             return result;
         }
 
