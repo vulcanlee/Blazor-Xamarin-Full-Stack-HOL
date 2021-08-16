@@ -136,15 +136,12 @@ namespace Backend
                     {
                         OnAuthenticationFailed = context =>
                        {
-                           context.Response.OnStarting(async () =>
-                           {
-                               context.Response.StatusCode = 401;
-                               context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
-                               APIResult apiResult = JWTTokenFailHelper.GetFailResult(context.Exception);
+                           context.Response.StatusCode = 401;
+                           context.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = context.Exception.Message;
+                           APIResult apiResult = JWTTokenFailHelper.GetFailResult(context.Exception);
 
-                               context.Response.ContentType = "application/json";
-                               await context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult));
-                           });
+                           context.Response.ContentType = "application/json";
+                           context.Response.WriteAsync(JsonConvert.SerializeObject(apiResult)).Wait();
                            return Task.CompletedTask;
                        },
                         OnChallenge = context =>
