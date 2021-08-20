@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace Backend.Middlewares
 {
     /// <summary>
-    /// 當呼叫 API ( /api/someController ) 且該服務端點不存在的時候，將會替換網頁為 404 的 APIResult 訊息
+    /// 當呼叫 API ( /api/someController ) 且該服務端點不存在的時候，將會替換網頁為 404 的 APIResult 訊息 
     /// </summary>
     public class ApiNotFoundPageToAPIResultMiddleware
     {
