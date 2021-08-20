@@ -48,6 +48,9 @@
             </div>
             <article class="card-body bg-light">
                 <div>
+                    <button class="btn btn-danger mb-4" @onclick="InitDB">資料庫重新建立</button>
+                </div>
+                <div>
                     <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
                 </div>
             </article>
@@ -101,6 +104,12 @@
             verified = true;
             verifyCode = Question.ToString();
         }
+    }
+    public async Task InitDB()
+    {
+        this.VisibleProperty = true;
+        await DatabaseInitService.InitDBAsync();
+        this.VisibleProperty = false;
     }
     public async Task Init()
     {

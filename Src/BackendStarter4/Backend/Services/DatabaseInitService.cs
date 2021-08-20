@@ -39,6 +39,32 @@ namespace Backend.Services
             SystemLogHelper = systemLogHelper;
         }
 
+        public async Task InitDBAsync()
+        {
+            Random random = new Random();
+
+            #region 適用於 Code First ，刪除資料庫與移除資料庫
+            string Msg = "";
+            Msg = $"適用於 Code First ，刪除資料庫與移除資料庫";
+            Logger.LogInformation($"{Msg}");
+            await context.Database.EnsureDeletedAsync();
+            Msg = $"刪除資料庫";
+            Logger.LogInformation($"{Msg}");
+            await context.Database.EnsureCreatedAsync();
+            Msg = $"建立資料庫";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            });
+            Logger.LogInformation($"{Msg}");
+            #endregion
+        }
+
         public async Task InitDataAsync()
         {
             Random random = new Random();
