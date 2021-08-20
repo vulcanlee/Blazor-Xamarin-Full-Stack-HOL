@@ -167,17 +167,18 @@ namespace Backend.Helpers
             {
                 ShowStatusHandler?.Invoke($"匯入 功能表角色 {i} / {total}");
 
-                //角色名稱	名稱	層級	子功能表	排序值	Icon名稱	路由作業	啟用	強制導航
-                //匯入角色	帳號管理	0	0	20	mdi-clipboard-account	MyUser	1	0
+                // 1             2    3    4       5       6     7          8         9
+                //角色名稱      名稱  啟用  層級  子功能表 排序值 Icon名稱    路由作業    強制導航
+                //開發者角色     首頁 TRUE 0       FALSE   10    mdi-home    /         FALSE
                 var item功能表角色匯入 = new 功能表角色匯入();
                 item功能表角色匯入.角色名稱 = sheet[i, 1].Value;
                 item功能表角色匯入.名稱 = sheet[i, 2].Value;
-                item功能表角色匯入.層級 = sheet[i, 3].Value;
-                item功能表角色匯入.子功能表 = sheet[i, 4].Value;
-                item功能表角色匯入.排序值 = sheet[i, 5].Value;
-                item功能表角色匯入.Icon名稱 = sheet[i, 6].Value;
-                item功能表角色匯入.路由作業 = sheet[i, 7].Value;
-                item功能表角色匯入.啟用 = sheet[i, 8].Value;
+                item功能表角色匯入.啟用 = sheet[i, 3].Value;
+                item功能表角色匯入.層級 = sheet[i, 4].Value;
+                item功能表角色匯入.子功能表 = sheet[i, 5].Value;
+                item功能表角色匯入.排序值 = sheet[i, 6].Value;
+                item功能表角色匯入.Icon名稱 = sheet[i, 7].Value;
+                item功能表角色匯入.路由作業 = sheet[i, 8].Value;
                 item功能表角色匯入.強制導航 = sheet[i, 9].Value;
 
                 all功能表角色匯入.Add(item功能表角色匯入);
@@ -205,10 +206,10 @@ namespace Backend.Helpers
                 var itemMenuData = new MenuData()
                 {
                     CodeName = item.路由作業,
-                    Enable = item.啟用 == "1" ? true : false,
-                    ForceLoad = item.強制導航 == "1" ? true : false,
+                    Enable = item.啟用 == "TRUE" ? true : false,
+                    ForceLoad = item.強制導航 == "TRUE" ? true : false,
                     Icon = item.Icon名稱,
-                    IsGroup = item.子功能表 == "1" ? true : false,
+                    IsGroup = item.子功能表 == "TRUE" ? true : false,
                     Level = Convert.ToInt32(item.層級),
                     Name = item.名稱,
                     Sequence = Convert.ToInt32(item.排序值),
@@ -219,14 +220,13 @@ namespace Backend.Helpers
             #endregion
 
             #region 產生要更新資料庫的紀錄
-            //List<MenuRole> needMenuRoleInsert = new List<MenuRole>();
-            //List<MenuData> needMenuDataInsert = new List<MenuData>();
             CleanTrackingHelper.Clean<MenuRole>(Context);
+            CleanTrackingHelper.Clean<MenuData>(Context);
             foreach (var item in foundMenuRoleInsert)
             {
                 var searchItem = await Context.MenuRole
                     .FirstOrDefaultAsync(x => x.Name == item.Name);
-                if(searchItem==null)
+                if (searchItem == null)
                 {
                     await Context.AddAsync(item);
                     await Context.SaveChangesAsync();
@@ -247,6 +247,7 @@ namespace Backend.Helpers
                 await Context.BulkInsertAsync(needMenuDataInsert);
             }
             #endregion
+      
             CleanTrackingHelper.Clean<MenuRole>(Context);
             CleanTrackingHelper.Clean<MenuData>(Context);
             #endregion

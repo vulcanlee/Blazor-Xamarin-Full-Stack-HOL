@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Initialization", "Initializ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{676C278B-84D4-44D1-B02F-7EDC806B9A29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApi", "ClientApi\ClientApi.csproj", "{FBCC732B-A2A7-4C1B-8F53-324359AF92E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApi", "ClientApi\ClientApi.csproj", "{FBCC732B-A2A7-4C1B-8F53-324359AF92E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApiSample", "ClientApiSample\ClientApiSample.csproj", "{F25B01BC-1D44-4151-9976-68A05209F235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApiSample", "ClientApiSample\ClientApiSample.csproj", "{F25B01BC-1D44-4151-9976-68A05209F235}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
