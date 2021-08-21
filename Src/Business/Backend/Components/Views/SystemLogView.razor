@@ -1,0 +1,203 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Calendars
+
+@inject SystemLogViewModel RazorModel
+@implements IRazorPage
+@implements IDataGrid
+
+<div>
+    <SfGrid @ref="Grid" TValue="SystemLogAdapterModel"
+            AllowPaging="true" class="parentFullWidth"
+            Toolbar="RazorModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <SystemLogAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></SystemLogAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="SystemLogAdapterModel"
+                    OnToolbarClick="RazorModel.ToolbarClickHandler" />
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(SystemLogAdapterModel.Message)
+                        HeaderText="訊息" />
+            <GridColumn Field=@nameof(SystemLogAdapterModel.Category)
+                        HeaderText="分類"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(SystemLogAdapterModel.LogLevel)
+                        HeaderText="日誌等級"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(SystemLogAdapterModel.IP)
+                        HeaderText="IP"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(SystemLogAdapterModel.Updatetime)
+                        HeaderText="時間" Format="yyyyMMdd HHmmss" />
+            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+                <GridCommandColumns>
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameRead"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdRead})" />
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@RazorModel.EditRecordDialogTitle</Header>
+        <Content>
+            <EditForm Model="@RazorModel.CurrentRecord">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <InputWatcher EditContextActionChanged="@RazorModel.OnEditContestChanged" />
+
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">分類</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Category"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Category)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">日誌等級</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.LogLevel"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.LogLevel)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">訊息</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Message"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Message)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">其他內容</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Content"
+                                       Readonly="true" Multiline="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Content)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">使用者 IP</label>
+                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.IP"
+                                       Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.IP)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">紀錄時間</label>
+                            <SfDateTimePicker @bind-Value="RazorModel.CurrentRecord.Updatetime"
+                                              Format="yyyyMMdd HHmmss"
+                                              Readonly="true" />
+                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Updatetime)" />
+                        </div>
+                    </div>
+
+                </div>
+            </EditForm>
+        </Content>
+        <FooterTemplate>
+            <div>
+                <button class="btn btn-secondary" @onclick="RazorModel.OnRecordEditCancel">關閉</button>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
+            IsVisible="@RazorModel.MessageBox.IsVisible"
+            Title="@RazorModel.MessageBox.Title" Message="@RazorModel.MessageBox.Body"
+            Callback="x=>RazorModel.MessageBox.Hidden()" />
+
+<ConfirmBox Height="@RazorModel.ConfirmMessageBox.Height" Width="@RazorModel.ConfirmMessageBox.Width"
+            IsVisible="@RazorModel.ConfirmMessageBox.IsVisible"
+            Title="@RazorModel.ConfirmMessageBox.Title" Message="@RazorModel.ConfirmMessageBox.Body"
+            Callback="x=>RazorModel.RemoveThisRecord(x)" />
+
+<DialogBackground />
+
+@code{
+    SfGrid<SystemLogAdapterModel> Grid;
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    [Parameter]
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+    [Parameter]
+    public EventCallback<object> OnViewRender { get; set; }
+
+    #region 生命週期事件
+    protected override void OnInitialized()
+    {
+        RazorModel.Setup(this, this);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            RazorModel.Setup(this, this);
+        }
+        if (OnViewRender.HasDelegate)
+        {
+            await OnViewRender.InvokeAsync(null);
+        }
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        StateHasChanged();
+    }
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    public void RefreshGrid()
+    {
+        Grid?.Refresh();
+    }
+    public bool GridIsExist()
+    {
+        return Grid == null ? false : true;
+    }
+    public Task InvokeGridAsync(string actionName)
+    {
+        return Task.CompletedTask;
+    }
+    #endregion
+
+}
