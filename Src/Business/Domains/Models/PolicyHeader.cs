@@ -17,6 +17,7 @@ namespace Domains.Models
         /// <summary>
         /// 名稱
         /// </summary>
+        [Required(ErrorMessage = "名稱 不可為空白")]
         public string Name { get; set; }
         /// <summary>
         /// 啟用

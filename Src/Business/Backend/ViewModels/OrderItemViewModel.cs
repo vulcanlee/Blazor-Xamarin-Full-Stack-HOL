@@ -249,8 +249,15 @@ namespace Backend.ViewModels
                     .BeforeAddCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    if (checkedResult.MessageId == CommonDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        MessageBox.Show("400px", "200px", "警告", checkedResult.Message);
+                    }
+                    else
+                    {
+                        MessageBox.Show("400px", "200px", "警告",
+                            ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    }
                     thisView.NeedRefresh();
                     return;
                 }
@@ -261,8 +268,15 @@ namespace Backend.ViewModels
                     .BeforeUpdateCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    if (checkedResult.MessageId == CommonDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        MessageBox.Show("400px", "200px", "警告", checkedResult.Message);
+                    }
+                    else
+                    {
+                        MessageBox.Show("400px", "200px", "警告",
+                            ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    }
                     thisView.NeedRefresh();
                     return;
                 }

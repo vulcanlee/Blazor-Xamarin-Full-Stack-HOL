@@ -159,6 +159,7 @@ namespace Backend.ViewModels
             {
                 CurrentRecord = new PolicyHeaderAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
+                CurrentRecord.Enable = true;
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
@@ -210,7 +211,7 @@ namespace Backend.ViewModels
             {
                 #region 點選 開啟多筆 CRUD 對話窗 按鈕
                 IsShowMoreDetailsRecord = true;
-                ShowMoreDetailsRecordDialogTitle = MagicHelper.訂單明細管理功能名稱;
+                ShowMoreDetailsRecordDialogTitle = MagicHelper.簽核流程政策明細;
                 MasterRecord masterRecord = new MasterRecord()
                 {
                     Id = item.Id
@@ -264,8 +265,15 @@ namespace Backend.ViewModels
                     .BeforeAddCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    if (checkedResult.MessageId == CommonDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        MessageBox.Show("400px", "200px", "警告", checkedResult.Message);
+                    }
+                    else
+                    {
+                        MessageBox.Show("400px", "200px", "警告",
+                            ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    }
                     thisView.NeedRefresh();
                     return;
                 }
@@ -276,8 +284,15 @@ namespace Backend.ViewModels
                     .BeforeUpdateCheckAsync(CurrentRecord);
                 if (checkedResult.Success == false)
                 {
-                    MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    if (checkedResult.MessageId == CommonDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
+                    {
+                        MessageBox.Show("400px", "200px", "警告", checkedResult.Message);
+                    }
+                    else
+                    {
+                        MessageBox.Show("400px", "200px", "警告",
+                            ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                    }
                     thisView.NeedRefresh();
                     return;
                 }
@@ -332,7 +347,6 @@ namespace Backend.ViewModels
         }
 
         #endregion
-
 
         #region 紀錄啟用或停用
         public async Task DisableIt(PolicyHeaderAdapterModel item)

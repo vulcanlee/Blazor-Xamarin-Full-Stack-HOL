@@ -16,10 +16,10 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class ProductViewModel
+    public class PolicyDetailViewModel
     {
         #region Constructor
-        public ProductViewModel(IProductService CurrentService,
+        public PolicyDetailViewModel(IPolicyDetailService CurrentService,
            BackendDBContext context, IMapper Mapper,
            TranscationResultHelper transcationResultHelper)
         {
@@ -27,7 +27,7 @@ namespace Backend.ViewModels
             this.context = context;
             mapper = Mapper;
             TranscationResultHelper = transcationResultHelper;
-            ProductSort.Initialization(SortConditions);
+            PolicyDetailSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -62,11 +62,11 @@ namespace Backend.ViewModels
         /// <summary>
         /// 現在正在新增或修改的紀錄  
         /// </summary>
-        public ProductAdapterModel CurrentRecord { get; set; } = new ProductAdapterModel();
+        public PolicyDetailAdapterModel CurrentRecord { get; set; } = new PolicyDetailAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
-        public ProductAdapterModel CurrentNeedDeleteRecord { get; set; } = new ProductAdapterModel();
+        public PolicyDetailAdapterModel CurrentNeedDeleteRecord { get; set; } = new PolicyDetailAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
@@ -113,6 +113,7 @@ namespace Backend.ViewModels
         /// 訊息對話窗設定
         /// </summary>
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
+        public TranscationResultHelper TranscationResultHelper { get; }
         #endregion
         #endregion
 
@@ -124,10 +125,9 @@ namespace Backend.ViewModels
         /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
-        private readonly IProductService CurrentService;
+        private readonly IPolicyDetailService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
-
         /// <summary>
         /// 這個元件整體的通用介面方法
         /// </summary>
@@ -139,7 +139,6 @@ namespace Backend.ViewModels
         #endregion
 
         #region Method
-
         #region DataGrid 初始化
         /// <summary>
         /// 將會於 生命週期事件 OnInitialized / OnAfterRenderAsync 觸發此方法
@@ -158,12 +157,14 @@ namespace Backend.ViewModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new ProductAdapterModel();
+                CurrentRecord = new PolicyDetailAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
                 IsShowEditRecord = true;
+                CurrentRecord.PolicyHeaderId = Header.Id;
+                CurrentRecord.Enable = true;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {
@@ -173,9 +174,9 @@ namespace Backend.ViewModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除)
-        public async Task OnCommandClicked(CommandClickEventArgs<ProductAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<PolicyDetailAdapterModel> args)
         {
-            ProductAdapterModel item = args.RowData as ProductAdapterModel;
+            PolicyDetailAdapterModel item = args.RowData as PolicyDetailAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 #region 點選 修改紀錄 按鈕
@@ -302,25 +303,32 @@ namespace Backend.ViewModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
-        //public void OnOpenPicker()
-        //{
-        //    ShowAontherRecordPicker = true;
-        //}
+        public void OnOpenPicker()
+        {
+            ShowAontherRecordPicker = true;
+        }
 
-        //public void OnPickerCompletion(MyUserAdapterModel e)
-        //{
-        //    if (e != null)
-        //    {
-        //        CurrentRecord.Id = e.Id;
-        //        CurrentRecord.Name = e.Name;
-        //    }
-        //    ShowAontherRecordPicker = false;
-        //}
+        public void OnPickerCompletion(MyUserAdapterModel e)
+        {
+            if (e != null)
+            {
+                CurrentRecord.MyUserId = e.Id;
+                CurrentRecord.MyUserName = e.Name;
+            }
+            ShowAontherRecordPicker = false;
+        }
+        #endregion
+
+        #region 資料表關聯的方法
+        public async Task UpdateMasterHeaderAsync(MasterRecord header)
+        {
+            Header = header;
+            await Task.Delay(100);
+            dataGrid.RefreshGrid();
+        }
         #endregion
 
         #region 排序搜尋事件
-        public int DefaultSorting { get; set; } = -1;
-        public TranscationResultHelper TranscationResultHelper { get; }
 
         public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)
         {
@@ -329,6 +337,20 @@ namespace Backend.ViewModels
                 CurrentSortCondition.Id = args.Value;
                 dataGrid.RefreshGrid();
             }
+        }
+
+        #endregion
+
+        #region 啟用/停用
+        public async Task DisableIt(PolicyDetailAdapterModel item)
+        {
+            await CurrentService.DisableIt(item);
+            dataGrid.RefreshGrid();
+        }
+        public async Task EnableIt(PolicyDetailAdapterModel item)
+        {
+            await CurrentService.EnableIt(item);
+            dataGrid.RefreshGrid();
         }
         #endregion
         #endregion

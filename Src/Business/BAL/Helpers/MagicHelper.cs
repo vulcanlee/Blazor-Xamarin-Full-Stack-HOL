@@ -42,6 +42,7 @@ namespace BAL.Helpers
         public static readonly string 一般使用者使用功能名稱 = "一般使用者使用";
 
         public static readonly string 簽核流程政策 = "簽核流程政策";
+        public static readonly string 簽核流程政策明細 = "簽核流程政策明細";
         #endregion
 
         #region 測試與系統帳號

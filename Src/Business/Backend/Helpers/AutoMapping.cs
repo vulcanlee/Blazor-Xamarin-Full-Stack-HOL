@@ -10,6 +10,8 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<PolicyDetail, PolicyDetailAdapterModel>();
+            CreateMap<PolicyDetailAdapterModel, PolicyDetail>();
             CreateMap<PolicyHeader, PolicyHeaderAdapterModel>();
             CreateMap<PolicyHeaderAdapterModel, PolicyHeader>();
 

@@ -12,6 +12,7 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<IPolicyDetailService, PolicyDetailService>();
             services.AddTransient<IPolicyHeaderService, PolicyHeaderService>();
 
             services.AddTransient<ISystemLogService, SystemLogService>();
@@ -28,6 +29,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
+            services.AddTransient<PolicyDetailViewModel>();
             services.AddTransient<PolicyHeaderViewModel>();
 
             services.AddTransient<SystemLogViewModel>();

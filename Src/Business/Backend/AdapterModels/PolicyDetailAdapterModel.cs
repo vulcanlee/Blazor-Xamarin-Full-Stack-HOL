@@ -4,14 +4,22 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.AdapterModels
 {
-    public class PolicyHeaderAdapterModel : ICloneable
+    public class PolicyDetailAdapterModel : ICloneable
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "名稱 不可為空白")]
         /// <summary>
         /// 名稱
         /// </summary>
-        [Required(ErrorMessage = "名稱 不可為空白")]
         public string Name { get; set; }
+        public int Level { get; set; }
+        public bool OnlyCC { get; set; }
+        public int PolicyHeaderId { get; set; }
+        public PolicyHeaderAdapterModel PolicyHeader { get; set; }
+        public string PolicyHeaderName { get; set; }
+        public int MyUserId { get; set; }
+        public MyUserAdapterModel MyUser { get; set; }
+        public string MyUserName { get; set; }
         /// <summary>
         /// 啟用
         /// </summary>
@@ -30,9 +38,9 @@ namespace Backend.AdapterModels
             }
         }
 
-        public PolicyHeaderAdapterModel Clone()
+        public PolicyDetailAdapterModel Clone()
         {
-            return ((ICloneable)this).Clone() as PolicyHeaderAdapterModel;
+            return ((ICloneable)this).Clone() as PolicyDetailAdapterModel;
         }
         object ICloneable.Clone()
         {
