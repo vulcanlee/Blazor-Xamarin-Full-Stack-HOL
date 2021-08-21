@@ -15,8 +15,8 @@ namespace Domains.Models
         public int Level { get; set; }
         public bool OnlyCC { get; set; }
         public bool Enable { get; set; }
-        public int PolicyId { get; set; }
-        public PolicyHeader Policy { get; set; }
+        public int PolicyHeaderId { get; set; }
+        public PolicyHeader PolicyHeader { get; set; }
         public int MyUserId { get; set; }
         public MyUser MyUser { get; set; }
     }

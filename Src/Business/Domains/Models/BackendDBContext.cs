@@ -27,6 +27,9 @@ namespace Domains.Models
         public virtual DbSet<MenuRole> MenuRole { get; set; }
         public virtual DbSet<MenuData> MenuData { get; set; }
         public virtual DbSet<SystemLog> SystemLog { get; set; }
+        public virtual DbSet<PolicyHeader> PolicyHeader { get; set; }
+        public virtual DbSet<PolicyDetail> PolicyDetail { get; set; }
+        public virtual DbSet<AuditItem> AuditItem { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

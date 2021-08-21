@@ -14,7 +14,13 @@ namespace Domains.Models
             PolicyDetail = new HashSet<PolicyDetail>();
         }
         public int Id { get; set; }
+        /// <summary>
+        /// 名稱
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 啟用
+        /// </summary>
         public bool Enable { get; set; }
         public ICollection<PolicyDetail> PolicyDetail { get; set; }
     }

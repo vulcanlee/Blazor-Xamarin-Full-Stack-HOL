@@ -40,6 +40,8 @@ namespace BAL.Helpers
         public static readonly string 商品管理功能名稱 = "商品管理";
         public static readonly string 管理者專用功能名稱 = "管理者專用";
         public static readonly string 一般使用者使用功能名稱 = "一般使用者使用";
+
+        public static readonly string 簽核流程政策 = "簽核流程政策";
         #endregion
 
         #region 測試與系統帳號
@@ -51,6 +53,12 @@ namespace BAL.Helpers
         public static string 開發者帳號 = "god";
         public static string 系統管理員帳號 = "admin";
         public static string[] 使用者帳號 = { "user1", "user2", "user3", "user4" };
+        #endregion
+
+        #region 作業會用到的名稱
+        public static readonly string EnableTrue = "啟用";
+        public static readonly string EnableFalse = "停用";
+
         #endregion
         #endregion
 

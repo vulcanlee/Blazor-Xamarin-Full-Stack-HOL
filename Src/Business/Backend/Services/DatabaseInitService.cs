@@ -433,6 +433,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 簽核流程政策
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = MagicHelper.簽核流程政策,
+                CodeName = "Policy",
+                Enable = true,
+                Icon = "mdi-head-heart",
+                IsGroup = false,
+                Level = 0,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<MenuData>(context);
             #endregion
@@ -481,6 +497,10 @@ namespace Backend.Services
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == MagicHelper.商品管理功能名稱));
+
+            defaultMenuData
+                .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == MagicHelper.簽核流程政策));
 
             #endregion
 

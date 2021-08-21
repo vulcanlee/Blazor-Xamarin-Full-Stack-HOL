@@ -10,6 +10,9 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<PolicyHeader, PolicyHeaderAdapterModel>();
+            CreateMap<PolicyHeaderAdapterModel, PolicyHeader>();
+
             CreateMap<SystemLog, SystemLogAdapterModel>();
             CreateMap<SystemLogAdapterModel, SystemLog>();
             CreateMap<MenuRole, MenuRoleAdapterModel>();
