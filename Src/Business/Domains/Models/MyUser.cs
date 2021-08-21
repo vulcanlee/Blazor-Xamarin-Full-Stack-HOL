@@ -12,6 +12,10 @@ namespace Domains.Models
     /// </summary>
     public class MyUser
     {
+        public MyUser()
+        {
+            PolicyDetail = new HashSet<PolicyDetail>();
+        }
         public int Id { get; set; }
         [Required(ErrorMessage = "帳號 不可為空白")]
         public string Account { get; set; }
@@ -23,5 +27,7 @@ namespace Domains.Models
         public bool Status { get; set; }
         public int MenuRoleId { get; set; }
         public virtual MenuRole MenuRole { get; set; }
+
+        public ICollection<PolicyDetail> PolicyDetail { get; set; }
     }
 }
