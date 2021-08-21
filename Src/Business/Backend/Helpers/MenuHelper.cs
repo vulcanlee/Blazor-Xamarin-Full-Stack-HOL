@@ -24,7 +24,7 @@ namespace Backend.Helpers
         public IMenuDataService MenuDataService { get; }
         public int RoleId { get; }
 
-        public async Task<List<MainMenu>> MakeMenuObjectAsync(bool isHttc)
+        public async Task<List<MainMenu>> MakeMenuObjectAsync(bool isDeveloper)
         {
             #region 讀取該使用者角色的所有功能表清單
             var dataRequest = new DataRequest()
@@ -85,7 +85,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 加入開發者可以使用的功能表清單
-            if (isHttc == true)
+            if (isDeveloper == true)
             {
                 mainMenu = new MainMenu()
                 {
@@ -94,7 +94,7 @@ namespace Backend.Helpers
                     MenuData = new()
                     {
                         Level = 0,
-                        Name = "系統管理者",
+                        Name = "開發者專用",
                         Enable = true,
                         ForceLoad = false,
                         Icon = "mdi-apple-icloud",

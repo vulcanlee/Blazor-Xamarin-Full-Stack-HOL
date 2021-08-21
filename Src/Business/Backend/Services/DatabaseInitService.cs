@@ -224,7 +224,7 @@ namespace Backend.Services
 
             myUser.Salt = Guid.NewGuid().ToString();
             myUser.Password =
-             PasswordHelper.GetPasswordSHA(myUser.Salt+"Vulcan", "abc");
+             PasswordHelper.GetPasswordSHA(myUser.Salt + "Vulcan", "abc");
 
             context.Add(myUser);
             await context.SaveChangesAsync();
@@ -353,6 +353,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 系統資料管理子功能表
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = "系統資料管理",
+                CodeName = "",
+                Enable = true,
+                Icon = "mdi-star-box",
+                IsGroup = true,
+                Level = 0,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 帳號管理功能名稱
             cc += 10;
             menuData = new MenuData()
@@ -361,102 +377,6 @@ namespace Backend.Services
                 CodeName = "MyUser",
                 Enable = true,
                 Icon = "mdi-clipboard-account",
-                IsGroup = false,
-                Level = 0,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 開發標準範例
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = "開發標準範例",
-                CodeName = "",
-                Enable = true,
-                Icon = "mdi-robot-confused",
-                IsGroup = true,
-                Level = 0,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 訂單管理功能名稱
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = MagicHelper.訂單管理功能名稱,
-                CodeName = "Order",
-                Enable = true,
-                Icon = "mdi-shopping",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 商品管理功能名稱
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = MagicHelper.商品管理功能名稱,
-                CodeName = "Product",
-                Enable = true,
-                Icon = "mdi-gift",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 授權測試子功能表
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = "授權測試子功能表",
-                CodeName = "",
-                Enable = true,
-                Icon = "mdi-test-tube",
-                IsGroup = true,
-                Level = 0,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 管理者專用功能名稱
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = MagicHelper.管理者專用功能名稱,
-                CodeName = "OnlyAdministrator",
-                Enable = true,
-                Icon = "mdi-hand-pointing-up",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 一般使用者使用功能名稱
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = MagicHelper.一般使用者使用功能名稱,
-                CodeName = "OnlyUser",
-                Enable = true,
-                Icon = "mdi-head-heart",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
@@ -474,7 +394,7 @@ namespace Backend.Services
                 Enable = true,
                 Icon = "mdi-head-heart",
                 IsGroup = false,
-                Level = 0,
+                Level = 1,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
@@ -521,14 +441,6 @@ namespace Backend.Services
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == MagicHelper.帳號管理功能名稱));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.管理者專用功能名稱));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.商品管理功能名稱));
 
             defaultMenuData
                 .Remove(defaultMenuData

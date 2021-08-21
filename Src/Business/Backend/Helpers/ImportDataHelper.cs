@@ -237,8 +237,14 @@ namespace Backend.Helpers
                 {
                     foreach (var itemData in item.MenuData)
                     {
-                        itemData.MenuRoleId = searchItem.Id;
-                        needMenuDataInsert.Add(itemData);
+                        var searchItemMenuData = await Context.MenuData
+                            .FirstOrDefaultAsync(x => x.MenuRoleId == searchItem.Id &&
+                            x.CodeName == itemData.CodeName);
+                        if(searchItemMenuData == null)
+                        {
+                            itemData.MenuRoleId = searchItem.Id;
+                            needMenuDataInsert.Add(itemData);
+                        }
                     }
                 }
             }
