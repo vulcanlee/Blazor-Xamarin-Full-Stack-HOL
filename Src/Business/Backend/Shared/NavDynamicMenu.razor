@@ -48,11 +48,20 @@
                         else
                         {
                             <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
-                                <div @onclick="()=> {
+                                <div @onclick='()=> {
                                            currentMenuData.IsExpand=!currentMenuData.IsExpand;
-                                       }">
+                                                   if(currentMenuData.IsExpand == true)
+                                                   {
+                                                       currentMenuData.ExpandIcon="mdi mdi-18px mdi-chevron-down";
+                                                   }
+                                                   else
+                                                   {
+                                                       currentMenuData.ExpandIcon="mdi mdi-18px mdi-chevron-right";
+                                                   }
+                                       }'>
                                     <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
                                     <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                    <span class="text-white text-right @currentMenuData.ExpandIcon"></span>
                                 </div>
                             </li>
                             if (currentMenuData.IsExpand)
@@ -60,7 +69,7 @@
                                 foreach (var itemSub in item.SubMenus)
                                 {
                                     var currentSubMenuData = itemSub;
-                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-1 noselect">
+                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-3 noselect">
                                         <div @onclick="()=> { SubMenuDataClicked(currentSubMenuData); }">
                                             <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
                                             <span class="text-white">@currentSubMenuData.MenuData.Name</span>

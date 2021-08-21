@@ -60,6 +60,14 @@ namespace Backend.Helpers
                         IsExpand = false,
                         MenuData = item
                     };
+                    if (mainMenu.IsSubMenu == true)
+                    {
+                        mainMenu.ExpandIcon = "mdi mdi-18px mdi-chevron-right";
+                    }
+                    else
+                    {
+                        mainMenu.ExpandIcon = "";
+                    }
                     mainMenus.Add(mainMenu);
                     #endregion
                 }
@@ -76,7 +84,7 @@ namespace Backend.Helpers
             }
             #endregion
 
-            #region 加入鴻才管理者可以使用的功能表清單
+            #region 加入開發者可以使用的功能表清單
             if (isHttc == true)
             {
                 mainMenu = new MainMenu()
@@ -94,6 +102,7 @@ namespace Backend.Helpers
                         IsGroup = true,
                     }
                 };
+                mainMenu.ExpandIcon = "mdi mdi-18px mdi-chevron-right";
                 mainMenus.Add(mainMenu);
 
                 #region 第二層功能清單
@@ -172,6 +181,7 @@ namespace Backend.Helpers
         public bool IsExpand { get; set; } = false;
         public bool IsClicked { get; set; } = false;
         public string MenuClass { get; set; } = "";
+        public string ExpandIcon { get; set; } = "";
         public MenuDataAdapterModel MenuData { get; set; }
         public List<SubMenu> SubMenus { get; set; } = new List<SubMenu>();
     }
