@@ -337,22 +337,6 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
-            #region 帳號管理功能名稱
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = BAL.Helpers.MagicHelper.帳號管理功能名稱,
-                CodeName = "MyUser",
-                Enable = true,
-                Icon = "mdi-clipboard-account",
-                IsGroup = false,
-                Level = 0,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
             #region 變更密碼
             cc += 10;
             menuData = new MenuData()
@@ -369,6 +353,38 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 帳號管理功能名稱
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.帳號管理功能名稱,
+                CodeName = "MyUser",
+                Enable = true,
+                Icon = "mdi-clipboard-account",
+                IsGroup = false,
+                Level = 0,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
+            #region 開發標準範例
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = "開發標準範例",
+                CodeName = "",
+                Enable = true,
+                Icon = "mdi-robot-confused",
+                IsGroup = true,
+                Level = 0,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 訂單管理功能名稱
             cc += 10;
             menuData = new MenuData()
@@ -378,7 +394,7 @@ namespace Backend.Services
                 Enable = true,
                 Icon = "mdi-shopping",
                 IsGroup = false,
-                Level = 0,
+                Level = 1,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
@@ -394,6 +410,22 @@ namespace Backend.Services
                 Enable = true,
                 Icon = "mdi-gift",
                 IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
+            #region 授權測試子功能表
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = "授權測試子功能表",
+                CodeName = "",
+                Enable = true,
+                Icon = "mdi-test-tube",
+                IsGroup = true,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
@@ -410,7 +442,7 @@ namespace Backend.Services
                 Enable = true,
                 Icon = "mdi-hand-pointing-up",
                 IsGroup = false,
-                Level = 0,
+                Level = 1,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
@@ -426,7 +458,7 @@ namespace Backend.Services
                 Enable = true,
                 Icon = "mdi-head-heart",
                 IsGroup = false,
-                Level = 0,
+                Level = 1,
                 MenuRoleId = menuRole開發者.Id,
                 Sequence = cc,
             };
