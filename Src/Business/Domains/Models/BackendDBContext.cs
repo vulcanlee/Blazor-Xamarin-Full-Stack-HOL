@@ -27,6 +27,7 @@ namespace Domains.Models
         public virtual DbSet<MenuRole> MenuRole { get; set; }
         public virtual DbSet<MenuData> MenuData { get; set; }
         public virtual DbSet<SystemLog> SystemLog { get; set; }
+        public virtual DbSet<ExceptionRecord> ExceptionRecord { get; set; }
         public virtual DbSet<PolicyHeader> PolicyHeader { get; set; }
         public virtual DbSet<PolicyDetail> PolicyDetail { get; set; }
         public virtual DbSet<AuditMaster> AuditItem { get; set; }
