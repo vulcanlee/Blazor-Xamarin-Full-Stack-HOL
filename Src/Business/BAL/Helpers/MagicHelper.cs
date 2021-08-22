@@ -55,7 +55,10 @@ namespace BAL.Helpers
         public const string 開發者的角色聲明 = "developer";
         public static string 開發者帳號 = "god";
         public static string 系統管理員帳號 = "admin";
-        public static string[] 使用者帳號 = { "user1", "user2", "user3", "user4" };
+        public static string[] 使用者帳號 = { "user1", "user2", "user3", "user4", "user5",
+        "user6", "user7", "user8", "user9", "user10",
+        "user11", "user12", "user13", "user14", "user15",
+        "user16", "user17", "user18", "user19", "user20",};
         #endregion
 
         #region 作業會用到的名稱

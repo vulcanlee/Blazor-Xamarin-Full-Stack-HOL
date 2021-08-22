@@ -91,6 +91,7 @@ namespace Backend.Services
             #endregion
 
             #region 建立開發環境要用到的測試紀錄
+            #region 建立功能表角色與項目清單
             await 建立功能表角色與項目清單Async();
             Msg = $"建立功能表角色與項目清單";
             await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -103,6 +104,9 @@ namespace Backend.Services
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
             });
             Logger.LogInformation($"{Msg}");
+            #endregion
+
+            #region 建立使用者紀錄
             await 建立使用者紀錄Async();
             Msg = $"建立使用者紀錄";
             await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -115,20 +119,11 @@ namespace Backend.Services
                 IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
             });
             Logger.LogInformation($"{Msg}");
-            List<Product> products = await 建立產品紀錄Async();
-            Msg = $"建立產品紀錄";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
-            {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
-            Logger.LogInformation($"{Msg}");
-            await 建立訂單紀錄Async(random, products);
-            Msg = $"建立訂單紀錄";
+            #endregion
+
+            #region 建立片語分類與文字Async
+            await 建立片語分類與文字Async();
+            Msg = $"建立片語分類與文字";
             await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
             {
                 Message = Msg,
@@ -140,59 +135,292 @@ namespace Backend.Services
             });
             Logger.LogInformation($"{Msg}");
             #endregion
+
+            #region 建立簽核政策
+            await 建立簽核政策Async();
+            Msg = $"建立簽核政策";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            });
+            Logger.LogInformation($"{Msg}");
+            #endregion
+
+            #endregion
         }
 
-        private async Task 建立訂單紀錄Async(Random random, List<Product> products)
+        #region 建立測試紀錄
+        async Task 建立片語分類與文字Async()
         {
-            for (int i = 0; i < 3; i++)
-            {
-                OrderMaster order = new OrderMaster()
-                {
-                    Name = $"Order{i}",
-                    OrderDate = DateTime.Now.AddDays(random.Next(30)),
-                    RequiredDate = DateTime.Now.AddDays(random.Next(30)),
-                    ShippedDate = DateTime.Now.AddDays(random.Next(30)),
-                };
-                context.Add(order);
-                await context.SaveChangesAsync();
-                var total = random.Next(1, 6);
-                for (int j = 0; j < total; j++)
-                {
-                    OrderItem orderItem = new OrderItem()
-                    {
-                        Name = $"OrderItem{j}",
-                        OrderMasterId = order.Id,
-                        ProductId = products[j].Id,
-                        Quantity = 3,
-                        ListPrice = 168,
-                    };
-                    context.Add(orderItem);
-                }
-                await context.SaveChangesAsync();
-            }
-            CleanTrackingHelper.Clean<Product>(context);
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            CleanTrackingHelper.Clean<OrderItem>(context);
-        }
+            List<PhaseMessage> PhaseMessage = new List<PhaseMessage>();
 
-        private async Task<List<Product>> 建立產品紀錄Async()
-        {
-            CleanTrackingHelper.Clean<Product>(context);
-            CleanTrackingHelper.Clean<OrderMaster>(context);
-            CleanTrackingHelper.Clean<OrderItem>(context);
-            List<Product> products = new List<Product>();
-            for (int i = 0; i < 10; i++)
+            int cc = 10;
+            #region 簽核表單使用的輸入片語
+            var phaseCategory = new PhaseCategory()
             {
-                Product product = new Product()
-                {
-                    Name = $"Product{i}"
-                };
-                products.Add(product);
-                context.Add(product);
-            }
+                Name = "簽核表單使用的輸入片語",
+                Enable = true,
+                OrderNumber = cc++,
+                PhaseMessage = new List<PhaseMessage>()
+            };
+            await context.PhaseCategory.AddAsync(phaseCategory);
             await context.SaveChangesAsync();
-            return products;
+            PhaseMessage = new List<PhaseMessage>()
+                {
+                    new PhaseMessage()
+                    {
+                        Content = "做得很好，繼續努力",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "用來形容情緒不會表露出來的人",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "像魚一樣的喝，表示喝很多，尤其指喝很多酒",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "意指非常重要、有權力或是具有影響力的人",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                };
+            await context.BulkInsertAsync(PhaseMessage);
+            #endregion
+            #region 改善報告的輸入片語
+            phaseCategory = new PhaseCategory()
+            {
+                Name = "改善報告的輸入片語",
+                Enable = true,
+                OrderNumber = cc++,
+                PhaseMessage = new List<PhaseMessage>()
+            };
+            await context.PhaseCategory.AddAsync(phaseCategory);
+            await context.SaveChangesAsync();
+            PhaseMessage = new List<PhaseMessage>()
+                {
+                    new PhaseMessage()
+                    {
+                        Content = "加速意見溝通",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "○○○○案，簽會意見綜合說明如下，請鑒核",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "會簽意見一略以，○○○○○○○○○…",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "會簽意見二略以，○○○○○○○○○…",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "「是否允當」?",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "……因故不克擔任…，予以改派…",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                };
+            await context.BulkInsertAsync(PhaseMessage);
+            #endregion
+            #region 雜項輸入片語
+            phaseCategory = new PhaseCategory()
+            {
+                Name = "雜項輸入片語",
+                Enable = true,
+                OrderNumber = cc++,
+                PhaseMessage = new List<PhaseMessage>()
+            };
+            await context.PhaseCategory.AddAsync(phaseCategory);
+            await context.SaveChangesAsync();
+            PhaseMessage = new List<PhaseMessage>()
+                {
+                    new PhaseMessage()
+                    {
+                        Content = "可以嗎?",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                    new PhaseMessage()
+                    {
+                        Content = "有關本校進修部學生向 鈞部「部長信箱」反映課程標準一案，本校已查明原委，謹檢陳查核報告乙份（如附件），敬請 鑒核。",
+                        Enable = true,
+                        OrderNumber = cc++,
+                        PhaseCategoryId = phaseCategory.Id,
+                    },
+                };
+            await context.BulkInsertAsync(PhaseMessage);
+            #endregion
         }
+
+        async Task 建立簽核政策Async()
+        {
+            List<PolicyDetail> policyDetail = new List<PolicyDetail>();
+            var allUsers = await context.MyUser.ToListAsync();
+            #region 稽核室簽核流程
+            var policyHeader = new PolicyHeader()
+            {
+                Name = "稽核室簽核流程",
+                Enable = true,
+            };
+            await context.PolicyHeader.AddAsync(policyHeader);
+            await context.SaveChangesAsync();
+            policyDetail = new List<PolicyDetail>()
+                {
+                    new PolicyDetail()
+                    {
+                        Name = "主任",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user11").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "副課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "經理",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
+                    },
+                };
+            await context.BulkInsertAsync(policyDetail);
+            #endregion
+
+            #region 異常問題簽核流程
+            policyHeader = new PolicyHeader()
+            {
+                Name = "異常問題簽核流程",
+                Enable = true,
+            };
+            await context.PolicyHeader.AddAsync(policyHeader);
+            await context.SaveChangesAsync();
+            policyDetail = new List<PolicyDetail>()
+                {
+                    new PolicyDetail()
+                    {
+                        Name = "現場領班",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user15").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "廠長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user16").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "總經理",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user17").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "處長",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user18").Id,
+                    },
+                };
+            await context.BulkInsertAsync(policyDetail);
+            #endregion
+
+            #region 一般事項簽核流程
+            policyHeader = new PolicyHeader()
+            {
+                Name = "一般事項簽核流程",
+                Enable = true,
+            };
+            await context.PolicyHeader.AddAsync(policyHeader);
+            await context.SaveChangesAsync();
+            policyDetail = new List<PolicyDetail>()
+                {
+                    new PolicyDetail()
+                    {
+                        Name = "主任",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
+                    },
+                };
+            await context.BulkInsertAsync(policyDetail);
+            #endregion
+
+        }
+
+        #endregion
 
         #region 建立相關紀錄
         private async Task 建立使用者紀錄Async()

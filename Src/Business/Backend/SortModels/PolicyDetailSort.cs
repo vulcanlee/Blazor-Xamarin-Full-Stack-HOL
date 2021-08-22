@@ -5,10 +5,10 @@ namespace Backend.SortModels
 {
     public enum PolicyDetailSortEnum
     {
-        NameAscending,
-        NameDescending,
         LevelAscending,
         LevelDescending,
+        NameAscending,
+        NameDescending,
         EnableAscending,
         EnableDescending,
     }
@@ -21,16 +21,6 @@ namespace Backend.SortModels
             SortConditions.Clear();
             SortConditions.Add(new SortCondition()
             {
-                Id = (int)PolicyDetailSortEnum.NameAscending,
-                Title = "名稱 遞增"
-            });
-            SortConditions.Add(new SortCondition()
-            {
-                Id = (int)PolicyDetailSortEnum.NameDescending,
-                Title = "名稱 遞減"
-            });
-            SortConditions.Add(new SortCondition()
-            {
                 Id = (int)PolicyDetailSortEnum.LevelAscending,
                 Title = "階層 遞增"
             });
@@ -38,6 +28,16 @@ namespace Backend.SortModels
             {
                 Id = (int)PolicyDetailSortEnum.LevelDescending,
                 Title = "階層 遞減"
+            });
+            SortConditions.Add(new SortCondition()
+            {
+                Id = (int)PolicyDetailSortEnum.NameAscending,
+                Title = "名稱 遞增"
+            });
+            SortConditions.Add(new SortCondition()
+            {
+                Id = (int)PolicyDetailSortEnum.NameDescending,
+                Title = "名稱 遞減"
             });
             SortConditions.Add(new SortCondition()
             {
