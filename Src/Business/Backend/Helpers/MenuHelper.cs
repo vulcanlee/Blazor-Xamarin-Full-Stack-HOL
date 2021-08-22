@@ -106,6 +106,7 @@ namespace Backend.Helpers
                 mainMenus.Add(mainMenu);
 
                 #region 第二層功能清單
+                #region 功能表角色功能名稱
                 subMenu = new SubMenu()
                 {
                     MenuData = new MenuDataAdapterModel()
@@ -119,6 +120,8 @@ namespace Backend.Helpers
                     }
                 };
                 mainMenu.SubMenus.Add(subMenu);
+                #endregion
+                #region 系統日誌功能名稱
                 subMenu = new SubMenu()
                 {
                     MenuData = new MenuDataAdapterModel()
@@ -132,6 +135,23 @@ namespace Backend.Helpers
                     }
                 };
                 mainMenu.SubMenus.Add(subMenu);
+                #endregion
+                #region Icons 圖示
+                subMenu = new SubMenu()
+                {
+                    MenuData = new MenuDataAdapterModel()
+                    {
+                        Name = "Icons 圖示",
+                        CodeName = "https://pictogrammers.github.io/@mdi/font/5.8.55/",
+                        Enable = true,
+                        Icon = "mdi-family-tree",
+                        IsGroup = false,
+                        Level = 1, ForceLoad=true
+                    }
+                };
+                mainMenu.SubMenus.Add(subMenu);
+                #endregion
+                #region Excel匯入功能名稱
                 subMenu = new SubMenu()
                 {
                     MenuData = new MenuDataAdapterModel()
@@ -145,6 +165,7 @@ namespace Backend.Helpers
                     }
                 };
                 mainMenu.SubMenus.Add(subMenu);
+                #endregion
                 #endregion
             }
             #endregion  

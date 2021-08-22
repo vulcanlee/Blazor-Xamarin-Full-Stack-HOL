@@ -1,7 +1,7 @@
 ﻿@inject IMenuDataService menuDataService
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject NavigationManager NavigationManager
-
+@inject IJSRuntime JSRuntime;
 
 <div class="top-row pl-4 navbar navbar-dark">
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -28,7 +28,7 @@
                     if (currentMenuData.MenuData.CodeName == "/")
                     {
                         <li class="@currentMenuData.MenuClass nav-item px-3">
-                            <div @onclick="() => { MenuDataClicked(currentMenuData); }" class="noselect">
+                            <div @onclick="async () => {await MenuDataClickedAsync(currentMenuData); }" class="noselect">
                                 <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
                                 <span class="text-white">@currentMenuData.MenuData.Name</span>
                             </div>
@@ -39,7 +39,7 @@
                         if (currentMenuData.MenuData.IsGroup == false)
                         {
                             <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
-                                <div @onclick="()=> { MenuDataClicked(currentMenuData); }">
+                                <div @onclick="async () => {await MenuDataClickedAsync(currentMenuData); }">
                                     <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
                                     <span class="text-white">@currentMenuData.MenuData.Name</span>
                                 </div>
@@ -70,7 +70,7 @@
                                 {
                                     var currentSubMenuData = itemSub;
                                     <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-3 noselect">
-                                        <div @onclick="()=> { SubMenuDataClicked(currentSubMenuData); }">
+                                        <div @onclick="async ()=> { await SubMenuDataClickedAsync(currentSubMenuData); }">
                                             <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
                                             <span class="text-white">@currentSubMenuData.MenuData.Name</span>
                                         </div>
@@ -125,7 +125,7 @@
         }
     }
 
-    void MenuDataClicked(MainMenu currentMenuData)
+    async Task MenuDataClickedAsync(MainMenu currentMenuData)
     {
         foreach (var item in mainMenus)
         {
@@ -144,10 +144,19 @@
         {
             ToggleNavMenu();
         }
-        NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        //NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        if (currentMenuData.MenuData.ForceLoad == true)
+        {
+            // https://www.syncfusion.com/faq/blazor/general/can-blazor-open-a-url-in-a-new-tab-using-urihelper-navigateto
+            await JSRuntime.InvokeAsync<object>("open", currentMenuData.MenuData.CodeName, "_blank");
+        }
+        else
+        {
+            NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        }
     }
 
-    void SubMenuDataClicked(SubMenu currentMenuData)
+    async Task SubMenuDataClickedAsync(SubMenu currentMenuData)
     {
         foreach (var item in mainMenus)
         {
@@ -163,6 +172,14 @@
         currentMenuData.IsClicked = true;
         currentMenuData.MenuClass = "clicked";
         ToggleNavMenu();
-        NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        if (currentMenuData.MenuData.ForceLoad == true)
+        {
+            // https://www.syncfusion.com/faq/blazor/general/can-blazor-open-a-url-in-a-new-tab-using-urihelper-navigateto
+            await JSRuntime.InvokeAsync<object>("open", currentMenuData.MenuData.CodeName, "_blank");
+        }
+        else
+        {
+            NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        }
     }
 }
