@@ -6,18 +6,17 @@
 @using Syncfusion.Blazor.Calendars
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
-@using Syncfusion.Blazor.Buttons
 
-@inject PolicyHeaderViewModel ViewModel
+@inject AuditMasterViewModel ViewModel
 @implements IRazorPage
 @implements IDataGrid
 
 <div>
-    <SfGrid @ref="Grid" TValue="PolicyHeaderAdapterModel"
+    <SfGrid @ref="Grid" TValue="AuditMasterAdapterModel"
             AllowPaging="true" class="parentFullWidth"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <PolicyHeaderAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></PolicyHeaderAdapter>
+            <AuditMasterAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></AuditMasterAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -33,31 +32,21 @@
                 </ToolbarItem>
             </ToolbarItems>
         </SfToolbar>
-        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="PolicyHeaderAdapterModel"
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="AuditMasterAdapterModel"
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(PolicyHeaderAdapterModel.Name)
-                        HeaderText="名稱" />
-            <GridColumn Field=@nameof(PolicyHeaderAdapterModel.Enable) HeaderText="狀態" Width="150">
-                <Template>
-                    @{
-                        var currentRec = (context as PolicyHeaderAdapterModel);
-                        if (currentRec.Enable == true)
-                        {
-                            <span>@currentRec.EnableName</span>
-                            <span class="oi oi-play-circle mx-2 text-success"
-                                  @onclick="x=>ViewModel.DisableIt(currentRec)" />
-                        }
-                        else
-                        {
-                            <span>@currentRec.EnableName</span>
-                            <span class="oi oi-media-stop mx-2 text-danger"
-                                  @onclick="x=>ViewModel.EnableIt(currentRec)" />
-                        }
-                    }
-                </Template>
-            </GridColumn>
+            <GridColumn Field=@nameof(AuditMasterAdapterModel.Title)
+                        HeaderText="主旨" Width="250" />
+            <GridColumn Field=@nameof(AuditMasterAdapterModel.CreateDate)
+                        HeaderText="建立時間" Format="yyyy-MM-dd HH:mm:ss"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(AuditMasterAdapterModel.MyUserName)
+                        HeaderText="建立者" Format="yyyy-MM-dd"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(AuditMasterAdapterModel.PolicyHeaderName)
+                        HeaderText="簽核政策" Format="yyyy-MM-dd"
+                        HideAtMedia="(min-width: 640px)" />
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowDetailOfMaster"
@@ -82,22 +71,62 @@
         <Content>
             <EditForm Model="@ViewModel.CurrentRecord">
                 <DataAnnotationsValidator />
+                <ValidationSummary />
                 <InputWatcher EditContextActionChanged="@ViewModel.OnEditContestChanged" />
 
                 <div>
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">名稱</label>
-                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Name"
-                                       Placeholder="請輸名稱" />
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Name)" />
+                            <label class="control-label">主旨</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Title"
+                                       Placeholder="請輸訂單名稱" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Title)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <SfCheckBox Label="啟用" @bind-Checked="ViewModel.CurrentRecord.Enable"></SfCheckBox>
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Enable)" />
+                            <label class="control-label">說明</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Content"
+                                       Placeholder="請輸訂單名稱" Multiline="true" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Content)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">建立時間</label>
+                            <SfDateTimePicker TValue="DateTime"
+                                              @bind-Value="ViewModel.CurrentRecord.CreateDate"
+                                              Format="yyyy-MM-dd hh:mm:ss"
+                                              Placeholder="請選擇一個日期、時間" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.CreateDate)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">
+                                建立者
+                                <span class="mdi mdi-24px mdi-magnify"
+                                      @onclick="ViewModel.OnOpenPicker"></span>
+                            </label>
+                            <SfTextBox Value="@ViewModel.CurrentRecord.MyUserName"
+                                       Enabled="false"></SfTextBox>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.MyUserName)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">
+                                簽核政策
+                                <span class="mdi mdi-24px mdi-magnify"
+                                      @onclick="ViewModel.OnOpenPolicyPicker"></span>
+                            </label>
+                            <SfTextBox Value="@ViewModel.CurrentRecord.PolicyHeaderName"
+                                       Enabled="false"></SfTextBox>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.PolicyHeaderName)" />
                         </div>
                     </div>
 
@@ -119,7 +148,7 @@
     <DialogTemplates>
         <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>
-            <PolicyDetailView @ref="ViewModel.ShowMoreDetailsGrid" PageSize="@MagicHelper.GridPageSize"
+            <OrderItemView @ref="ViewModel.ShowMoreDetailsGrid" PageSize="@MagicHelper.GridPageSize"
                            Header="ViewModel.Header" />
         </Content>
         <FooterTemplate>
@@ -130,6 +159,13 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
+
+<MyUserPicker OpenPicker="ViewModel.ShowAontherRecordPicker"
+              OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
+
+<PolicyHeaderPicker OpenPicker="ViewModel.ShowPolicyRecordPicker"
+              OnConfirmCallback="x=>ViewModel.OnPickerPolicyCompletion(x)" />
+
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"
@@ -144,7 +180,7 @@
 <DialogBackground />
 
 @code{
-    SfGrid<PolicyHeaderAdapterModel> Grid;
+    SfGrid<AuditMasterAdapterModel> Grid;
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]
