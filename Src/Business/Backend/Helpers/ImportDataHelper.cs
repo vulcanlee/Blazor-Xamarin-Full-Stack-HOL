@@ -114,7 +114,7 @@ namespace Backend.Helpers
                     {
                         Account = 帳號,
                         Name = 姓名,
-                        Status = (啟用 == "1") ? true : false,
+                        Status = (啟用 == "TRUE") ? true : false,
                         Password = "",
                         Salt = Guid.NewGuid().ToString(),
                     };

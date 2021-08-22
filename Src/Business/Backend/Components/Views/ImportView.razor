@@ -51,7 +51,6 @@
 
     public async Task UploaderChange(UploadChangeEventArgs args)
     {
-        Loggr.LogInformation("call - UploaderChange");
         DataHelper.IsLoad = false;
         if (args.Files.Count > 0)
         {
@@ -61,7 +60,6 @@
     }
     public async Task ImportAsync()
     {
-        Loggr.LogInformation("call - Import");
         DataHelper.ShowStatusHandler = null;
         DataHelper.ShowStatusHandler = (x) =>
         {
