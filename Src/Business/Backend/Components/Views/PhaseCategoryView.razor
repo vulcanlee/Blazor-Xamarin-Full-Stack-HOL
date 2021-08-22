@@ -5,6 +5,7 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
 
 @inject PhaseCategoryViewModel ViewModel
 @implements IRazorPage
@@ -56,8 +57,11 @@
                     }
                 </Template>
             </GridColumn>
-            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+            <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowDetailOfMaster"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowDetailOfMaster})" />
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
                                        ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
@@ -90,6 +94,13 @@
                         </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <SfCheckBox Label="啟用" @bind-Checked="ViewModel.CurrentRecord.Enable"></SfCheckBox>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Enable)" />
+                        </div>
+                    </div>
+
                 </div>
             </EditForm>
         </Content>
@@ -97,6 +108,24 @@
             <div>
                 <button type="submit" class="btn btn-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</button>
                 <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</button>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+
+<SfDialog @bind-Visible="@ViewModel.IsShowMoreDetailsRecord" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
+        <Content>
+            <PhaseMessageView @ref="ViewModel.ShowMoreDetailsGrid" PageSize="@MagicHelper.GridPageSize"
+                              Header="ViewModel.Header" />
+        </Content>
+        <FooterTemplate>
+            <div>
+                <button class="btn btn-secondary" @onclick="()=> { ViewModel.IsShowMoreDetailsRecord = false; }">關閉</button>
             </div>
         </FooterTemplate>
     </DialogTemplates>

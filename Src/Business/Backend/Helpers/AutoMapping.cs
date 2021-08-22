@@ -10,6 +10,8 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<PhaseMessage, PhaseMessageAdapterModel>();
+            CreateMap<PhaseMessageAdapterModel, PhaseMessage>();
             CreateMap<PhaseCategory, PhaseCategoryAdapterModel>();
             CreateMap<PhaseCategoryAdapterModel, PhaseCategory>();
             CreateMap<PolicyDetail, PolicyDetailAdapterModel>();

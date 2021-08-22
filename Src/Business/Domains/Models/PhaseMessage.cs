@@ -13,18 +13,21 @@ namespace Domains.Models
     public class PhaseMessage
     {
         public int Id { get; set; }
-        public int OrderNumber { get; set; }
-        [Required(ErrorMessage = "名稱 不可為空白")]
         /// <summary>
-        /// 名稱
+        /// 排序編號
         /// </summary>
-        public string Name { get; set; }
+        public int OrderNumber { get; set; }
+        [Required(ErrorMessage = "內容 不可為空白")]
+        /// <summary>
+        /// 內容
+        /// </summary>
+        public string Content { get; set; }
         /// <summary>
         /// 啟用
         /// </summary>
         public bool Enable { get; set; }
 
         public int PhaseCategoryId { get; set; }
-        public virtual PhaseCategory LeaveCategory { get; set; }
+        public virtual PhaseCategory PhaseCategory { get; set; }
     }
 }

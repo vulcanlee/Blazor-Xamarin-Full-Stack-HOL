@@ -7,17 +7,17 @@
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Buttons
 
-@inject PolicyDetailViewModel ViewModel
+@inject PhaseMessageViewModel ViewModel
 @implements IRazorPage
 @implements IDataGrid
 
 <div>
-    <SfGrid @ref="Grid" TValue="PolicyDetailAdapterModel"
+    <SfGrid @ref="Grid" TValue="PhaseMessageAdapterModel"
             AllowPaging="true"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <PolicyDetailAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
-                                 HeaderID="@ViewModel.Header.Id"></PolicyDetailAdapter>
+            <PhaseMessageAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
+                                 HeaderID="@ViewModel.Header.Id"></PhaseMessageAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -33,23 +33,17 @@
                 </ToolbarItem>
             </ToolbarItems>
         </SfToolbar>
-        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="PolicyDetailAdapterModel"
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="PhaseMessageAdapterModel"
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(PolicyDetailAdapterModel.Name)
-                        HeaderText="簽核項目名稱" />
-            <GridColumn Field=@nameof(PolicyDetailAdapterModel.Level)
-                        HeaderText="階層"
-                        HideAtMedia="(min-width: 640px)" />
-            <GridColumn Field=@nameof(PolicyDetailAdapterModel.MyUserName)
-                        HeaderText="使用者"
-                        HideAtMedia="(min-width: 640px)" />
-            <GridColumn Field=@nameof(PolicyDetailAdapterModel.Enable)
+            <GridColumn Field=@nameof(PhaseMessageAdapterModel.Content)
+                        HeaderText="片語文字" />
+            <GridColumn Field=@nameof(PhaseMessageAdapterModel.Enable)
                         HeaderText="狀態" Width="70">
                 <Template>
                     @{
-                        var currentRec = (context as PolicyDetailAdapterModel);
+                        var currentRec = (context as PhaseMessageAdapterModel);
                         if (currentRec.Enable == true)
                         {
                             <span class="oi oi-play-circle mx-2 text-success"
@@ -91,50 +85,30 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">名稱</label>
-                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Name" />
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Name)" />
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Content"
+                                       Multiline="true"
+                                       Placeholder="請輸入商品名稱" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Content)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">階層</label>
-                            <SfNumericTextBox @bind-Value="ViewModel.CurrentRecord.Level"
+                            <label class="control-label">排序編號</label>
+                            <SfNumericTextBox @bind-Value="ViewModel.CurrentRecord.OrderNumber"
                                               Placeholder="請輸入大於0的整數數值" Min="1" />
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Level)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.OrderNumber)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">
-                                使用者
-                                <span class="mdi mdi-24px mdi-magnify"
-                                      @onclick="ViewModel.OnOpenPicker"></span>
-                            </label>
-                            <SfTextBox Value="@ViewModel.CurrentRecord.MyUserName"
-                                       Enabled="false"></SfTextBox>
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.MyUserName)" />
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="control-label">知會</label>
-                            <SfCheckBox @bind-Checked="@ViewModel.CurrentRecord.OnlyCC" />
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.OnlyCC)" />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="control-label">啟用</label>
-                            <SfCheckBox @bind-Checked="@ViewModel.CurrentRecord.Enable" />
+                            <SfCheckBox Label="啟用" @bind-Checked="ViewModel.CurrentRecord.Enable"></SfCheckBox>
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.Enable)" />
                         </div>
                     </div>
 
-                </div>
-            </EditForm>
+                </div>            </EditForm>
         </Content>
         <FooterTemplate>
             <div>
@@ -145,9 +119,6 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
-
-<MyUserPicker OpenPicker="ViewModel.ShowAontherRecordPicker"
-               OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"
@@ -162,7 +133,7 @@
 <DialogBackground />
 
 @code{
-    SfGrid<PolicyDetailAdapterModel> Grid;
+    SfGrid<PhaseMessageAdapterModel> Grid;
     [Parameter]
     public MasterRecord Header { get; set; } = new MasterRecord();
     [Parameter]

@@ -16,10 +16,10 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
 
-    public class PhaseCategoryViewModel
+    public class PhaseMessageViewModel
     {
         #region Constructor
-        public PhaseCategoryViewModel(IPhaseCategoryService CurrentService,
+        public PhaseMessageViewModel(IPhaseMessageService CurrentService,
            BackendDBContext context, IMapper Mapper,
            TranscationResultHelper transcationResultHelper)
         {
@@ -27,7 +27,7 @@ namespace Backend.ViewModels
             this.context = context;
             mapper = Mapper;
             TranscationResultHelper = transcationResultHelper;
-            PhaseCategorySort.Initialization(SortConditions);
+            PhaseMessageSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -62,11 +62,11 @@ namespace Backend.ViewModels
         /// <summary>
         /// 現在正在新增或修改的紀錄  
         /// </summary>
-        public PhaseCategoryAdapterModel CurrentRecord { get; set; } = new PhaseCategoryAdapterModel();
+        public PhaseMessageAdapterModel CurrentRecord { get; set; } = new PhaseMessageAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
-        public PhaseCategoryAdapterModel CurrentNeedDeleteRecord { get; set; } = new PhaseCategoryAdapterModel();
+        public PhaseMessageAdapterModel CurrentNeedDeleteRecord { get; set; } = new PhaseMessageAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
@@ -124,7 +124,7 @@ namespace Backend.ViewModels
         /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
-        private readonly IPhaseCategoryService CurrentService;
+        private readonly IPhaseMessageService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
 
@@ -158,12 +158,13 @@ namespace Backend.ViewModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new PhaseCategoryAdapterModel();
+                CurrentRecord = new PhaseMessageAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
                 IsShowEditRecord = true;
+                CurrentRecord.PhaseCategoryId = Header.Id;
                 CurrentRecord.Enable = true;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
@@ -174,9 +175,9 @@ namespace Backend.ViewModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除)
-        public async Task OnCommandClicked(CommandClickEventArgs<PhaseCategoryAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<PhaseMessageAdapterModel> args)
         {
-            PhaseCategoryAdapterModel item = args.RowData as PhaseCategoryAdapterModel;
+            PhaseMessageAdapterModel item = args.RowData as PhaseMessageAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 #region 點選 修改紀錄 按鈕
@@ -206,23 +207,6 @@ namespace Backend.ViewModels
                 #endregion
 
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
-                #endregion
-            }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
-            {
-                #region 點選 開啟多筆 CRUD 對話窗 按鈕
-                IsShowMoreDetailsRecord = true;
-                ShowMoreDetailsRecordDialogTitle = MagicHelper.片語文字;
-                MasterRecord masterRecord = new MasterRecord()
-                {
-                    Id = item.Id
-                };
-                Header = masterRecord;
-                if (ShowMoreDetailsGrid != null)
-                {
-                    await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
-                    ShowMoreDetailsGrid.RefreshGrid();
-                }
                 #endregion
             }
         }
@@ -351,12 +335,12 @@ namespace Backend.ViewModels
         #endregion
 
         #region 紀錄啟用或停用
-        public async Task DisableIt(PhaseCategoryAdapterModel item)
+        public async Task DisableIt(PhaseMessageAdapterModel item)
         {
             await CurrentService.DisableIt(item);
             dataGrid.RefreshGrid();
         }
-        public async Task EnableIt(PhaseCategoryAdapterModel item)
+        public async Task EnableIt(PhaseMessageAdapterModel item)
         {
             await CurrentService.EnableIt(item);
             dataGrid.RefreshGrid();
