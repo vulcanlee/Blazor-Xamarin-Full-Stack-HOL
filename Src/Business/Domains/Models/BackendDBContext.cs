@@ -29,7 +29,7 @@ namespace Domains.Models
         public virtual DbSet<SystemLog> SystemLog { get; set; }
         public virtual DbSet<PolicyHeader> PolicyHeader { get; set; }
         public virtual DbSet<PolicyDetail> PolicyDetail { get; set; }
-        public virtual DbSet<AuditItem> AuditItem { get; set; }
+        public virtual DbSet<AuditMaster> AuditItem { get; set; }
         public virtual DbSet<PhaseCategory> PhaseCategory { get; set; }
         public virtual DbSet<PhaseMessage> PhaseMessage { get; set; }
 

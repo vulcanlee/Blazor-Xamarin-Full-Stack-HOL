@@ -266,7 +266,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                        VerifyRecordResultHelper.GetMessageString(checkedResult));
                     thisView.NeedRefresh();
                     return;
                 }
@@ -278,7 +278,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                        VerifyRecordResultHelper.GetMessageString(checkedResult));
                     thisView.NeedRefresh();
                     return;
                 }

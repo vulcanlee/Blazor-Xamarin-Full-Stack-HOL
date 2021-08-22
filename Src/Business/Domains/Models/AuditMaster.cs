@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Domains.Models
 {
-    public partial class AuditItem
+    public partial class AuditMaster
     {
-        public AuditItem()
+        public AuditMaster()
         {
         }
 
@@ -18,5 +18,6 @@ namespace Domains.Models
         public virtual MyUser MyUser { get; set; }
         public int PolicyHeaderId { get; set; }
         public virtual PolicyHeader PolicyHeader { get; set; }
+        public string PolicyHeaderName { get; set; }
     }
 }
