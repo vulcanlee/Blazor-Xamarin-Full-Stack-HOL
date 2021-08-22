@@ -46,20 +46,6 @@
     </article>
 </div>
 
-@if (env.IsProduction() == false)
-{
-    <div class="card mb-4">
-        <div class="card-header bg-danger text-white">
-            <span class="h2">資料庫初始化</span>
-        </div>
-        <article class="card-body bg-light">
-            <div>
-                <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
-            </div>
-        </article>
-    </div>
-}
-
 <div class="card mb-4">
     <div class="card-header bg-info text-white">
         <span class="h2">使用者認證資訊</span>
