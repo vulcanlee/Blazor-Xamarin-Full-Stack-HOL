@@ -8,20 +8,15 @@ using System.Threading.Tasks;
 namespace Domains.Models
 {
     /// <summary>
-    /// 請假類別
+    /// 輸入片語文字
     /// </summary>
-    public class LeaveCategory
+    public class PhaseMessage
     {
-        public LeaveCategory()
-        {
-            LeaveForm = new HashSet<LeaveForm>();
-        }
-
         public int Id { get; set; }
         public int OrderNumber { get; set; }
-        [Required(ErrorMessage = "請假類別 不可為空白")]
+        [Required(ErrorMessage = "名稱 不可為空白")]
         public string Name { get; set; }
-
-        public virtual ICollection<LeaveForm> LeaveForm { get; set; }
+        public int PhaseCategoryId { get; set; }
+        public virtual PhaseCategory LeaveCategory { get; set; }
     }
 }

@@ -30,6 +30,8 @@ namespace Domains.Models
         public virtual DbSet<PolicyHeader> PolicyHeader { get; set; }
         public virtual DbSet<PolicyDetail> PolicyDetail { get; set; }
         public virtual DbSet<AuditItem> AuditItem { get; set; }
+        public virtual DbSet<PhaseCategory> PhaseCategory { get; set; }
+        public virtual DbSet<PhaseMessage> PhaseMessage { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
