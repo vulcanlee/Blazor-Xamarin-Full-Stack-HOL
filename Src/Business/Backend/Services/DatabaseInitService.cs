@@ -645,6 +645,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 片語分類
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.片語分類,
+                CodeName = "PhaseCategory",
+                Enable = true,
+                Icon = "mdi-lightbulb-group",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 簽核文件子功能表
             cc += 10;
             menuData = new MenuData()
