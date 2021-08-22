@@ -20,7 +20,14 @@ namespace Domains.Models
         public int Id { get; set; }
         public int OrderNumber { get; set; }
         [Required(ErrorMessage = "名稱 不可為空白")]
+        /// <summary>
+        /// 名稱
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 啟用
+        /// </summary>
+        public bool Enable { get; set; }
 
         public virtual ICollection<PhaseMessage> PhaseMessage { get; set; }
     }

@@ -43,6 +43,8 @@ namespace BAL.Helpers
 
         public static readonly string 簽核流程政策 = "簽核流程政策";
         public static readonly string 簽核流程政策明細 = "簽核流程政策明細";
+        public static readonly string 片語分類 = "片語分類";
+        public static readonly string 片語文字 = "片語文字";
         #endregion
 
         #region 測試與系統帳號

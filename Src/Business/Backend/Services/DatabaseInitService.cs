@@ -401,6 +401,38 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 基本資料管理子功能表
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = "基本資料管理",
+                CodeName = "",
+                Enable = true,
+                Icon = "mdi-database-cog",
+                IsGroup = true,
+                Level = 0,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
+            #region 片語分類
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.片語分類,
+                CodeName = "PhaseCategory",
+                Enable = true,
+                Icon = "mdi-lightbulb-group",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             await context.SaveChangesAsync();
             CleanTrackingHelper.Clean<MenuData>(context);
             #endregion
@@ -412,10 +444,6 @@ namespace Backend.Services
                 .AsNoTracking()
                 .Where(x => x.MenuRoleId == menuRole開發者.Id)
                 .ToListAsync();
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.一般使用者使用功能名稱));
             #endregion
 
             #region 建立 系統管理員 功能表項目清單 
@@ -440,11 +468,23 @@ namespace Backend.Services
 
             defaultMenuData
                 .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == "系統資料管理"));
+
+            defaultMenuData
+                .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == MagicHelper.帳號管理功能名稱));
 
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == MagicHelper.簽核流程政策));
+
+            defaultMenuData
+                .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == "基本資料管理"));
+
+            defaultMenuData
+                .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == MagicHelper.片語分類));
 
             #endregion
 
