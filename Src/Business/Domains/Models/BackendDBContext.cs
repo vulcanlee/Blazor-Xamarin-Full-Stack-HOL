@@ -33,6 +33,7 @@ namespace Domains.Models
         public virtual DbSet<FlowMaster> FlowMaster { get; set; }
         public virtual DbSet<FlowUser> FlowUser { get; set; }
         public virtual DbSet<FlowHistory> FlowHistory { get; set; }
+        public virtual DbSet<FlowInbox> FlowInbox { get; set; }
         public virtual DbSet<PhaseCategory> PhaseCategory { get; set; }
         public virtual DbSet<PhaseMessage> PhaseMessage { get; set; }
 

@@ -12,6 +12,7 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<IFlowInboxService, FlowInboxService>();
             services.AddTransient<IFlowHistoryService, FlowHistoryService>();
             services.AddTransient<IFlowUserService, FlowUserService>();
             services.AddTransient<IFlowMasterService, FlowMasterService>();
@@ -34,6 +35,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
+            services.AddTransient<FlowInboxViewModel>();
             services.AddTransient<FlowHistoryViewModel>();
             services.AddTransient<FlowUserViewModel>();
             services.AddTransient<FlowMasterViewModel>();

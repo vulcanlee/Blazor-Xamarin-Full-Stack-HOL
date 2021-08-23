@@ -10,6 +10,8 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<FlowInbox, FlowInboxAdapterModel>();
+            CreateMap<FlowInboxAdapterModel, FlowInbox>();
             CreateMap<FlowHistory, FlowHistoryAdapterModel>();
             CreateMap<FlowHistoryAdapterModel, FlowHistory>();
             CreateMap<FlowUser, FlowUserAdapterModel>();
