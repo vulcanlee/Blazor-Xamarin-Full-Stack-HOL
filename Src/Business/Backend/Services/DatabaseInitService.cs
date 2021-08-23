@@ -700,7 +700,7 @@ namespace Backend.Services
                 Name = BAL.Helpers.MagicHelper.簽核收件匣,
                 CodeName = "FlowInbox",
                 Enable = true,
-                Icon = "mdi-inbox",
+                Icon = "mdi-email-outline",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
