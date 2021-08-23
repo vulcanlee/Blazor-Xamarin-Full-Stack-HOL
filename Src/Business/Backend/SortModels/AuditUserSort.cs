@@ -5,8 +5,8 @@ namespace Backend.SortModels
 {
     public enum AuditUserSortEnum
     {
-        NameDescending,
-        NameAscending,
+        LevelAscending,
+        LevelDescending,
     }
     public class AuditUserSort
     {
@@ -15,13 +15,13 @@ namespace Backend.SortModels
             SortConditions.Clear();
             SortConditions.Add(new SortCondition()
             {
-                Id = (int)AuditUserSortEnum.NameAscending,
-                Title = "名稱 遞增"
+                Id = (int)AuditUserSortEnum.LevelAscending,
+                Title = "階級 遞增"
             });
              SortConditions.Add(new SortCondition()
             {
-                Id = (int)AuditUserSortEnum.NameDescending,
-                Title = "名稱 遞減"
+                Id = (int)AuditUserSortEnum.LevelDescending,
+                Title = "階級 遞減"
              });
        }
     }

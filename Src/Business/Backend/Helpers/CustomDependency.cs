@@ -12,6 +12,8 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<IAuditHistoryService, AuditHistoryService>();
+            services.AddTransient<IAuditUserService, AuditUserService>();
             services.AddTransient<IAuditMasterService, AuditMasterService>();
             services.AddTransient<IPhaseMessageService, PhaseMessageService>();
             services.AddTransient<IPhaseCategoryService, PhaseCategoryService>();
