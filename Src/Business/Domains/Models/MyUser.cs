@@ -28,6 +28,6 @@ namespace Domains.Models
         public int MenuRoleId { get; set; }
         public virtual MenuRole MenuRole { get; set; }
 
-        public ICollection<PolicyDetail> PolicyDetail { get; set; }
+        public virtual ICollection<PolicyDetail> PolicyDetail { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace Domains.Models
         public virtual DbSet<PolicyDetail> PolicyDetail { get; set; }
         public virtual DbSet<AuditMaster> AuditMaster { get; set; }
         public virtual DbSet<AuditUser> AuditUser { get; set; }
+        public virtual DbSet<AuditHistory> AuditHistory { get; set; }
         public virtual DbSet<PhaseCategory> PhaseCategory { get; set; }
         public virtual DbSet<PhaseMessage> PhaseMessage { get; set; }
 

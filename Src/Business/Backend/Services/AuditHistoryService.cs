@@ -16,17 +16,17 @@ namespace Backend.Services
     using CommonDomain.Enums;
     using System;
 
-    public class AuditMasterService : IAuditMasterService
+    public class AuditHistoryService : IAuditHistoryService
     {
         #region 欄位與屬性
         private readonly BackendDBContext context;
         public IMapper Mapper { get; }
-        public ILogger<AuditMasterService> Logger { get; }
+        public ILogger<AuditHistoryService> Logger { get; }
         #endregion
 
         #region 建構式
-        public AuditMasterService(BackendDBContext context, IMapper mapper,
-            ILogger<AuditMasterService> logger)
+        public AuditHistoryService(BackendDBContext context, IMapper mapper,
+            ILogger<AuditHistoryService> logger)
         {
             this.context = context;
             Mapper = mapper;
@@ -35,22 +35,18 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
-        public async Task<DataRequestResult<AuditMasterAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<AuditHistoryAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<AuditMasterAdapterModel> data = new();
-            DataRequestResult<AuditMasterAdapterModel> result = new();
-            var DataSource = context.AuditMaster
+            List<AuditHistoryAdapterModel> data = new();
+            DataRequestResult<AuditHistoryAdapterModel> result = new();
+            var DataSource = context.AuditHistory
                 .Include(x => x.MyUser)
-                .Include(x => x.PolicyHeader)
-                .Include(x => x.AuditUser)
-                .Include(x => x.AuditHistory)
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
                 DataSource = DataSource
-                .Where(x => x.Title.Contains(dataRequest.Search) ||
-                x.Title.Contains(dataRequest.Search));
+                .Where(x => x.Comment.Contains(dataRequest.Search));
             }
             #endregion
 
@@ -60,11 +56,11 @@ namespace Backend.Services
                 SortCondition CurrentSortCondition = dataRequest.Sorted;
                 switch (CurrentSortCondition.Id)
                 {
-                    case (int)AuditMasterSortEnum.CreateDateDescending:
-                        DataSource = DataSource.OrderByDescending(x => x.CreateDate);
+                    case (int)AuditHistorySortEnum.CreateDateDescending:
+                        DataSource = DataSource.OrderByDescending(x => x.Updatetime);
                         break;
-                    case (int)AuditMasterSortEnum.CreateDateAscending:
-                        DataSource = DataSource.OrderBy(x => x.CreateDate);
+                    case (int)AuditHistorySortEnum.CreateDateAscending:
+                        DataSource = DataSource.OrderBy(x => x.Updatetime);
                         break;
                     default:
                         DataSource = DataSource.OrderBy(x => x.Id);
@@ -75,7 +71,7 @@ namespace Backend.Services
 
             #region 進行分頁
             // 取得記錄總數量，將要用於分頁元件面板使用
-            result.Count = DataSource.Cast<AuditMaster>().Count();
+            result.Count = DataSource.Cast<AuditHistory>().Count();
             DataSource = DataSource.Skip(dataRequest.Skip);
             if (dataRequest.Take != 0)
             {
@@ -84,8 +80,8 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<AuditMasterAdapterModel> adapterModelObjects =
-                Mapper.Map<List<AuditMasterAdapterModel>>(DataSource);
+            List<AuditHistoryAdapterModel> adapterModelObjects =
+                Mapper.Map<List<AuditHistoryAdapterModel>>(DataSource);
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
@@ -98,31 +94,28 @@ namespace Backend.Services
             return result;
         }
 
-        public async Task<AuditMasterAdapterModel> GetAsync(int id)
+        public async Task<AuditHistoryAdapterModel> GetAsync(int id)
         {
-            AuditMaster item = await context.AuditMaster
+            AuditHistory item = await context.AuditHistory
                 .Include(x => x.MyUser)
-                .Include(x => x.PolicyHeader)
-                .Include(x => x.AuditUser)
-                .Include(x => x.AuditHistory)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
-            AuditMasterAdapterModel result = Mapper.Map<AuditMasterAdapterModel>(item);
+            AuditHistoryAdapterModel result = Mapper.Map<AuditHistoryAdapterModel>(item);
             await OhterDependencyData(result);
             return result;
         }
 
-        public async Task<VerifyRecordResult> AddAsync(AuditMasterAdapterModel paraObject)
+        public async Task<VerifyRecordResult> AddAsync(AuditHistoryAdapterModel paraObject)
         {
             try
             {
-                CleanTrackingHelper.Clean<AuditMaster>(context);
-                AuditMaster itemParameter = Mapper.Map<AuditMaster>(paraObject);
-                CleanTrackingHelper.Clean<AuditMaster>(context);
-                await context.AuditMaster
+                CleanTrackingHelper.Clean<AuditHistory>(context);
+                AuditHistory itemParameter = Mapper.Map<AuditHistory>(paraObject);
+                CleanTrackingHelper.Clean<AuditHistory>(context);
+                await context.AuditHistory
                     .AddAsync(itemParameter);
                 await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<AuditMaster>(context);
+                CleanTrackingHelper.Clean<AuditHistory>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
             catch (Exception ex)
@@ -132,13 +125,13 @@ namespace Backend.Services
             }
         }
 
-        public async Task<VerifyRecordResult> UpdateAsync(AuditMasterAdapterModel paraObject)
+        public async Task<VerifyRecordResult> UpdateAsync(AuditHistoryAdapterModel paraObject)
         {
             try
             {
-                AuditMaster itemData = Mapper.Map<AuditMaster>(paraObject);
-                CleanTrackingHelper.Clean<AuditMaster>(context);
-                AuditMaster item = await context.AuditMaster
+                AuditHistory itemData = Mapper.Map<AuditHistory>(paraObject);
+                CleanTrackingHelper.Clean<AuditHistory>(context);
+                AuditHistory item = await context.AuditHistory
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
                 if (item == null)
@@ -147,10 +140,10 @@ namespace Backend.Services
                 }
                 else
                 {
-                    CleanTrackingHelper.Clean<AuditMaster>(context);
+                    CleanTrackingHelper.Clean<AuditHistory>(context);
                     context.Entry(itemData).State = EntityState.Modified;
                     await context.SaveChangesAsync();
-                    CleanTrackingHelper.Clean<AuditMaster>(context);
+                    CleanTrackingHelper.Clean<AuditHistory>(context);
                     return VerifyRecordResultFactory.Build(true);
                 }
             }
@@ -165,8 +158,8 @@ namespace Backend.Services
         {
             try
             {
-                CleanTrackingHelper.Clean<AuditMaster>(context);
-                AuditMaster item = await context.AuditMaster
+                CleanTrackingHelper.Clean<AuditHistory>(context);
+                AuditHistory item = await context.AuditHistory
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == id);
                 if (item == null)
@@ -175,10 +168,10 @@ namespace Backend.Services
                 }
                 else
                 {
-                    CleanTrackingHelper.Clean<AuditMaster>(context);
+                    CleanTrackingHelper.Clean<AuditHistory>(context);
                     context.Entry(item).State = EntityState.Deleted;
                     await context.SaveChangesAsync();
-                    CleanTrackingHelper.Clean<AuditMaster>(context);
+                    CleanTrackingHelper.Clean<AuditHistory>(context);
                     return VerifyRecordResultFactory.Build(true);
                 }
             }
@@ -191,34 +184,26 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 的限制條件檢查
-        public async Task<VerifyRecordResult> BeforeAddCheckAsync(AuditMasterAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeAddCheckAsync(AuditHistoryAdapterModel paraObject)
         {
             await Task.Yield();
             if (paraObject.MyUserId == 0)
             {
                 return VerifyRecordResultFactory.Build(false, "需要指定一個使用者");
             }
-            if (paraObject.PolicyHeaderId == 0)
-            {
-                return VerifyRecordResultFactory.Build(false, "需要指定一個簽核政策");
-            }
 
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(AuditMasterAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(AuditHistoryAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<AuditMaster>(context);
+            CleanTrackingHelper.Clean<AuditHistory>(context);
             if (paraObject.MyUserId == 0)
             {
                 return VerifyRecordResultFactory.Build(false, "需要指定一個使用者");
             }
-            if (paraObject.PolicyHeaderId == 0)
-            {
-                return VerifyRecordResultFactory.Build(false, "需要指定一個簽核政策");
-            }
 
-            var searchItem = await context.AuditMaster
+            var searchItem = await context.AuditHistory
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem == null)
@@ -229,14 +214,14 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(AuditMasterAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(AuditHistoryAdapterModel paraObject)
         {
             try
             {
                 CleanTrackingHelper.Clean<OrderItem>(context);
-                CleanTrackingHelper.Clean<AuditMaster>(context);
+                CleanTrackingHelper.Clean<AuditHistory>(context);
 
-                var searchItem = await context.AuditMaster
+                var searchItem = await context.AuditHistory
                  .AsNoTracking()
                  .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
                 if (searchItem == null)
@@ -244,13 +229,6 @@ namespace Backend.Services
                     return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
                 }
 
-                var searchOrderItemItem = await context.AuditUser
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.AuditMasterId == paraObject.Id);
-                if (searchOrderItemItem != null)
-                {
-                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
-                }
                 return VerifyRecordResultFactory.Build(true);
             }
             catch (Exception ex)
@@ -261,10 +239,9 @@ namespace Backend.Services
         #endregion
 
         #region 其他服務方法
-        Task OhterDependencyData(AuditMasterAdapterModel data)
+        Task OhterDependencyData(AuditHistoryAdapterModel data)
         {
             data.MyUserName = data.MyUser.Name;
-            data.PolicyHeaderName = data.PolicyHeader.Name;
             return Task.FromResult(0);
         }
         #endregion

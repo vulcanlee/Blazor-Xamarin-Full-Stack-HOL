@@ -23,6 +23,6 @@ namespace Domains.Models
         /// 啟用
         /// </summary>
         public bool Enable { get; set; }
-        public ICollection<PolicyDetail> PolicyDetail { get; set; }
+        public virtual ICollection<PolicyDetail> PolicyDetail { get; set; }
     }
 }

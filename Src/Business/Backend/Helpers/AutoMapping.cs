@@ -10,6 +10,8 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<AuditHistory, AuditHistoryAdapterModel>();
+            CreateMap<AuditHistoryAdapterModel, AuditHistory>();
             CreateMap<AuditUser, AuditUserAdapterModel>();
             CreateMap<AuditUserAdapterModel, AuditUser>();
             CreateMap<AuditMaster, AuditMasterAdapterModel>();

@@ -8,10 +8,12 @@ namespace Domains.Models
 {
     public partial class AuditMaster
     {
-        public ICollection<AuditUser> AuditUser { get; set; }
+        public virtual ICollection<AuditUser> AuditUser { get; set; }
+        public virtual ICollection<AuditHistory> AuditHistory { get; set; }
         public AuditMaster()
         {
             AuditUser = new HashSet<AuditUser>();
+            AuditHistory = new HashSet<AuditHistory>();
         }
 
         public int Id { get; set; }

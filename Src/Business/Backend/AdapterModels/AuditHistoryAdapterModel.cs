@@ -4,21 +4,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.AdapterModels
 {
-    public class AuditUserAdapterModel : ICloneable
+    public class AuditHistoryAdapterModel : ICloneable
     {
         public int Id { get; set; }
         public int MyUserId { get; set; }
         public MyUserAdapterModel MyUser { get; set; }
         public string MyUserName { get; set; }
-        public int Level { get; set; }
-        public bool OnlyCC { get; set; }
-        public bool Enable { get; set; }
+        public bool Approve { get; set; }
+        [Required(ErrorMessage = "批示意見 不可為空白")]
+        public string Comment { get; set; }
+        public DateTime Updatetime { get; set; }
         public int AuditMasterId { get; set; }
         public AuditMasterAdapterModel AuditMaster { get; set; }
+        public string AuditMasterName { get; set; }
 
-        public AuditUserAdapterModel Clone()
+        public AuditHistoryAdapterModel Clone()
         {
-            return ((ICloneable)this).Clone() as AuditUserAdapterModel;
+            return ((ICloneable)this).Clone() as AuditHistoryAdapterModel;
         }
         object ICloneable.Clone()
         {
