@@ -45,8 +45,6 @@ namespace Backend.Services
             var DataSource = context.FlowMaster
                 .Include(x => x.MyUser)
                 .Include(x => x.PolicyHeader)
-                .Include(x => x.FlowUser)
-                .Include(x => x.FlowHistory)
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -106,8 +104,6 @@ namespace Backend.Services
             FlowMaster item = await context.FlowMaster
                 .Include(x => x.MyUser)
                 .Include(x => x.PolicyHeader)
-                .Include(x => x.FlowUser)
-                .Include(x => x.FlowHistory)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             FlowMasterAdapterModel result = Mapper.Map<FlowMasterAdapterModel>(item);

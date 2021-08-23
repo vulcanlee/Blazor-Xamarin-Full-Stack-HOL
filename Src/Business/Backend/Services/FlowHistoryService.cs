@@ -40,13 +40,16 @@ namespace Backend.Services
             List<FlowHistoryAdapterModel> data = new();
             DataRequestResult<FlowHistoryAdapterModel> result = new();
             var DataSource = context.FlowHistory
+                .AsNoTracking()
                 .Include(x => x.MyUser)
-                .AsNoTracking();
+                .AsQueryable();
+
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
                 DataSource = DataSource
-                .Where(x => x.Comment.Contains(dataRequest.Search));
+                .Where(x => x.Summary.Contains(dataRequest.Search) ||
+                x.Comment.Contains(dataRequest.Search));
             }
             #endregion
 
@@ -63,7 +66,68 @@ namespace Backend.Services
                         DataSource = DataSource.OrderBy(x => x.Updatetime);
                         break;
                     default:
-                        DataSource = DataSource.OrderBy(x => x.Id);
+                        break;
+                }
+            }
+            #endregion
+
+            #region 進行分頁
+            // 取得記錄總數量，將要用於分頁元件面板使用
+            result.Count = DataSource.Cast<FlowHistory>().Count();
+            DataSource = DataSource.Skip(dataRequest.Skip);
+            if (dataRequest.Take != 0)
+            {
+                DataSource = DataSource.Take(dataRequest.Take);
+            }
+            #endregion
+
+            #region 在這裡進行取得資料與與額外屬性初始化
+            List<FlowHistoryAdapterModel> adapterModelObjects =
+                Mapper.Map<List<FlowHistoryAdapterModel>>(DataSource);
+
+            foreach (var adapterModelItem in adapterModelObjects)
+            {
+                await OhterDependencyData(adapterModelItem);
+
+            }
+            #endregion
+
+            result.Result = adapterModelObjects;
+            await Task.Yield();
+            return result;
+        }
+
+        public async Task<DataRequestResult<FlowHistoryAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
+        {
+            List<FlowHistoryAdapterModel> data = new();
+            DataRequestResult<FlowHistoryAdapterModel> result = new();
+            var DataSource = context.FlowHistory
+                .AsNoTracking()
+                .Include(x => x.MyUser)
+                .Where(x => x.FlowMasterId == id);
+
+            #region 進行搜尋動作
+            if (!string.IsNullOrWhiteSpace(dataRequest.Search))
+            {
+                DataSource = DataSource
+                .Where(x => x.Summary.Contains(dataRequest.Search)||
+                x.Comment.Contains(dataRequest.Search));
+            }
+            #endregion
+
+            #region 進行排序動作
+            if (dataRequest.Sorted != null)
+            {
+                SortCondition CurrentSortCondition = dataRequest.Sorted;
+                switch (CurrentSortCondition.Id)
+                {
+                    case (int)FlowHistorySortEnum.CreateDateDescending:
+                        DataSource = DataSource.OrderByDescending(x => x.Updatetime);
+                        break;
+                    case (int)FlowHistorySortEnum.CreateDateAscending:
+                        DataSource = DataSource.OrderBy(x => x.Updatetime);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -97,8 +161,8 @@ namespace Backend.Services
         public async Task<FlowHistoryAdapterModel> GetAsync(int id)
         {
             FlowHistory item = await context.FlowHistory
-                .Include(x => x.MyUser)
                 .AsNoTracking()
+                .Include(x => x.MyUser)
                 .FirstOrDefaultAsync(x => x.Id == id);
             FlowHistoryAdapterModel result = Mapper.Map<FlowHistoryAdapterModel>(item);
             await OhterDependencyData(result);
@@ -109,7 +173,6 @@ namespace Backend.Services
         {
             try
             {
-                CleanTrackingHelper.Clean<FlowHistory>(context);
                 FlowHistory itemParameter = Mapper.Map<FlowHistory>(paraObject);
                 CleanTrackingHelper.Clean<FlowHistory>(context);
                 await context.FlowHistory
@@ -186,12 +249,19 @@ namespace Backend.Services
         #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(FlowHistoryAdapterModel paraObject)
         {
-            await Task.Yield();
+            CleanTrackingHelper.Clean<FlowHistory>(context);
             if (paraObject.MyUserId == 0)
             {
                 return VerifyRecordResultFactory.Build(false, "需要指定一個使用者");
             }
-
+            var item = await context.FlowHistory
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.FlowMasterId &&
+                x.MyUserId == paraObject.MyUserId);
+            if (item != null)
+            {
+                return VerifyRecordResultFactory.Build(false, "同一個簽核政策內，使用者不能重複指定");
+            }
             return VerifyRecordResultFactory.Build(true);
         }
 
@@ -211,30 +281,30 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
             }
 
+            searchItem = await context.FlowHistory
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.FlowMasterId &&
+                x.MyUserId == paraObject.MyUserId &&
+                x.Id != paraObject.Id);
+            if (searchItem != null)
+            {
+                return VerifyRecordResultFactory.Build(false, "同一個簽核政策內，使用者不能重複指定");
+            }
             return VerifyRecordResultFactory.Build(true);
         }
 
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(FlowHistoryAdapterModel paraObject)
         {
-            try
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            var searchItem = await context.FlowHistory
+             .AsNoTracking()
+             .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
+            if (searchItem == null)
             {
-                CleanTrackingHelper.Clean<OrderItem>(context);
-                CleanTrackingHelper.Clean<FlowHistory>(context);
-
-                var searchItem = await context.FlowHistory
-                 .AsNoTracking()
-                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
-                if (searchItem == null)
-                {
-                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
-                }
-
-                return VerifyRecordResultFactory.Build(true);
+                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
             }
-            catch (Exception ex)
-            {
-                return VerifyRecordResultFactory.Build(false, "刪除記錄發生例外異常", ex);
-            }
+
+            return VerifyRecordResultFactory.Build(true);
         }
         #endregion
 
@@ -245,5 +315,6 @@ namespace Backend.Services
             return Task.FromResult(0);
         }
         #endregion
+
     }
 }

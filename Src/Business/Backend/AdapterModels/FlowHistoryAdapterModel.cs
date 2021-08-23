@@ -11,6 +11,13 @@ namespace Backend.AdapterModels
         public MyUserAdapterModel MyUser { get; set; }
         public string MyUserName { get; set; }
         public bool Approve { get; set; }
+        public string ApproveName
+        {
+            get
+            {
+                return Approve ? "通過" : "拒絕";
+            }
+        }
         public string Summary { get; set; }
         [Required(ErrorMessage = "批示意見 不可為空白")]
         public string Comment { get; set; }

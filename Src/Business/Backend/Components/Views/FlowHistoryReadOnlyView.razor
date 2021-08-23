@@ -1,0 +1,126 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+
+@inject FlowHistoryViewModel ViewModel
+@implements IRazorPage
+@implements IDataGrid
+
+<div>
+    <SfGrid @ref="Grid" TValue="FlowHistoryAdapterModel"
+            AllowPaging="true"
+            Toolbar="ViewModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <FlowHistoryAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
+                             HeaderID="@ViewModel.Header.Id"></FlowHistoryAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="FlowHistoryAdapterModel"
+                    OnToolbarClick="ViewModel.ToolbarClickHandler" />
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(FlowHistoryAdapterModel.MyUserName)
+                        HeaderText="使用者" />
+            <GridColumn Field=@nameof(FlowHistoryAdapterModel.Summary)
+                        HeaderText="摘要" />
+            <GridColumn Field=@nameof(FlowHistoryAdapterModel.Comment)
+                        HeaderText="批示備註"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(FlowHistoryAdapterModel.ApproveName)
+                        HeaderText="結果" />
+            <GridColumn Field=@nameof(FlowHistoryAdapterModel.Updatetime)
+                        HeaderText="建立時間" Format="yyyy-MM-dd HH:mm:ss"
+                        HideAtMedia="(min-width: 640px)" />
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
+            IsVisible="@ViewModel.MessageBox.IsVisible"
+            Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
+            Callback="x=>ViewModel.MessageBox.Hidden()" />
+
+<ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
+            IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
+            Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
+            Callback="x=>ViewModel.RemoveThisRecord(x)" />
+
+<DialogBackground />
+
+@code{
+    SfGrid<FlowHistoryAdapterModel> Grid;
+    [Parameter]
+    public MasterRecord Header { get; set; } = new MasterRecord();
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    [Parameter]
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+    [Parameter]
+    public EventCallback<object> OnViewRender { get; set; }
+
+    #region 生命週期事件
+    protected override void OnInitialized()
+    {
+        ViewModel.Setup(this, this);
+    }
+    protected override void OnParametersSet()
+    {
+        if (Header != null)
+        {
+            ViewModel.Header = Header;
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            ViewModel.Setup(this, this);
+        }
+        if (OnViewRender.HasDelegate)
+        {
+            await OnViewRender.InvokeAsync(null);
+        }
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        StateHasChanged();
+    }
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    public void RefreshGrid()
+    {
+        Grid?.Refresh();
+    }
+    public bool GridIsExist()
+    {
+        return Grid == null ? false : true;
+    }
+    public Task InvokeGridAsync(string actionName)
+    {
+        return Task.CompletedTask;
+    }
+    #endregion
+
+}

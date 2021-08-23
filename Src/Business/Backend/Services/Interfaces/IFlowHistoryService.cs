@@ -18,6 +18,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> DeleteAsync(int id);
         Task<DataRequestResult<FlowHistoryAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<FlowHistoryAdapterModel> GetAsync(int id);
+        Task<DataRequestResult<FlowHistoryAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest);
         Task<VerifyRecordResult> UpdateAsync(FlowHistoryAdapterModel paraObject);
     }
 }

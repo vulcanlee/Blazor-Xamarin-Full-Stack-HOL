@@ -155,11 +155,28 @@
         <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>
             <FlowUserReadOnlyView @ref="ViewModel.ShowFlowUserGrid" PageSize="@MagicHelper.GridPageSize"
-                           Header="ViewModel.Header" />
+                                  Header="ViewModel.Header" />
         </Content>
         <FooterTemplate>
             <div>
                 <button class="btn btn-secondary" @onclick="()=> { ViewModel.IsShowFlowUserRecord = false; }">關閉</button>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<SfDialog @bind-Visible="@ViewModel.IsShowFlowHistoryRecord" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
+        <Content>
+            <FlowHistoryReadOnlyView @ref="ViewModel.ShowFlowUserGrid" PageSize="@MagicHelper.GridPageSize"
+                                  Header="ViewModel.Header" />
+        </Content>
+        <FooterTemplate>
+            <div>
+                <button class="btn btn-secondary" @onclick="()=> { ViewModel.IsShowFlowHistoryRecord = false; }">關閉</button>
             </div>
         </FooterTemplate>
     </DialogTemplates>
