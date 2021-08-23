@@ -121,6 +121,7 @@ namespace Backend.Services
             {
                 CleanTrackingHelper.Clean<FlowMaster>(context);
                 CleanTrackingHelper.Clean<FlowUser>(context);
+                CleanTrackingHelper.Clean<FlowHistory>(context);
                 CleanTrackingHelper.Clean<MyUser>(context);
                 FlowMaster itemParameter = Mapper.Map<FlowMaster>(paraObject);
                 CleanTrackingHelper.Clean<FlowMaster>(context);
@@ -129,7 +130,7 @@ namespace Backend.Services
                 await context.SaveChangesAsync();
 
                 #region 產生要審核的使用者清單
-                var user = context.MyUser
+                var user = await context.MyUser
                     .FirstOrDefaultAsync(x => x.Id == itemParameter.MyUserId);
                 FlowUser auditUser = new FlowUser()
                 {
@@ -142,7 +143,7 @@ namespace Backend.Services
                 await context.FlowUser.AddAsync(auditUser);
                 var policyDetails = await context.PolicyDetail
                     .Where(x => x.PolicyHeaderId == paraObject.PolicyHeaderId)
-                    .OrderBy(x=>x.Level)
+                    .OrderBy(x => x.Level)
                     .ToListAsync();
                 foreach (var item in policyDetails)
                 {
@@ -161,8 +162,23 @@ namespace Backend.Services
                 await context.SaveChangesAsync();
                 #endregion
 
+                #region 增加簽核流程歷史紀錄 - 建立簽核表單
+                FlowHistory history = new FlowHistory()
+                {
+                    FlowMasterId = itemParameter.Id,
+                    MyUserId = itemParameter.MyUserId,
+                    Approve = true,
+                    Summary = $"{user.Account} / {user.Name} 建立簽核表單",
+                    Comment = $"簽核單草稿",
+                    Updatetime = DateTime.Now,
+                };
+                await context.FlowHistory.AddAsync(history);
+                await context.SaveChangesAsync();
+                #endregion
+
                 CleanTrackingHelper.Clean<FlowMaster>(context);
                 CleanTrackingHelper.Clean<FlowUser>(context);
+                CleanTrackingHelper.Clean<FlowHistory>(context);
                 CleanTrackingHelper.Clean<MyUser>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
@@ -234,6 +250,7 @@ namespace Backend.Services
                     context.Entry(item).State = EntityState.Deleted;
                     await context.SaveChangesAsync();
                     CleanTrackingHelper.Clean<FlowMaster>(context);
+                    CleanTrackingHelper.Clean<FlowHistory>(context);
                     return VerifyRecordResultFactory.Build(true);
                 }
             }

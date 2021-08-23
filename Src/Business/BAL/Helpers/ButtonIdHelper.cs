@@ -26,7 +26,7 @@ namespace BAL.Helpers
         public static string ButtonIdShowFlowUser => "mdi mdi-account-box-multiple-outline";
         public static string ButtonIdShowFlowHistory => "mdi mdi-history";
         public static string ButtonNameShowDetailOfMaster => "明細";
-        public static string ButtonNameShowFlowUser => "稽核使用者";
-        public static string ButtonNameShowFlowHistory => "稽核歷史";
+        public static string ButtonNameShowFlowUser => "簽核使用者";
+        public static string ButtonNameShowFlowHistory => "簽核歷史";
     }
 }
