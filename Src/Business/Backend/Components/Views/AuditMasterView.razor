@@ -79,7 +79,7 @@
                         <div class="form-group col">
                             <label class="control-label">主旨</label>
                             <SfTextBox @bind-Value="ViewModel.CurrentRecord.Title"
-                                       Placeholder="請輸訂單名稱" />
+                                       Placeholder="請輸主旨名稱" />
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.Title)" />
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                         <div class="form-group col">
                             <label class="control-label">說明</label>
                             <SfTextBox @bind-Value="ViewModel.CurrentRecord.Content"
-                                       Placeholder="請輸訂單名稱" Multiline="true" />
+                                       Placeholder="請輸說明內容" Multiline="true" />
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.Content)" />
                         </div>
                     </div>
@@ -117,18 +117,21 @@
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="control-label">
-                                簽核政策
-                                <span class="mdi mdi-24px mdi-magnify"
-                                      @onclick="ViewModel.OnOpenPolicyPicker"></span>
-                            </label>
-                            <SfTextBox Value="@ViewModel.CurrentRecord.PolicyHeaderName"
-                                       Enabled="false"></SfTextBox>
-                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.PolicyHeaderName)" />
+                    @if (ViewModel.IsNewRecordMode == true)
+                    {
+                        <div class="form-row">
+                            <div class="form-group col">
+                                <label class="control-label">
+                                    簽核政策
+                                    <span class="mdi mdi-24px mdi-magnify"
+                                          @onclick="ViewModel.OnOpenPolicyPicker"></span>
+                                </label>
+                                <SfTextBox Value="@ViewModel.CurrentRecord.PolicyHeaderName"
+                                           Enabled="false"></SfTextBox>
+                                <ValidationMessage For="@(() => ViewModel.CurrentRecord.PolicyHeaderName)" />
+                            </div>
                         </div>
-                    </div>
+                    }
 
                 </div>
             </EditForm>
@@ -164,7 +167,7 @@
               OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
 
 <PolicyHeaderPicker OpenPicker="ViewModel.ShowPolicyRecordPicker"
-              OnConfirmCallback="x=>ViewModel.OnPickerPolicyCompletion(x)" />
+                    OnConfirmCallback="x=>ViewModel.OnPickerPolicyCompletion(x)" />
 
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"

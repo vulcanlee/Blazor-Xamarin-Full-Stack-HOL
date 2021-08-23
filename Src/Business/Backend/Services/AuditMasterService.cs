@@ -15,6 +15,7 @@ namespace Backend.Services
     using CommonDomain.DataModels;
     using CommonDomain.Enums;
     using System;
+    using Backend.Helpers;
 
     public class AuditMasterService : IAuditMasterService
     {
@@ -22,15 +23,17 @@ namespace Backend.Services
         private readonly BackendDBContext context;
         public IMapper Mapper { get; }
         public ILogger<AuditMasterService> Logger { get; }
+        public CurrentUserHelper CurrentUserHelper { get; }
         #endregion
 
         #region 建構式
         public AuditMasterService(BackendDBContext context, IMapper mapper,
-            ILogger<AuditMasterService> logger)
+            ILogger<AuditMasterService> logger, CurrentUserHelper currentUserHelper)
         {
             this.context = context;
             Mapper = mapper;
             Logger = logger;
+            CurrentUserHelper = currentUserHelper;
         }
         #endregion
 
@@ -117,12 +120,50 @@ namespace Backend.Services
             try
             {
                 CleanTrackingHelper.Clean<AuditMaster>(context);
+                CleanTrackingHelper.Clean<AuditUser>(context);
+                CleanTrackingHelper.Clean<MyUser>(context);
                 AuditMaster itemParameter = Mapper.Map<AuditMaster>(paraObject);
                 CleanTrackingHelper.Clean<AuditMaster>(context);
                 await context.AuditMaster
                     .AddAsync(itemParameter);
                 await context.SaveChangesAsync();
+
+                #region 產生要審核的使用者清單
+                var user = context.MyUser
+                    .FirstOrDefaultAsync(x => x.Id == itemParameter.MyUserId);
+                AuditUser auditUser = new AuditUser()
+                {
+                    MyUserId = itemParameter.MyUserId,
+                    AuditMasterId = itemParameter.Id,
+                    Enable = true,
+                    Level = 0,
+                    OnlyCC = false,
+                };
+                await context.AuditUser.AddAsync(auditUser);
+                var policyDetails = await context.PolicyDetail
+                    .Where(x => x.PolicyHeaderId == paraObject.PolicyHeaderId)
+                    .OrderBy(x=>x.Level)
+                    .ToListAsync();
+                foreach (var item in policyDetails)
+                {
+                    if (item.Enable == false) continue;
+                    auditUser = new AuditUser()
+                    {
+                        MyUserId = item.MyUserId,
+                        AuditMasterId = itemParameter.Id,
+                        Enable = true,
+                        Level = item.Level,
+                        OnlyCC = item.OnlyCC,
+                        Name = item.Name,
+                    };
+                    await context.AuditUser.AddAsync(auditUser);
+                }
+                await context.SaveChangesAsync();
+                #endregion
+
                 CleanTrackingHelper.Clean<AuditMaster>(context);
+                CleanTrackingHelper.Clean<AuditUser>(context);
+                CleanTrackingHelper.Clean<MyUser>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
             catch (Exception ex)
@@ -175,6 +216,20 @@ namespace Backend.Services
                 }
                 else
                 {
+                    #region 刪除其他關連紀錄
+                    CleanTrackingHelper.Clean<AuditUser>(context);
+                    CleanTrackingHelper.Clean<AuditHistory>(context);
+                    var auditUsers = await context.AuditUser
+                        .Where(x => x.AuditMasterId == id)
+                        .ToListAsync();
+                    context.AuditUser.RemoveRange(auditUsers);
+                    var auditHistories = await context.AuditHistory
+                        .Where(x => x.AuditMasterId == id)
+                        .ToListAsync();
+                    context.AuditHistory.RemoveRange(auditHistories);
+                    await context.SaveChangesAsync();
+                    #endregion
+
                     CleanTrackingHelper.Clean<AuditMaster>(context);
                     context.Entry(item).State = EntityState.Deleted;
                     await context.SaveChangesAsync();

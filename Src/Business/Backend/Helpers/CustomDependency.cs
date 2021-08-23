@@ -50,6 +50,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 其他服務註冊
+            services.AddScoped<CurrentUserHelper>();
             services.AddSingleton<SystemBroadcast>();
             services.AddTransient<ImportDataHelper>();
             services.AddTransient<TranscationResultHelper>();

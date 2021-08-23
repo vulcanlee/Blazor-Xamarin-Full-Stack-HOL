@@ -7,6 +7,7 @@ namespace Backend.AdapterModels
     public class AuditUserAdapterModel : ICloneable
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public int MyUserId { get; set; }
         public MyUserAdapterModel MyUser { get; set; }
         public string MyUserName { get; set; }

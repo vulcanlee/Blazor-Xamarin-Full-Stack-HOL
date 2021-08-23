@@ -10,6 +10,7 @@ namespace Domains.Models
     public class AuditUser
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public int MyUserId { get; set; }
         public MyUser MyUser { get; set; }
         public int Level { get; set; }

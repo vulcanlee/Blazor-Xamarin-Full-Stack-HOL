@@ -22,11 +22,13 @@ namespace Backend.ViewModels
         #region Constructor
         public AuditMasterViewModel(IAuditMasterService CurrentService,
            BackendDBContext context, IMapper Mapper,
+           CurrentUserHelper currentUserHelper,
            TranscationResultHelper transcationResultHelper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
+            this.currentUserHelper = currentUserHelper;
             TranscationResultHelper = transcationResultHelper;
             AuditMasterSort.Initialization(SortConditions);
 
@@ -52,6 +54,10 @@ namespace Backend.ViewModels
         #endregion
 
         #region Property
+        /// <summary>
+        /// 對選取紀錄進行 新增 或者 修改 
+        /// </summary>
+        public bool IsNewRecordMode { get; set; } = false;
         /// <summary>
         /// 是否要顯示紀錄新增或修改對話窗 
         /// </summary>
@@ -121,15 +127,13 @@ namespace Backend.ViewModels
 
         #region Field
         /// <summary>
-        /// 對選取紀錄進行 新增 或者 修改 
-        /// </summary>
-        bool isNewRecordMode;
-        /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
         private readonly IAuditMasterService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
+        private readonly CurrentUserHelper currentUserHelper;
+
         /// <summary>
         /// 這個元件整體的通用介面方法
         /// </summary>
@@ -155,7 +159,7 @@ namespace Backend.ViewModels
         #endregion
 
         #region 工具列事件 (新增)
-        public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+        public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
@@ -163,8 +167,12 @@ namespace Backend.ViewModels
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
-                isNewRecordMode = true;
+                IsNewRecordMode = true;
                 IsShowEditRecord = true;
+                var user = await currentUserHelper.GetCurrentUserAsync();
+                CurrentRecord.MyUserId = user.Id;
+                CurrentRecord.MyUserName = user.Name;
+
                 CurrentRecord.CreateDate = DateTime.Now;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
@@ -184,7 +192,7 @@ namespace Backend.ViewModels
                 CurrentRecord = item.Clone();
                 EditRecordDialogTitle = "修改紀錄";
                 IsShowEditRecord = true;
-                isNewRecordMode = false;
+                IsNewRecordMode = false;
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdDelete)
@@ -261,7 +269,7 @@ namespace Backend.ViewModels
             #endregion
 
             #region 檢查資料完整性
-            if (isNewRecordMode == true)
+            if (IsNewRecordMode == true)
             {
                 var checkedResult = await CurrentService
                     .BeforeAddCheckAsync(CurrentRecord);
@@ -289,7 +297,7 @@ namespace Backend.ViewModels
 
             if (IsShowEditRecord == true)
             {
-                if (isNewRecordMode == true)
+                if (IsNewRecordMode == true)
                 {
                     var verifyRecordResult = await CurrentService.AddAsync(CurrentRecord);
                     await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
