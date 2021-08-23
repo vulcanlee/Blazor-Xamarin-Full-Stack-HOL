@@ -149,17 +149,17 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
-<SfDialog @bind-Visible="@ViewModel.IsShowMoreDetailsRecord" IsModal="true"
+<SfDialog @bind-Visible="@ViewModel.IsShowFlowUserRecord" IsModal="true"
           Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
         <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>
-            <OrderItemView @ref="ViewModel.ShowMoreDetailsGrid" PageSize="@MagicHelper.GridPageSize"
+            <FlowUserReadOnlyView @ref="ViewModel.ShowFlowUserGrid" PageSize="@MagicHelper.GridPageSize"
                            Header="ViewModel.Header" />
         </Content>
         <FooterTemplate>
             <div>
-                <button class="btn btn-secondary" @onclick="()=> { ViewModel.IsShowMoreDetailsRecord = false; }">關閉</button>
+                <button class="btn btn-secondary" @onclick="()=> { ViewModel.IsShowFlowUserRecord = false; }">關閉</button>
             </div>
         </FooterTemplate>
     </DialogTemplates>

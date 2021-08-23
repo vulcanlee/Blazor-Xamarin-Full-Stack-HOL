@@ -315,14 +315,6 @@ namespace Backend.Services
                 {
                     return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
                 }
-
-                var searchOrderItemItem = await context.FlowUser
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.Id);
-                if (searchOrderItemItem != null)
-                {
-                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.該紀錄無法刪除因為有其他資料表在使用中);
-                }
                 return VerifyRecordResultFactory.Build(true);
             }
             catch (Exception ex)

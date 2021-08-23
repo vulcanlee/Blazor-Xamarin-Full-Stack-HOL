@@ -15,32 +15,20 @@ namespace Backend.ViewModels
     using CommonDomain.DataModels;
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
-    using System;
 
-    public class FlowMasterViewModel
+    public class FlowUserViewModel
     {
         #region Constructor
-        public FlowMasterViewModel(IFlowMasterService CurrentService,
+        public FlowUserViewModel(IFlowUserService CurrentService,
            BackendDBContext context, IMapper Mapper,
-           UserHelper currentUserHelper,
            TranscationResultHelper transcationResultHelper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            this.currentUserHelper = currentUserHelper;
             TranscationResultHelper = transcationResultHelper;
-            FlowMasterSort.Initialization(SortConditions);
+            FlowUserSort.Initialization(SortConditions);
 
-            Toolbaritems.Add(new ItemModel()
-            {
-                Id = ButtonIdHelper.ButtonIdAdd,
-                Text = "新增",
-                TooltipText = "新增",
-                Type = ItemType.Button,
-                PrefixIcon = "mdi mdi-plus-thick",
-                Align = ItemAlign.Left,
-            });
             Toolbaritems.Add(new ItemModel()
             {
                 Id = ButtonIdHelper.ButtonIdRefresh,
@@ -55,10 +43,6 @@ namespace Backend.ViewModels
 
         #region Property
         /// <summary>
-        /// 對選取紀錄進行 新增 或者 修改 
-        /// </summary>
-        public bool IsNewRecordMode { get; set; } = false;
-        /// <summary>
         /// 是否要顯示紀錄新增或修改對話窗 
         /// </summary>
         public bool IsShowEditRecord { get; set; } = false;
@@ -66,16 +50,14 @@ namespace Backend.ViewModels
         /// 是否要顯示關聯多筆資料表的 CRUD 對話窗
         /// </summary>
         public bool IsShowMoreDetailsRecord { get; set; } = false;
-        public bool IsShowFlowUserRecord { get; set; } = false;
-        public bool IsShowFlowHistoryRecord { get; set; } = false;
         /// <summary>
         /// 現在正在新增或修改的紀錄  
         /// </summary>
-        public FlowMasterAdapterModel CurrentRecord { get; set; } = new FlowMasterAdapterModel();
+        public FlowUserAdapterModel CurrentRecord { get; set; } = new FlowUserAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
-        public FlowMasterAdapterModel CurrentNeedDeleteRecord { get; set; } = new FlowMasterAdapterModel();
+        public FlowUserAdapterModel CurrentNeedDeleteRecord { get; set; } = new FlowUserAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
@@ -84,7 +66,6 @@ namespace Backend.ViewModels
         /// 是否顯示選取其他清單記錄對話窗 
         /// </summary>
         public bool ShowAontherRecordPicker { get; set; } = false;
-        public bool ShowPolicyRecordPicker { get; set; } = false;
         /// <summary>
         /// 父參考物件的 Id 
         /// </summary>
@@ -101,8 +82,6 @@ namespace Backend.ViewModels
         /// 用於控制、更新明細清單 Grid 
         /// </summary>
         public IDataGrid ShowMoreDetailsGrid { get; set; }
-        public IDataGrid ShowFlowUserGrid { get; set; }
-        public IDataGrid ShowFlowHistoryGrid { get; set; }
         /// <summary>
         /// 明細清單 Grid 的對話窗主題 
         /// </summary>
@@ -131,13 +110,15 @@ namespace Backend.ViewModels
 
         #region Field
         /// <summary>
+        /// 對選取紀錄進行 新增 或者 修改 
+        /// </summary>
+        bool isNewRecordMode;
+        /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
-        private readonly IFlowMasterService CurrentService;
+        private readonly IFlowUserService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
-        private readonly UserHelper currentUserHelper;
-
         /// <summary>
         /// 這個元件整體的通用介面方法
         /// </summary>
@@ -163,21 +144,18 @@ namespace Backend.ViewModels
         #endregion
 
         #region 工具列事件 (新增)
-        public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+        public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new FlowMasterAdapterModel();
+                CurrentRecord = new FlowUserAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
-                IsNewRecordMode = true;
+                isNewRecordMode = true;
                 IsShowEditRecord = true;
-                var user = await currentUserHelper.GetCurrentUserAsync();
-                CurrentRecord.MyUserId = user.Id;
-                CurrentRecord.MyUserName = user.Name;
-
-                CurrentRecord.CreateDate = DateTime.Now;
+                CurrentRecord.FlowMasterId = Header.Id;
+                //CurrentRecord.Name = Header.Title;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {
@@ -186,17 +164,17 @@ namespace Backend.ViewModels
         }
         #endregion
 
-        #region 記錄列的按鈕事件 (修改與刪除與明細紀錄瀏覽)
-        public async Task OnCommandClicked(CommandClickEventArgs<FlowMasterAdapterModel> args)
+        #region 記錄列的按鈕事件 (修改與刪除)
+        public async Task OnCommandClicked(CommandClickEventArgs<FlowUserAdapterModel> args)
         {
-            FlowMasterAdapterModel item = args.RowData as FlowMasterAdapterModel;
+            FlowUserAdapterModel item = args.RowData as FlowUserAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 #region 點選 修改紀錄 按鈕
                 CurrentRecord = item.Clone();
                 EditRecordDialogTitle = "修改紀錄";
                 IsShowEditRecord = true;
-                IsNewRecordMode = false;
+                isNewRecordMode = false;
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdDelete)
@@ -219,40 +197,6 @@ namespace Backend.ViewModels
                 #endregion
 
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
-                #endregion
-            }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowFlowUser)
-            {
-                #region 點選 稽核使用者 對話窗 按鈕
-                IsShowFlowUserRecord = true;
-                ShowMoreDetailsRecordDialogTitle = MagicHelper.簽核使用者明細;
-                MasterRecord masterRecord = new MasterRecord()
-                {
-                    Id = item.Id
-                };
-                Header = masterRecord;
-                if (ShowFlowUserGrid != null)
-                {
-                    await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
-                    ShowFlowUserGrid.RefreshGrid();
-                }
-                #endregion
-            }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowFlowHistory)
-            {
-                #region 點選 開啟多筆 CRUD 對話窗 按鈕
-                IsShowFlowHistoryRecord = true;
-                ShowMoreDetailsRecordDialogTitle = MagicHelper.簽核歷史紀錄;
-                MasterRecord masterRecord = new MasterRecord()
-                {
-                    Id = item.Id
-                };
-                Header = masterRecord;
-                if (ShowFlowHistoryGrid != null)
-                {
-                    await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
-                    ShowFlowHistoryGrid.RefreshGrid();
-                }
                 #endregion
             }
         }
@@ -290,7 +234,7 @@ namespace Backend.ViewModels
             #endregion
 
             #region 檢查資料完整性
-            if (IsNewRecordMode == true)
+            if (isNewRecordMode == true)
             {
                 var checkedResult = await CurrentService
                     .BeforeAddCheckAsync(CurrentRecord);
@@ -318,7 +262,7 @@ namespace Backend.ViewModels
 
             if (IsShowEditRecord == true)
             {
-                if (IsNewRecordMode == true)
+                if (isNewRecordMode == true)
                 {
                     var verifyRecordResult = await CurrentService.AddAsync(CurrentRecord);
                     await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
@@ -336,33 +280,28 @@ namespace Backend.ViewModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
-        public void OnOpenPicker()
-        {
-            ShowAontherRecordPicker = true;
-        }
+        //public void OnOpenPicker()
+        //{
+        //    ShowAontherRecordPicker = true;
+        //}
 
-        public void OnPickerCompletion(MyUserAdapterModel e)
-        {
-            if (e != null)
-            {
-                CurrentRecord.MyUserId = e.Id;
-                CurrentRecord.MyUserName = e.Name;
-            }
-            ShowAontherRecordPicker = false;
-        }
-        public void OnOpenPolicyPicker()
-        {
-            ShowPolicyRecordPicker = true;
-        }
+        //public void OnPickerCompletion(ProductAdapterModel e)
+        //{
+        //    if (e != null)
+        //    {
+        //        CurrentRecord.ProductId = e.Id;
+        //        CurrentRecord.ProductName = e.Name;
+        //    }
+        //    ShowAontherRecordPicker = false;
+        //}
+        #endregion
 
-        public void OnPickerPolicyCompletion(PolicyHeaderAdapterModel e)
+        #region 資料表關聯的方法
+        public async Task UpdateMasterHeaderAsync(MasterRecord header)
         {
-            if (e != null)
-            {
-                CurrentRecord.PolicyHeaderId = e.Id;
-                CurrentRecord.PolicyHeaderName = e.Name;
-            }
-            ShowPolicyRecordPicker = false;
+            Header = header;
+            await Task.Delay(100);
+            dataGrid.RefreshGrid();
         }
         #endregion
 

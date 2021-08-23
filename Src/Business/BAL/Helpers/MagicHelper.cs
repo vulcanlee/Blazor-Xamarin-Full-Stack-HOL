@@ -47,6 +47,7 @@ namespace BAL.Helpers
         public static readonly string 片語文字 = "片語文字";
         public static readonly string 簽核文件 = "簽核文件";
         public static readonly string 簽核使用者明細 = "簽核使用者明細";
+        public static readonly string 簽核歷史紀錄 = "簽核歷史紀錄";
         #endregion
 
         #region 測試與系統帳號

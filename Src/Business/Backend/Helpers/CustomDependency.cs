@@ -34,6 +34,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
+            services.AddTransient<FlowUserViewModel>();
             services.AddTransient<FlowMasterViewModel>();
             services.AddTransient<PhaseMessageViewModel>();
             services.AddTransient<PhaseCategoryViewModel>();
