@@ -217,7 +217,24 @@ namespace Backend.ViewModels
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
                 #endregion
             }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
+            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowAuditUser)
+            {
+                #region 點選 開啟多筆 CRUD 對話窗 按鈕
+                IsShowMoreDetailsRecord = true;
+                ShowMoreDetailsRecordDialogTitle = MagicHelper.訂單明細管理功能名稱;
+                MasterRecord masterRecord = new MasterRecord()
+                {
+                    Id = item.Id
+                };
+                Header = masterRecord;
+                if (ShowMoreDetailsGrid != null)
+                {
+                    await Task.Delay(100); // 使用延遲，讓 Header 的資料綁定可以成功
+                    ShowMoreDetailsGrid.RefreshGrid();
+                }
+                #endregion
+            }
+            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowAuditHistory)
             {
                 #region 點選 開啟多筆 CRUD 對話窗 按鈕
                 IsShowMoreDetailsRecord = true;

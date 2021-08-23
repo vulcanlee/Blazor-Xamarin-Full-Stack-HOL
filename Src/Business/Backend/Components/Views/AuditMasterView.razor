@@ -47,11 +47,14 @@
             <GridColumn Field=@nameof(AuditMasterAdapterModel.PolicyHeaderName)
                         HeaderText="簽核政策" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
-            <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
+            <GridColumn HeaderText="命令" Width="200" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
-                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowDetailOfMaster"
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowAuditHistory"
                                        ButtonOption="@(new CommandButtonOptions()
-                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowDetailOfMaster})" />
+                                                       { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowAuditHistory})" />
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowAuditUser"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                       { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowAuditUser})" />
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
                                        ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />

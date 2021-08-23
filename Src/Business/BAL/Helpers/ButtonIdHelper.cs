@@ -23,6 +23,10 @@ namespace BAL.Helpers
         public static string ButtonIdRead => "mdi mdi-book-open-variant";
         public static string ButtonNameRead => "查看";
         public static string ButtonIdShowDetailOfMaster => "mdi mdi-table-large";
+        public static string ButtonIdShowAuditUser => "mdi mdi-account-box-multiple-outline";
+        public static string ButtonIdShowAuditHistory => "mdi mdi-history";
         public static string ButtonNameShowDetailOfMaster => "明細";
+        public static string ButtonNameShowAuditUser => "稽核使用者";
+        public static string ButtonNameShowAuditHistory => "稽核歷史";
     }
 }
