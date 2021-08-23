@@ -1,8 +1,0 @@
-﻿@page "/Audit"
-@attribute [Authorize(Roles = "Audit")]
-
-<div>
-    <div class="page-title">@BAL.Helpers.MagicHelper.簽核文件</div>
-    <AuditMasterView PageSize="@MagicHelper.GridPageSize" />
-
-</div>

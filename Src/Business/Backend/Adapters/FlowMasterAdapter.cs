@@ -9,7 +9,7 @@
     using Newtonsoft.Json;
     using Syncfusion.Blazor;
     using Syncfusion.Blazor.Data;
-    public partial class AuditMasterAdapter : DataAdaptor<IAuditMasterService>
+    public partial class FlowMasterAdapter : DataAdaptor<IFlowMasterService>
     {
         [Parameter]
         public SortCondition CurrentSortCondition { get; set; }
@@ -34,7 +34,7 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<AuditMasterAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
+            DataRequestResult<FlowMasterAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
             var item = dataManagerRequest.RequiresCounts
                 ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
                 : (object)adaptorModelObjects.Result;

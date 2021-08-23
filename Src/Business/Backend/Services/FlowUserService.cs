@@ -16,17 +16,17 @@ namespace Backend.Services
     using CommonDomain.Enums;
     using System;
 
-    public class AuditUserService : IAuditUserService
+    public class FlowUserService : IFlowUserService
     {
         #region 欄位與屬性
         private readonly BackendDBContext context;
         public IMapper Mapper { get; }
-        public ILogger<AuditUserService> Logger { get; }
+        public ILogger<FlowUserService> Logger { get; }
         #endregion
 
         #region 建構式
-        public AuditUserService(BackendDBContext context, IMapper mapper,
-            ILogger<AuditUserService> logger)
+        public FlowUserService(BackendDBContext context, IMapper mapper,
+            ILogger<FlowUserService> logger)
         {
             this.context = context;
             Mapper = mapper;
@@ -35,11 +35,11 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
-        public async Task<DataRequestResult<AuditUserAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<FlowUserAdapterModel>> GetAsync(DataRequest dataRequest)
         {
-            List<AuditUserAdapterModel> data = new();
-            DataRequestResult<AuditUserAdapterModel> result = new();
-            var DataSource = context.AuditUser
+            List<FlowUserAdapterModel> data = new();
+            DataRequestResult<FlowUserAdapterModel> result = new();
+            var DataSource = context.FlowUser
                 .AsNoTracking()
                 .Include(x => x.MyUser)
                 .AsQueryable();
@@ -58,10 +58,10 @@ namespace Backend.Services
                 SortCondition CurrentSortCondition = dataRequest.Sorted;
                 switch (CurrentSortCondition.Id)
                 {
-                    case (int)AuditUserSortEnum.LevelDescending:
+                    case (int)FlowUserSortEnum.LevelDescending:
                         DataSource = DataSource.OrderByDescending(x => x.Level);
                         break;
-                    case (int)AuditUserSortEnum.LevelAscending:
+                    case (int)FlowUserSortEnum.LevelAscending:
                         DataSource = DataSource.OrderBy(x => x.Level);
                         break;
                     default:
@@ -72,7 +72,7 @@ namespace Backend.Services
 
             #region 進行分頁
             // 取得記錄總數量，將要用於分頁元件面板使用
-            result.Count = DataSource.Cast<AuditUser>().Count();
+            result.Count = DataSource.Cast<FlowUser>().Count();
             DataSource = DataSource.Skip(dataRequest.Skip);
             if (dataRequest.Take != 0)
             {
@@ -81,8 +81,8 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<AuditUserAdapterModel> adapterModelObjects =
-                Mapper.Map<List<AuditUserAdapterModel>>(DataSource);
+            List<FlowUserAdapterModel> adapterModelObjects =
+                Mapper.Map<List<FlowUserAdapterModel>>(DataSource);
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
@@ -96,14 +96,14 @@ namespace Backend.Services
             return result;
         }
 
-        public async Task<DataRequestResult<AuditUserAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
+        public async Task<DataRequestResult<FlowUserAdapterModel>> GetByHeaderIDAsync(int id, DataRequest dataRequest)
         {
-            List<AuditUserAdapterModel> data = new();
-            DataRequestResult<AuditUserAdapterModel> result = new();
-            var DataSource = context.AuditUser
+            List<FlowUserAdapterModel> data = new();
+            DataRequestResult<FlowUserAdapterModel> result = new();
+            var DataSource = context.FlowUser
                 .AsNoTracking()
                 .Include(x => x.MyUser)
-                .Where(x => x.AuditMasterId == id);
+                .Where(x => x.FlowMasterId == id);
 
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -119,10 +119,10 @@ namespace Backend.Services
                 SortCondition CurrentSortCondition = dataRequest.Sorted;
                 switch (CurrentSortCondition.Id)
                 {
-                    case (int)AuditUserSortEnum.LevelDescending:
+                    case (int)FlowUserSortEnum.LevelDescending:
                         DataSource = DataSource.OrderByDescending(x => x.Level);
                         break;
-                    case (int)AuditUserSortEnum.LevelAscending:
+                    case (int)FlowUserSortEnum.LevelAscending:
                         DataSource = DataSource.OrderBy(x => x.Level);
                         break;
                     default:
@@ -133,7 +133,7 @@ namespace Backend.Services
 
             #region 進行分頁
             // 取得記錄總數量，將要用於分頁元件面板使用
-            result.Count = DataSource.Cast<AuditUser>().Count();
+            result.Count = DataSource.Cast<FlowUser>().Count();
             DataSource = DataSource.Skip(dataRequest.Skip);
             if (dataRequest.Take != 0)
             {
@@ -142,8 +142,8 @@ namespace Backend.Services
             #endregion
 
             #region 在這裡進行取得資料與與額外屬性初始化
-            List<AuditUserAdapterModel> adapterModelObjects =
-                Mapper.Map<List<AuditUserAdapterModel>>(DataSource);
+            List<FlowUserAdapterModel> adapterModelObjects =
+                Mapper.Map<List<FlowUserAdapterModel>>(DataSource);
 
             foreach (var adapterModelItem in adapterModelObjects)
             {
@@ -156,27 +156,27 @@ namespace Backend.Services
             return result;
         }
 
-        public async Task<AuditUserAdapterModel> GetAsync(int id)
+        public async Task<FlowUserAdapterModel> GetAsync(int id)
         {
-            AuditUser item = await context.AuditUser
+            FlowUser item = await context.FlowUser
                 .AsNoTracking()
                 .Include(x => x.MyUser)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            AuditUserAdapterModel result = Mapper.Map<AuditUserAdapterModel>(item);
+            FlowUserAdapterModel result = Mapper.Map<FlowUserAdapterModel>(item);
             await OhterDependencyData(result);
             return result;
         }
 
-        public async Task<VerifyRecordResult> AddAsync(AuditUserAdapterModel paraObject)
+        public async Task<VerifyRecordResult> AddAsync(FlowUserAdapterModel paraObject)
         {
             try
             {
-                AuditUser itemParameter = Mapper.Map<AuditUser>(paraObject);
-                CleanTrackingHelper.Clean<AuditUser>(context);
-                await context.AuditUser
+                FlowUser itemParameter = Mapper.Map<FlowUser>(paraObject);
+                CleanTrackingHelper.Clean<FlowUser>(context);
+                await context.FlowUser
                     .AddAsync(itemParameter);
                 await context.SaveChangesAsync();
-                CleanTrackingHelper.Clean<AuditUser>(context);
+                CleanTrackingHelper.Clean<FlowUser>(context);
                 return VerifyRecordResultFactory.Build(true);
             }
             catch (Exception ex)
@@ -186,13 +186,13 @@ namespace Backend.Services
             }
         }
 
-        public async Task<VerifyRecordResult> UpdateAsync(AuditUserAdapterModel paraObject)
+        public async Task<VerifyRecordResult> UpdateAsync(FlowUserAdapterModel paraObject)
         {
             try
             {
-                AuditUser itemData = Mapper.Map<AuditUser>(paraObject);
-                CleanTrackingHelper.Clean<AuditUser>(context);
-                AuditUser item = await context.AuditUser
+                FlowUser itemData = Mapper.Map<FlowUser>(paraObject);
+                CleanTrackingHelper.Clean<FlowUser>(context);
+                FlowUser item = await context.FlowUser
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
                 if (item == null)
@@ -201,10 +201,10 @@ namespace Backend.Services
                 }
                 else
                 {
-                    CleanTrackingHelper.Clean<AuditUser>(context);
+                    CleanTrackingHelper.Clean<FlowUser>(context);
                     context.Entry(itemData).State = EntityState.Modified;
                     await context.SaveChangesAsync();
-                    CleanTrackingHelper.Clean<AuditUser>(context);
+                    CleanTrackingHelper.Clean<FlowUser>(context);
                     return VerifyRecordResultFactory.Build(true);
                 }
             }
@@ -219,8 +219,8 @@ namespace Backend.Services
         {
             try
             {
-                CleanTrackingHelper.Clean<AuditUser>(context);
-                AuditUser item = await context.AuditUser
+                CleanTrackingHelper.Clean<FlowUser>(context);
+                FlowUser item = await context.FlowUser
                     .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id == id);
                 if (item == null)
@@ -229,10 +229,10 @@ namespace Backend.Services
                 }
                 else
                 {
-                    CleanTrackingHelper.Clean<AuditUser>(context);
+                    CleanTrackingHelper.Clean<FlowUser>(context);
                     context.Entry(item).State = EntityState.Deleted;
                     await context.SaveChangesAsync();
-                    CleanTrackingHelper.Clean<AuditUser>(context);
+                    CleanTrackingHelper.Clean<FlowUser>(context);
                     return VerifyRecordResultFactory.Build(true);
                 }
             }
@@ -245,16 +245,16 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 的限制條件檢查
-        public async Task<VerifyRecordResult> BeforeAddCheckAsync(AuditUserAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeAddCheckAsync(FlowUserAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<AuditUser>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
             if (paraObject.MyUserId == 0)
             {
                 return VerifyRecordResultFactory.Build(false, "需要指定一個使用者");
             }
-            var item = await context.AuditUser
+            var item = await context.FlowUser
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.AuditMasterId == paraObject.AuditMasterId &&
+                .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.FlowMasterId &&
                 x.MyUserId == paraObject.MyUserId);
             if (item != null)
             {
@@ -263,15 +263,15 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(AuditUserAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(FlowUserAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<AuditUser>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
             if (paraObject.MyUserId == 0)
             {
                 return VerifyRecordResultFactory.Build(false, "需要指定一個使用者");
             }
 
-            var searchItem = await context.AuditUser
+            var searchItem = await context.FlowUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem == null)
@@ -279,9 +279,9 @@ namespace Backend.Services
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.要更新的紀錄_發生同時存取衝突_已經不存在資料庫上);
             }
 
-            searchItem = await context.AuditUser
+            searchItem = await context.FlowUser
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.AuditMasterId == paraObject.AuditMasterId &&
+                .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.FlowMasterId &&
                 x.MyUserId == paraObject.MyUserId &&
                 x.Id != paraObject.Id);
             if (searchItem != null)
@@ -291,10 +291,10 @@ namespace Backend.Services
             return VerifyRecordResultFactory.Build(true);
         }
 
-        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(AuditUserAdapterModel paraObject)
+        public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(FlowUserAdapterModel paraObject)
         {
-            CleanTrackingHelper.Clean<AuditUser>(context);
-            var searchItem = await context.AuditUser
+            CleanTrackingHelper.Clean<FlowUser>(context);
+            var searchItem = await context.FlowUser
              .AsNoTracking()
              .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem == null)
@@ -307,7 +307,7 @@ namespace Backend.Services
         #endregion
 
         #region 其他服務方法
-        Task OhterDependencyData(AuditUserAdapterModel data)
+        Task OhterDependencyData(FlowUserAdapterModel data)
         {
             data.MyUserName = data.MyUser.Name;
             return Task.FromResult(0);
@@ -315,11 +315,11 @@ namespace Backend.Services
         #endregion
 
         #region 啟用或停用的紀錄變更
-        public async Task DisableIt(AuditUserAdapterModel paraObject)
+        public async Task DisableIt(FlowUserAdapterModel paraObject)
         {
-            AuditUser itemData = Mapper.Map<AuditUser>(paraObject);
-            CleanTrackingHelper.Clean<AuditUser>(context);
-            AuditUser item = await context.AuditUser
+            FlowUser itemData = Mapper.Map<FlowUser>(paraObject);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+            FlowUser item = await context.FlowUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)
@@ -334,11 +334,11 @@ namespace Backend.Services
             }
         }
 
-        public async Task EnableIt(AuditUserAdapterModel paraObject)
+        public async Task EnableIt(FlowUserAdapterModel paraObject)
         {
-            AuditUser itemData = Mapper.Map<AuditUser>(paraObject);
-            CleanTrackingHelper.Clean<AuditUser>(context);
-            AuditUser item = await context.AuditUser
+            FlowUser itemData = Mapper.Map<FlowUser>(paraObject);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+            FlowUser item = await context.FlowUser
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (item == null)

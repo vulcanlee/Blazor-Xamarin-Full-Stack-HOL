@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domains.Models
 {
-    public class AuditUser
+    public class FlowUser
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -16,7 +16,7 @@ namespace Domains.Models
         public int Level { get; set; }
         public bool OnlyCC { get; set; }
         public bool Enable { get; set; }
-        public int AuditMasterId { get; set; }
-        public AuditMaster AuditMaster { get; set; }
+        public int FlowMasterId { get; set; }
+        public FlowMaster FlowMaster { get; set; }
     }
 }

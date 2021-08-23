@@ -17,12 +17,12 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Navigations;
     using System;
 
-    public class AuditMasterViewModel
+    public class FlowMasterViewModel
     {
         #region Constructor
-        public AuditMasterViewModel(IAuditMasterService CurrentService,
+        public FlowMasterViewModel(IFlowMasterService CurrentService,
            BackendDBContext context, IMapper Mapper,
-           CurrentUserHelper currentUserHelper,
+           UserHelper currentUserHelper,
            TranscationResultHelper transcationResultHelper)
         {
             this.CurrentService = CurrentService;
@@ -30,7 +30,7 @@ namespace Backend.ViewModels
             mapper = Mapper;
             this.currentUserHelper = currentUserHelper;
             TranscationResultHelper = transcationResultHelper;
-            AuditMasterSort.Initialization(SortConditions);
+            FlowMasterSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -69,11 +69,11 @@ namespace Backend.ViewModels
         /// <summary>
         /// 現在正在新增或修改的紀錄  
         /// </summary>
-        public AuditMasterAdapterModel CurrentRecord { get; set; } = new AuditMasterAdapterModel();
+        public FlowMasterAdapterModel CurrentRecord { get; set; } = new FlowMasterAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
-        public AuditMasterAdapterModel CurrentNeedDeleteRecord { get; set; } = new AuditMasterAdapterModel();
+        public FlowMasterAdapterModel CurrentNeedDeleteRecord { get; set; } = new FlowMasterAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
@@ -129,10 +129,10 @@ namespace Backend.ViewModels
         /// <summary>
         /// 當前記錄需要用到的 Service 物件 
         /// </summary>
-        private readonly IAuditMasterService CurrentService;
+        private readonly IFlowMasterService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
-        private readonly CurrentUserHelper currentUserHelper;
+        private readonly UserHelper currentUserHelper;
 
         /// <summary>
         /// 這個元件整體的通用介面方法
@@ -163,7 +163,7 @@ namespace Backend.ViewModels
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
-                CurrentRecord = new AuditMasterAdapterModel();
+                CurrentRecord = new FlowMasterAdapterModel();
                 #region 針對新增的紀錄所要做的初始值設定商業邏輯
                 #endregion
                 EditRecordDialogTitle = "新增紀錄";
@@ -183,9 +183,9 @@ namespace Backend.ViewModels
         #endregion
 
         #region 記錄列的按鈕事件 (修改與刪除與明細紀錄瀏覽)
-        public async Task OnCommandClicked(CommandClickEventArgs<AuditMasterAdapterModel> args)
+        public async Task OnCommandClicked(CommandClickEventArgs<FlowMasterAdapterModel> args)
         {
-            AuditMasterAdapterModel item = args.RowData as AuditMasterAdapterModel;
+            FlowMasterAdapterModel item = args.RowData as FlowMasterAdapterModel;
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 #region 點選 修改紀錄 按鈕
@@ -217,7 +217,7 @@ namespace Backend.ViewModels
                 ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
                 #endregion
             }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowAuditUser)
+            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowFlowUser)
             {
                 #region 點選 開啟多筆 CRUD 對話窗 按鈕
                 IsShowMoreDetailsRecord = true;
@@ -234,7 +234,7 @@ namespace Backend.ViewModels
                 }
                 #endregion
             }
-            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowAuditHistory)
+            else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowFlowHistory)
             {
                 #region 點選 開啟多筆 CRUD 對話窗 按鈕
                 IsShowMoreDetailsRecord = true;

@@ -7,16 +7,16 @@
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
 
-@inject AuditMasterViewModel ViewModel
+@inject FlowMasterViewModel ViewModel
 @implements IRazorPage
 @implements IDataGrid
 
 <div>
-    <SfGrid @ref="Grid" TValue="AuditMasterAdapterModel"
+    <SfGrid @ref="Grid" TValue="FlowMasterAdapterModel"
             AllowPaging="true" class="parentFullWidth"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <AuditMasterAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></AuditMasterAdapter>
+            <FlowMasterAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></FlowMasterAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -32,29 +32,29 @@
                 </ToolbarItem>
             </ToolbarItems>
         </SfToolbar>
-        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="AuditMasterAdapterModel"
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="FlowMasterAdapterModel"
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(AuditMasterAdapterModel.Title)
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.Title)
                         HeaderText="主旨" Width="250" />
-            <GridColumn Field=@nameof(AuditMasterAdapterModel.CreateDate)
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.CreateDate)
                         HeaderText="建立時間" Format="yyyy-MM-dd HH:mm:ss"
                         HideAtMedia="(min-width: 640px)" />
-            <GridColumn Field=@nameof(AuditMasterAdapterModel.MyUserName)
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.MyUserName)
                         HeaderText="建立者" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
-            <GridColumn Field=@nameof(AuditMasterAdapterModel.PolicyHeaderName)
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.PolicyHeaderName)
                         HeaderText="簽核政策" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn HeaderText="命令" Width="200" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
-                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowAuditHistory"
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowFlowHistory"
                                        ButtonOption="@(new CommandButtonOptions()
-                                                       { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowAuditHistory})" />
-                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowAuditUser"
+                                                       { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowFlowHistory})" />
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowFlowUser"
                                        ButtonOption="@(new CommandButtonOptions()
-                                                       { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowAuditUser})" />
+                                                       { Content = "", IconCss = @ButtonIdHelper.ButtonIdShowFlowUser})" />
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
                                        ButtonOption="@(new CommandButtonOptions()
                                                    { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
@@ -186,7 +186,7 @@
 <DialogBackground />
 
 @code{
-    SfGrid<AuditMasterAdapterModel> Grid;
+    SfGrid<FlowMasterAdapterModel> Grid;
     [Parameter]
     public int PageSize { get; set; } = 15;
     [Parameter]

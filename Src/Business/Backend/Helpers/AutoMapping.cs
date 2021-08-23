@@ -10,12 +10,12 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
-            CreateMap<AuditHistory, AuditHistoryAdapterModel>();
-            CreateMap<AuditHistoryAdapterModel, AuditHistory>();
-            CreateMap<AuditUser, AuditUserAdapterModel>();
-            CreateMap<AuditUserAdapterModel, AuditUser>();
-            CreateMap<AuditMaster, AuditMasterAdapterModel>();
-            CreateMap<AuditMasterAdapterModel, AuditMaster>();
+            CreateMap<FlowHistory, FlowHistoryAdapterModel>();
+            CreateMap<FlowHistoryAdapterModel, FlowHistory>();
+            CreateMap<FlowUser, FlowUserAdapterModel>();
+            CreateMap<FlowUserAdapterModel, FlowUser>();
+            CreateMap<FlowMaster, FlowMasterAdapterModel>();
+            CreateMap<FlowMasterAdapterModel, FlowMaster>();
             CreateMap<PhaseMessage, PhaseMessageAdapterModel>();
             CreateMap<PhaseMessageAdapterModel, PhaseMessage>();
             CreateMap<PhaseCategory, PhaseCategoryAdapterModel>();

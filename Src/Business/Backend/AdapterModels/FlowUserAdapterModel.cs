@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.AdapterModels
 {
-    public class AuditUserAdapterModel : ICloneable
+    public class FlowUserAdapterModel : ICloneable
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,12 +14,12 @@ namespace Backend.AdapterModels
         public int Level { get; set; }
         public bool OnlyCC { get; set; }
         public bool Enable { get; set; }
-        public int AuditMasterId { get; set; }
-        public AuditMasterAdapterModel AuditMaster { get; set; }
+        public int FlowMasterId { get; set; }
+        public FlowMasterAdapterModel FlowMaster { get; set; }
 
-        public AuditUserAdapterModel Clone()
+        public FlowUserAdapterModel Clone()
         {
-            return ((ICloneable)this).Clone() as AuditUserAdapterModel;
+            return ((ICloneable)this).Clone() as FlowUserAdapterModel;
         }
         object ICloneable.Clone()
         {

@@ -6,14 +6,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domains.Models
 {
-    public partial class AuditMaster
+    public partial class FlowMaster
     {
-        public virtual ICollection<AuditUser> AuditUser { get; set; }
-        public virtual ICollection<AuditHistory> AuditHistory { get; set; }
-        public AuditMaster()
+        public virtual ICollection<FlowUser> FlowUser { get; set; }
+        public virtual ICollection<FlowHistory> FlowHistory { get; set; }
+        public FlowMaster()
         {
-            AuditUser = new HashSet<AuditUser>();
-            AuditHistory = new HashSet<AuditHistory>();
+            FlowUser = new HashSet<FlowUser>();
+            FlowHistory = new HashSet<FlowHistory>();
         }
 
         public int Id { get; set; }

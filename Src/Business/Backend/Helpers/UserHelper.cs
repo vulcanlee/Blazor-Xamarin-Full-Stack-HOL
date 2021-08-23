@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Backend.Helpers
 {
-    public class CurrentUserHelper
+    public class UserHelper
     {
-        public CurrentUserHelper(AuthenticationStateProvider authenticationStateProvider,
+        public UserHelper(AuthenticationStateProvider authenticationStateProvider,
             IMapper mapper, IMyUserService myUserService)
         {
             AuthenticationStateProvider = authenticationStateProvider;

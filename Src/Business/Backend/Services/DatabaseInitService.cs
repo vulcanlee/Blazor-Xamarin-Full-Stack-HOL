@@ -682,7 +682,7 @@ namespace Backend.Services
             menuData = new MenuData()
             {
                 Name = BAL.Helpers.MagicHelper.簽核文件,
-                CodeName = "Audit",
+                CodeName = "Flow",
                 Enable = true,
                 Icon = "mdi-file-document-edit",
                 IsGroup = false,

@@ -12,9 +12,9 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
-            services.AddTransient<IAuditHistoryService, AuditHistoryService>();
-            services.AddTransient<IAuditUserService, AuditUserService>();
-            services.AddTransient<IAuditMasterService, AuditMasterService>();
+            services.AddTransient<IFlowHistoryService, FlowHistoryService>();
+            services.AddTransient<IFlowUserService, FlowUserService>();
+            services.AddTransient<IFlowMasterService, FlowMasterService>();
             services.AddTransient<IPhaseMessageService, PhaseMessageService>();
             services.AddTransient<IPhaseCategoryService, PhaseCategoryService>();
             services.AddTransient<IPolicyDetailService, PolicyDetailService>();
@@ -34,7 +34,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
-            services.AddTransient<AuditMasterViewModel>();
+            services.AddTransient<FlowMasterViewModel>();
             services.AddTransient<PhaseMessageViewModel>();
             services.AddTransient<PhaseCategoryViewModel>();
             services.AddTransient<PolicyDetailViewModel>();
@@ -52,7 +52,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 其他服務註冊
-            services.AddScoped<CurrentUserHelper>();
+            services.AddScoped<UserHelper>();
             services.AddSingleton<SystemBroadcast>();
             services.AddTransient<ImportDataHelper>();
             services.AddTransient<TranscationResultHelper>();
