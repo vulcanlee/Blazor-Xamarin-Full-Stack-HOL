@@ -23,6 +23,7 @@ namespace Backend.AdapterModels
         public string EnableName { get; set; }
         [Required(ErrorMessage = "驗證碼 不可為空白")]
         public bool ForceLoad { get; set; }
+        public bool NewTab { get; set; } = false;
         public int MenuRoleId { get; set; }
         public virtual MenuRoleAdapterModel MenuRole { get; set; }
 

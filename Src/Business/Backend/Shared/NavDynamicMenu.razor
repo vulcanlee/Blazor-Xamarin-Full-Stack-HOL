@@ -145,7 +145,7 @@
             ToggleNavMenu();
         }
         //NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
-        if (currentMenuData.MenuData.ForceLoad == true)
+        if (currentMenuData.MenuData.NewTab == true)
         {
             // https://www.syncfusion.com/faq/blazor/general/can-blazor-open-a-url-in-a-new-tab-using-urihelper-navigateto
             await JSRuntime.InvokeAsync<object>("open", currentMenuData.MenuData.CodeName, "_blank");
@@ -172,7 +172,7 @@
         currentMenuData.IsClicked = true;
         currentMenuData.MenuClass = "clicked";
         ToggleNavMenu();
-        if (currentMenuData.MenuData.ForceLoad == true)
+        if (currentMenuData.MenuData.NewTab == true)
         {
             // https://www.syncfusion.com/faq/blazor/general/can-blazor-open-a-url-in-a-new-tab-using-urihelper-navigateto
             await JSRuntime.InvokeAsync<object>("open", currentMenuData.MenuData.CodeName, "_blank");

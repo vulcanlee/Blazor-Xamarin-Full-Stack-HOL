@@ -11,22 +11,31 @@ using System.Threading.Tasks;
 
 namespace Backend.Helpers
 {
-    public class FlowHelper
+    public static class FlowHelper
     {
-        public FlowHelper(IMapper mapper, IMyUserService myUserService)
+        /// <summary>
+        /// 轉換狀態碼成為說明文字
+        /// </summary>
+        /// <param name="flowMasterAdapterModel"></param>
+        /// <returns></returns>
+        public static FlowMasterAdapterModel GetStatusName(this FlowMasterAdapterModel flowMasterAdapterModel)
         {
-            Mapper = mapper;
-            MyUserService = myUserService;
-        }
-
-        public IMapper Mapper { get; }
-        public IMyUserService MyUserService { get; }
-
-        public async Task CreateFlowHistory()
-        {
-            #region  取得現在登入使用者資訊
-            #endregion
-
+            switch (flowMasterAdapterModel.Status)
+            {
+                case 0:
+                    flowMasterAdapterModel.StatusName = "草稿";
+                    break;
+                case 1:
+                    flowMasterAdapterModel.StatusName = "送審";
+                    break;
+                case 99:
+                    flowMasterAdapterModel.StatusName = "完成";
+                    break;
+                default:
+                    flowMasterAdapterModel.StatusName = "???";
+                    break;
+            }
+            return flowMasterAdapterModel;
         }
     }
 }

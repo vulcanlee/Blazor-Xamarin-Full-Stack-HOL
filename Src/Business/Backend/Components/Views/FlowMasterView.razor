@@ -37,12 +37,16 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(FlowMasterAdapterModel.Title)
-                        HeaderText="主旨" Width="250" />
+                        HeaderText="主旨"/>
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.ProcessLevel)
+                        HeaderText="層級" Width="70"/>
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.StatusName)
+                        HeaderText="狀態" Width="70" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.CreateDate)
                         HeaderText="建立時間" Format="yyyy-MM-dd HH:mm:ss"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.MyUserName)
-                        HeaderText="建立者" Format="yyyy-MM-dd"
+                        HeaderText="建立者"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.PolicyHeaderName)
                         HeaderText="簽核政策" Format="yyyy-MM-dd"
@@ -171,7 +175,7 @@
     <DialogTemplates>
         <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>
-            <FlowHistoryReadOnlyView @ref="ViewModel.ShowFlowUserGrid" PageSize="@MagicHelper.GridPageSize"
+            <FlowHistoryReadOnlyView @ref="ViewModel.ShowFlowHistoryGrid" PageSize="@MagicHelper.GridPageSize"
                                   Header="ViewModel.Header" />
         </Content>
         <FooterTemplate>

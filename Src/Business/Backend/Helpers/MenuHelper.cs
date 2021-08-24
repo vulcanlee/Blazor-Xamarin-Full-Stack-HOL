@@ -51,6 +51,11 @@ namespace Backend.Helpers
             #region 依據資料庫內的紀錄，產生要顯示的功能表物件
             foreach (var item in menuDatas)
             {
+                if(item.CodeName.ToLower().Contains("http:") ||
+                    item.CodeName.ToLower().Contains("https:"))
+                {
+                    item.NewTab = true;
+                }
                 if (item.Level == 0)
                 {
                     #region 第一層功能清單
@@ -146,7 +151,7 @@ namespace Backend.Helpers
                         Enable = true,
                         Icon = "mdi-family-tree",
                         IsGroup = false,
-                        Level = 1, ForceLoad=true
+                        Level = 1, ForceLoad = true, NewTab = true,
                     }
                 };
                 mainMenu.SubMenus.Add(subMenu);
@@ -183,6 +188,7 @@ namespace Backend.Helpers
                         Name = "登出",
                         Enable = true,
                         ForceLoad = true,
+                        NewTab = false,
                         Icon = "mdi-logout",
                         CodeName = "/Logout",
                         IsGroup = false,

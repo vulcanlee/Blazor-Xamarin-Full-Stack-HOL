@@ -135,6 +135,7 @@ namespace Backend.Services
                     Enable = true,
                     Level = 0,
                     OnlyCC = false,
+                    Name = "發文者",
                 };
                 await context.FlowUser.AddAsync(auditUser);
                 var policyDetails = await context.PolicyDetail
@@ -325,6 +326,7 @@ namespace Backend.Services
         {
             data.MyUserName = data.MyUser.Name;
             data.PolicyHeaderName = data.PolicyHeader.Name;
+            data.GetStatusName();
             return Task.FromResult(0);
         }
         #endregion

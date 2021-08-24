@@ -176,6 +176,8 @@ namespace Backend.ViewModels
                 var user = await currentUserHelper.GetCurrentUserAsync();
                 CurrentRecord.MyUserId = user.Id;
                 CurrentRecord.MyUserName = user.Name;
+                CurrentRecord.Status = 0;
+                CurrentRecord.ProcessLevel = 0;
 
                 CurrentRecord.CreateDate = DateTime.Now;
             }
