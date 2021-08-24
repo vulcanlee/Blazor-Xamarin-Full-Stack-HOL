@@ -6,6 +6,7 @@
 @using Syncfusion.Blazor.Calendars
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
 
 @inject FlowMasterViewModel ViewModel
 @implements IRazorPage
@@ -37,9 +38,9 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(FlowMasterAdapterModel.Title)
-                        HeaderText="主旨"/>
+                        HeaderText="主旨" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.ProcessLevel)
-                        HeaderText="層級" Width="70"/>
+                        HeaderText="層級" Width="70" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.StatusName)
                         HeaderText="狀態" Width="70" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.CreateDate)
@@ -51,6 +52,42 @@
             <GridColumn Field=@nameof(FlowMasterAdapterModel.PolicyHeaderName)
                         HeaderText="簽核政策" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.StatusName) HeaderText="簽核" Width="180">
+                <Template>
+                    @{
+                        var currentRec = (context as FlowMasterAdapterModel);
+                        if (currentRec.Status == 0)
+                        {
+                            var tpa1 = $"tpa{currentRec.Id}";
+                            var tpa2 = $"#{tpa1}";
+                            <SfTooltip Target="@tpa2" Content="送出">
+                                <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary" />
+                            </SfTooltip>
+                        }
+                        else if (currentRec.Status == 99)
+                        {
+                        }
+                        else
+                        {
+                            var tpb1 = $"tpa{currentRec.Id}";
+                            var tpb2 = $"#{tpb1}";
+                            var tpc1 = $"tpa{currentRec.Id}";
+                            var tpc2 = $"#{tpc1}";
+                            var tpd1 = $"tpa{currentRec.Id}";
+                            var tpd2 = $"#{tpd1}";
+                            <SfTooltip Target="@tpb2" Content="退回申請者">
+                                <span id="@tpb1" class="mdi mdi-24px mdi-arrow-left-bold-circle mx-1 text-secondary" />
+                            </SfTooltip>
+                            <SfTooltip Target="@tpc2" Content="通過">
+                                <span id="@tpc1" class="mdi mdi-24px mdi-check-circle mx-1 text-success" />
+                            </SfTooltip>
+                            <SfTooltip Target="@tpd2" Content="退回">
+                                <span id="@tpd1" class="mdi mdi-24px mdi-close-circle text-danger" />
+                            </SfTooltip>
+                        }
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn HeaderText="命令" Width="200" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowFlowHistory"
@@ -176,7 +213,7 @@
         <Header>@ViewModel.ShowMoreDetailsRecordDialogTitle</Header>
         <Content>
             <FlowHistoryReadOnlyView @ref="ViewModel.ShowFlowHistoryGrid" PageSize="@MagicHelper.GridPageSize"
-                                  Header="ViewModel.Header" />
+                                     Header="ViewModel.Header" />
         </Content>
         <FooterTemplate>
             <div>

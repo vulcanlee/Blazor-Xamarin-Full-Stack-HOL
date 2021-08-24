@@ -18,7 +18,7 @@ namespace Backend.Helpers
         /// </summary>
         /// <param name="flowMasterAdapterModel"></param>
         /// <returns></returns>
-        public static FlowMasterAdapterModel GetStatusName(this FlowMasterAdapterModel flowMasterAdapterModel)
+        public static FlowMasterAdapterModel GetFlowName(this FlowMasterAdapterModel flowMasterAdapterModel)
         {
             switch (flowMasterAdapterModel.Status)
             {
@@ -36,6 +36,18 @@ namespace Backend.Helpers
                     break;
             }
             return flowMasterAdapterModel;
+        }
+        public static FlowUserAdapterModel GetName(this FlowUserAdapterModel flowUserAdapterModel)
+        {
+            if(flowUserAdapterModel.Completion == false)
+            {
+                flowUserAdapterModel.CompletionName = "";
+            }
+            else
+            {
+                flowUserAdapterModel.CompletionName = "完成";
+            }
+            return flowUserAdapterModel;
         }
     }
 }

@@ -326,7 +326,7 @@ namespace Backend.Services
         {
             data.MyUserName = data.MyUser.Name;
             data.PolicyHeaderName = data.PolicyHeader.Name;
-            data.GetStatusName();
+            data.GetFlowName();
             return Task.FromResult(0);
         }
         #endregion

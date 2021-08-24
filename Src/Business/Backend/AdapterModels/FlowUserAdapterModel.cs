@@ -13,6 +13,11 @@ namespace Backend.AdapterModels
         public string MyUserName { get; set; }
         public int Level { get; set; }
         public bool OnlyCC { get; set; }
+        /// <summary>
+        /// 簽核流程已經完成
+        /// </summary>
+        public bool Completion { get; set; }
+        public string CompletionName { get; set; }
         public bool Enable { get; set; }
         public int FlowMasterId { get; set; }
         public FlowMasterAdapterModel FlowMaster { get; set; }

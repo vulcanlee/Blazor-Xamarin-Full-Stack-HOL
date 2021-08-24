@@ -36,6 +36,8 @@
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
+            <GridColumn Field=@nameof(FlowUserAdapterModel.CompletionName)
+                        HeaderText="狀態" Width="70" />
             <GridColumn Field=@nameof(FlowUserAdapterModel.Name)
                         HeaderText="名稱" />
             <GridColumn Field=@nameof(FlowUserAdapterModel.Level)
