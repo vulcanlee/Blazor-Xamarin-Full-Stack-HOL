@@ -157,6 +157,9 @@ namespace Backend.Services
                     };
                     await context.FlowUser.AddAsync(auditUser);
                 }
+
+                itemParameter.NextMyUserName = user.Name;
+                context.FlowMaster.Update(itemParameter);
                 await context.SaveChangesAsync();
                 #endregion
 
@@ -333,49 +336,151 @@ namespace Backend.Services
         #endregion
 
         #region 審核動作事件
+        #region 取得現在使用者與簽核流程所有使用者
+        public async Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)>
+            GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            var user = await UserHelper.GetCurrentUserAsync();
+
+            var flowUsers = await context.FlowUser
+                .Include(x => x.MyUser)
+                .OrderBy(x => x.Level)
+                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
+                .ToListAsync();
+            return (flowUsers, user);
+        }
+        #endregion
+
+        #region 副本使用者，自動視為完成審核
+        public void CopyUserAutoCompletion(List<FlowUser> flowUsers, int processLevel)
+        {
+            var flowUserCCs = flowUsers.Where(x => x.Level == processLevel
+            && x.OnlyCC == true).ToList();
+            foreach (var item in flowUserCCs)
+            {
+                item.Completion = true;
+            }
+            return;
+        }
+        #endregion
+
+        #region 找出一個下一個使用者名稱
+        public void FindNextActionUser(List<FlowUser> flowUsers, FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            var flowUserNexts = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel
+            && x.OnlyCC == false && x.Completion == false).ToList();
+            if (flowUserNexts.Count() == 0)
+            {
+                flowMasterAdapterModel.NextMyUserName = "";
+            }
+            else
+            {
+                flowMasterAdapterModel.NextMyUserName = flowUserNexts.Last().MyUser.Name;
+            }
+            return;
+        }
+        #endregion
+
+        #region 撤銷流程使用者的完成狀態
+        public void RecoveryCompletion(List<FlowUser> flowUsers, int processLevel)
+        {
+            var flowUserLevel = flowUsers.Where(x => x.Level == processLevel).ToList();
+            foreach (var item in flowUserLevel)
+            {
+                item.Completion = false;
+            }
+            return;
+        }
+        #endregion
+
+        #region 加入批示歷史紀錄
+        public async Task AddHistoryRecord(MyUserAdapterModel myUserAdapterModel,
+            FlowMasterAdapterModel flowMasterAdapterModel, string Summary, string Comment,
+            bool approve)
+        {
+            FlowHistory history = new FlowHistory()
+            {
+                Comment = Comment,
+                Summary = Summary,
+                Updatetime = DateTime.Now,
+                FlowMasterId = flowMasterAdapterModel.Id,
+                MyUserId = myUserAdapterModel.Id,
+                Approve = approve,
+            };
+            await context.FlowHistory.AddAsync(history);
+            await context.SaveChangesAsync();
+        }
+        #endregion
+
+        #region 確認該使用者是否可以執行簽核流程
+        public bool CheckCurrentActionUser(List<FlowUser> flowUsers,
+            MyUserAdapterModel myUserAdapterModel, FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            var flowUserCurrent = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel
+            && x.OnlyCC == false && x.Completion == false).ToList();
+            if (flowUserCurrent.Count() == 0)
+            {
+                return false; ;
+            }
+            else
+            {
+                var findUser = flowUserCurrent.FirstOrDefault(x => x.MyUserId == myUserAdapterModel.Id);
+                if (findUser == null)
+                    return false;
+                else
+                    return true;
+            }
+        }
+        #endregion
+
         #region 送出
         public async Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
 
-            var user = await UserHelper.GetCurrentUserAsync();
+            (var flowUsers, var user) = await GetUsersDataAsync(flowMasterAdapterModel);
 
-            var flowUsers = await context.FlowUser
-                .OrderBy(x => x.Level)
-                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
-                .ToListAsync();
+            if (user.Id != flowMasterAdapterModel.MyUserId)
+            {
+                return;
+            }
 
             var flowUser = flowUsers.FirstOrDefault(x => x.Level == 0);
             flowUser.Completion = true;
             flowMasterAdapterModel.ProcessLevel = 1;
             flowMasterAdapterModel.Status = 1;
 
-            #region 副本使用者，自動視為完成審核
-            var flowUserCCs = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel
-            && x.OnlyCC == true).ToList();
-            foreach (var item in flowUserCCs)
-            {
-                item.Completion = true;
-            }
-            #endregion
+            CopyUserAutoCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
+
+            FindNextActionUser(flowUsers, flowMasterAdapterModel);
 
             await context.BulkUpdateAsync(flowUsers);
             await UpdateAsync(flowMasterAdapterModel);
+
+            await AddHistoryRecord(user, flowMasterAdapterModel, $"使用者 {user.Name} 送出簽核申請", $"自動產生此紀錄", true);
+
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
         }
         #endregion
+
         #region 退回申請者
         public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
-            var user = await UserHelper.GetCurrentUserAsync();
-            var flowUsers = await context.FlowUser
-                .OrderBy(x => x.Level)
-                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
-                .ToListAsync();
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
+
+            (var flowUsers, var user) = await GetUsersDataAsync(flowMasterAdapterModel);
+
+            if (CheckCurrentActionUser(flowUsers, user, flowMasterAdapterModel) == false) return;
+
             foreach (var item in flowUsers)
             {
                 item.Completion = false;
@@ -383,24 +488,32 @@ namespace Backend.Services
             flowMasterAdapterModel.ProcessLevel = 0;
             flowMasterAdapterModel.Status = 0;
 
+            FindNextActionUser(flowUsers, flowMasterAdapterModel);
+
             await context.BulkUpdateAsync(flowUsers);
             await UpdateAsync(flowMasterAdapterModel);
+
+            await AddHistoryRecord(user, flowMasterAdapterModel,
+                $"使用者 {user.Name} 退回申請者簽核", $"自動產生此紀錄", false);
+
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
         }
         #endregion
+
         #region 同意
         public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
 
-            var user = await UserHelper.GetCurrentUserAsync();
+            (var flowUsers, var user) = await GetUsersDataAsync(flowMasterAdapterModel);
 
-            var flowUsers = await context.FlowUser
-                .OrderBy(x => x.Level)
-                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
-                .ToListAsync();
+            if (CheckCurrentActionUser(flowUsers, user, flowMasterAdapterModel) == false) return;
 
             var flowUserCurrentLevel = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel).ToList();
             var currentUser = flowUserCurrentLevel.FirstOrDefault(x => x.MyUserId == user.Id);
@@ -428,58 +541,45 @@ namespace Backend.Services
                     #region 還有關卡要繼續審核
                     flowMasterAdapterModel.Status = 1;
                     flowMasterAdapterModel.ProcessLevel++;
-                    #region 副本使用者，自動視為完成審核
-                    var flowUserCCs = flowUsers
-                        .Where(x => x.Level == flowMasterAdapterModel.ProcessLevel &&
-                        x.OnlyCC == true).ToList();
-                    foreach (var item in flowUserCCs)
-                    {
-                        item.Completion = true;
-                    }
-                    #endregion
+
+                    CopyUserAutoCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
                     #endregion
                 }
                 #endregion
             }
 
+            FindNextActionUser(flowUsers, flowMasterAdapterModel);
+
             await context.BulkUpdateAsync(flowUsers);
             await UpdateAsync(flowMasterAdapterModel);
+
+            await AddHistoryRecord(user, flowMasterAdapterModel,
+                $"使用者 {user.Name} 同意簽核申請", $"自動產生此紀錄", true);
+
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
         }
         #endregion
+
         #region 退回
         public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
 
-            var user = await UserHelper.GetCurrentUserAsync();
+            (var flowUsers, var user) = await GetUsersDataAsync(flowMasterAdapterModel);
 
-            var flowUsers = await context.FlowUser
-                .OrderBy(x => x.Level)
-                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
-                .ToListAsync();
+            if (CheckCurrentActionUser(flowUsers, user, flowMasterAdapterModel) == false) return;
 
-            var flowUserCurrentLevel = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel)
-                .ToList();
-            //var currentUser = flowUserCurrentLevel.FirstOrDefault(x => x.MyUserId == user.Id);
-            //if (currentUser != null)
-            //{
-            //    currentUser.Completion = true;
-            //}
-            foreach (var item in flowUserCurrentLevel)
-            {
-                item.Completion = false;
-            }
+            RecoveryCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
 
             flowMasterAdapterModel.ProcessLevel--;
-            flowUserCurrentLevel = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel)
-                .ToList();
-            foreach (var item in flowUserCurrentLevel)
-            {
-                item.Completion = false;
-            }
+            RecoveryCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
+
             if (flowMasterAdapterModel.ProcessLevel > 0)
             {
             }
@@ -489,12 +589,21 @@ namespace Backend.Services
 
             }
 
+            FindNextActionUser(flowUsers, flowMasterAdapterModel);
+
             await context.BulkUpdateAsync(flowUsers);
             await UpdateAsync(flowMasterAdapterModel);
+
+            await AddHistoryRecord(user, flowMasterAdapterModel,
+                $"使用者 {user.Name} 退回簽核申請", $"自動產生此紀錄", false);
+            
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
         }
         #endregion
+
         #endregion
     }
 }

@@ -66,6 +66,9 @@
             <GridColumn Field=@nameof(FlowMasterAdapterModel.PolicyHeaderName)
                         HeaderText="簽核政策" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.NextMyUserName)
+                        HeaderText="批示者"
+                        HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.StatusName) HeaderText="簽核" Width="120">
                 <Template>
                     @{

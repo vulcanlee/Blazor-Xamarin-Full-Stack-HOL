@@ -31,6 +31,7 @@ namespace Domains.Models
         public DateTime CreateDate { get; set; }
         public int MyUserId { get; set; }
         public virtual MyUser MyUser { get; set; }
+        public string NextMyUserName { get; set; }
         public int PolicyHeaderId { get; set; }
         public virtual PolicyHeader PolicyHeader { get; set; }
     }

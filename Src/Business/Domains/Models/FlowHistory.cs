@@ -13,7 +13,6 @@ namespace Domains.Models
         public int MyUserId { get; set; }
         public MyUser MyUser { get; set; }
         public bool Approve { get; set; }
-        [Required(ErrorMessage = "批示意見 不可為空白")]
         public string Summary { get; set; }
         public string Comment { get; set; }
         public DateTime Updatetime { get; set; }

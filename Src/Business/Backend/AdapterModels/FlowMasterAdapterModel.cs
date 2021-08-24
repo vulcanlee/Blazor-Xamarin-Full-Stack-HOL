@@ -28,6 +28,7 @@ namespace Backend.AdapterModels
         public int MyUserId { get; set; }
         public virtual MyUserAdapterModel MyUser { get; set; }
         public string MyUserName { get; set; }
+        public string NextMyUserName { get; set; }
         public int PolicyHeaderId { get; set; }
         public virtual PolicyHeaderAdapterModel PolicyHeader { get; set; }
         public string PolicyHeaderName { get; set; }
