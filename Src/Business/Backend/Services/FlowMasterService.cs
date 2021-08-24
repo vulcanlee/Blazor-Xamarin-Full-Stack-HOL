@@ -16,6 +16,7 @@ namespace Backend.Services
     using CommonDomain.Enums;
     using System;
     using Backend.Helpers;
+    using EFCore.BulkExtensions;
 
     public class FlowMasterService : IFlowMasterService
     {
@@ -23,7 +24,7 @@ namespace Backend.Services
         private readonly BackendDBContext context;
         public IMapper Mapper { get; }
         public ILogger<FlowMasterService> Logger { get; }
-        public UserHelper CurrentUserHelper { get; }
+        public UserHelper UserHelper { get; }
         #endregion
 
         #region 建構式
@@ -33,7 +34,7 @@ namespace Backend.Services
             this.context = context;
             Mapper = mapper;
             Logger = logger;
-            CurrentUserHelper = currentUserHelper;
+            UserHelper = currentUserHelper;
         }
         #endregion
 
@@ -302,7 +303,7 @@ namespace Backend.Services
         {
             try
             {
-                CleanTrackingHelper.Clean<OrderItem>(context);
+                CleanTrackingHelper.Clean<FlowMaster>(context);
                 CleanTrackingHelper.Clean<FlowMaster>(context);
 
                 var searchItem = await context.FlowMaster
@@ -329,6 +330,171 @@ namespace Backend.Services
             data.GetFlowName();
             return Task.FromResult(0);
         }
+        #endregion
+
+        #region 審核動作事件
+        #region 送出
+        public async Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+
+            var user = await UserHelper.GetCurrentUserAsync();
+
+            var flowUsers = await context.FlowUser
+                .OrderBy(x => x.Level)
+                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
+                .ToListAsync();
+
+            var flowUser = flowUsers.FirstOrDefault(x => x.Level == 0);
+            flowUser.Completion = true;
+            flowMasterAdapterModel.ProcessLevel = 1;
+            flowMasterAdapterModel.Status = 1;
+
+            #region 副本使用者，自動視為完成審核
+            var flowUserCCs = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel
+            && x.OnlyCC == true).ToList();
+            foreach (var item in flowUserCCs)
+            {
+                item.Completion = true;
+            }
+            #endregion
+
+            await context.BulkUpdateAsync(flowUsers);
+            await UpdateAsync(flowMasterAdapterModel);
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+        }
+        #endregion
+        #region 退回申請者
+        public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+            var user = await UserHelper.GetCurrentUserAsync();
+            var flowUsers = await context.FlowUser
+                .OrderBy(x => x.Level)
+                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
+                .ToListAsync();
+            foreach (var item in flowUsers)
+            {
+                item.Completion = false;
+            }
+            flowMasterAdapterModel.ProcessLevel = 0;
+            flowMasterAdapterModel.Status = 0;
+
+            await context.BulkUpdateAsync(flowUsers);
+            await UpdateAsync(flowMasterAdapterModel);
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+        }
+        #endregion
+        #region 同意
+        public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+
+            var user = await UserHelper.GetCurrentUserAsync();
+
+            var flowUsers = await context.FlowUser
+                .OrderBy(x => x.Level)
+                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
+                .ToListAsync();
+
+            var flowUserCurrentLevel = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel).ToList();
+            var currentUser = flowUserCurrentLevel.FirstOrDefault(x => x.MyUserId == user.Id);
+            if (currentUser != null)
+            {
+                currentUser.Completion = true;
+            }
+            var remindUsers = flowUsers
+                .Where(x => x.Level == flowMasterAdapterModel.ProcessLevel &&
+                x.Completion == false).ToList();
+            bool allProcessing = (remindUsers.Count() > 0) ? false : true;
+
+            if (allProcessing)
+            {
+                #region 是否是最後一關關卡
+                var lastLevel = flowUsers.OrderByDescending(x => x.Level)
+                    .FirstOrDefault();
+                if (flowMasterAdapterModel.ProcessLevel == lastLevel.Level)
+                {
+                    flowMasterAdapterModel.Status = 99;
+                    flowMasterAdapterModel.ProcessLevel++;
+                }
+                else
+                {
+                    #region 還有關卡要繼續審核
+                    flowMasterAdapterModel.Status = 1;
+                    flowMasterAdapterModel.ProcessLevel++;
+                    #region 副本使用者，自動視為完成審核
+                    var flowUserCCs = flowUsers
+                        .Where(x => x.Level == flowMasterAdapterModel.ProcessLevel &&
+                        x.OnlyCC == true).ToList();
+                    foreach (var item in flowUserCCs)
+                    {
+                        item.Completion = true;
+                    }
+                    #endregion
+                    #endregion
+                }
+                #endregion
+            }
+
+            await context.BulkUpdateAsync(flowUsers);
+            await UpdateAsync(flowMasterAdapterModel);
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+        }
+        #endregion
+        #region 退回
+        public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+
+            var user = await UserHelper.GetCurrentUserAsync();
+
+            var flowUsers = await context.FlowUser
+                .OrderBy(x => x.Level)
+                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
+                .ToListAsync();
+
+            var flowUserCurrentLevel = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel)
+                .ToList();
+            //var currentUser = flowUserCurrentLevel.FirstOrDefault(x => x.MyUserId == user.Id);
+            //if (currentUser != null)
+            //{
+            //    currentUser.Completion = true;
+            //}
+            foreach (var item in flowUserCurrentLevel)
+            {
+                item.Completion = false;
+            }
+
+            flowMasterAdapterModel.ProcessLevel--;
+            flowUserCurrentLevel = flowUsers.Where(x => x.Level == flowMasterAdapterModel.ProcessLevel)
+                .ToList();
+            foreach (var item in flowUserCurrentLevel)
+            {
+                item.Completion = false;
+            }
+            if (flowMasterAdapterModel.ProcessLevel > 0)
+            {
+            }
+            else
+            {
+                flowMasterAdapterModel.Status = 0;
+
+            }
+
+            await context.BulkUpdateAsync(flowUsers);
+            await UpdateAsync(flowMasterAdapterModel);
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+        }
+        #endregion
         #endregion
     }
 }

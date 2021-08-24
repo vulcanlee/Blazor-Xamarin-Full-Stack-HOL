@@ -28,7 +28,7 @@ namespace Backend.ViewModels
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
-            this.currentUserHelper = currentUserHelper;
+            CurrentUserHelper = currentUserHelper;
             TranscationResultHelper = transcationResultHelper;
             FlowMasterSort.Initialization(SortConditions);
 
@@ -84,6 +84,7 @@ namespace Backend.ViewModels
         /// 是否顯示選取其他清單記錄對話窗 
         /// </summary>
         public bool ShowAontherRecordPicker { get; set; } = false;
+        public bool ShowSimulatorUserPicker { get; set; } = false;
         public bool ShowPolicyRecordPicker { get; set; } = false;
         /// <summary>
         /// 父參考物件的 Id 
@@ -115,6 +116,7 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
+        public bool IsGod { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         /// <summary>
@@ -125,6 +127,7 @@ namespace Backend.ViewModels
         /// 訊息對話窗設定
         /// </summary>
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
+        public UserHelper CurrentUserHelper { get; }
         public TranscationResultHelper TranscationResultHelper { get; }
         #endregion
         #endregion
@@ -136,7 +139,6 @@ namespace Backend.ViewModels
         private readonly IFlowMasterService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
-        private readonly UserHelper currentUserHelper;
 
         /// <summary>
         /// 這個元件整體的通用介面方法
@@ -173,7 +175,7 @@ namespace Backend.ViewModels
                 EditRecordDialogTitle = "新增紀錄";
                 IsNewRecordMode = true;
                 IsShowEditRecord = true;
-                var user = await currentUserHelper.GetCurrentUserAsync();
+                var user = await CurrentUserHelper.GetCurrentUserAsync();
                 CurrentRecord.MyUserId = user.Id;
                 CurrentRecord.MyUserName = user.Name;
                 CurrentRecord.Status = 0;
@@ -352,6 +354,25 @@ namespace Backend.ViewModels
             }
             ShowAontherRecordPicker = false;
         }
+        public void OnOpenSimulatorUserPicker()
+        {
+            ShowSimulatorUserPicker = true;
+        }
+
+        public void OnPickerSimulatorUserCompletion(MyUserAdapterModel e)
+        {
+            if (e != null)
+            {
+                CurrentUserHelper.CustomUserId = e.Id;
+                CurrentUserHelper.CustomUserName = e.Name;
+            }
+            else
+            {
+                CurrentUserHelper.CustomUserId = 0;
+                CurrentUserHelper.CustomUserName = "";
+            }
+            ShowSimulatorUserPicker = false;
+        }
         public void OnOpenPolicyPicker()
         {
             ShowPolicyRecordPicker = true;
@@ -379,6 +400,37 @@ namespace Backend.ViewModels
             }
         }
 
+        #endregion
+
+        #region 審核動作事件
+        #region 送出
+        public async Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            await CurrentService.SendAsync(flowMasterAdapterModel);
+            dataGrid.RefreshGrid();
+        }
+        #endregion
+        #region 退回申請者
+        public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            await CurrentService.BackToSendAsync(flowMasterAdapterModel);
+            dataGrid.RefreshGrid();
+        }
+        #endregion
+        #region 同意
+        public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            await CurrentService.AgreeAsync(flowMasterAdapterModel);
+            dataGrid.RefreshGrid();
+        }
+        #endregion
+        #region 退回
+        public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            await CurrentService.DenyAsync(flowMasterAdapterModel);
+            dataGrid.RefreshGrid();
+        }
+        #endregion
         #endregion
         #endregion
     }

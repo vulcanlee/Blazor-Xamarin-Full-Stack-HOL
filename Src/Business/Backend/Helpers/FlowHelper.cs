@@ -37,7 +37,7 @@ namespace Backend.Helpers
             }
             return flowMasterAdapterModel;
         }
-        public static FlowUserAdapterModel GetName(this FlowUserAdapterModel flowUserAdapterModel)
+        public static FlowUserAdapterModel GetCompletionName(this FlowUserAdapterModel flowUserAdapterModel)
         {
             if(flowUserAdapterModel.Completion == false)
             {

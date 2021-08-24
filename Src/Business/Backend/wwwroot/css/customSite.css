@@ -92,6 +92,10 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.flow-acton-icon {
+    display: inline-block;
+}
+
 @media (max-width: 640px) {
 
     .navbar {

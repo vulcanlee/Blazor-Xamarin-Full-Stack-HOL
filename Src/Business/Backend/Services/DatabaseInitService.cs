@@ -339,7 +339,7 @@ namespace Backend.Services
                         Level = 3,
                         PolicyHeaderId = policyHeader.Id,
                         OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
+                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
                     },
                 };
             await context.BulkInsertAsync(policyDetail);

@@ -7,10 +7,24 @@
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Popups
+@using System.Security.Claims
 
 @inject FlowMasterViewModel ViewModel
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserHelper UserHelper
+
 @implements IRazorPage
 @implements IDataGrid
+
+@if (ViewModel.IsGod)
+{
+    <div>
+        <span>@ViewModel.CurrentUserHelper.CustomUserName</span>
+        <button
+                @onclick="ViewModel.OnOpenSimulatorUserPicker">選取使用者</button>
+    </div>
+}
 
 <div>
     <SfGrid @ref="Grid" TValue="FlowMasterAdapterModel"
@@ -52,7 +66,7 @@
             <GridColumn Field=@nameof(FlowMasterAdapterModel.PolicyHeaderName)
                         HeaderText="簽核政策" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
-            <GridColumn Field=@nameof(FlowMasterAdapterModel.StatusName) HeaderText="簽核" Width="180">
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.StatusName) HeaderText="簽核" Width="120">
                 <Template>
                     @{
                         var currentRec = (context as FlowMasterAdapterModel);
@@ -61,7 +75,8 @@
                             var tpa1 = $"tpa{currentRec.Id}";
                             var tpa2 = $"#{tpa1}";
                             <SfTooltip Target="@tpa2" Content="送出">
-                                <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary" />
+                                <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary"
+                                      @onclick="async () => { await ViewModel.SendAsync(currentRec); }" />
                             </SfTooltip>
                         }
                         else if (currentRec.Status == 99)
@@ -75,15 +90,29 @@
                             var tpc2 = $"#{tpc1}";
                             var tpd1 = $"tpa{currentRec.Id}";
                             var tpd2 = $"#{tpd1}";
-                            <SfTooltip Target="@tpb2" Content="退回申請者">
-                                <span id="@tpb1" class="mdi mdi-24px mdi-arrow-left-bold-circle mx-1 text-secondary" />
-                            </SfTooltip>
-                            <SfTooltip Target="@tpc2" Content="通過">
-                                <span id="@tpc1" class="mdi mdi-24px mdi-check-circle mx-1 text-success" />
-                            </SfTooltip>
-                            <SfTooltip Target="@tpd2" Content="退回">
-                                <span id="@tpd1" class="mdi mdi-24px mdi-close-circle text-danger" />
-                            </SfTooltip>
+                            <div>
+                                <span>
+                                    <SfTooltip Target="@tpb2" Content="退回申請者"
+                                               style="display: inline-block;"
+                                               @onclick="async () => { await ViewModel.BackToSendAsync(currentRec); }">
+                                        <span id="@tpb1" class="mdi mdi-24px mdi-arrow-left-bold-circle mr-1 text-secondary flow-acton-icon" />
+                                    </SfTooltip>
+                                </span>
+                                <span>
+                                    <SfTooltip Target="@tpc2" Content="同意"
+                                               style="display: inline-block;">
+                                        <span id="@tpc1" class="mdi mdi-24px mdi-check-circle mr-1 text-success flow-acton-icon"
+                                              @onclick="async () => { await ViewModel.AgreeAsync(currentRec); }" />
+                                    </SfTooltip>
+                                </span>
+                                <span>
+                                    <SfTooltip Target="@tpd2" Content="退回"
+                                               style="display: inline-block;">
+                                        <span id="@tpd1" class="mdi mdi-24px mdi-close-circle text-danger flow-acton-icon"
+                                              @onclick="async () => { await ViewModel.DenyAsync(currentRec); }" />
+                                    </SfTooltip>
+                                </span>
+                            </div>
                         }
                     }
                 </Template>
@@ -224,6 +253,9 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
+<MyUserPicker OpenPicker="ViewModel.ShowSimulatorUserPicker"
+              OnConfirmCallback="x=>ViewModel.OnPickerSimulatorUserCompletion(x)" />
+
 <MyUserPicker OpenPicker="ViewModel.ShowAontherRecordPicker"
               OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
 
@@ -262,6 +294,19 @@
         if (firstRender == true)
         {
             ViewModel.Setup(this, this);
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            if (user.Identity.IsAuthenticated)
+            {
+                #region 使用者已經登入了
+                var userAccount = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userAccount.ToLower() == MagicHelper.開發者帳號.ToString())
+                {
+                    ViewModel.IsGod = true;
+                    StateHasChanged();
+                }
+                #endregion
+            }
         }
         if (OnViewRender.HasDelegate)
         {

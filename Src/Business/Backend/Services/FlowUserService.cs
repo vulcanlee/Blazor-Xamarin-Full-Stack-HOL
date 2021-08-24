@@ -15,6 +15,7 @@ namespace Backend.Services
     using CommonDomain.DataModels;
     using CommonDomain.Enums;
     using System;
+    using Backend.Helpers;
 
     public class FlowUserService : IFlowUserService
     {
@@ -310,6 +311,7 @@ namespace Backend.Services
         Task OhterDependencyData(FlowUserAdapterModel data)
         {
             data.MyUserName = data.MyUser.Name;
+            data.GetCompletionName();
             return Task.FromResult(0);
         }
         #endregion
