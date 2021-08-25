@@ -345,6 +345,151 @@ namespace Backend.Services
             await context.BulkInsertAsync(policyDetail);
             #endregion
 
+            #region 稽核室簽核流程(都有副本)
+            policyHeader = new PolicyHeader()
+            {
+                Name = "稽核室簽核流程(都有副本)",
+                Enable = true,
+            };
+            await context.PolicyHeader.AddAsync(policyHeader);
+            await context.SaveChangesAsync();
+            policyDetail = new List<PolicyDetail>()
+                {
+                    new PolicyDetail()
+                    {
+                        Name = "主任",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "組長",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user1").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user11").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "副課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "經理",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "總經理",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
+                    },
+                };
+            await context.BulkInsertAsync(policyDetail);
+            #endregion
+
+            #region 稽核室簽核流程(有副本與會簽)
+            policyHeader = new PolicyHeader()
+            {
+                Name = "稽核室簽核流程(有副本與會簽)",
+                Enable = true,
+            };
+            await context.PolicyHeader.AddAsync(policyHeader);
+            await context.SaveChangesAsync();
+            policyDetail = new List<PolicyDetail>()
+                {
+                    new PolicyDetail()
+                    {
+                        Name = "主任",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "組長",
+                        Enable = true,
+                        Level = 1,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user1").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user11").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "總務課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user14").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "副課長",
+                        Enable = true,
+                        Level = 2,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "經理",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=false,
+                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
+                    },
+                    new PolicyDetail()
+                    {
+                        Name = "總經理",
+                        Enable = true,
+                        Level = 3,
+                        PolicyHeaderId = policyHeader.Id,
+                        OnlyCC=true,
+                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
+                    },
+                };
+            await context.BulkInsertAsync(policyDetail);
+            #endregion
+
             #region 異常問題簽核流程
             policyHeader = new PolicyHeader()
             {

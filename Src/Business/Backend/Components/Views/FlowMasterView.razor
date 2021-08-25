@@ -21,8 +21,9 @@
 {
     <div>
         <span>@ViewModel.CurrentUserHelper.CustomUserName</span>
-        <button
-                @onclick="ViewModel.OnOpenSimulatorUserPicker">選取使用者</button>
+        <button @onclick="ViewModel.OnOpenSimulatorUserPicker">
+            選取使用者
+        </button>
     </div>
 }
 
@@ -255,6 +256,9 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
+
+<FlowApproveView OpenPicker="ViewModel.ShowApproveOpinionDialog"
+              OnConfirmCallback="x=>ViewModel.OnShowApproveOpinionDialogCompletion(x)" />
 
 <MyUserPicker OpenPicker="ViewModel.ShowSimulatorUserPicker"
               OnConfirmCallback="x=>ViewModel.OnPickerSimulatorUserCompletion(x)" />

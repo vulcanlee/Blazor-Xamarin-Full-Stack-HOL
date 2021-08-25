@@ -17,6 +17,7 @@ namespace Backend.Services
     using System;
     using Backend.Helpers;
     using EFCore.BulkExtensions;
+    using Backend.Models;
 
     public class FlowMasterService : IFlowMasterService
     {
@@ -434,7 +435,8 @@ namespace Backend.Services
         #endregion
 
         #region 送出
-        public async Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        public async Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel,
+            ApproveOpinionModel approveOpinionModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -470,7 +472,8 @@ namespace Backend.Services
         #endregion
 
         #region 退回申請者
-        public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel,
+            ApproveOpinionModel approveOpinionModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -504,7 +507,8 @@ namespace Backend.Services
         #endregion
 
         #region 同意
-        public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel,
+            ApproveOpinionModel approveOpinionModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -564,7 +568,8 @@ namespace Backend.Services
         #endregion
 
         #region 退回
-        public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel,
+            ApproveOpinionModel approveOpinionModel)
         {
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -579,6 +584,7 @@ namespace Backend.Services
 
             flowMasterAdapterModel.ProcessLevel--;
             RecoveryCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
+            CopyUserAutoCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
 
             if (flowMasterAdapterModel.ProcessLevel > 0)
             {
@@ -596,7 +602,7 @@ namespace Backend.Services
 
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"使用者 {user.Name} 退回簽核申請", $"自動產生此紀錄", false);
-            
+
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);

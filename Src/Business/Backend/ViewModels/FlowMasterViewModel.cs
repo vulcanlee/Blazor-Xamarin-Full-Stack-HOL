@@ -16,6 +16,7 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
     using System;
+    using Backend.Models;
 
     public class FlowMasterViewModel
     {
@@ -86,6 +87,9 @@ namespace Backend.ViewModels
         public bool ShowAontherRecordPicker { get; set; } = false;
         public bool ShowSimulatorUserPicker { get; set; } = false;
         public bool ShowPolicyRecordPicker { get; set; } = false;
+        public bool ShowApproveOpinionDialog { get; set; } = false;
+        public FlowActionEnum FlowActionEnum { get; set; }
+        public FlowMasterAdapterModel FlowMasterAdapterModel { get; set; }
         /// <summary>
         /// 父參考物件的 Id 
         /// </summary>
@@ -344,7 +348,6 @@ namespace Backend.ViewModels
         {
             ShowAontherRecordPicker = true;
         }
-
         public void OnPickerCompletion(MyUserAdapterModel e)
         {
             if (e != null)
@@ -358,7 +361,6 @@ namespace Backend.ViewModels
         {
             ShowSimulatorUserPicker = true;
         }
-
         public void OnPickerSimulatorUserCompletion(MyUserAdapterModel e)
         {
             if (e != null)
@@ -377,7 +379,6 @@ namespace Backend.ViewModels
         {
             ShowPolicyRecordPicker = true;
         }
-
         public void OnPickerPolicyCompletion(PolicyHeaderAdapterModel e)
         {
             if (e != null)
@@ -386,6 +387,38 @@ namespace Backend.ViewModels
                 CurrentRecord.PolicyHeaderName = e.Name;
             }
             ShowPolicyRecordPicker = false;
+        }
+        public void OnShowApproveOpinionDialog()
+        {
+            ShowApproveOpinionDialog = true;
+        }
+        public async Task OnShowApproveOpinionDialogCompletion(ApproveOpinionModel e)
+        {
+            if (e != null)
+            {
+                switch (FlowActionEnum)
+                {
+                    case FlowActionEnum.Send:
+                        await CurrentService.SendAsync(FlowMasterAdapterModel, e);
+                        break;
+                    case FlowActionEnum.BackToSend:
+                        await CurrentService.BackToSendAsync(FlowMasterAdapterModel, e);
+                        break;
+                    case FlowActionEnum.Agree:
+                        await CurrentService.AgreeAsync(FlowMasterAdapterModel, e);
+                        break;
+                    case FlowActionEnum.Deny:
+                        await CurrentService.DenyAsync(FlowMasterAdapterModel, e);
+                        break;
+                    default:
+                        break;
+                }
+                dataGrid.RefreshGrid();
+            }
+            else
+            {
+            }
+            ShowApproveOpinionDialog = false;
         }
         #endregion
 
@@ -406,29 +439,37 @@ namespace Backend.ViewModels
         #region 送出
         public async Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
-            await CurrentService.SendAsync(flowMasterAdapterModel);
-            dataGrid.RefreshGrid();
+            OnShowApproveOpinionDialog();
+            await Task.Yield();
+            FlowMasterAdapterModel = flowMasterAdapterModel;
+            FlowActionEnum = FlowActionEnum.Send;
         }
         #endregion
         #region 退回申請者
         public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
-            await CurrentService.BackToSendAsync(flowMasterAdapterModel);
-            dataGrid.RefreshGrid();
+            OnShowApproveOpinionDialog();
+            await Task.Yield();
+            FlowMasterAdapterModel = flowMasterAdapterModel;
+            FlowActionEnum = FlowActionEnum.BackToSend;
         }
         #endregion
         #region 同意
         public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
-            await CurrentService.AgreeAsync(flowMasterAdapterModel);
-            dataGrid.RefreshGrid();
+            OnShowApproveOpinionDialog();
+            await Task.Yield();
+            FlowMasterAdapterModel = flowMasterAdapterModel;
+            FlowActionEnum = FlowActionEnum.Agree;
         }
         #endregion
         #region 退回
         public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
-            await CurrentService.DenyAsync(flowMasterAdapterModel);
-            dataGrid.RefreshGrid();
+            OnShowApproveOpinionDialog();
+            await Task.Yield();
+            FlowMasterAdapterModel = flowMasterAdapterModel;
+            FlowActionEnum = FlowActionEnum.Deny;
         }
         #endregion
         #endregion

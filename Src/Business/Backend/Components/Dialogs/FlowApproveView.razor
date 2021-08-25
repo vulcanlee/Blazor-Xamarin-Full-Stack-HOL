@@ -1,0 +1,78 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+
+<SfDialog @bind-Visible="@OpenPicker" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@DialogTitle</Header>
+        <Content>
+            <div class="mb-4">
+                <div class="">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">批示摘要</label>
+                            <SfTextBox @bind-Value="ApproveOpinionModel.Summary"
+                                       Placeholder="請輸 批示摘要" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">批示意見</label>
+                            <SfTextBox @bind-Value="ApproveOpinionModel.Comment"
+                                       Multiline="true"
+                                       Placeholder="請輸 批示意見" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </Content>
+        <FooterTemplate>
+            <button @onclick="@OnPickerOK" class='btn btn-primary'>確認</button>
+            <button @onclick="@OnPickerCancel" class='btn btn-secondary'>取消</button>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<MessageBox Height="400" Width="600" IsVisible="@ShowMessageBox"
+            Title="@MessageBoxTitle" Message="@MessageBoxBody"
+            Callback="x=>ShowMessageBox =false" />
+
+<DialogBackground />
+
+@code{
+    [Parameter]
+    public bool OpenPicker { get; set; } = false;
+    string DialogTitle = "填寫簽核意見";
+    [Parameter]
+    public EventCallback<ApproveOpinionModel> OnConfirmCallback { get; set; }
+    public bool ShowMessageBox { get; set; } = false;
+    public string MessageBoxBody { get; set; } = "";
+    public string MessageBoxTitle { get; set; } = "";
+    public ApproveOpinionModel ApproveOpinionModel { get; set; } = new ApproveOpinionModel();
+
+    protected override void OnInitialized()
+    {
+    }
+
+    public void ShowDialog()
+    {
+        OpenPicker = true;
+    }
+
+    async Task OnPickerOK()
+    {
+        await OnConfirmCallback.InvokeAsync(ApproveOpinionModel);
+    }
+    async Task OnPickerCancel()
+    {
+        await OnConfirmCallback.InvokeAsync(null);
+    }
+}
