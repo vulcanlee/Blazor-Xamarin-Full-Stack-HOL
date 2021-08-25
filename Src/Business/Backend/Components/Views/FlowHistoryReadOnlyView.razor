@@ -12,11 +12,12 @@
 
 <div>
     <SfGrid @ref="Grid" TValue="FlowHistoryAdapterModel"
-            AllowPaging="true"
+            AllowPaging="true" AllowTextWrap="true"
             Toolbar="ViewModel.Toolbaritems">
+        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <FlowHistoryAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
-                             HeaderID="@ViewModel.Header.Id"></FlowHistoryAdapter>
+                                HeaderID="@ViewModel.Header.Id"></FlowHistoryAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>

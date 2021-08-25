@@ -48,7 +48,8 @@ namespace Backend.Services
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
                 DataSource = DataSource
-                .Where(x => x.Content.Contains(dataRequest.Search));
+                .Where(x => x.Content.Contains(dataRequest.Search)||
+                x.PhaseCategory.Name.Contains(dataRequest.Search));
             }
             #endregion
 

@@ -15,7 +15,9 @@
                 <div class="">
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">批示摘要</label>
+                            <label class="control-label">批示摘要
+                            <span class="mdi mdi-24px mdi-magnify"
+                                  @onclick="OnSummaryPhaseMessageOpenPicker"></span></label>
                             <SfTextBox @bind-Value="ApproveOpinionModel.Summary"
                                        Placeholder="請輸 批示摘要" />
                         </div>
@@ -23,7 +25,11 @@
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">批示意見</label>
+                            <label class="control-label">
+                                批示意見
+                                <span class="mdi mdi-24px mdi-magnify"
+                                      @onclick="OnCommentPhaseMessageOpenPicker"></span>
+                            </label>
                             <SfTextBox @bind-Value="ApproveOpinionModel.Comment"
                                        Multiline="true"
                                        Placeholder="請輸 批示意見" />
@@ -41,6 +47,9 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
+<PhaseMessagePicker OpenPicker="ShowPhaseMessageDialog"
+                    OnConfirmCallback="x=>OnPhaseMessageCompletion(x)" />
+
 <MessageBox Height="400" Width="600" IsVisible="@ShowMessageBox"
             Title="@MessageBoxTitle" Message="@MessageBoxBody"
             Callback="x=>ShowMessageBox =false" />
@@ -57,12 +66,12 @@
         set
         {
             openPicker = value;
-            if(openPicker == true)
+            if (openPicker == true)
             {
                 ApproveOpinionModel = new ApproveOpinionModel();
                 //ApproveOpinionModel.Summary = "";
                 //ApproveOpinionModel.Comment = "";
-                }
+            }
         }
     }
 
@@ -73,6 +82,8 @@
     public string MessageBoxBody { get; set; } = "";
     public string MessageBoxTitle { get; set; } = "";
     public ApproveOpinionModel ApproveOpinionModel { get; set; } = new ApproveOpinionModel();
+    public bool ShowPhaseMessageDialog { get; set; } = false;
+    public bool IsSummary = false;
 
     protected override void OnInitialized()
     {
@@ -98,5 +109,33 @@
     async Task OnPickerCancel()
     {
         await OnConfirmCallback.InvokeAsync(null);
+    }
+
+    public void OnSummaryPhaseMessageOpenPicker()
+    {
+        ShowPhaseMessageDialog = true;
+        IsSummary = true;
+    }
+    public void OnCommentPhaseMessageOpenPicker()
+    {
+        ShowPhaseMessageDialog = true;
+        IsSummary = false;
+    }
+    public void OnPhaseMessageCompletion(PhaseMessageAdapterModel e)
+    {
+        if (e != null)
+        {
+            if(IsSummary == true)
+            {
+                ApproveOpinionModel.Summary += $" {e.Content}";
+                ApproveOpinionModel.Summary = ApproveOpinionModel.Summary.Trim();
+            }
+            else
+            {
+                ApproveOpinionModel.Comment += $" {e.Content}";
+                ApproveOpinionModel.Comment = ApproveOpinionModel.Comment.Trim();
+            }
+        }
+        ShowPhaseMessageDialog = false;
     }
 }
