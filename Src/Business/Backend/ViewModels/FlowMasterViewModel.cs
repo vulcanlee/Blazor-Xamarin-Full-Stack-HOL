@@ -24,13 +24,15 @@ namespace Backend.ViewModels
         public FlowMasterViewModel(IFlowMasterService CurrentService,
            BackendDBContext context, IMapper Mapper,
            UserHelper currentUserHelper,
-           TranscationResultHelper transcationResultHelper)
+           TranscationResultHelper transcationResultHelper,
+           CurrentUser currentUser)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
             CurrentUserHelper = currentUserHelper;
             TranscationResultHelper = transcationResultHelper;
+            CurrentUser = currentUser;
             FlowMasterSort.Initialization(SortConditions);
 
             Toolbaritems.Add(new ItemModel()
@@ -133,6 +135,7 @@ namespace Backend.ViewModels
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         public UserHelper CurrentUserHelper { get; }
         public TranscationResultHelper TranscationResultHelper { get; }
+        public CurrentUser CurrentUser { get; }
         #endregion
         #endregion
 
@@ -367,6 +370,8 @@ namespace Backend.ViewModels
             {
                 CurrentUserHelper.CustomUserId = e.Id;
                 CurrentUserHelper.CustomUserName = e.Name;
+                CurrentUser.MyUserId = e.Id;
+                dataGrid.RefreshGrid();
             }
             else
             {
@@ -445,6 +450,7 @@ namespace Backend.ViewModels
             FlowActionEnum = FlowActionEnum.Send;
         }
         #endregion
+
         #region 退回申請者
         public async Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
@@ -454,6 +460,7 @@ namespace Backend.ViewModels
             FlowActionEnum = FlowActionEnum.BackToSend;
         }
         #endregion
+
         #region 同意
         public async Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
@@ -463,6 +470,7 @@ namespace Backend.ViewModels
             FlowActionEnum = FlowActionEnum.Agree;
         }
         #endregion
+
         #region 退回
         public async Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
@@ -470,6 +478,18 @@ namespace Backend.ViewModels
             await Task.Yield();
             FlowMasterAdapterModel = flowMasterAdapterModel;
             FlowActionEnum = FlowActionEnum.Deny;
+        }
+        #endregion
+
+        #region 檢查該使用者可以做批示動作
+        public bool CheckFlowAction(FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            var result = Task.Run<bool>(async () =>
+            {
+                var result = await CurrentService.CheckUserShowActionAsync(flowMasterAdapterModel, CurrentUser);
+                return result;
+            }).Result;
+            return result;
         }
         #endregion
         #endregion

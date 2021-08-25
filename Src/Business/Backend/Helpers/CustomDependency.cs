@@ -56,6 +56,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 其他服務註冊
+            services.AddScoped<CurrentUser>();
             services.AddScoped<UserHelper>();
             services.AddSingleton<SystemBroadcast>();
             services.AddTransient<ImportDataHelper>();

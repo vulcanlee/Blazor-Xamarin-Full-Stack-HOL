@@ -30,7 +30,8 @@ namespace Backend.Services
 
         #region 建構式
         public FlowMasterService(BackendDBContext context, IMapper mapper,
-            ILogger<FlowMasterService> logger, UserHelper currentUserHelper)
+            ILogger<FlowMasterService> logger, UserHelper currentUserHelper,
+            CurrentUser currentUser)
         {
             this.context = context;
             Mapper = mapper;
@@ -327,12 +328,13 @@ namespace Backend.Services
         #endregion
 
         #region 其他服務方法
-        Task OhterDependencyData(FlowMasterAdapterModel data)
+        async Task OhterDependencyData(FlowMasterAdapterModel data)
         {
             data.MyUserName = data.MyUser.Name;
             data.PolicyHeaderName = data.PolicyHeader.Name;
             data.GetFlowName();
-            return Task.FromResult(0);
+            //await CheckUserShowActionAsync(data);
+            return;
         }
         #endregion
 
@@ -342,6 +344,18 @@ namespace Backend.Services
             GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
             var user = await UserHelper.GetCurrentUserAsync();
+
+            var flowUsers = await context.FlowUser
+                .Include(x => x.MyUser)
+                .OrderBy(x => x.Level)
+                .Where(x => x.FlowMasterId == flowMasterAdapterModel.Id)
+                .ToListAsync();
+            return (flowUsers, user);
+        }
+        public async Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)>
+            GetUsersDataByActionAsync(FlowMasterAdapterModel flowMasterAdapterModel, CurrentUser currentUser)
+        {
+            var user = await UserHelper.GetCurrentUserByShowFlowActionAsync(currentUser);
 
             var flowUsers = await context.FlowUser
                 .Include(x => x.MyUser)
@@ -442,7 +456,6 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
-
             (var flowUsers, var user) = await GetUsersDataAsync(flowMasterAdapterModel);
 
             if (user.Id != flowMasterAdapterModel.MyUserId)
@@ -462,7 +475,8 @@ namespace Backend.Services
             await context.BulkUpdateAsync(flowUsers);
             await UpdateAsync(flowMasterAdapterModel);
 
-            await AddHistoryRecord(user, flowMasterAdapterModel, $"使用者 {user.Name} 送出簽核申請", $"自動產生此紀錄", true);
+            await AddHistoryRecord(user, flowMasterAdapterModel,
+                $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", true);
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -497,7 +511,7 @@ namespace Backend.Services
             await UpdateAsync(flowMasterAdapterModel);
 
             await AddHistoryRecord(user, flowMasterAdapterModel,
-                $"使用者 {user.Name} 退回申請者簽核", $"自動產生此紀錄", false);
+                $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", false);
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -558,7 +572,7 @@ namespace Backend.Services
             await UpdateAsync(flowMasterAdapterModel);
 
             await AddHistoryRecord(user, flowMasterAdapterModel,
-                $"使用者 {user.Name} 同意簽核申請", $"自動產生此紀錄", true);
+                $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", true);
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -601,12 +615,35 @@ namespace Backend.Services
             await UpdateAsync(flowMasterAdapterModel);
 
             await AddHistoryRecord(user, flowMasterAdapterModel,
-                $"使用者 {user.Name} 退回簽核申請", $"自動產生此紀錄", false);
+                $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", false);
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
+        }
+        #endregion
+
+        #region 是否顯示批示按鈕
+        public async Task<bool> CheckUserShowActionAsync(FlowMasterAdapterModel flowMasterAdapterModel,
+            CurrentUser currentUser)
+        {
+            bool result = false;
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
+
+            (var flowUsers, var user) = await GetUsersDataByActionAsync(flowMasterAdapterModel, currentUser);
+
+            flowMasterAdapterModel.UserShowAction = CheckCurrentActionUser(flowUsers, user, flowMasterAdapterModel);
+
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
+
+            return flowMasterAdapterModel.UserShowAction;
         }
         #endregion
 

@@ -13,6 +13,16 @@ namespace Backend.AdapterModels
         public string MyUserName { get; set; }
         public int Level { get; set; }
         public bool OnlyCC { get; set; }
+        public string OnlyCCName
+        {
+            get
+            {
+                if (OnlyCC == true)
+                    return "知會";
+                else
+                    return "";
+            }
+        }
         /// <summary>
         /// 簽核流程已經完成
         /// </summary>

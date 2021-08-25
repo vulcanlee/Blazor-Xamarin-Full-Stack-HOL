@@ -10,6 +10,8 @@
 @using Prism.Events
 @inject IEventAggregator EventAggregator
 @inject ILogger<CheckUserStatusView> Logger
+@inject UserHelper UserHelper
+@inject CurrentUser CurrentUser
 @implements IDisposable
 
 @code {
@@ -26,10 +28,12 @@
             int CheckUserStateInterval = Convert.ToInt32(Configuration["CheckUserStateInterval"]);
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             user = authState.User;
+
             if (user.Identity.IsAuthenticated)
             {
                 #region 使用者已經登入了
                 cts = new CancellationTokenSource();
+                bool runningFirst = true;
                 CheckUserTask = Task.Run(async () =>
                 {
                     await InvokeAsync(async () =>
@@ -40,7 +44,11 @@
                             try
                             {
                                 var userId = Convert.ToInt32(user.FindFirst(ClaimTypes.Sid)?.Value);
+                                if (runningFirst == true)
+                                    CurrentUser.MyUserId = userId;
+                                runningFirst = false;
                                 myUser = await MyUserService.GetAsync(userId);
+                                CurrentUser.MyUserAdapterModel = myUser;
                                 if (myUser.Account.ToLower() != MagicHelper.開發者帳號)
                                 {
                                     if (myUser.Status == false)

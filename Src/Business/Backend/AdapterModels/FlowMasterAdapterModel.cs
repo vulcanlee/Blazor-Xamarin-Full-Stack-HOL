@@ -32,6 +32,7 @@ namespace Backend.AdapterModels
         public int PolicyHeaderId { get; set; }
         public virtual PolicyHeaderAdapterModel PolicyHeader { get; set; }
         public string PolicyHeaderName { get; set; }
+        public bool UserShowAction { get; set; }
 
         public FlowMasterAdapterModel Clone()
         {

@@ -24,6 +24,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> BeforeDeleteCheckAsync(FlowMasterAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeUpdateCheckAsync(FlowMasterAdapterModel paraObject);
         bool CheckCurrentActionUser(List<FlowUser> flowUsers, MyUserAdapterModel myUserAdapterModel, FlowMasterAdapterModel flowMasterAdapterModel);
+        Task<bool> CheckUserShowActionAsync(FlowMasterAdapterModel flowMasterAdapterModel, CurrentUser currentUser);
         void CopyUserAutoCompletion(List<FlowUser> flowUsers, int processLevel);
         Task<VerifyRecordResult> DeleteAsync(int id);
         Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel, ApproveOpinionModel approveOpinionModel);
@@ -31,6 +32,7 @@ namespace Backend.Services
         Task<DataRequestResult<FlowMasterAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<FlowMasterAdapterModel> GetAsync(int id);
         Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)> GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel);
+        Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)> GetUsersDataByActionAsync(FlowMasterAdapterModel flowMasterAdapterModel, CurrentUser currentUser);
         void RecoveryCompletion(List<FlowUser> flowUsers, int processLevel);
         Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel, ApproveOpinionModel approveOpinionModel);
         Task<VerifyRecordResult> UpdateAsync(FlowMasterAdapterModel paraObject);

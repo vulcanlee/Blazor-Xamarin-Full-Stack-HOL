@@ -48,8 +48,24 @@
 <DialogBackground />
 
 @code{
+    private bool openPicker = false;
+
     [Parameter]
-    public bool OpenPicker { get; set; } = false;
+    public bool OpenPicker
+    {
+        get { return openPicker; }
+        set
+        {
+            openPicker = value;
+            if(openPicker == true)
+            {
+                ApproveOpinionModel = new ApproveOpinionModel();
+                //ApproveOpinionModel.Summary = "";
+                //ApproveOpinionModel.Comment = "";
+                }
+        }
+    }
+
     string DialogTitle = "填寫簽核意見";
     [Parameter]
     public EventCallback<ApproveOpinionModel> OnConfirmCallback { get; set; }
@@ -69,6 +85,14 @@
 
     async Task OnPickerOK()
     {
+        if (string.IsNullOrEmpty(ApproveOpinionModel.Summary))
+        {
+            ApproveOpinionModel.Summary = "無 批示摘要";
+        }
+        if (string.IsNullOrEmpty(ApproveOpinionModel.Comment))
+        {
+            ApproveOpinionModel.Comment = "無 批示意見";
+        }
         await OnConfirmCallback.InvokeAsync(ApproveOpinionModel);
     }
     async Task OnPickerCancel()

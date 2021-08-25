@@ -13,6 +13,7 @@
 @inject FlowMasterViewModel ViewModel
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserHelper UserHelper
+@inject CurrentUser CurrentUser
 
 @implements IRazorPage
 @implements IDataGrid
@@ -21,7 +22,7 @@
 {
     <div>
         <span>@ViewModel.CurrentUserHelper.CustomUserName</span>
-        <button @onclick="ViewModel.OnOpenSimulatorUserPicker">
+        <button class="btn btn-danger" @onclick="ViewModel.OnOpenSimulatorUserPicker">
             選取使用者
         </button>
     </div>
@@ -74,49 +75,55 @@
                 <Template>
                     @{
                         var currentRec = (context as FlowMasterAdapterModel);
-                        if (currentRec.Status == 0)
+                        if (ViewModel.CheckFlowAction(currentRec))
                         {
-                            var tpa1 = $"tpa{currentRec.Id}";
-                            var tpa2 = $"#{tpa1}";
-                            <SfTooltip Target="@tpa2" Content="送出">
-                                <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary"
-                                      @onclick="async () => { await ViewModel.SendAsync(currentRec); }" />
-                            </SfTooltip>
-                        }
-                        else if (currentRec.Status == 99)
-                        {
-                        }
-                        else
-                        {
-                            var tpb1 = $"tpa{currentRec.Id}";
-                            var tpb2 = $"#{tpb1}";
-                            var tpc1 = $"tpa{currentRec.Id}";
-                            var tpc2 = $"#{tpc1}";
-                            var tpd1 = $"tpa{currentRec.Id}";
-                            var tpd2 = $"#{tpd1}";
-                            <div>
-                                <span>
-                                    <SfTooltip Target="@tpb2" Content="退回申請者"
-                                               style="display: inline-block;"
-                                               @onclick="async () => { await ViewModel.BackToSendAsync(currentRec); }">
-                                        <span id="@tpb1" class="mdi mdi-24px mdi-arrow-left-bold-circle mr-1 text-secondary flow-acton-icon" />
+                            if (currentRec.UserShowAction == true)
+                            {
+                                if (currentRec.Status == 0)
+                                {
+                                    var tpa1 = $"tpa{currentRec.Id}";
+                                    var tpa2 = $"#{tpa1}";
+                                    <SfTooltip Target="@tpa2" Content="送出">
+                                        <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary"
+                                              @onclick="async () => { await ViewModel.SendAsync(currentRec); }" />
                                     </SfTooltip>
-                                </span>
-                                <span>
-                                    <SfTooltip Target="@tpc2" Content="同意"
-                                               style="display: inline-block;">
-                                        <span id="@tpc1" class="mdi mdi-24px mdi-check-circle mr-1 text-success flow-acton-icon"
-                                              @onclick="async () => { await ViewModel.AgreeAsync(currentRec); }" />
-                                    </SfTooltip>
-                                </span>
-                                <span>
-                                    <SfTooltip Target="@tpd2" Content="退回"
-                                               style="display: inline-block;">
-                                        <span id="@tpd1" class="mdi mdi-24px mdi-close-circle text-danger flow-acton-icon"
-                                              @onclick="async () => { await ViewModel.DenyAsync(currentRec); }" />
-                                    </SfTooltip>
-                                </span>
-                            </div>
+                                }
+                                else if (currentRec.Status == 99)
+                                {
+                                }
+                                else
+                                {
+                                    var tpb1 = $"tpa{currentRec.Id}";
+                                    var tpb2 = $"#{tpb1}";
+                                    var tpc1 = $"tpa{currentRec.Id}";
+                                    var tpc2 = $"#{tpc1}";
+                                    var tpd1 = $"tpa{currentRec.Id}";
+                                    var tpd2 = $"#{tpd1}";
+                                    <div>
+                                        <span>
+                                            <SfTooltip Target="@tpb2" Content="退回申請者"
+                                                       style="display: inline-block;"
+                                                       @onclick="async () => { await ViewModel.BackToSendAsync(currentRec); }">
+                                                <span id="@tpb1" class="mdi mdi-24px mdi-arrow-left-bold-circle mr-1 text-secondary flow-acton-icon" />
+                                            </SfTooltip>
+                                        </span>
+                                        <span>
+                                            <SfTooltip Target="@tpc2" Content="同意"
+                                                       style="display: inline-block;">
+                                                <span id="@tpc1" class="mdi mdi-24px mdi-check-circle mr-1 text-success flow-acton-icon"
+                                                      @onclick="async () => { await ViewModel.AgreeAsync(currentRec); }" />
+                                            </SfTooltip>
+                                        </span>
+                                        <span>
+                                            <SfTooltip Target="@tpd2" Content="退回"
+                                                       style="display: inline-block;">
+                                                <span id="@tpd1" class="mdi mdi-24px mdi-close-circle text-danger flow-acton-icon"
+                                                      @onclick="async () => { await ViewModel.DenyAsync(currentRec); }" />
+                                            </SfTooltip>
+                                        </span>
+                                    </div>
+                                }
+                            }
                         }
                     }
                 </Template>
