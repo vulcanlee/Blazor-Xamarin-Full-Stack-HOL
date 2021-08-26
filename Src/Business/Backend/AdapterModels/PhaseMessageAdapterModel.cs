@@ -11,6 +11,10 @@ namespace Backend.AdapterModels
         /// 排序編號
         /// </summary>
         public int OrderNumber { get; set; }
+        /// <summary>
+        /// 代碼
+        /// </summary>
+        public string Code { get; set; }
         [Required(ErrorMessage = "內容 不可為空白")]
         /// <summary>
         /// 內容

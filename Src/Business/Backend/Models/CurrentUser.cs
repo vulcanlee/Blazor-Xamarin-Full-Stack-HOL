@@ -9,10 +9,11 @@ namespace Backend.Models
 {
     public class CurrentUser
     {
-        public MyUserAdapterModel MyUserAdapterModel { get; set; }
+        public MyUserAdapterModel LoginMyUserAdapterModel { get; set; }
+        public MyUserAdapterModel SimulatorMyUserAdapterModel { get; set; }
         private int myUserId;
 
-        public int MyUserId
+        public int CurrentMyUserId
         {
             get
             {

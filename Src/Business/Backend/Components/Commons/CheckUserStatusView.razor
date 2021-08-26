@@ -44,11 +44,13 @@
                             try
                             {
                                 var userId = Convert.ToInt32(user.FindFirst(ClaimTypes.Sid)?.Value);
-                                if (runningFirst == true)
-                                    CurrentUser.MyUserId = userId;
-                                runningFirst = false;
                                 myUser = await MyUserService.GetAsync(userId);
-                                CurrentUser.MyUserAdapterModel = myUser;
+                                if (runningFirst == true)
+                                {
+                                    CurrentUser.CurrentMyUserId = userId;
+                                    CurrentUser.LoginMyUserAdapterModel = myUser;
+                                }
+                                runningFirst = false;
                                 if (myUser.Account.ToLower() != MagicHelper.開發者帳號)
                                 {
                                     if (myUser.Status == false)

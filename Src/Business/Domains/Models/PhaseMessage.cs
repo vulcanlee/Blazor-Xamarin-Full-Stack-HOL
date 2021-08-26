@@ -17,10 +17,14 @@ namespace Domains.Models
         /// 排序編號
         /// </summary>
         public int OrderNumber { get; set; }
-        [Required(ErrorMessage = "內容 不可為空白")]
+        /// <summary>
+        /// 代碼
+        /// </summary>
+        public string Code { get; set; }
         /// <summary>
         /// 內容
         /// </summary>
+        [Required(ErrorMessage = "內容 不可為空白")]
         public string Content { get; set; }
         /// <summary>
         /// 啟用

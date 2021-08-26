@@ -63,17 +63,18 @@ namespace Backend.Helpers
         public async Task<MyUserAdapterModel> GetCurrentUserByShowFlowActionAsync(CurrentUser currentUser)
         {
             #region  取得現在登入使用者資訊
+            await Task.Yield();
             if (CustomUserId != 0)
             {
-                var myUser = await MyUserService.GetAsync(CustomUserId);
-                return myUser;
+                //var myUser = await MyUserService.GetAsync(CustomUserId);
+                //return myUser;
+                return currentUser.SimulatorMyUserAdapterModel;
             }
             else
             {
-                return currentUser.MyUserAdapterModel;
+                return currentUser.LoginMyUserAdapterModel;
             }
             #endregion
-
         }
     }
 }

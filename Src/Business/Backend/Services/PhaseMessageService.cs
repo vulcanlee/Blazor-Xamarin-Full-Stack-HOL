@@ -49,7 +49,8 @@ namespace Backend.Services
             {
                 DataSource = DataSource
                 .Where(x => x.Content.Contains(dataRequest.Search)||
-                x.PhaseCategory.Name.Contains(dataRequest.Search));
+                x.PhaseCategory.Name.Contains(dataRequest.Search) ||
+                x.Code.Contains(dataRequest.Search));
             }
             #endregion
 
@@ -111,7 +112,8 @@ namespace Backend.Services
             {
                 DataSource = DataSource
                 .Where(x => x.Content.Contains(dataRequest.Search) ||
-                x.PhaseCategory.Name.Contains(dataRequest.Search));
+                x.PhaseCategory.Name.Contains(dataRequest.Search) ||
+                x.Code.Contains(dataRequest.Search));
             }
             #endregion
 

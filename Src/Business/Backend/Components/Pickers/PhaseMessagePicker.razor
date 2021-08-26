@@ -13,8 +13,9 @@
         <Header>@DialogTitle</Header>
         <Content>
             <SfGrid @ref="GridDialog" TValue="PhaseMessageAdapterModel"
-                    AllowPaging="true"
+                    AllowPaging="true" AllowTextWrap="true"
                     Toolbar="Toolbaritems">
+                <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
                 <SfToolbar>
                     <ToolbarItems>
                         <ToolbarItem Type="ItemType.Input">
@@ -43,6 +44,8 @@
                 <GridColumns>
                     <GridColumn Field=@nameof(PhaseMessageAdapterModel.PhaseCategoryName)
                                 HeaderText="分類" />
+                    <GridColumn Field=@nameof(PhaseMessageAdapterModel.Code)
+                                HeaderText="代碼" />
                     <GridColumn Field=@nameof(PhaseMessageAdapterModel.Content)
                                 HeaderText="片語文字" />
                     <GridColumn Field=@nameof(PhaseMessageAdapterModel.EnableName)

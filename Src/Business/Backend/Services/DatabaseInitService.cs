@@ -176,6 +176,7 @@ namespace Backend.Services
                     {
                         Content = "做得很好，繼續努力",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -183,6 +184,7 @@ namespace Backend.Services
                     {
                         Content = "用來形容情緒不會表露出來的人",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -190,6 +192,7 @@ namespace Backend.Services
                     {
                         Content = "像魚一樣的喝，表示喝很多，尤其指喝很多酒",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -197,6 +200,7 @@ namespace Backend.Services
                     {
                         Content = "意指非常重要、有權力或是具有影響力的人",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -219,6 +223,7 @@ namespace Backend.Services
                     {
                         Content = "加速意見溝通",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -226,6 +231,7 @@ namespace Backend.Services
                     {
                         Content = "○○○○案，簽會意見綜合說明如下，請鑒核",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -233,6 +239,7 @@ namespace Backend.Services
                     {
                         Content = "會簽意見一略以，○○○○○○○○○…",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -240,6 +247,7 @@ namespace Backend.Services
                     {
                         Content = "會簽意見二略以，○○○○○○○○○…",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -247,6 +255,7 @@ namespace Backend.Services
                     {
                         Content = "「是否允當」?",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -254,6 +263,7 @@ namespace Backend.Services
                     {
                         Content = "……因故不克擔任…，予以改派…",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -276,6 +286,7 @@ namespace Backend.Services
                     {
                         Content = "可以嗎?",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },
@@ -283,6 +294,7 @@ namespace Backend.Services
                     {
                         Content = "有關本校進修部學生向 鈞部「部長信箱」反映課程標準一案，本校已查明原委，謹檢陳查核報告乙份（如附件），敬請 鑒核。",
                         Enable = true,
+                        Code = cc.ToString("D5"),
                         OrderNumber = cc++,
                         PhaseCategoryId = phaseCategory.Id,
                     },

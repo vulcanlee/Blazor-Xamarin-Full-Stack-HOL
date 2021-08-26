@@ -370,13 +370,16 @@ namespace Backend.ViewModels
             {
                 CurrentUserHelper.CustomUserId = e.Id;
                 CurrentUserHelper.CustomUserName = e.Name;
-                CurrentUser.MyUserId = e.Id;
+                CurrentUser.CurrentMyUserId = e.Id;
+                CurrentUser.SimulatorMyUserAdapterModel = e;
                 dataGrid.RefreshGrid();
             }
             else
             {
                 CurrentUserHelper.CustomUserId = 0;
                 CurrentUserHelper.CustomUserName = "";
+                CurrentUser.CurrentMyUserId = 0;
+                CurrentUser.SimulatorMyUserAdapterModel = null;
             }
             ShowSimulatorUserPicker = false;
         }

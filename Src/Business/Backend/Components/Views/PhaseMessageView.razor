@@ -13,8 +13,9 @@
 
 <div>
     <SfGrid @ref="Grid" TValue="PhaseMessageAdapterModel"
-            AllowPaging="true"
+            AllowPaging="true" AllowTextWrap="true"
             Toolbar="ViewModel.Toolbaritems">
+        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <PhaseMessageAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
                                  HeaderID="@ViewModel.Header.Id"></PhaseMessageAdapter>
@@ -37,6 +38,8 @@
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
+            <GridColumn Field=@nameof(PhaseMessageAdapterModel.Code)
+                        HeaderText="代碼" />
             <GridColumn Field=@nameof(PhaseMessageAdapterModel.Content)
                         HeaderText="片語文字" />
             <GridColumn Field=@nameof(PhaseMessageAdapterModel.Enable)
@@ -85,6 +88,16 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">名稱</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Code"
+                                       Multiline="true"
+                                       Placeholder="代碼" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Code)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">名稱</label>
                             <SfTextBox @bind-Value="ViewModel.CurrentRecord.Content"
                                        Multiline="true"
                                        Placeholder="請輸入商品名稱" />
@@ -108,7 +121,8 @@
                         </div>
                     </div>
 
-                </div>            </EditForm>
+                </div>        
+            </EditForm>
         </Content>
         <FooterTemplate>
             <div>
