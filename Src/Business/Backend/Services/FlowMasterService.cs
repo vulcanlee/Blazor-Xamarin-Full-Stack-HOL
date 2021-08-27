@@ -339,6 +339,21 @@ namespace Backend.Services
         #endregion
 
         #region 產生收件匣紀錄
+        public async Task NotifyInboxUsers(List<FlowUser> flowUsers,
+            FlowMasterAdapterModel flowMasterAdapterModel,int level)
+        {
+
+            #region 產生收件匣紀錄
+            var nextFlowUser = flowUsers
+                .Where(x => x.Level == level);
+            foreach (var item in nextFlowUser)
+            {
+                var notifyUser = Mapper.Map<MyUserAdapterModel>(item.MyUser);
+                var isCC = item.OnlyCC;
+                await AddInboxRecord(flowMasterAdapterModel, notifyUser, isCC);
+            }
+            #endregion
+        }
         public async Task AddInboxRecord(FlowMasterAdapterModel paraObject,
             MyUserAdapterModel myUser, bool isCC)
         {
@@ -488,7 +503,6 @@ namespace Backend.Services
             flowUser.Completion = true;
             flowMasterAdapterModel.ProcessLevel = 1;
             flowMasterAdapterModel.Status = 1;
-            int NextProcessLevel = flowMasterAdapterModel.ProcessLevel;
 
             CopyUserAutoCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
 
@@ -500,14 +514,9 @@ namespace Backend.Services
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", true);
 
-            var nextFlowUser = flowUsers
-                .Where(x => x.Level == NextProcessLevel);
-            foreach (var item in nextFlowUser)
-            {
-                var notifyUser = Mapper.Map<MyUserAdapterModel>(item.MyUser);
-                var isCC = !item.OnlyCC;
-                await AddInboxRecord(flowMasterAdapterModel, notifyUser, isCC);
-            }
+            #region 產生收件匣紀錄
+            await NotifyInboxUsers(flowUsers, flowMasterAdapterModel, flowMasterAdapterModel.ProcessLevel);
+            #endregion
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
@@ -544,6 +553,10 @@ namespace Backend.Services
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", false);
 
+            #region 產生收件匣紀錄
+            await NotifyInboxUsers(flowUsers, flowMasterAdapterModel, flowMasterAdapterModel.ProcessLevel);
+            #endregion
+
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);
@@ -560,6 +573,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<FlowHistory>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
 
+            var thisLevel = flowMasterAdapterModel.ProcessLevel;
             (var flowUsers, var user) = await GetUsersDataAsync(flowMasterAdapterModel);
 
             if (CheckCurrentActionUser(flowUsers, user, flowMasterAdapterModel) == false) return;
@@ -605,6 +619,14 @@ namespace Backend.Services
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", true);
 
+            if(thisLevel != flowMasterAdapterModel.ProcessLevel &&
+                flowMasterAdapterModel.Status != 99)
+            {
+                #region 產生收件匣紀錄
+                await NotifyInboxUsers(flowUsers, flowMasterAdapterModel, flowMasterAdapterModel.ProcessLevel);
+                #endregion
+            }
+
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);
@@ -647,6 +669,10 @@ namespace Backend.Services
 
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", false);
+
+            #region 產生收件匣紀錄
+            await NotifyInboxUsers(flowUsers, flowMasterAdapterModel, flowMasterAdapterModel.ProcessLevel);
+            #endregion
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
