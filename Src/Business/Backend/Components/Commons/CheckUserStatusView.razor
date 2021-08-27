@@ -44,6 +44,7 @@
                             try
                             {
                                 var userId = Convert.ToInt32(user.FindFirst(ClaimTypes.Sid)?.Value);
+                                var LastLoginTime = Convert.ToInt64(user.FindFirst(MagicHelper.LastLoginTimeClaim)?.Value);
                                 myUser = await MyUserService.GetAsync(userId);
                                 if (runningFirst == true)
                                 {
@@ -53,6 +54,7 @@
                                 runningFirst = false;
                                 if (myUser.Account.ToLower() != MagicHelper.開發者帳號)
                                 {
+                                    #region 檢查停用狀態與強制登出
                                     if (myUser.Status == false)
                                     {
                                         ToastModel.Title = "重要通知";
@@ -70,6 +72,27 @@
                                         IsRunning = false;
                                         continue;
                                     }
+                                    #endregion
+
+                                    #region 檢查是否達到強制登出條件，則需要進行強制登出
+                                    if (myUser.ForceLogoutDatetime.Ticks > LastLoginTime)
+                                    {
+                                        ToastModel.Title = "重要通知";
+                                        ToastModel.Content = "使用者需要重新進行身分驗證，5秒鐘後，將會強制登出";
+                                        EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+                                        {
+                                            Title = "重要通知",
+                                            Content = "使用者需要重新進行身分驗證，5秒鐘後，將會強制登出",
+                                            Timeout = 5000,
+                                            Color = "Green",
+
+                                        });
+                                        await Task.Delay(5000);
+                                        NavigationManager.NavigateTo("/Logout", true);
+                                        IsRunning = false;
+                                        continue;
+                                    }
+                                    #endregion
                                 }
                                 await Task.Delay(CheckUserStateInterval, cts.Token);
                             }

@@ -286,6 +286,13 @@ namespace Backend.ViewModels
             dataGrid.RefreshGrid();
         }
         #endregion
+
+        #region 使用者的政策調整
+        public void OnResetForceLogoutDatetime()
+        {
+            CurrentRecord.ForceLogoutDatetime = DateTime.Now;
+        }
+        #endregion
         #endregion
     }
 }

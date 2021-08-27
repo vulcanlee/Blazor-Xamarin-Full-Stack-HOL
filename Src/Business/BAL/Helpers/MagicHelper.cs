@@ -23,6 +23,7 @@ namespace BAL.Helpers
         public static readonly string AgentUserMode = "Agent";
         public static readonly int GridPageSize = 12;
         public static readonly string MenuRoleClaim = "MenuRole";
+        public static readonly string LastLoginTimeClaim = "LastLoginTime";
         public static readonly string SystemAdminClaim = "Administrator";
         #endregion
 

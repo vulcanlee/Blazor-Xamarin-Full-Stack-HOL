@@ -118,11 +118,15 @@
 
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">強制登出期限</label>
+                            <label class="control-label">
+                                強制登出期限
+                                <span class="mdi mdi-24px mdi-alarm-snooze"
+                                      @onclick="ViewModel.OnResetForceLogoutDatetime"></span>
+                            </label>
                             <SfDateTimePicker TValue="DateTime"
-                                          @bind-Value="ViewModel.CurrentRecord.ForceLogoutDatetime"
-                                          Format="yyyy-MM-dd HH:mm:ss"
-                                          Placeholder="請選擇一個日期" />
+                                              @bind-Value="ViewModel.CurrentRecord.ForceLogoutDatetime"
+                                              Format="yyyy-MM-dd HH:mm:ss"
+                                              Placeholder="請選擇一個日期" />
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.ForceLogoutDatetime)" />
                         </div>
                     </div>

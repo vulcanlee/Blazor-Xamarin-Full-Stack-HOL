@@ -144,6 +144,7 @@ namespace Backend.Pages
                     new Claim(ClaimTypes.Sid, user.Id.ToString()),
                     new Claim(MagicHelper.MenuRoleClaim, user.MenuRoleId.ToString()),
                     new Claim(MagicHelper.MenuRoleNameClaim, user.MenuRole?.Name),
+                    new Claim(MagicHelper.LastLoginTimeClaim, DateTime.Now.Ticks.ToString())
                 };
 
                 #region 若為 開發人員，加入 開發人員 專屬的角色
