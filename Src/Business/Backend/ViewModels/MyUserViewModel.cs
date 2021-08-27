@@ -102,6 +102,9 @@ namespace Backend.ViewModels
                 EditRecordDialogTitle = "新增紀錄";
                 isNewRecordMode = true;
                 IsShowEditRecord = true;
+                CurrentRecord.ForceLogoutDatetime = DateTime.Now;
+                CurrentRecord.ForceChangePassword = true;
+                CurrentRecord.ForceChangePasswordDatetime = DateTime.Now;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {

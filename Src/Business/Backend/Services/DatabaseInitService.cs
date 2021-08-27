@@ -607,6 +607,7 @@ namespace Backend.Services
                 Salt = Guid.NewGuid().ToString(),
                 ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                 ForceChangePassword = false,
+                ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
             };
 
             myUser.Salt = Guid.NewGuid().ToString();
@@ -628,6 +629,7 @@ namespace Backend.Services
                 Salt = Guid.NewGuid().ToString(),
                 ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                 ForceChangePassword = false,
+                ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
             };
             var adminRawPassword = "123";
             adminMyUser.Password =
@@ -655,6 +657,7 @@ namespace Backend.Services
                         Salt = Guid.NewGuid().ToString(),
                         ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                         ForceChangePassword = false,
+                        ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
                     };
                     var userRawPassword = "123";
                     itemMyUser.Password =
