@@ -14,6 +14,7 @@ namespace Backend.AdapterModels
         public string Name { get; set; }
         public string Salt { get; set; }
         public bool Status { get; set; }
+        public DateTime ForceLogoutDatetime { get; set; }
         public int MenuRoleId { get; set; }
         public string MenuRoleName { get; set; }
         public virtual MenuRoleAdapterModel MenuRole { get; set; }

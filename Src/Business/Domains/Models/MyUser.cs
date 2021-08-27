@@ -25,6 +25,7 @@ namespace Domains.Models
         public string Name { get; set; }
         public string Salt { get; set; }
         public bool Status { get; set; }
+        public DateTime ForceLogoutDatetime { get; set; }
         public int MenuRoleId { get; set; }
         public virtual MenuRole MenuRole { get; set; }
 

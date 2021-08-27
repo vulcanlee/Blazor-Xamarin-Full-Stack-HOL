@@ -6,6 +6,7 @@
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Calendars
 
 @inject MyUserViewModel ViewModel
 @implements IRazorPage
@@ -117,6 +118,17 @@
 
                     <div class="form-row">
                         <div class="form-group col">
+                            <label class="control-label">強制登出期限</label>
+                            <SfDateTimePicker TValue="DateTime"
+                                          @bind-Value="ViewModel.CurrentRecord.ForceLogoutDatetime"
+                                          Format="yyyy-MM-dd HH:mm:ss"
+                                          Placeholder="請選擇一個日期" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.ForceLogoutDatetime)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
                             <label class="control-label">啟用</label>
                             <SfCheckBox @bind-Checked="@ViewModel.CurrentRecord.Status" />
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.Status)" />
@@ -149,7 +161,7 @@
 </SfDialog>
 
 <MenuRolePicker OpenPicker="ViewModel.ShowAontherRecordPicker"
-              OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
+                OnConfirmCallback="x=>ViewModel.OnPickerCompletion(x)" />
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"

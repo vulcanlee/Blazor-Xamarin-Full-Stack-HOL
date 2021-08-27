@@ -604,7 +604,8 @@ namespace Backend.Services
                 Name = $"開發者",
                 MenuRoleId = menuRole開發者.Id,
                 Status = true,
-                Salt = Guid.NewGuid().ToString()
+                Salt = Guid.NewGuid().ToString(),
+                ForceLogoutDatetime = DateTime.Now.AddDays(-1),
             };
 
             myUser.Salt = Guid.NewGuid().ToString();
@@ -623,7 +624,8 @@ namespace Backend.Services
                 Name = $"系統管理員 {MagicHelper.系統管理員帳號}",
                 MenuRoleId = menuRole系統管理員.Id,
                 Status = true,
-                Salt = Guid.NewGuid().ToString()
+                Salt = Guid.NewGuid().ToString(),
+                ForceLogoutDatetime = DateTime.Now.AddDays(-1),
             };
             var adminRawPassword = "123";
             adminMyUser.Password =
@@ -648,7 +650,8 @@ namespace Backend.Services
                         Name = $"使用者 {item}",
                         MenuRoleId = menuRole使用者.Id,
                         Status = true,
-                        Salt = Guid.NewGuid().ToString()
+                        Salt = Guid.NewGuid().ToString(),
+                        ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                     };
                     var userRawPassword = "123";
                     itemMyUser.Password =
