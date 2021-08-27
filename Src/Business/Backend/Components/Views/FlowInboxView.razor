@@ -49,7 +49,7 @@
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(FlowInboxAdapterModel.IsRead) HeaderText="讀取" Width="50">
+            <GridColumn Field=@nameof(FlowInboxAdapterModel.IsRead) HeaderText="" Width="50">
                 <Template>
                     @{
                         var currentRec = (context as FlowInboxAdapterModel);
@@ -199,20 +199,6 @@
                 ViewModel.IsGod = true;
                 StateHasChanged();
             }
-
-            //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            //var user = authState.User;
-            //if (user.Identity.IsAuthenticated)
-            //{
-            //    #region 使用者已經登入了
-            //    var userAccount = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //    if (userAccount.ToLower() == MagicHelper.開發者帳號.ToString())
-            //    {
-            //        ViewModel.IsGod = true;
-            //        StateHasChanged();
-            //    }
-            //    #endregion
-            //}
         }
         if (OnViewRender.HasDelegate)
         {

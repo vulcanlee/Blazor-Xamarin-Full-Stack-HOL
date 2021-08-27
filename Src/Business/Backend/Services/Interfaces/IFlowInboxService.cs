@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
 using Backend.Helpers;
+using Backend.Models;
 using CommonDomain.DataModels;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> BeforeDeleteCheckAsync(FlowInboxAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeUpdateCheckAsync(FlowInboxAdapterModel paraObject);
         Task<VerifyRecordResult> DeleteAsync(int id);
-        Task<DataRequestResult<FlowInboxAdapterModel>> GetAsync(DataRequest dataRequest);
+        Task<DataRequestResult<FlowInboxAdapterModel>> GetAsync(DataRequest dataRequest, UserHelper UserHelper, CurrentUser CurrentUser);
         Task<FlowInboxAdapterModel> GetAsync(int id);
         Task MailReadedAsync(FlowInboxAdapterModel flowInboxAdapterModel);
         Task<VerifyRecordResult> UpdateAsync(FlowInboxAdapterModel paraObject);

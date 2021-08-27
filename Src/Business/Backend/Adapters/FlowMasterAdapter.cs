@@ -9,10 +9,17 @@
     using Newtonsoft.Json;
     using Syncfusion.Blazor;
     using Syncfusion.Blazor.Data;
+    using Backend.Helpers;
+    using Backend.Models;
+
     public partial class FlowMasterAdapter : DataAdaptor<IFlowMasterService>
     {
         [Parameter]
         public SortCondition CurrentSortCondition { get; set; }
+        [Inject]
+        public UserHelper UserHelper { get; set; }
+        [Inject]
+        public CurrentUser CurrentUser { get; set; }
 
         public override async Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string key = null)
         {
@@ -34,7 +41,8 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<FlowMasterAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
+            DataRequestResult<FlowMasterAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest,
+                UserHelper, CurrentUser);
             var item = dataManagerRequest.RequiresCounts
                 ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
                 : (object)adaptorModelObjects.Result;

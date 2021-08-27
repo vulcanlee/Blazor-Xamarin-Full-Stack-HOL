@@ -41,7 +41,8 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
-        public async Task<DataRequestResult<FlowMasterAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<FlowMasterAdapterModel>> GetAsync(DataRequest dataRequest,
+            UserHelper UserHelper, CurrentUser CurrentUser)
         {
             List<FlowMasterAdapterModel> data = new();
             DataRequestResult<FlowMasterAdapterModel> result = new();
@@ -55,6 +56,14 @@ namespace Backend.Services
                 DataSource = DataSource
                 .Where(x => x.Title.Contains(dataRequest.Search) ||
                 x.Title.Contains(dataRequest.Search));
+            }
+            #endregion
+
+            #region 決定要顯示那些簽核文件
+            if (CurrentUser.LoginMyUserAdapterModel.Account.ToLower() != MagicHelper.開發者帳號.ToString())
+            {
+                DataSource = DataSource
+                    .Where(x => x.FlowUser.Any(x => x.MyUserId == CurrentUser.LoginMyUserAdapterModel.Id));
             }
             #endregion
 
@@ -340,7 +349,7 @@ namespace Backend.Services
 
         #region 產生收件匣紀錄
         public async Task NotifyInboxUsers(List<FlowUser> flowUsers,
-            FlowMasterAdapterModel flowMasterAdapterModel,int level)
+            FlowMasterAdapterModel flowMasterAdapterModel, int level)
         {
 
             #region 產生收件匣紀錄
@@ -619,7 +628,7 @@ namespace Backend.Services
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", true);
 
-            if(thisLevel != flowMasterAdapterModel.ProcessLevel &&
+            if (thisLevel != flowMasterAdapterModel.ProcessLevel &&
                 flowMasterAdapterModel.Status != 99)
             {
                 #region 產生收件匣紀錄

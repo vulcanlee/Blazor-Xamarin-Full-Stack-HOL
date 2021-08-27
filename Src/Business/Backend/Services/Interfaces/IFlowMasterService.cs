@@ -18,6 +18,7 @@ namespace Backend.Services
 
         Task<VerifyRecordResult> AddAsync(FlowMasterAdapterModel paraObject);
         Task AddHistoryRecord(MyUserAdapterModel myUserAdapterModel, FlowMasterAdapterModel flowMasterAdapterModel, string Summary, string Comment, bool approve);
+        Task AddInboxRecord(FlowMasterAdapterModel paraObject, MyUserAdapterModel myUser, bool isCC);
         Task AgreeAsync(FlowMasterAdapterModel flowMasterAdapterModel, ApproveOpinionModel approveOpinionModel);
         Task BackToSendAsync(FlowMasterAdapterModel flowMasterAdapterModel, ApproveOpinionModel approveOpinionModel);
         Task<VerifyRecordResult> BeforeAddCheckAsync(FlowMasterAdapterModel paraObject);
@@ -29,10 +30,11 @@ namespace Backend.Services
         Task<VerifyRecordResult> DeleteAsync(int id);
         Task DenyAsync(FlowMasterAdapterModel flowMasterAdapterModel, ApproveOpinionModel approveOpinionModel);
         void FindNextActionUser(List<FlowUser> flowUsers, FlowMasterAdapterModel flowMasterAdapterModel);
-        Task<DataRequestResult<FlowMasterAdapterModel>> GetAsync(DataRequest dataRequest);
+        Task<DataRequestResult<FlowMasterAdapterModel>> GetAsync(DataRequest dataRequest, UserHelper UserHelper, CurrentUser CurrentUser);
         Task<FlowMasterAdapterModel> GetAsync(int id);
         Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)> GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel);
         Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)> GetUsersDataByActionAsync(FlowMasterAdapterModel flowMasterAdapterModel, CurrentUser currentUser);
+        Task NotifyInboxUsers(List<FlowUser> flowUsers, FlowMasterAdapterModel flowMasterAdapterModel, int level);
         void RecoveryCompletion(List<FlowUser> flowUsers, int processLevel);
         Task SendAsync(FlowMasterAdapterModel flowMasterAdapterModel, ApproveOpinionModel approveOpinionModel);
         Task<VerifyRecordResult> UpdateAsync(FlowMasterAdapterModel paraObject);

@@ -16,6 +16,7 @@ namespace Backend.Services
     using CommonDomain.Enums;
     using System;
     using Backend.Helpers;
+    using Backend.Models;
 
     public class FlowInboxService : IFlowInboxService
     {
@@ -38,7 +39,8 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
-        public async Task<DataRequestResult<FlowInboxAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<FlowInboxAdapterModel>> GetAsync(DataRequest dataRequest,
+            UserHelper UserHelper, CurrentUser CurrentUser)
         {
             List<FlowInboxAdapterModel> data = new();
             DataRequestResult<FlowInboxAdapterModel> result = new();
@@ -46,6 +48,7 @@ namespace Backend.Services
                 .Include(x => x.MyUser)
                 .Include(x => x.FlowMaster)
                 .AsNoTracking();
+        
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
             {
@@ -54,6 +57,15 @@ namespace Backend.Services
                 x.Title.Contains(dataRequest.Search));
             }
             #endregion
+
+            #region 決定要顯示那些使用者郵件
+            if (CurrentUser.LoginMyUserAdapterModel.Account.ToLower() != MagicHelper.開發者帳號.ToString())
+            {
+                DataSource = DataSource
+                    .Where(x => x.MyUserId == CurrentUser.LoginMyUserAdapterModel.Id);
+            }
+            #endregion
+
 
             #region 進行排序動作
             if (dataRequest.Sorted != null)
