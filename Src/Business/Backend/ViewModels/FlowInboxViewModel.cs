@@ -186,10 +186,12 @@ namespace Backend.ViewModels
             if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdEdit)
             {
                 #region 點選 修改紀錄 按鈕
+                await CurrentService.MailReadedAsync(item);
                 CurrentRecord = item.Clone();
                 EditRecordDialogTitle = "修改紀錄";
                 IsShowEditRecord = true;
                 isNewRecordMode = false;
+
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdDelete)

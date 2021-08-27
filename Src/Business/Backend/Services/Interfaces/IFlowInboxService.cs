@@ -20,6 +20,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> DeleteAsync(int id);
         Task<DataRequestResult<FlowInboxAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<FlowInboxAdapterModel> GetAsync(int id);
+        Task MailReadedAsync(FlowInboxAdapterModel flowInboxAdapterModel);
         Task<VerifyRecordResult> UpdateAsync(FlowInboxAdapterModel paraObject);
     }
 }

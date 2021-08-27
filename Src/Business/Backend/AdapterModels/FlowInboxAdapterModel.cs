@@ -22,19 +22,8 @@ namespace Backend.AdapterModels
                 return IsRead ? "已讀" : "未讀";
             }
         }
-        public bool IsProcess { get; set; }
-        public string IsProcessName
-        {
-            get
-            {
-                return IsProcess ? "已處理" : "未處理";
-            }
-        }
-        public bool Approve { get; set; }
-        public string Summary { get; set; }
-        public string Comment { get; set; }
+        public string Body { get; set; }
         public DateTime ReceiveTime { get; set; }
-        public DateTime SendTime { get; set; }
         public int FlowMasterId { get; set; }
         public FlowMasterAdapterModel FlowMaster { get; set; }
         public string FlowMasterName { get; set; }

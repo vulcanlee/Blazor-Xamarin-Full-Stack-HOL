@@ -260,6 +260,20 @@ namespace Backend.Services
             data.FlowMasterName = data.FlowMaster.Title;
             return Task.FromResult(0);
         }
+
+        public async Task MailReadedAsync(FlowInboxAdapterModel flowInboxAdapterModel)
+        {
+            CleanTrackingHelper.Clean<FlowInbox>(context);
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
+            flowInboxAdapterModel.IsRead = true;
+            var flowInbox = Mapper.Map<FlowInbox>(flowInboxAdapterModel);
+            context.FlowInbox.Update(flowInbox);
+            await context.SaveChangesAsync();
+            CleanTrackingHelper.Clean<FlowInbox>(context);
+            CleanTrackingHelper.Clean<FlowMaster>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
+        }
         #endregion
     }
 }

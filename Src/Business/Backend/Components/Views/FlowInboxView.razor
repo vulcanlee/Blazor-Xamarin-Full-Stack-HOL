@@ -49,17 +49,69 @@
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
-            <GridColumn Field=@nameof(FlowInboxAdapterModel.IsReadName)
-                        HeaderText="郵件" />
+            <GridColumn Field=@nameof(FlowInboxAdapterModel.IsRead) HeaderText="讀取" Width="50">
+                <Template>
+                    @{
+                        var currentRec = (context as FlowInboxAdapterModel);
+                        if (currentRec.IsRead)
+                        {
+                            <span class="mdi mdi-24px mdi-email-open-outline" />
+                        }
+                        else
+                        {
+                            <span class="mdi mdi-24px mdi-email-alert font-weight-bold" />
+                        }
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn Field=@nameof(FlowInboxAdapterModel.MyUserName)
-                        HeaderText="使用者" />
+                        HeaderText="使用者">
+                <Template>
+                    @{
+                        var currentRec = (context as FlowInboxAdapterModel);
+                        if (currentRec.IsRead)
+                        {
+                            <span class="">@currentRec.MyUserName</span>
+                        }
+                        else
+                        {
+                            <span class="font-weight-bold">@currentRec.MyUserName</span>
+                        }
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn Field=@nameof(FlowInboxAdapterModel.Title)
-                        HeaderText="主旨" />
-            <GridColumn Field=@nameof(FlowInboxAdapterModel.IsProcessName)
-                        HeaderText="處理" />
+                        HeaderText="主旨">
+                <Template>
+                    @{
+                        var currentRec = (context as FlowInboxAdapterModel);
+                        if (currentRec.IsRead)
+                        {
+                            <span class="">@currentRec.Title</span>
+                        }
+                        else
+                        {
+                            <span class="font-weight-bold">@currentRec.Title</span>
+                        }
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn Field=@nameof(FlowInboxAdapterModel.ReceiveTime)
-                        HeaderText="時間"
-                        HideAtMedia="(min-width: 640px)" />
+                        HeaderText="時間" HideAtMedia="(min-width: 640px)" >
+                <Template>
+                    @{
+                        var currentRec = (context as FlowInboxAdapterModel);
+                        if (currentRec.IsRead)
+                        {
+                            <span class="">@currentRec.ReceiveTime</span>
+                        }
+                        else
+                        {
+                            <span class="font-weight-bold">@currentRec.ReceiveTime</span>
+                        }
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
