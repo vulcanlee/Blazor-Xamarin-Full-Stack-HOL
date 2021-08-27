@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Backend.Pages
 {
-    [Authorize(Roles = "User")]
+    [AllowAnonymous]
     public class NeedChangePasswordModel : PageModel
     {
         private readonly IMyUserService myUserService;
@@ -51,7 +51,7 @@ namespace Backend.Pages
             ClaimsPrincipal claimsPrincipal = HttpContextAccessor.HttpContext.User;
             if (claimsPrincipal.Identity.IsAuthenticated == false)
             {
-                Msg = "使用者尚未登入";
+                Msg = "使用者尚未登入，請先進行帳號密碼身分驗證程序";
             }
         }
 
@@ -59,14 +59,14 @@ namespace Backend.Pages
         {
 
             ClaimsPrincipal claimsPrincipal = HttpContextAccessor.HttpContext.User;
-            if (NewPassword != AgainPassword)
+             if (claimsPrincipal.Identity.IsAuthenticated == false)
             {
-                Msg = "請確認兩次輸入的密碼都是相同的";
+                Msg = "無法變更密碼，請先進行帳號密碼身分驗證程序";
                 return Page();
             }
-            else if (claimsPrincipal.Identity.IsAuthenticated == false)
+          else if (NewPassword != AgainPassword)
             {
-                Msg = "使用者尚未登入";
+                Msg = "請確認兩次輸入的密碼都是相同的";
                 return Page();
             }
             else
