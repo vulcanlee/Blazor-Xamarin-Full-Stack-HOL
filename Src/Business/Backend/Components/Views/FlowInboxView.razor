@@ -5,10 +5,24 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using System.Security.Claims
 
 @inject FlowInboxViewModel ViewModel
+@inject UserHelper UserHelper
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CurrentUser CurrentUser
 @implements IRazorPage
 @implements IDataGrid
+
+@if (ViewModel.IsGod)
+{
+    <div>
+        <span>@ViewModel.CurrentUserHelper.CustomUserName</span>
+        <button class="btn btn-danger" @onclick="ViewModel.OnOpenSimulatorUserPicker">
+            選取使用者
+        </button>
+    </div>
+}
 
 <div>
     <SfGrid @ref="Grid" TValue="FlowInboxAdapterModel"
@@ -91,6 +105,9 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
+<MyUserPicker OpenPicker="ViewModel.ShowSimulatorUserPicker"
+              OnConfirmCallback="x=>ViewModel.OnPickerSimulatorUserCompletion(x)" />
+
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"
             Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
@@ -122,6 +139,26 @@
         if (firstRender == true)
         {
             ViewModel.Setup(this, this);
+
+            if (CurrentUser.LoginMyUserAdapterModel.Account.ToLower() == MagicHelper.開發者帳號.ToString())
+            {
+                ViewModel.IsGod = true;
+                StateHasChanged();
+            }
+
+            //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            //var user = authState.User;
+            //if (user.Identity.IsAuthenticated)
+            //{
+            //    #region 使用者已經登入了
+            //    var userAccount = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //    if (userAccount.ToLower() == MagicHelper.開發者帳號.ToString())
+            //    {
+            //        ViewModel.IsGod = true;
+            //        StateHasChanged();
+            //    }
+            //    #endregion
+            //}
         }
         if (OnViewRender.HasDelegate)
         {

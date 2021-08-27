@@ -333,15 +333,36 @@ namespace Backend.Services
             data.MyUserName = data.MyUser.Name;
             data.PolicyHeaderName = data.PolicyHeader.Name;
             data.GetFlowName();
-            //await CheckUserShowActionAsync(data);
+            await Task.Yield();
             return;
+        }
+        #endregion
+
+        #region 產生收件匣紀錄
+        public async Task AddInboxRecord(FlowMasterAdapterModel paraObject,
+            MyUserAdapterModel myUser, bool isCC)
+        {
+            string CCMessage = isCC ? "[知會]" : "";
+            CleanTrackingHelper.Clean<FlowInbox>(context);
+            FlowInbox inbox = new FlowInbox()
+            {
+                FlowMasterId = paraObject.Id,
+                MyUserId = myUser.Id,
+                IsRead = false,
+                ReceiveTime = DateTime.Now,
+                Title = $"{CCMessage} {paraObject.Title}",
+                Body = paraObject.Content,
+            };
+            await context.FlowInbox.AddAsync(inbox);
+            await context.SaveChangesAsync();
+            CleanTrackingHelper.Clean<FlowInbox>(context);
         }
         #endregion
 
         #region 審核動作事件
         #region 取得現在使用者與簽核流程所有使用者
         public async Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)>
-            GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel)
+        GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel)
         {
             var user = await UserHelper.GetCurrentUserAsync();
 
@@ -467,6 +488,7 @@ namespace Backend.Services
             flowUser.Completion = true;
             flowMasterAdapterModel.ProcessLevel = 1;
             flowMasterAdapterModel.Status = 1;
+            int NextProcessLevel = flowMasterAdapterModel.ProcessLevel;
 
             CopyUserAutoCompletion(flowUsers, flowMasterAdapterModel.ProcessLevel);
 
@@ -477,6 +499,15 @@ namespace Backend.Services
 
             await AddHistoryRecord(user, flowMasterAdapterModel,
                 $"{approveOpinionModel.Summary}", $"{approveOpinionModel.Comment}", true);
+
+            var nextFlowUser = flowUsers
+                .Where(x => x.Level == NextProcessLevel);
+            foreach (var item in nextFlowUser)
+            {
+                var notifyUser = Mapper.Map<MyUserAdapterModel>(item.MyUser);
+                var isCC = !item.OnlyCC;
+                await AddInboxRecord(flowMasterAdapterModel, notifyUser, isCC);
+            }
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);

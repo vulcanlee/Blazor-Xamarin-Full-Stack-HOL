@@ -15,17 +15,21 @@ namespace Backend.ViewModels
     using CommonDomain.DataModels;
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
+    using Backend.Models;
 
     public class FlowInboxViewModel
     {
         #region Constructor
         public FlowInboxViewModel(IFlowInboxService CurrentService,
            BackendDBContext context, IMapper Mapper,
+           UserHelper currentUserHelper, CurrentUser currentUser,
            TranscationResultHelper transcationResultHelper)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
+            CurrentUserHelper = currentUserHelper;
+            CurrentUser = currentUser;
             TranscationResultHelper = transcationResultHelper;
             FlowInboxSort.Initialization(SortConditions);
 
@@ -103,6 +107,9 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
+        public bool IsGod { get; set; } = false;
+        public bool ShowApproveOpinionDialog { get; set; } = false;
+        public bool ShowSimulatorUserPicker { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         /// <summary>
@@ -302,10 +309,36 @@ namespace Backend.ViewModels
         //    }
         //    ShowAontherRecordPicker = false;
         //}
+
+        public void OnOpenSimulatorUserPicker()
+        {
+            ShowSimulatorUserPicker = true;
+        }
+        public void OnPickerSimulatorUserCompletion(MyUserAdapterModel e)
+        {
+            if (e != null)
+            {
+                CurrentUserHelper.CustomUserId = e.Id;
+                CurrentUserHelper.CustomUserName = e.Name;
+                CurrentUser.CurrentMyUserId = e.Id;
+                CurrentUser.SimulatorMyUserAdapterModel = e;
+                dataGrid.RefreshGrid();
+            }
+            else
+            {
+                CurrentUserHelper.CustomUserId = 0;
+                CurrentUserHelper.CustomUserName = "";
+                CurrentUser.CurrentMyUserId = 0;
+                CurrentUser.SimulatorMyUserAdapterModel = null;
+            }
+            ShowSimulatorUserPicker = false;
+        }
         #endregion
 
         #region 排序搜尋事件
         public int DefaultSorting { get; set; } = -1;
+        public UserHelper CurrentUserHelper { get; }
+        public CurrentUser CurrentUser { get; }
         public TranscationResultHelper TranscationResultHelper { get; }
 
         public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)
