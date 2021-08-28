@@ -28,9 +28,11 @@ namespace Backend.Pages
     {
         private readonly IMyUserService myUserService;
         private readonly ILogger<LoginModel> logger;
+        private readonly ISystemEnvironmentService systemEnvironmentService;
 
         public LoginModel(IMyUserService myUserService, ILogger<LoginModel> logger,
-            SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor)
+            SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor,
+            ISystemEnvironmentService systemEnvironmentService)
         {
 #if DEBUG
             Username = "god";
@@ -41,6 +43,7 @@ namespace Backend.Pages
             this.logger = logger;
             SystemLogHelper = systemLogHelper;
             HttpContextAccessor = httpContextAccessor;
+            this.systemEnvironmentService = systemEnvironmentService;
         }
         [BindProperty]
         public string Username { get; set; } = "";
@@ -78,46 +81,93 @@ namespace Backend.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            bool checkCaptch = true;
+            SystemEnvironmentAdapterModel systemEnvironmentAdapterModel = await systemEnvironmentService.GetAsync();
+            bool checkPreLoginData = true;
             if (string.IsNullOrEmpty(Captcha))
             {
                 Msg = "請輸入驗證碼";
-                checkCaptch = false;
+                checkPreLoginData = false;
             }
             else if (GetCaptchaSHA(Captcha) != CaptchaOrigin)
             {
                 Msg = "驗證碼輸入錯誤";
-                checkCaptch = false;
+                checkPreLoginData = false;
             }
 
-            if (checkCaptch)
+            if (checkPreLoginData)
             {
+                #region 檢查該使用者是否已經被停用了
+                if (Username.ToLower() != MagicHelper.開發者帳號)
+                {
+                    var accUser = await myUserService.UserByAccount(Username);
+                    if (accUser == null)
+                    {
+                        #region 身分驗證失敗，使用者不存在
+                        Msg = $"身分驗證失敗，使用者帳號 ({Username}) 或者密碼不正確";
+                        await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                        {
+                            Message = Msg,
+                            Category = LogCategories.User,
+                            Content = "",
+                            LogLevel = LogLevels.Information,
+                            Updatetime = DateTime.Now,
+                            IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        });
+                        logger.LogInformation($"{Msg}");
+                        GetCaptchaImage();
+                        return Page();
+                        #endregion
+                    }
+
+                    if (accUser.Status == false)
+                    {
+                        #region 使用者已經被停用，無法登入
+                        Msg = $"使用者 {accUser.Account} 已經被停用，無法登入";
+                        await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                        {
+                            Message = Msg,
+                            Category = LogCategories.User,
+                            Content = "",
+                            LogLevel = LogLevels.Information,
+                            Updatetime = DateTime.Now,
+                            IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        });
+                        logger.LogInformation($"{Msg}");
+                        GetCaptchaImage();
+                        return Page();
+                        #endregion
+                    }
+
+                    if (systemEnvironmentAdapterModel.EnableLoginFailDetection)
+                    {
+                        if (accUser.LoginFailUnlockDatetime > DateTime.Now)
+                        {
+                            #region 使用者已經被鎖住，無法登入
+                            Msg = $"使用者 {accUser.Account} 因為輸入過多錯誤密碼，已經被鎖住，無法登入";
+                            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                            {
+                                Message = Msg,
+                                Category = LogCategories.User,
+                                Content = "",
+                                LogLevel = LogLevels.Information,
+                                Updatetime = DateTime.Now,
+                                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                            });
+                            logger.LogInformation($"{Msg}");
+                            GetCaptchaImage();
+                            return Page();
+                            #endregion
+                        }
+                    }
+                }
+                #endregion
+
                 (MyUserAdapterModel user, string message) =
                 await myUserService.CheckUser(Username, Password);
-
                 if (user == null)
                 {
                     #region 身分驗證失敗，使用者不存在
                     Msg = $"身分驗證失敗，使用者({Username}不存在 : {message})";
-                    await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
-                    {
-                        Message = Msg,
-                        Category = LogCategories.User,
-                        Content = "",
-                        LogLevel = LogLevels.Information,
-                        Updatetime = DateTime.Now,
-                        IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-                    });
-                    logger.LogInformation($"{Msg}");
-                    GetCaptchaImage();
-                    return Page();
-                    #endregion
-                }
-
-                if (user.Status == false)
-                {
-                    #region 使用者已經被停用，無法登入
-                    Msg = $"使用者 {user.Account} 已經被停用，無法登入";
                     await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
                     {
                         Message = Msg,
@@ -151,9 +201,10 @@ namespace Backend.Pages
                 if (MagicHelper.開發者帳號.ToString() == Username.ToLower())
                 {
                     claims.Add(new Claim(ClaimTypes.Role, MagicHelper.開發者的角色聲明));
-                } else
+                }
+                else
                 {
-                    if(user.ForceChangePassword == true)
+                    if (user.ForceChangePassword == true)
                     {
                         returnUrl = Url.Content("~/NeedChangePassword");
                     }

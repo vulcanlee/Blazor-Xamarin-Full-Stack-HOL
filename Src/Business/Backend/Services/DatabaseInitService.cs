@@ -603,6 +603,7 @@ namespace Backend.Services
             #region 新增系統定義紀錄
             SystemEnvironment systemEnvironment = new SystemEnvironment()
             {
+                EnableLoginFailDetection = true,
                 LoginFailMaxTimes = 3,
                 LoginFailTimesLockMinutes = 5,
             };

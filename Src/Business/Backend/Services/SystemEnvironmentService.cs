@@ -35,6 +35,15 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
+        public async Task<SystemEnvironmentAdapterModel> GetAsync()
+        {
+            var result = await context.SystemEnvironment
+                  .AsNoTracking()
+                  .FirstOrDefaultAsync();
+            var resultAdapterModel = Mapper.Map<SystemEnvironmentAdapterModel>(result);
+            return resultAdapterModel;
+        }
+
         public async Task<DataRequestResult<SystemEnvironmentAdapterModel>> GetAsync(DataRequest dataRequest)
         {
             List<SystemEnvironmentAdapterModel> data = new();

@@ -16,6 +16,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> BeforeDeleteCheckAsync(SystemEnvironmentAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeUpdateCheckAsync(SystemEnvironmentAdapterModel paraObject);
         Task<VerifyRecordResult> DeleteAsync(int id);
+        Task<SystemEnvironmentAdapterModel> GetAsync();
         Task<DataRequestResult<SystemEnvironmentAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<SystemEnvironmentAdapterModel> GetAsync(int id);
         Task<VerifyRecordResult> UpdateAsync(SystemEnvironmentAdapterModel paraObject);

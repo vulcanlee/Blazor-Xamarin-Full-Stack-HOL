@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
-using Microsoft.Extensions.Configuration;
 using CommonDomain.DataModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace Backend.Services
@@ -9,6 +10,7 @@ namespace Backend.Services
     public interface IMyUserService
     {
         IConfiguration Configuration { get; }
+        ILogger<MyUserService> Logger { get; }
         IMapper Mapper { get; }
 
         Task<VerifyRecordResult> AddAsync(MyUserAdapterModel paraObject);
@@ -22,5 +24,6 @@ namespace Backend.Services
         Task<DataRequestResult<MyUserAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<MyUserAdapterModel> GetAsync(int id);
         Task<VerifyRecordResult> UpdateAsync(MyUserAdapterModel paraObject);
+        Task<MyUserAdapterModel> UserByAccount(string account);
     }
 }

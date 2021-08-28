@@ -313,8 +313,22 @@ namespace Backend.Services
         #endregion
 
         #region 其他服務方法
+        public async Task<MyUserAdapterModel> UserByAccount(string account)
+        {
+            CleanTrackingHelper.Clean<MyUser>(context);
+            MyUser user = new();
+            MyUserAdapterModel userAdapterModel = new();
+            user = await context.MyUser
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Account == account);
+            userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
+            CleanTrackingHelper.Clean<MyUser>(context);
+            return userAdapterModel;
+        }
+
         public async Task<(MyUserAdapterModel, string)> CheckUser(string account, string password)
         {
+            CleanTrackingHelper.Clean<MyUser>(context);
             MyUser user = new();
             MyUserAdapterModel userAdapterModel = new();
             if (account == MagicHelper.開發者帳號)
@@ -386,9 +400,29 @@ namespace Backend.Services
 
                 if (user.Password != shaPassword)
                 {
+                    var systemEnvironment = await context.SystemEnvironment.FirstOrDefaultAsync();
+                    user.LoginFailTimes++;
+                    if (user.LoginFailTimes >= systemEnvironment.LoginFailMaxTimes)
+                    {
+                        user.LoginFailUnlockDatetime = DateTime
+                            .Now.AddMinutes(systemEnvironment.LoginFailTimesLockMinutes);
+                    }
+
+                    context.MyUser.Update(user);
+                    await context.SaveChangesAsync();
+
                     return (null, ErrorMessageMappingHelper.Instance
                         .GetErrorMessage(ErrorMessageEnum.密碼不正確));
                 }
+
+                #region 重新 Reset 計算登入失敗的計數器
+                user.LoginFailTimes = 0;
+                user.LoginFailUnlockDatetime = DateTime.Now.AddMinutes(-5);
+                context.MyUser.Update(user);
+                await context.SaveChangesAsync();
+                #endregion
+
+                CleanTrackingHelper.Clean<MyUser>(context);
                 userAdapterModel = Mapper.Map<MyUserAdapterModel>(user);
             }
             return (userAdapterModel, "");
