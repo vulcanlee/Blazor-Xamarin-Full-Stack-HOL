@@ -807,6 +807,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 系統運作條件
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = MagicHelper.系統運作條件,
+                CodeName = "Environment",
+                Enable = true,
+                Icon = "mdi-flash-circle",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 帳號管理功能名稱
             cc += 10;
             menuData = new MenuData()
@@ -955,6 +971,10 @@ namespace Backend.Services
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == "系統資料管理"));
+
+            defaultMenuData
+                .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == MagicHelper.系統運作條件));
 
             defaultMenuData
                 .Remove(defaultMenuData

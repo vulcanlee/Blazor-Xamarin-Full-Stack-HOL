@@ -36,6 +36,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
+            services.AddTransient<SystemEnvironmentViewModel>();
             services.AddTransient<FlowInboxViewModel>();
             services.AddTransient<FlowHistoryViewModel>();
             services.AddTransient<FlowUserViewModel>();

@@ -1,0 +1,7 @@
+﻿@page "/Environment"
+@attribute [Authorize(Roles = "Environment")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.系統運作條件</div>
+    <SystemEnvironmentView />
+</div>
