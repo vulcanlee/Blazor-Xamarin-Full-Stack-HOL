@@ -814,7 +814,7 @@ namespace Backend.Services
                 Name = MagicHelper.系統運作條件,
                 CodeName = "Environment",
                 Enable = true,
-                Icon = "mdi-flash-circle",
+                Icon = "mdi-cog",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
