@@ -10,6 +10,10 @@ namespace Backend.AdapterModels
         public bool EnableLoginFailDetection { get; set; }
         public int LoginFailMaxTimes { get; set; }
         public int LoginFailTimesLockMinutes { get; set; }
+        public int PasswordAge { get; set; }
+        public int MinimumPasswordLength { get; set; }
+        public int PasswordHistory { get; set; }
+        public int PasswordComplexity { get; set; }
 
         public SystemEnvironmentAdapterModel Clone()
         {

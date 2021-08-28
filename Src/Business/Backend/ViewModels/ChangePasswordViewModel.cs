@@ -39,8 +39,12 @@ namespace Backend.ViewModels
         {
             LocalEditContext = context;
         }
+        public string PasswordStrengthName { get; set; }
         public async Task OnSaveAsync()
         {
+            var PasswordStrength = PasswordCheck.GetPasswordStrength(ChangePasswordModel.NewPassword);
+            PasswordStrengthName = PasswordStrength.ToString();
+
             MyUserAdapterModel myUserAdapterModel = new MyUserAdapterModel();
             #region 進行 Form Validation 檢查驗證作業
             if (LocalEditContext.Validate() == false)

@@ -606,6 +606,10 @@ namespace Backend.Services
                 EnableLoginFailDetection = true,
                 LoginFailMaxTimes = 3,
                 LoginFailTimesLockMinutes = 5,
+                MinimumPasswordLength = 3,
+                PasswordAge = 0,
+                PasswordComplexity = 0,
+                PasswordHistory = 0,
             };
 
             context.SystemEnvironment.Add(systemEnvironment);
