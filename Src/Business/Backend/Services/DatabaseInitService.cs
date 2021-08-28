@@ -91,6 +91,21 @@ namespace Backend.Services
             #endregion
 
             #region 建立開發環境要用到的測試紀錄
+            #region 建立系統定義參數
+            await 建立系統定義參數Async();
+            Msg = $"建立系統定義參數";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            });
+            Logger.LogInformation($"{Msg}");
+            #endregion
+
             #region 建立功能表角色與項目清單
             await 建立功能表角色與項目清單Async();
             Msg = $"建立功能表角色與項目清單";
@@ -580,6 +595,24 @@ namespace Backend.Services
         #endregion
 
         #region 建立相關紀錄
+        private async Task 建立系統定義參數Async()
+        {
+            #region 建立系統定義參數 
+
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            #region 新增系統定義紀錄
+            SystemEnvironment systemEnvironment = new SystemEnvironment()
+            {
+                LoginFailMaxTimes = 3,
+                LoginFailTimesLockMinutes = 5,
+            };
+
+            context.SystemEnvironment.Add(systemEnvironment);
+            await context.SaveChangesAsync();
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            #endregion
+            #endregion
+        }
         private async Task 建立使用者紀錄Async()
         {
             #region 建立使用者紀錄 
@@ -608,6 +641,8 @@ namespace Backend.Services
                 ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                 ForceChangePassword = false,
                 ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
+                LoginFailTimes = 0,
+                LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
             };
 
             myUser.Salt = Guid.NewGuid().ToString();
@@ -630,6 +665,8 @@ namespace Backend.Services
                 ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                 ForceChangePassword = false,
                 ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
+                LoginFailTimes = 0,
+                LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
             };
             var adminRawPassword = "123";
             adminMyUser.Password =
@@ -658,6 +695,8 @@ namespace Backend.Services
                         ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                         ForceChangePassword = false,
                         ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
+                        LoginFailTimes = 0,
+                        LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
                     };
                     var userRawPassword = "123";
                     itemMyUser.Password =
