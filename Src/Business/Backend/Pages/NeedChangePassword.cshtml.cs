@@ -23,7 +23,8 @@ namespace Backend.Pages
         private readonly ILogger<NeedChangePasswordModel> logger;
 
         public NeedChangePasswordModel(IMyUserService myUserService, ILogger<NeedChangePasswordModel> logger,
-            SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor)
+            SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor,
+            ISystemEnvironmentService systemEnvironmentService)
         {
 #if DEBUG
             NewPassword = "";
@@ -34,44 +35,69 @@ namespace Backend.Pages
             this.logger = logger;
             SystemLogHelper = systemLogHelper;
             HttpContextAccessor = httpContextAccessor;
+            SystemEnvironmentService = systemEnvironmentService;
         }
         [BindProperty]
         public string NewPassword { get; set; } = "";
 
         [BindProperty]
         public string AgainPassword { get; set; } = "";
+
+        [BindProperty]
         public string PasswordType { get; set; } = "password";
+        [BindProperty]
+        public string PasswordHint { get; set; } = "";
+
+        [BindProperty]
         public string Msg { get; set; }
         public string ReturnUrl { get; set; }
         public SystemLogHelper SystemLogHelper { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
-
+        public ISystemEnvironmentService SystemEnvironmentService { get; }
+        SystemEnvironmentAdapterModel systemEnvironmentAdapterModel = null;
         public async Task OnGetAsync()
         {
-            await Task.Yield();
+            await GetPasswordHint();
             ClaimsPrincipal claimsPrincipal = HttpContextAccessor.HttpContext.User;
             if (claimsPrincipal.Identity.IsAuthenticated == false)
             {
                 Msg = "使用者尚未登入，請先進行帳號密碼身分驗證程序";
             }
         }
-
+        public async Task GetPasswordHint()
+        {
+            if (systemEnvironmentAdapterModel == null)
+            {
+                systemEnvironmentAdapterModel =
+                    await SystemEnvironmentService.GetAsync();
+            }
+            PasswordStrength passwordStrength = (PasswordStrength)systemEnvironmentAdapterModel.PasswordComplexity;
+            PasswordHint = PasswordCheck.PasswordHint(passwordStrength);
+        }
         public async Task<IActionResult> OnPostAsync()
         {
+            await GetPasswordHint();
+            PasswordStrength passwordStrength = (PasswordStrength)systemEnvironmentAdapterModel.PasswordComplexity;
 
             ClaimsPrincipal claimsPrincipal = HttpContextAccessor.HttpContext.User;
-             if (claimsPrincipal.Identity.IsAuthenticated == false)
+            if (claimsPrincipal.Identity.IsAuthenticated == false)
             {
                 Msg = "無法變更密碼，請先進行帳號密碼身分驗證程序";
                 return Page();
             }
-          else if (NewPassword != AgainPassword)
+            else if (NewPassword != AgainPassword)
             {
                 Msg = "請確認兩次輸入的密碼都是相同的";
                 return Page();
             }
             else
             {
+                var inputPasswordStrength = PasswordCheck.GetPasswordStrength(NewPassword);
+                if(passwordStrength> inputPasswordStrength)
+                {
+                    Msg = "密碼強度不足，請輸入符合密碼政策的密碼";
+                    return Page();
+                }
                 var userId = Convert.ToInt32(claimsPrincipal.FindFirst(ClaimTypes.Sid)?.Value);
                 var myUser = await myUserService.GetAsync(userId);
 

@@ -41,26 +41,41 @@ namespace BAL.Helpers
     {
         /// <summary>
         /// Blank Password (empty and/or space chars only)
+        /// 允許空白密碼
         /// </summary>
         Blank = 0,
         /// <summary>
         /// Either too short (less than 5 chars), one-case letters only or digits only
+        /// 密碼長度小於5個字元 或者 具有一個字母字元 或者 具有一個數字字元
         /// </summary>
         VeryWeak = 1,
         /// <summary>
-        /// At least 5 characters, one strong condition met (>= 8 chars with 1 or more UC letters, LC letters, digits & special chars)
+        /// At least 5 characters, one strong condition met (>= 8 chars 
+        /// with 1 or more UC letters, LC letters, digits & special chars)
+        /// 密碼長度至少5個字元 並且符合這裡其中一個條件
+        /// 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號
         /// </summary>
         Weak = 2,
         /// <summary>
-        /// At least 5 characters, two strong conditions met (>= 8 chars with 1 or more UC letters, LC letters, digits & special chars)
+        /// At least 5 characters, 
+        /// two strong conditions met 
+        /// (>= 8 chars 
+        /// with 1 or more UC letters, LC letters, digits & special chars)
+        /// 密碼長度至少5個字元 並且符合這裡其中兩個個條件
+        /// 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號
         /// </summary>
         Medium = 3,
         /// <summary>
-        /// At least 8 characters, three strong conditions met (>= 8 chars with 1 or more UC letters, LC letters, digits & special chars)
+        /// At least 8 characters, 
+        /// three strong conditions met (>= 8 chars with 1 or more UC letters, LC letters, digits & special chars)
+        /// 密碼長度至少8個字元 並且符合這裡其中三個個條件
+        /// 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號
         /// </summary>
         Strong = 4,
         /// <summary>
         /// At least 8 characters, all strong conditions met (>= 8 chars with 1 or more UC letters, LC letters, digits & special chars)
+        /// 密碼長度至少8個字元 並且符合這裡所有條件
+        /// 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號
         /// </summary>
         VeryStrong = 5
     }
@@ -77,6 +92,35 @@ namespace BAL.Helpers
 
     public static class PasswordCheck
     {
+
+        public static string PasswordHint(PasswordStrength passwordStrength)
+        {
+            string result = "";
+            switch (passwordStrength)
+            {
+                case PasswordStrength.Blank:
+                    result = "允許空白密碼";
+                    break;
+                case PasswordStrength.VeryWeak:
+                    result = "密碼長度小於5個字元 或者 具有一個字母字元 或者 具有一個數字字元"; 
+                    break;
+                case PasswordStrength.Weak:
+                    result = "密碼長度至少5個字元 並且符合這裡其中一個條件 : 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號";
+                    break;
+                case PasswordStrength.Medium:
+                    result = "密碼長度至少5個字元 並且符合這裡其中兩個個條件 : 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號";
+                    break;
+                case PasswordStrength.Strong:
+                    result = "密碼長度至少8個字元 並且符合這裡其中三個個條件 : 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號";
+                    break;
+                case PasswordStrength.VeryStrong:
+                    result = "密碼長度至少8個字元 並且符合這裡所有條件 : 密碼長度大於等於 8 個字元、大寫、小寫、數字、特殊符號"; 
+                    break;
+                default:
+                    break;
+            }
+            return result;
+        }
         /// <summary>
         /// Generic method to retrieve password strength: use this for general purpose scenarios, 
         /// i.e. when you don't have a strict policy to follow.

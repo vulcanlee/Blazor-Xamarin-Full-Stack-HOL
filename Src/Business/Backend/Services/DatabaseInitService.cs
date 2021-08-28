@@ -608,7 +608,7 @@ namespace Backend.Services
                 LoginFailTimesLockMinutes = 5,
                 MinimumPasswordLength = 3,
                 PasswordAge = 0,
-                PasswordComplexity = 0,
+                PasswordComplexity = 3,  // PasswordStrength.Medium
                 PasswordHistory = 0,
             };
 
