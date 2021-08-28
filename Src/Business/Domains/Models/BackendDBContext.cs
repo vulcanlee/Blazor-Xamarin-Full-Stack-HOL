@@ -36,6 +36,7 @@ namespace Domains.Models
         public virtual DbSet<FlowInbox> FlowInbox { get; set; }
         public virtual DbSet<PhaseCategory> PhaseCategory { get; set; }
         public virtual DbSet<PhaseMessage> PhaseMessage { get; set; }
+        public virtual DbSet<SystemEnvironment> SystemEnvironment { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

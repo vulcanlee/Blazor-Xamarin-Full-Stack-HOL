@@ -48,6 +48,7 @@ namespace Backend.Pages
 
         public async Task OnGetAsync()
         {
+            await Task.Yield();
             ClaimsPrincipal claimsPrincipal = HttpContextAccessor.HttpContext.User;
             if (claimsPrincipal.Identity.IsAuthenticated == false)
             {

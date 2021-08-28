@@ -14,6 +14,8 @@ namespace Backend.AdapterModels
         public string Name { get; set; }
         public string Salt { get; set; }
         public bool Status { get; set; }
+        public int LoginFailTimes { get; set; }
+        public DateTime LoginFailUnlockDatetime { get; set; }
         public DateTime ForceLogoutDatetime { get; set; }
         public bool ForceChangePassword { get; set; }
         public DateTime ForceChangePasswordDatetime { get; set; }
