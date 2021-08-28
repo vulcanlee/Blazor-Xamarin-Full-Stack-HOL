@@ -83,7 +83,13 @@ namespace Backend.Pages
             Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
             SystemEnvironmentAdapterModel systemEnvironmentAdapterModel = await systemEnvironmentService.GetAsync();
             bool checkPreLoginData = true;
-            if (string.IsNullOrEmpty(Captcha))
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password) ||
+                string.IsNullOrEmpty(Username.Trim()) || string.IsNullOrEmpty(Password.Trim()))
+            {
+                Msg = "帳號或者密碼不可為空白";
+                checkPreLoginData = false;
+            }
+            else if (string.IsNullOrEmpty(Captcha))
             {
                 Msg = "請輸入驗證碼";
                 checkPreLoginData = false;
