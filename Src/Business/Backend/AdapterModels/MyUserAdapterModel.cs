@@ -19,6 +19,7 @@ namespace Backend.AdapterModels
         public DateTime ForceLogoutDatetime { get; set; }
         public bool ForceChangePassword { get; set; }
         public DateTime ForceChangePasswordDatetime { get; set; }
+        public DateTime LastLoginDatetime { get; set; }
         public int MenuRoleId { get; set; }
         public string MenuRoleName { get; set; }
         public virtual MenuRoleAdapterModel MenuRole { get; set; }

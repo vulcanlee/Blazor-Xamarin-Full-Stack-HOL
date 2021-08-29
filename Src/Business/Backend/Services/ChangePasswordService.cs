@@ -51,13 +51,27 @@ namespace Backend.Services
 
         public async Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword)
         {
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            SystemEnvironment systemEnvironment = await context.SystemEnvironment
+                .FirstOrDefaultAsync();
             string encodePassword =
                 PasswordHelper.GetPasswordSHA(myUserAdapterModel.Salt, newPassword);
             myUserAdapterModel.Password = encodePassword;
             var myUser = Mapper.Map<MyUser>(myUserAdapterModel);
             CleanTrackingHelper.Clean<MyUser>(context);
+
+            #region 更新下次要變更密碼的時間
+            if (systemEnvironment.EnableCheckPasswordAge)
+            {
+                myUser.ForceChangePasswordDatetime = DateTime.Now
+                    .AddDays(systemEnvironment.PasswordAge);
+            }
+            myUser.ForceChangePassword = false;
+            #endregion
+
             context.Entry(myUser).State = EntityState.Modified;
             await context.SaveChangesAsync();
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
         }
     }

@@ -21,10 +21,11 @@ namespace Backend.Pages
     {
         private readonly IMyUserService myUserService;
         private readonly ILogger<NeedChangePasswordModel> logger;
+        private readonly IChangePasswordService changePasswordService;
 
         public NeedChangePasswordModel(IMyUserService myUserService, ILogger<NeedChangePasswordModel> logger,
             SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor,
-            ISystemEnvironmentService systemEnvironmentService)
+            ISystemEnvironmentService systemEnvironmentService, IChangePasswordService changePasswordService)
         {
 #if DEBUG
             NewPassword = "";
@@ -36,6 +37,7 @@ namespace Backend.Pages
             SystemLogHelper = systemLogHelper;
             HttpContextAccessor = httpContextAccessor;
             SystemEnvironmentService = systemEnvironmentService;
+            this.changePasswordService = changePasswordService;
         }
         [BindProperty]
         public string NewPassword { get; set; } = "";
@@ -119,10 +121,8 @@ namespace Backend.Pages
                     #endregion
                 }
 
-                myUser.Password =
-                    PasswordHelper.GetPasswordSHA(myUser.Salt, NewPassword);
-                myUser.ForceChangePassword = false;
-                await myUserService.UpdateAsync(myUser);
+                await changePasswordService.ChangePassword(myUser, NewPassword);
+
                 Msg = $"使用者 {myUser.Account} / {myUser.Name} " +
                     $"已經變更密碼 {DateTime.Now}";
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()

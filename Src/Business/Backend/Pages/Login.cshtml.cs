@@ -278,6 +278,11 @@ namespace Backend.Pages
                     IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
                 });
                 logger.LogInformation($"{Msg}");
+
+                #region 更新使用者最後登入時間
+                user.LastLoginDatetime = DateTime.Now;
+                await myUserService.UpdateAsync(user);
+                #endregion
                 return LocalRedirect(returnUrl);
             }
             GetCaptchaImage();

@@ -30,6 +30,7 @@ namespace Domains.Models
         public DateTime ForceLogoutDatetime { get; set; }
         public bool ForceChangePassword { get; set; }
         public DateTime ForceChangePasswordDatetime { get; set; }
+        public DateTime LastLoginDatetime { get; set; }
         public int MenuRoleId { get; set; }
         public virtual MenuRole MenuRole { get; set; }
 
