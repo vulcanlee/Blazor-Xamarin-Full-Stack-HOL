@@ -21,12 +21,12 @@ namespace Backend.Services
         #region 欄位與屬性
         private readonly BackendDBContext context;
         public IMapper Mapper { get; }
-        public ILogger<SystemEnvironmentService> Logger { get; }
+        public ILogger<PasswordPolicyService> Logger { get; }
         #endregion
 
         #region 建構式
         public SystemEnvironmentService(BackendDBContext context, IMapper mapper,
-            ILogger<SystemEnvironmentService> logger)
+            ILogger<PasswordPolicyService> logger)
         {
             this.context = context;
             Mapper = mapper;

@@ -43,6 +43,13 @@
         </div>
         <div class="form-row">
             <div class="form-group col">
+                <label for="Name" class="control-label">需要檢查密碼是否要定期更新</label>
+                <SfCheckBox @bind-Checked="ViewModel.SystemEnvironmentModel.EnableCheckPasswordAge" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.EnableCheckPasswordAge)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
                 <label for="Name" class="control-label">需要變更密碼的週期(天)</label>
                 <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.PasswordAge"
                                   Placeholder="請輸入正整數數值"

@@ -8,7 +8,7 @@ namespace Backend.Services
 {
     public interface ISystemEnvironmentService
     {
-        ILogger<SystemEnvironmentService> Logger { get; }
+        ILogger<PasswordPolicyService> Logger { get; }
         IMapper Mapper { get; }
 
         Task<VerifyRecordResult> AddAsync(SystemEnvironmentAdapterModel paraObject);

@@ -607,9 +607,10 @@ namespace Backend.Services
                 LoginFailMaxTimes = 3,
                 LoginFailTimesLockMinutes = 5,
                 MinimumPasswordLength = 3,
-                PasswordAge = 0,
+                PasswordAge = 42,
                 PasswordComplexity = 3,  // PasswordStrength.Medium
-                PasswordHistory = 0,
+                PasswordHistory = 20,
+                EnableCheckPasswordAge = true,
             };
 
             context.SystemEnvironment.Add(systemEnvironment);

@@ -24,6 +24,10 @@ namespace Domains.Models
         /// </summary>
         public int PasswordAge { get; set; }
         /// <summary>
+        /// 需要檢查密碼是否要定期更新
+        /// </summary>
+        public bool EnableCheckPasswordAge { get; set; }
+        /// <summary>
         /// 密碼最小字數
         /// </summary>
         public int MinimumPasswordLength { get; set; }
