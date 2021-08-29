@@ -11,6 +11,7 @@ namespace Backend.Services
         IMapper Mapper { get; }
 
         Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword, string ip);
+        Task<string> CheckWetherCanChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword);
         Task<MyUserAdapterModel> GetCurrentUser();
     }
 }

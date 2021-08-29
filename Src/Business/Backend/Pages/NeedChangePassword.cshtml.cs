@@ -120,7 +120,11 @@ namespace Backend.Pages
                     return Page();
                     #endregion
                 }
-
+                Msg = await changePasswordService.CheckWetherCanChangePassword(myUser, NewPassword);
+                if(string.IsNullOrEmpty(Msg) ==false)
+                {
+                    return Page();
+                }
                 await changePasswordService.ChangePassword(myUser, NewPassword,
                     HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
 

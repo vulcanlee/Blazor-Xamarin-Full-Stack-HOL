@@ -30,6 +30,7 @@ namespace Backend.ViewModels
         public IChangePasswordService ChangePasswordService { get; }
         public NavigationManager NavigationManager { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
+        public bool Relogin { get; set; } = false;
 
         public ChangePasswordViewModel(IChangePasswordService changePasswordService,
             NavigationManager navigationManager, IHttpContextAccessor httpContextAccessor)
@@ -45,6 +46,7 @@ namespace Backend.ViewModels
         public string PasswordStrengthName { get; set; }
         public async Task OnSaveAsync()
         {
+            Relogin = false;
             var PasswordStrength = PasswordCheck.GetPasswordStrength(ChangePasswordModel.NewPassword);
             PasswordStrengthName = PasswordStrength.ToString();
 
@@ -77,9 +79,19 @@ namespace Backend.ViewModels
             }
             #endregion
 
+            string msg = await ChangePasswordService
+                .CheckWetherCanChangePassword(myUserAdapterModel, ChangePasswordModel.NewPassword);
+            if (string.IsNullOrEmpty(msg) == false)
+            {
+                MessageBox.Show("400px", "200px",
+                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告), msg);
+                return;
+            }
+
             #region 進行密碼變更
             await ChangePasswordService.ChangePassword(myUserAdapterModel, ChangePasswordModel.NewPassword,
                 HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
+            Relogin = true;
             MessageBox.Show("400px", "200px",
                 ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),
                 ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼已經變更成功));
@@ -91,7 +103,8 @@ namespace Backend.ViewModels
         {
             MessageBox.Hidden();
             await Task.Yield();
-            NavigationManager.NavigateTo("/Logout", true);
+            if (Relogin)
+                NavigationManager.NavigateTo("/Logout", true);
         }
     }
 }

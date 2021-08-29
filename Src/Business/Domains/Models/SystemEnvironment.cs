@@ -35,6 +35,7 @@ namespace Domains.Models
         /// 紀錄變更密碼數量，以便免重覆變更之前密碼
         /// </summary>
         public int PasswordHistory { get; set; }
+        public bool EnablePasswordHistory { get; set; }
         /// <summary>
         /// 輸入密碼的複雜度
         /// </summary>

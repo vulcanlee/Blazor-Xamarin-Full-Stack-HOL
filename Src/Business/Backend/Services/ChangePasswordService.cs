@@ -49,6 +49,33 @@ namespace Backend.Services
 
         }
 
+        public async Task<string> CheckWetherCanChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword)
+        {
+            string result = "";
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
+            SystemEnvironment systemEnvironment = await context.SystemEnvironment
+                .FirstOrDefaultAsync();
+            string encodePassword = PasswordHelper.GetPasswordSHA(myUserAdapterModel.Salt, newPassword);
+            if (encodePassword == myUserAdapterModel.Password)
+            {
+                result = "不可以變更成為現在正在使用的密碼";
+            }
+            else
+            {
+                if (systemEnvironment.EnablePasswordHistory)
+                {
+                    var history = await context.MyUserPasswordHistory
+                        .FirstOrDefaultAsync(x => x.MyUserId == myUserAdapterModel.Id &&
+                        x.Password == encodePassword);
+                    if (history != null)
+                    {
+                        result = "不可以變更成為之前用過的密碼";
+                    }
+                }
+            }
+            return result;
+        }
         public async Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword,
             string ip)
         {
@@ -74,17 +101,40 @@ namespace Backend.Services
             context.Entry(myUser).State = EntityState.Modified;
             await context.SaveChangesAsync();
 
-            MyUserPasswordHistory myUserPasswordHistory = new MyUserPasswordHistory()
+            if (systemEnvironment.EnablePasswordHistory == true)
             {
-                MyUserId = myUser.Id,
-                IP = ip,
-                Password = myUser.Password,
-                ChangePasswordDatetime = DateTime.Now,
-            };
+                MyUserPasswordHistory myUserPasswordHistory = new MyUserPasswordHistory()
+                {
+                    MyUserId = myUser.Id,
+                    IP = ip,
+                    Password = myUser.Password,
+                    ChangePasswordDatetime = DateTime.Now,
+                };
 
-            await context.AddAsync(myUserPasswordHistory);
-            await context.SaveChangesAsync();
+                await context.AddAsync(myUserPasswordHistory);
+                await context.SaveChangesAsync();
 
+                while(true)
+                {
+                    #region 只會記錄下系統指定的變更密碼數量 systemEnvironment.PasswordHistory
+                    var myUserPasswordHistories = await context.MyUserPasswordHistory
+                        .Where(x => x.MyUserId == myUser.Id)
+                        .OrderBy(x => x.ChangePasswordDatetime)
+                        .ToListAsync();
+                    if(myUserPasswordHistories.Count > systemEnvironment.PasswordHistory)
+                    {
+                        var first = myUserPasswordHistories.First();
+                        context.Remove(first);
+                        await context.SaveChangesAsync();
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    #endregion
+                }
+            }
             CleanTrackingHelper.Clean<SystemEnvironment>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);

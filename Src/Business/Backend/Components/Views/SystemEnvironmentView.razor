@@ -59,6 +59,13 @@
         </div>
         <div class="form-row">
             <div class="form-group col">
+                <label for="Name" class="control-label">是否啟用偵測變更密碼歷史紀錄</label>
+                <SfCheckBox @bind-Checked="ViewModel.SystemEnvironmentModel.EnablePasswordHistory" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.EnablePasswordHistory)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
                 <label for="Name" class="control-label">紀錄變更密碼數量，以便免重覆變更之前密碼</label>
                 <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.PasswordHistory"
                                   Placeholder="請輸入正整數數值"

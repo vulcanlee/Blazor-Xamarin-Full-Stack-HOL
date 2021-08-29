@@ -14,6 +14,7 @@ namespace Backend.AdapterModels
         public int PasswordAge { get; set; }
         public int MinimumPasswordLength { get; set; }
         public int PasswordHistory { get; set; }
+        public bool EnablePasswordHistory { get; set; }
         public int PasswordComplexity { get; set; }
 
         public SystemEnvironmentAdapterModel Clone()
