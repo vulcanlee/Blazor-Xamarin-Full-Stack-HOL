@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services
 {
@@ -37,6 +38,35 @@ namespace Backend.Services
         #region 檢查密碼政策
         public async Task CheckPasswordAge()
         {
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<MyUser>(context);
+
+            SystemEnvironment systemEnvironment = await context.SystemEnvironment
+                .FirstOrDefaultAsync();
+            List<MyUser> myUsers = await context.MyUser
+                .ToListAsync();
+
+            var enableCheckPasswordAge = systemEnvironment.EnableCheckPasswordAge;
+            var passwordAge = systemEnvironment.PasswordAge;
+
+            if (enableCheckPasswordAge == true)
+            {
+                foreach (var item in myUsers)
+                {
+                    if (DateTime.Now > item.ForceChangePasswordDatetime)
+                    {
+                        #region 該使用者已經達到要變更密碼的時間
+                        item.ForceChangePasswordDatetime = DateTime.Now.AddDays(passwordAge);
+                        item.ForceChangePassword = true;
+                        context.Update(item);
+                        await context.SaveChangesAsync();
+                        #endregion
+                    }
+                }
+            }
+
+            CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<SystemEnvironment>(context);
 
         }
         #endregion

@@ -646,7 +646,7 @@ namespace Backend.Services
                 Salt = Guid.NewGuid().ToString(),
                 ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                 ForceChangePassword = false,
-                ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
+                ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
                 LoginFailTimes = 0,
                 LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
             };
@@ -670,7 +670,7 @@ namespace Backend.Services
                 Salt = Guid.NewGuid().ToString(),
                 ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                 ForceChangePassword = false,
-                ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
+                ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
                 LoginFailTimes = 0,
                 LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
             };
@@ -700,7 +700,7 @@ namespace Backend.Services
                         Salt = Guid.NewGuid().ToString(),
                         ForceLogoutDatetime = DateTime.Now.AddDays(-1),
                         ForceChangePassword = false,
-                        ForceChangePasswordDatetime = DateTime.Now.AddMonths(3),
+                        ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
                         LoginFailTimes = 0,
                         LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
                     };

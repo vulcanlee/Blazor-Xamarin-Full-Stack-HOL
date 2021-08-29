@@ -190,6 +190,7 @@ namespace Backend
             {
                 services.AddHostedService<KeepAliveHostedService>();
             }
+                services.AddHostedService<PasswordPolicyHostedService>();
             #endregion
 
             #region ¨Ï¥Î HttpContext
