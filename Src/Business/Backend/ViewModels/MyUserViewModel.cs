@@ -107,6 +107,7 @@ namespace Backend.ViewModels
                 CurrentRecord.ForceChangePasswordDatetime = DateTime.Now;
                 CurrentRecord.LoginFailUnlockDatetime = DateTime.Now;
                 CurrentRecord.LoginFailTimes = 0;
+                CurrentRecord.LastLoginDatetime = DateTime.Now;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {

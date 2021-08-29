@@ -649,6 +649,7 @@ namespace Backend.Services
                 ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
                 LoginFailTimes = 0,
                 LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
+                LastLoginDatetime = DateTime.Now,
             };
 
             myUser.Salt = Guid.NewGuid().ToString();
@@ -673,6 +674,7 @@ namespace Backend.Services
                 ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
                 LoginFailTimes = 0,
                 LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
+                LastLoginDatetime = DateTime.Now,
             };
             var adminRawPassword = "123";
             adminMyUser.Password =
@@ -703,6 +705,7 @@ namespace Backend.Services
                         ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
                         LoginFailTimes = 0,
                         LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
+                        LastLoginDatetime = DateTime.Now,
                     };
                     var userRawPassword = "123";
                     itemMyUser.Password =
