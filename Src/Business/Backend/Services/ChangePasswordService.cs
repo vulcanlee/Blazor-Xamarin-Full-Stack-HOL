@@ -79,6 +79,7 @@ namespace Backend.Services
                 MyUserId = myUser.Id,
                 IP = ip,
                 Password = myUser.Password,
+                ChangePasswordDatetime = DateTime.Now,
             };
 
             await context.AddAsync(myUserPasswordHistory);

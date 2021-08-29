@@ -665,6 +665,7 @@ namespace Backend.Services
                 MyUserId = myUser.Id,
                 IP = "",
                 Password = myUser.Password,
+                ChangePasswordDatetime = DateTime.Now,
             };
 
             await context.AddAsync(myUserPasswordHistoryAdapterModel);
@@ -701,6 +702,7 @@ namespace Backend.Services
                 MyUserId = adminMyUser.Id,
                 IP = "",
                 Password = adminMyUser.Password,
+                ChangePasswordDatetime = DateTime.Now,
             };
 
             await context.AddAsync(myUserPasswordHistoryAdapterModel);
@@ -744,6 +746,7 @@ namespace Backend.Services
                         MyUserId = itemMyUser.Id,
                         IP = "",
                         Password = itemMyUser.Password,
+                        ChangePasswordDatetime = DateTime.Now,
                     };
                     await context.AddAsync(myUserPasswordHistoryAdapterModel);
                     await context.SaveChangesAsync();
