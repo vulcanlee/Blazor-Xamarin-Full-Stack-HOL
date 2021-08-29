@@ -121,7 +121,8 @@ namespace Backend.Pages
                     #endregion
                 }
 
-                await changePasswordService.ChangePassword(myUser, NewPassword);
+                await changePasswordService.ChangePassword(myUser, NewPassword,
+                    HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
 
                 Msg = $"使用者 {myUser.Account} / {myUser.Name} " +
                     $"已經變更密碼 {DateTime.Now}";

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Backend.ViewModels
 {
@@ -28,12 +29,14 @@ namespace Backend.ViewModels
         public EditContext LocalEditContext { get; set; }
         public IChangePasswordService ChangePasswordService { get; }
         public NavigationManager NavigationManager { get; }
+        public IHttpContextAccessor HttpContextAccessor { get; }
 
         public ChangePasswordViewModel(IChangePasswordService changePasswordService,
-            NavigationManager navigationManager)
+            NavigationManager navigationManager, IHttpContextAccessor httpContextAccessor)
         {
             ChangePasswordService = changePasswordService;
             NavigationManager = navigationManager;
+            HttpContextAccessor = httpContextAccessor;
         }
         public void OnEditContestChanged(EditContext context)
         {
@@ -75,7 +78,8 @@ namespace Backend.ViewModels
             #endregion
 
             #region 進行密碼變更
-            await ChangePasswordService.ChangePassword(myUserAdapterModel, ChangePasswordModel.NewPassword);
+            await ChangePasswordService.ChangePassword(myUserAdapterModel, ChangePasswordModel.NewPassword,
+                HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
             MessageBox.Show("400px", "200px",
                 ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),
                 ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼已經變更成功));

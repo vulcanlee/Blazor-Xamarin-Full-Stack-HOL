@@ -624,6 +624,7 @@ namespace Backend.Services
             #region 建立使用者紀錄 
 
             CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             #region 取得各種需要的角色
             var menuRole開發者 = await context.MenuRole
                 .AsNoTracking()
@@ -658,7 +659,19 @@ namespace Backend.Services
 
             context.Add(myUser);
             await context.SaveChangesAsync();
+
+            MyUserPasswordHistory myUserPasswordHistoryAdapterModel = new MyUserPasswordHistory()
+            {
+                MyUserId = myUser.Id,
+                IP = "",
+                Password = myUser.Password,
+            };
+
+            await context.AddAsync(myUserPasswordHistoryAdapterModel);
+            await context.SaveChangesAsync();
+
             CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             #endregion
 
             #region 建立 系統管理員
@@ -682,7 +695,19 @@ namespace Backend.Services
 
             context.Add(adminMyUser);
             await context.SaveChangesAsync();
+
+            myUserPasswordHistoryAdapterModel = new MyUserPasswordHistory()
+            {
+                MyUserId = adminMyUser.Id,
+                IP = "",
+                Password = adminMyUser.Password,
+            };
+
+            await context.AddAsync(myUserPasswordHistoryAdapterModel);
+            await context.SaveChangesAsync();
+
             CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             #endregion
 
             #region 建立 使用者
@@ -713,7 +738,18 @@ namespace Backend.Services
 
                     context.Add(itemMyUser);
                     await context.SaveChangesAsync();
+
+                    myUserPasswordHistoryAdapterModel = new MyUserPasswordHistory()
+                    {
+                        MyUserId = itemMyUser.Id,
+                        IP = "",
+                        Password = itemMyUser.Password,
+                    };
+                    await context.AddAsync(myUserPasswordHistoryAdapterModel);
+                    await context.SaveChangesAsync();
+
                     CleanTrackingHelper.Clean<MyUser>(context);
+                    CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
                 }
             }
             #endregion

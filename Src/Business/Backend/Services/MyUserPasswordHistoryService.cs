@@ -16,7 +16,7 @@ namespace Backend.Services
     using CommonDomain.Enums;
     using System;
 
-    public class MyUserPasswordHistoryService 
+    public class MyUserPasswordHistoryService : IMyUserPasswordHistoryService
     {
         #region 欄位與屬性
         private readonly BackendDBContext context;

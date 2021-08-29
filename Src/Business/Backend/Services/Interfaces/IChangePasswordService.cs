@@ -10,7 +10,7 @@ namespace Backend.Services
         AuthenticationStateProvider AuthenticationStateProvider { get; }
         IMapper Mapper { get; }
 
-        Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword);
+        Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword, string ip);
         Task<MyUserAdapterModel> GetCurrentUser();
     }
 }

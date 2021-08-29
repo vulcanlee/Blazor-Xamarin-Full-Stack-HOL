@@ -49,9 +49,11 @@ namespace Backend.Services
 
         }
 
-        public async Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword)
+        public async Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword,
+            string ip)
         {
             CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             SystemEnvironment systemEnvironment = await context.SystemEnvironment
                 .FirstOrDefaultAsync();
             string encodePassword =
@@ -71,8 +73,20 @@ namespace Backend.Services
 
             context.Entry(myUser).State = EntityState.Modified;
             await context.SaveChangesAsync();
+
+            MyUserPasswordHistory myUserPasswordHistory = new MyUserPasswordHistory()
+            {
+                MyUserId = myUser.Id,
+                IP = ip,
+                Password = myUser.Password,
+            };
+
+            await context.AddAsync(myUserPasswordHistory);
+            await context.SaveChangesAsync();
+
             CleanTrackingHelper.Clean<SystemEnvironment>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
+            CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
         }
     }
 }
