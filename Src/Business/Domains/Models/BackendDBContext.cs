@@ -24,6 +24,7 @@ namespace Domains.Models
 
 
         public virtual DbSet<MyUser> MyUser { get; set; }
+        public virtual DbSet<MyUserPasswordHistory> MyUserPasswordHistory { get; set; }
         public virtual DbSet<MenuRole> MenuRole { get; set; }
         public virtual DbSet<MenuData> MenuData { get; set; }
         public virtual DbSet<SystemLog> SystemLog { get; set; }
