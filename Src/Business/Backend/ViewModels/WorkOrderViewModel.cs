@@ -16,6 +16,8 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
     using System;
+    using Backend.Models;
+    using System.Linq;
 
     public class WorkOrderViewModel
     {
@@ -29,6 +31,9 @@ namespace Backend.ViewModels
             mapper = Mapper;
             TranscationResultHelper = transcationResultHelper;
             WorkOrderSort.Initialization(SortConditions);
+            WorkOrderStatusCondition.Initialization(WorkOrderStatusConditions);
+            CurrentWorkOrderStatusCondition.Id = WorkOrderStatusConditions[0].Id;
+            CurrentWorkOrderStatusCondition.Title = WorkOrderStatusConditions[0].Title;
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -84,10 +89,12 @@ namespace Backend.ViewModels
         /// 可以選擇排序條件清單
         /// </summary>
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
+        public List<WorkOrderStatusCondition> WorkOrderStatusConditions { get; set; } = new List<WorkOrderStatusCondition>();
         /// <summary>
         /// 現在選擇排序條件項目
         /// </summary>
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        public WorkOrderStatusCondition CurrentWorkOrderStatusCondition { get; set; } = new WorkOrderStatusCondition();
         /// <summary>
         /// 用於控制、更新明細清單 Grid 
         /// </summary>
@@ -331,6 +338,17 @@ namespace Backend.ViewModels
             if (dataGrid.GridIsExist() == true)
             {
                 CurrentSortCondition.Id = args.Value;
+                dataGrid.RefreshGrid();
+            }
+        }
+
+        public void WorkOrderStatusChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, WorkOrderStatusCondition> args)
+        {
+            if (dataGrid.GridIsExist() == true)
+            {
+                CurrentWorkOrderStatusCondition.Id = args.Value;
+                CurrentWorkOrderStatusCondition.Title = WorkOrderStatusConditions
+                    .FirstOrDefault(x => x.Id == CurrentWorkOrderStatusCondition.Id).Title;
                 dataGrid.RefreshGrid();
             }
         }

@@ -17,7 +17,8 @@
             Toolbar="ViewModel.Toolbaritems">
         <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <WorkOrderAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></WorkOrderAdapter>
+            <WorkOrderAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
+                              CurrentWorkOrderStatusCondition="@ViewModel.CurrentWorkOrderStatusCondition"/>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -27,7 +28,16 @@
                         <SfDropDownList TValue="int" TItem="SortCondition"
                                         Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
                             <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" 
+                                                ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                        <span class="ml-4 mr-2 mdi mdi-18px mdi-gamepad-circle-left" />
+                        <SfDropDownList TValue="int" TItem="WorkOrderStatusCondition"
+                                        @bind-Value="ViewModel.CurrentWorkOrderStatusCondition.Id"
+                                        Placeholder="派工單類型" DataSource="@ViewModel.WorkOrderStatusConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="WorkOrderStatusCondition"
+                                                ValueChange="@ViewModel.WorkOrderStatusChanged"></DropDownListEvents>
                         </SfDropDownList>
                     </Template>
                 </ToolbarItem>

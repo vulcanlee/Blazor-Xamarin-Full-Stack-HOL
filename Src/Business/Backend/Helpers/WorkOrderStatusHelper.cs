@@ -23,6 +23,9 @@ namespace Backend.Helpers
             string result = "N/A";
             switch (workOrderStatus)
             {
+                case -1:
+                    result = "全部";
+                    break;
                 case 0:
                     result = "建立";
                     break;

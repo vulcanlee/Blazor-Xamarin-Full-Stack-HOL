@@ -5,6 +5,7 @@
     using AutoMapper;
     using Backend.Services;
     using Backend.AdapterModels;
+    using Backend.Models;
     using CommonDomain.DataModels;
     using Newtonsoft.Json;
     using Syncfusion.Blazor;
@@ -13,6 +14,8 @@
     {
         [Parameter]
         public SortCondition CurrentSortCondition { get; set; }
+        [Parameter]
+        public WorkOrderStatusCondition CurrentWorkOrderStatusCondition { get; set; }
 
         public override async Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string key = null)
         {
@@ -34,7 +37,8 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<WorkOrderAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
+            DataRequestResult<WorkOrderAdapterModel> adaptorModelObjects =
+                await Service.GetAsync(dataRequest, CurrentWorkOrderStatusCondition);
             var item = dataManagerRequest.RequiresCounts
                 ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
                 : (object)adaptorModelObjects.Result;

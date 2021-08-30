@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
+using Backend.Models;
 using CommonDomain.DataModels;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> BeforeDeleteCheckAsync(WorkOrderAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeUpdateCheckAsync(WorkOrderAdapterModel paraObject);
         Task<VerifyRecordResult> DeleteAsync(int id);
-        Task<DataRequestResult<WorkOrderAdapterModel>> GetAsync(DataRequest dataRequest);
+        Task<DataRequestResult<WorkOrderAdapterModel>> GetAsync(DataRequest dataRequest, WorkOrderStatusCondition CurrentWorkOrderStatusCondition = null);
         Task<WorkOrderAdapterModel> GetAsync(int id);
         Task<VerifyRecordResult> UpdateAsync(WorkOrderAdapterModel paraObject);
     }

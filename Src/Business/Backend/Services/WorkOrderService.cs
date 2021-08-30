@@ -15,6 +15,7 @@ namespace Backend.Services
     using CommonDomain.DataModels;
     using CommonDomain.Enums;
     using System;
+    using Backend.Models;
 
     public class WorkOrderService : IWorkOrderService
     {
@@ -35,7 +36,8 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
-        public async Task<DataRequestResult<WorkOrderAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<WorkOrderAdapterModel>> GetAsync(DataRequest dataRequest,
+            WorkOrderStatusCondition CurrentWorkOrderStatusCondition = null)
         {
             List<WorkOrderAdapterModel> data = new();
             DataRequestResult<WorkOrderAdapterModel> result = new();
@@ -47,6 +49,17 @@ namespace Backend.Services
                 DataSource = DataSource
                 .Where(x => x.Description.Contains(dataRequest.Search) ||
                 x.Comment.Contains(dataRequest.Search));
+            }
+            #endregion
+
+            #region 過濾派工單狀態
+            if(CurrentWorkOrderStatusCondition!=null)
+            {
+                if(CurrentWorkOrderStatusCondition.Id != -1)
+                {
+                    DataSource = DataSource
+                    .Where(x => x.Status== CurrentWorkOrderStatusCondition.Id);
+                }
             }
             #endregion
 
