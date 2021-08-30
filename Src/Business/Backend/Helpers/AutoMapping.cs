@@ -10,6 +10,8 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<WorkOrder, WorkOrderAdapterModel>();
+            CreateMap<WorkOrderAdapterModel, WorkOrder>();
             CreateMap<MyUserPasswordHistory, MyUserPasswordHistoryAdapterModel>();
             CreateMap<MyUserPasswordHistoryAdapterModel, MyUserPasswordHistory>();
             CreateMap<SystemEnvironment, SystemEnvironmentAdapterModel>();
