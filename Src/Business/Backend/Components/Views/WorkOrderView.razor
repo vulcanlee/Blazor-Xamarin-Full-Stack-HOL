@@ -152,8 +152,11 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">狀態<span> (@ViewModel.CurrentRecord.StatusName)</span></label>
-                            <SfNumericTextBox @bind-Value="ViewModel.CurrentRecord.Status"
-                                              Placeholder="請輸入大於等於 0 的整數數值" />
+                            <SfDropDownList TValue="int" TItem="WorkOrderStatusCondition"
+                                            @bind-Value="ViewModel.CurrentRecord.Status"
+                                            Placeholder="派工單類型" DataSource="@ViewModel.WorkOrderStatusRecordConditions">
+                                <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            </SfDropDownList>
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.Status)" />
                         </div>
                     </div>

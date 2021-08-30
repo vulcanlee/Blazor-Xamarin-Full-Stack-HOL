@@ -18,6 +18,7 @@ namespace Backend.ViewModels
     using System;
     using Backend.Models;
     using System.Linq;
+    using System.Threading;
 
     public class WorkOrderViewModel
     {
@@ -34,6 +35,8 @@ namespace Backend.ViewModels
             WorkOrderStatusCondition.Initialization(WorkOrderStatusConditions);
             CurrentWorkOrderStatusCondition.Id = WorkOrderStatusConditions[0].Id;
             CurrentWorkOrderStatusCondition.Title = WorkOrderStatusConditions[0].Title;
+            WorkOrderStatusCondition.Initialization(WorkOrderStatusRecordConditions);
+            WorkOrderStatusRecordConditions.RemoveAt(0);
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -90,6 +93,7 @@ namespace Backend.ViewModels
         /// </summary>
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
         public List<WorkOrderStatusCondition> WorkOrderStatusConditions { get; set; } = new List<WorkOrderStatusCondition>();
+        public List<WorkOrderStatusCondition> WorkOrderStatusRecordConditions { get; set; } = new List<WorkOrderStatusCondition>();
         /// <summary>
         /// 現在選擇排序條件項目
         /// </summary>
@@ -111,6 +115,10 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
+        /// <summary>
+        /// SfDropDownList 的 ValueChange 是否已經被觸發了
+        /// </summary>
+        public bool CanTriggerEvent { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         /// <summary>
@@ -342,14 +350,21 @@ namespace Backend.ViewModels
             }
         }
 
-        public void WorkOrderStatusChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, WorkOrderStatusCondition> args)
+        public async Task WorkOrderStatusChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, WorkOrderStatusCondition> args)
         {
-            if (dataGrid.GridIsExist() == true)
+            var thread = Thread.CurrentThread;
+            if(CanTriggerEvent == false)
             {
-                CurrentWorkOrderStatusCondition.Id = args.Value;
-                CurrentWorkOrderStatusCondition.Title = WorkOrderStatusConditions
-                    .FirstOrDefault(x => x.Id == CurrentWorkOrderStatusCondition.Id).Title;
-                dataGrid.RefreshGrid();
+                CanTriggerEvent = true;
+                if (dataGrid.GridIsExist() == true)
+                {
+                    CurrentWorkOrderStatusCondition.Id = args.Value;
+                    CurrentWorkOrderStatusCondition.Title = WorkOrderStatusConditions
+                        .FirstOrDefault(x => x.Id == CurrentWorkOrderStatusCondition.Id).Title;
+                    await Task.Delay(200);
+                    dataGrid.RefreshGrid();
+                }
+                CanTriggerEvent = false;
             }
         }
 
