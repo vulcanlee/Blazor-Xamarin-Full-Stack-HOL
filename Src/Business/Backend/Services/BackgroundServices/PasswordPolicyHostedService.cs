@@ -12,8 +12,6 @@ namespace Backend.Services
 {
     public class PasswordPolicyHostedService : IHostedService
     {
-        //public PasswordPolicyHostedService(ILogger<PasswordPolicyHostedService> logger,
-        //    IServer server, IConfiguration configuration, PasswordPolicyService passwordPolicyService)
         public PasswordPolicyHostedService(ILogger<PasswordPolicyHostedService> logger,
             IServer server, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
         {

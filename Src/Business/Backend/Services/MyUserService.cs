@@ -400,7 +400,8 @@ namespace Backend.Services
 
                 if (user.Password != shaPassword)
                 {
-                    var systemEnvironment = await context.SystemEnvironment.FirstOrDefaultAsync();
+                    var systemEnvironment = await context.SystemEnvironment
+                        .OrderBy(x => x.Id).FirstOrDefaultAsync();
                     user.LoginFailTimes++;
                     if (user.LoginFailTimes >= systemEnvironment.LoginFailMaxTimes)
                     {

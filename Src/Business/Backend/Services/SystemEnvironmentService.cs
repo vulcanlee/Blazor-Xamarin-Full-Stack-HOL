@@ -39,6 +39,7 @@ namespace Backend.Services
         {
             var result = await context.SystemEnvironment
                   .AsNoTracking()
+                  .OrderBy(x => x.Id)
                   .FirstOrDefaultAsync();
             var resultAdapterModel = Mapper.Map<SystemEnvironmentAdapterModel>(result);
             return resultAdapterModel;

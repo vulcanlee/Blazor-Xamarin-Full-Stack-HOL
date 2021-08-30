@@ -42,6 +42,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MyUser>(context);
 
             SystemEnvironment systemEnvironment = await context.SystemEnvironment
+                .OrderBy(x=>x.Id)
                 .FirstOrDefaultAsync();
             List<MyUser> myUsers = await context.MyUser
                 .ToListAsync();

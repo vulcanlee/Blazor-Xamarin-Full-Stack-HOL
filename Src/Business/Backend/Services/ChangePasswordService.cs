@@ -55,6 +55,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<SystemEnvironment>(context);
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             SystemEnvironment systemEnvironment = await context.SystemEnvironment
+                .OrderBy(x=>x.Id)
                 .FirstOrDefaultAsync();
             string encodePassword = PasswordHelper.GetPasswordSHA(myUserAdapterModel.Salt, newPassword);
             if (encodePassword == myUserAdapterModel.Password)
@@ -82,6 +83,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<SystemEnvironment>(context);
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             SystemEnvironment systemEnvironment = await context.SystemEnvironment
+                .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync();
             string encodePassword =
                 PasswordHelper.GetPasswordSHA(myUserAdapterModel.Salt, newPassword);
