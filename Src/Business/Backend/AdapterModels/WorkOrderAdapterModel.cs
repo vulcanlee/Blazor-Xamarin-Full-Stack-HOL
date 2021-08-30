@@ -1,6 +1,7 @@
 ﻿using CommonDomain.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Backend.Helpers;
 
 namespace Backend.AdapterModels
 {
@@ -23,19 +24,27 @@ namespace Backend.AdapterModels
         /// <summary>
         /// 修改時間
         /// </summary>
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         /// <summary>
         /// 開始時間
         /// </summary>
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         /// <summary>
         /// 結束時間
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         /// <summary>
         /// 狀態
         /// </summary>
-        public WorkOrderStatusEnum Status { get; set; }
+        [Range(0, 99, ErrorMessage = "請輸入大於等於0 整數")]
+        public int Status { get; set; }
+        public string StatusName
+        {
+            get
+            {
+                return Status.GetWorkOrderStatus();
+            }
+        }
 
         public WorkOrderAdapterModel Clone()
         {

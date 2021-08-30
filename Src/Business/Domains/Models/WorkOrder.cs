@@ -29,15 +29,15 @@ namespace Domains.Models
         /// <summary>
         /// 修改時間
         /// </summary>
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         /// <summary>
         /// 開始時間
         /// </summary>
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         /// <summary>
         /// 結束時間
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         /// <summary>
         /// 狀態
         /// </summary>

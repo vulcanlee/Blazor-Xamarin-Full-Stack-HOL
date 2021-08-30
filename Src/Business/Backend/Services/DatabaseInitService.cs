@@ -946,6 +946,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 工單
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.派工單,
+                CodeName = "WorkOrder",
+                Enable = true,
+                Icon = "mdi-cog-transfer-outline",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 簽核文件
             cc += 10;
             menuData = new MenuData()
