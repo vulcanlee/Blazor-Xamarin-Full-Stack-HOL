@@ -246,11 +246,13 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MyUserPasswordHistoryAdapterModel paraObject)
         {
+            await Task.Yield();
             return VerifyRecordResultFactory.Build(true);
         }
 
         public async Task<VerifyRecordResult> BeforeDeleteCheckAsync(MyUserPasswordHistoryAdapterModel paraObject)
         {
+            await Task.Yield();
             return VerifyRecordResultFactory.Build(true);
         }
         #endregion
