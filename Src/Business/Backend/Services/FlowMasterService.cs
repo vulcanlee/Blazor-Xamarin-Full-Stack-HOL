@@ -694,7 +694,6 @@ namespace Backend.Services
         public async Task<bool> CheckUserShowActionAsync(FlowMasterAdapterModel flowMasterAdapterModel,
             CurrentUser currentUser)
         {
-            bool result = false;
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);

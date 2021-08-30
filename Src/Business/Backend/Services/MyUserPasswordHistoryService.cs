@@ -240,6 +240,7 @@ namespace Backend.Services
         #region CRUD 的限制條件檢查
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(MyUserPasswordHistoryAdapterModel paraObject)
         {
+            await Task.Yield();
             return VerifyRecordResultFactory.Build(true);
         }
 

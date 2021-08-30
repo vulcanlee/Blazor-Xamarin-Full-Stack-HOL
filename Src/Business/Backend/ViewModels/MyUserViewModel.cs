@@ -75,7 +75,7 @@ namespace Backend.ViewModels
         private readonly IMyUserService CurrentService;
         private readonly BackendDBContext context;
         private readonly IMapper mapper;
-        IRazorPage thisRazorComponent;
+        IRazorPage thisView;
         IDataGrid dataGrid;
         public List<object> Toolbaritems = new List<object>();
         #endregion
@@ -85,7 +85,7 @@ namespace Backend.ViewModels
         #region DataGrid 初始化
         public void Setup(IRazorPage razorPage, IDataGrid dataGrid)
         {
-            thisRazorComponent = razorPage;
+            thisView = razorPage;
             this.dataGrid = dataGrid;
         }
         #endregion
@@ -141,7 +141,7 @@ namespace Backend.ViewModels
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
                     await Task.Yield();
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
                 #endregion
@@ -189,7 +189,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼不能為空白));
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
                 var checkedResult = await CurrentService
@@ -198,7 +198,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         VerifyRecordResultHelper.GetMessageString(checkedResult));
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
                 CurrentRecord.Salt = Guid.NewGuid().ToString();
@@ -213,7 +213,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         VerifyRecordResultHelper.GetMessageString(checkedResult));
-                    thisRazorComponent.NeedRefresh();
+                    thisView.NeedRefresh();
                     return;
                 }
                 if (string.IsNullOrEmpty(CurrentRecord.PasswordPlaintext) == false)

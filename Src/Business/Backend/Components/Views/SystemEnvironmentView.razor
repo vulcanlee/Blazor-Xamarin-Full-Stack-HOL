@@ -11,6 +11,8 @@
 @inject SystemEnvironmentViewModel ViewModel
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+@implements IRazorPage
+
 <EditForm Model="@ViewModel.SystemEnvironmentModel">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -100,6 +102,11 @@
 <DialogBackground />
 
 @code {
+    protected override void OnInitialized()
+    {
+        ViewModel.Setup(this);
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -109,5 +116,17 @@
             StateHasChanged();
         }
     }
+
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        StateHasChanged();
+    }
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    #endregion
 }
 

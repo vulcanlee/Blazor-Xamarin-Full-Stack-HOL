@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Backend.Interfaces;
 
 namespace Backend.ViewModels
 {
@@ -28,6 +29,7 @@ namespace Backend.ViewModels
         public EditContext LocalEditContext { get; set; }
         public ISystemEnvironmentService SystemEnvironmentService { get; }
         public NavigationManager NavigationManager { get; }
+        IRazorPage thisView;
 
         public SystemEnvironmentViewModel(ISystemEnvironmentService systemEnvironmentService,
             NavigationManager navigationManager)
@@ -35,6 +37,12 @@ namespace Backend.ViewModels
             SystemEnvironmentService = systemEnvironmentService;
             NavigationManager = navigationManager;
         }
+
+        public void Setup(IRazorPage razorPage)
+        {
+            thisView = razorPage;
+        }
+        
         public void OnEditContestChanged(EditContext context)
         {
             LocalEditContext = context;
@@ -62,6 +70,9 @@ namespace Backend.ViewModels
         public async Task CloseMessageBox()
         {
             MessageBox.Hidden();
+            thisView.NeedRefresh();
+            await Task.Yield();
+            thisView.NeedRefresh();
         }
     }
 }
