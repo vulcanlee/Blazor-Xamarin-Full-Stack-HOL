@@ -45,12 +45,13 @@ namespace Backend.Services
 
                     await Task.Delay(15000);
 
-                    var scope = ServiceScopeFactory.CreateScope();
-                    IPasswordPolicyService passwordPolicyService = scope.ServiceProvider.GetRequiredService<IPasswordPolicyService>();
 
                     HttpClient client = new();
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
+                        var scope = ServiceScopeFactory.CreateScope();
+                        IPasswordPolicyService passwordPolicyService = scope.ServiceProvider.GetRequiredService<IPasswordPolicyService>();
+                        
                         var dateOffset = DateTime.UtcNow.AddHours(8);
                         TimeSpan timeSpan = DateTime.Now - StartupTime;
                         // Todo : 這樣的用法要學起來
@@ -64,6 +65,8 @@ namespace Backend.Services
                         {
                             Logger.LogWarning(ex, $"Password Policy Check 檢查密碼是否要定期更新 發生例外異常");
                         }
+
+                        scope.Dispose();
                         await Task.Delay(checkCycle * 1000, cancellationTokenSource.Token);
                     }
                 }
