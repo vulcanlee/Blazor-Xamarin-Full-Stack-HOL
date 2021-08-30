@@ -115,10 +115,6 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
-        /// <summary>
-        /// SfDropDownList 的 ValueChange 是否已經被觸發了
-        /// </summary>
-        public bool CanTriggerEvent { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
         /// <summary>
@@ -352,10 +348,8 @@ namespace Backend.ViewModels
 
         public async Task WorkOrderStatusChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, WorkOrderStatusCondition> args)
         {
-            var thread = Thread.CurrentThread;
-            if(CanTriggerEvent == false)
+            if (args.IsInteracted == true)
             {
-                CanTriggerEvent = true;
                 if (dataGrid.GridIsExist() == true)
                 {
                     CurrentWorkOrderStatusCondition.Id = args.Value;
@@ -364,7 +358,6 @@ namespace Backend.ViewModels
                     await Task.Delay(200);
                     dataGrid.RefreshGrid();
                 }
-                CanTriggerEvent = false;
             }
         }
 
