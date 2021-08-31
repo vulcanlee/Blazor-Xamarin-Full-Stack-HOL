@@ -2,6 +2,7 @@
 using Backend.AdapterModels;
 using CommonDomain.DataModels;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.Services
@@ -18,6 +19,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> DeleteAsync(long id);
         Task<DataRequestResult<MailQueueAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<MailQueueAdapterModel> GetAsync(long id);
+        Task<List<MailQueueAdapterModel>> GetNotSentAsync();
         Task<VerifyRecordResult> UpdateAsync(MailQueueAdapterModel paraObject);
     }
 }

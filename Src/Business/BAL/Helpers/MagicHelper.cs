@@ -77,6 +77,10 @@ namespace BAL.Helpers
         #endregion
 
         #region 支援方法
+        public static readonly int MaxEmailResend = 3;
+        public static readonly int MailStatus等待 = 0;
+        public static readonly int MailStatus失敗 = 1;
+        public static readonly int MailStatus成功 = 2;
         #endregion
     }
 }

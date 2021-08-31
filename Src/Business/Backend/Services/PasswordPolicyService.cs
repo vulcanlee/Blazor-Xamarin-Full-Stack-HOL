@@ -16,6 +16,7 @@ namespace Backend.Services
     using CommonDomain.DataModels;
     using CommonDomain.Enums;
     using System;
+    using System.Threading;
 
     public class PasswordPolicyService : IPasswordPolicyService
     {
@@ -36,16 +37,18 @@ namespace Backend.Services
         #endregion
 
         #region 檢查密碼政策
-        public async Task CheckPasswordAge()
+        public async Task CheckPasswordAge(CancellationToken cancellationToken)
         {
             CleanTrackingHelper.Clean<SystemEnvironment>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
 
             SystemEnvironment systemEnvironment = await context.SystemEnvironment
-                .OrderBy(x=>x.Id)
+                .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             List<MyUser> myUsers = await context.MyUser
                 .ToListAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
             var enableCheckPasswordAge = systemEnvironment.EnableCheckPasswordAge;
             var passwordAge = systemEnvironment.PasswordAge;
@@ -54,6 +57,7 @@ namespace Backend.Services
             {
                 foreach (var item in myUsers)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     if (DateTime.Now > item.ForceChangePasswordDatetime)
                     {
                         #region 該使用者已經達到要變更密碼的時間

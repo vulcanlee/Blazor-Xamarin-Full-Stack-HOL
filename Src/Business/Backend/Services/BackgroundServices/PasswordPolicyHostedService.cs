@@ -45,8 +45,6 @@ namespace Backend.Services
 
                     await Task.Delay(15000);
 
-
-                    HttpClient client = new();
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
                         var scope = ServiceScopeFactory.CreateScope();
@@ -59,7 +57,7 @@ namespace Backend.Services
 
                         try
                         {
-                            await passwordPolicyService.CheckPasswordAge();
+                            await passwordPolicyService.CheckPasswordAge(cancellationTokenSource.Token);
                         }
                         catch (Exception ex)
                         {
@@ -72,11 +70,11 @@ namespace Backend.Services
                 }
                 catch (OperationCanceledException)
                 {
-                    Logger.LogInformation($"Keep alive 服務準備正常離開中");
+                    Logger.LogInformation($"Password Policy Check 服務準備正常離開中");
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogWarning(ex, $"Keep alive 服務產生例外異常");
+                    Logger.LogWarning(ex, $"Password Policy Check 服務產生例外異常");
                 }
                 #endregion
             });

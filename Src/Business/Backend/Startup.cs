@@ -28,6 +28,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Serialization;
+using CommonDomain.DataModels;
 
 namespace Backend
 {
@@ -107,6 +108,7 @@ namespace Backend
 
             #region 加入設定強型別注入宣告
             services.Configure<TokenConfiguration>(Configuration.GetSection("Tokens"));
+            services.Configure<SmtpClientInformation>(Configuration.GetSection("SmtpClientInformation"));
             #endregion
 
             #region 加入使用 Cookie & JWT 認證需要的宣告
@@ -190,7 +192,8 @@ namespace Backend
             {
                 services.AddHostedService<KeepAliveHostedService>();
             }
-                services.AddHostedService<PasswordPolicyHostedService>();
+            services.AddHostedService<PasswordPolicyHostedService>();
+            services.AddHostedService<SendingMailHostedService>();
             #endregion
 
             #region 使用 HttpContext

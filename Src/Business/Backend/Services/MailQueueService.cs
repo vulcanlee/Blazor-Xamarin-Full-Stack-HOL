@@ -93,6 +93,18 @@ namespace Backend.Services
             return result;
         }
 
+        public async Task<List<MailQueueAdapterModel>> GetNotSentAsync()
+        {
+            List<MailQueueAdapterModel> data = new();
+            var DataSource = await context.MailQueue
+                .AsNoTracking()
+                .Where(x => x.Status != 2 && x.SendTimes <= MagicHelper.MaxEmailResend)
+                .ToListAsync();
+
+            data = Mapper.Map<List<MailQueueAdapterModel>>(DataSource);
+            return data;
+        }
+
         public async Task<MailQueueAdapterModel> GetAsync(long id)
 
         {

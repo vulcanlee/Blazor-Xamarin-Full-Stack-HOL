@@ -15,6 +15,7 @@ namespace Backend.ViewModels
     using CommonDomain.DataModels;
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
+    using System;
 
     public class MailQueueViewModel
     {
@@ -29,6 +30,15 @@ namespace Backend.ViewModels
             TranscationResultHelper = transcationResultHelper;
             MailQueueSort.Initialization(SortConditions);
 
+            Toolbaritems.Add(new ItemModel()
+            {
+                Id = ButtonIdHelper.ButtonIdAdd,
+                Text = "新增",
+                TooltipText = "新增",
+                Type = ItemType.Button,
+                PrefixIcon = "mdi mdi-plus-thick",
+                Align = ItemAlign.Left,
+            });
             Toolbaritems.Add(new ItemModel()
             {
                 Id = ButtonIdHelper.ButtonIdRefresh,
@@ -145,16 +155,28 @@ namespace Backend.ViewModels
         #endregion
 
         #region 工具列事件 (新增)
-        public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+        public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
                 CurrentRecord = new MailQueueAdapterModel();
-                #region 針對新增的紀錄所要做的初始值設定商業邏輯
+                //#region 針對新增的紀錄所要做的初始值設定商業邏輯
+                //#endregion
+                //EditRecordDialogTitle = "新增紀錄";
+                //isNewRecordMode = true;
+                //IsShowEditRecord = true;
+
+                #region 產生測試發送郵件紀錄
+                CurrentRecord.Body = "這是測試郵件的<h1>內容</h1>";
+                CurrentRecord.CreatedAt = DateTime.Now;
+                CurrentRecord.SendedAt = null;
+                CurrentRecord.SendTimes = 0;
+                CurrentRecord.Status = MagicHelper.MailStatus等待;
+                CurrentRecord.Subject = $"測試郵件主旨 {DateTime.Now}";
+                CurrentRecord.To = $"vulcan.lee@gmail.com";
+                await CurrentService.AddAsync(CurrentRecord);
+                dataGrid.RefreshGrid();
                 #endregion
-                EditRecordDialogTitle = "新增紀錄";
-                isNewRecordMode = true;
-                IsShowEditRecord = true;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {

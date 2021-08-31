@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BAL.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -11,15 +12,15 @@ namespace Backend.Helpers
     {
         public static string MailQueueStatusName(int status)
         {
-            if(status == 0)
+            if(status == MagicHelper.MailStatus等待)
             {
                 return "等待";
             }
-            else if (status == 1)
+            else if (status == MagicHelper.MailStatus失敗)
             {
                 return "失敗";
             }
-            else if (status == 2)
+            else if (status == MagicHelper.MailStatus成功)
             {
                 return "成功";
             }

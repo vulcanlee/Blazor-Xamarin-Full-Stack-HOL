@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Backend.Services
@@ -9,6 +10,6 @@ namespace Backend.Services
         ILogger<PasswordPolicyService> Logger { get; }
         IMapper Mapper { get; }
 
-        Task CheckPasswordAge();
+        Task CheckPasswordAge(CancellationToken cancellationToken);
     }
 }
