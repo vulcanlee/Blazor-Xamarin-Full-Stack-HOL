@@ -53,6 +53,7 @@ namespace BAL.Helpers
         public static readonly string 系統運作條件 = "系統運作條件";
         public static readonly string 派工單 = "派工單";
         public static readonly string 郵件寄送紀錄 = "郵件寄送紀錄";
+        public static readonly string 系統摘要資訊 = "系統摘要資訊";
         #endregion
 
         #region 測試與系統帳號

@@ -171,6 +171,21 @@ namespace Backend.Helpers
                 };
                 mainMenu.SubMenus.Add(subMenu);
                 #endregion
+                #region SystemInfo
+                subMenu = new SubMenu()
+                {
+                    MenuData = new MenuDataAdapterModel()
+                    {
+                        Name = BAL.Helpers.MagicHelper.系統摘要資訊,
+                        CodeName = "SystemInfo",
+                        Enable = true,
+                        Icon = "mdi-wifi-alert",
+                        IsGroup = false,
+                        Level = 1,
+                    }
+                };
+                mainMenu.SubMenus.Add(subMenu);
+                #endregion
                 #endregion
             }
             #endregion  
