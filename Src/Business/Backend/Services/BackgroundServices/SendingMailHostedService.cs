@@ -52,8 +52,13 @@ namespace Backend.Services
                     StartupTime = DateTime.Now;
                     Random random = new Random();
                     var firstDelay = random.Next(60 * 1000, 3 * 60 * 1000);
+
+#if DEBUG
                     await Task.Delay(5000);
-                    //await Task.Delay(firstDelay);
+#else
+                    await Task.Delay(firstDelay);
+#endif
+
                     SmtpHelper.Initialization(SmtpClientInformation);
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
@@ -68,7 +73,7 @@ namespace Backend.Services
                             var waitSendingMails = await mailQueueService.GetNotSentAsync();
                             cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-                            #region 寄送郵件
+#region 寄送郵件
                             var allEmail = await mailQueueService.GetNotSentAsync();
                             SendEmailModel sendEmailModel = new SendEmailModel();
                             foreach (var email in allEmail)
@@ -91,7 +96,7 @@ namespace Backend.Services
                                 }
                                 await mailQueueService.UpdateAsync(email);
                             }
-                            #endregion
+#endregion
                         }
                         catch (Exception ex)
                         {
@@ -110,7 +115,7 @@ namespace Backend.Services
                 {
                     Logger.LogWarning(ex, $"寄送郵件 服務產生例外異常");
                 }
-                #endregion
+#endregion
             });
             PasswordPolicyTask = backgroundService;
 
