@@ -33,8 +33,9 @@
                         </SfDropDownList>
                         <span class="ml-4 mr-2 mdi mdi-18px mdi-gamepad-circle-left" />
                         <SfDropDownList TValue="int" TItem="WorkOrderStatusCondition"
-                                        @bind-Value="ViewModel.CurrentWorkOrderStatusCondition.Id"
-                                        Placeholder="派工單類型" DataSource="@ViewModel.WorkOrderStatusConditions">
+                                        @bind-Value="ViewModel.FilterWorkOrderStatusCondition"
+                                        Placeholder="派工單狀態" 
+                                        DataSource="@ViewModel.WorkOrderStatusConditions">
                             <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
                             <DropDownListEvents TValue="int" TItem="WorkOrderStatusCondition"
                                                 ValueChange="@ViewModel.WorkOrderStatusChanged"></DropDownListEvents>
@@ -154,7 +155,8 @@
                             <label class="control-label">狀態<span> (@ViewModel.CurrentRecord.StatusName)</span></label>
                             <SfDropDownList TValue="int" TItem="WorkOrderStatusCondition"
                                             @bind-Value="ViewModel.CurrentRecord.Status"
-                                            Placeholder="派工單類型" DataSource="@ViewModel.WorkOrderStatusRecordConditions">
+                                            Placeholder="派工單狀態" 
+                                            DataSource="@ViewModel.WorkOrderStatusRecordConditions">
                                 <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
                             </SfDropDownList>
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.Status)" />

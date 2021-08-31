@@ -35,6 +35,7 @@ namespace Backend.ViewModels
             WorkOrderStatusCondition.Initialization(WorkOrderStatusConditions);
             CurrentWorkOrderStatusCondition.Id = WorkOrderStatusConditions[0].Id;
             CurrentWorkOrderStatusCondition.Title = WorkOrderStatusConditions[0].Title;
+            FilterWorkOrderStatusCondition = CurrentWorkOrderStatusCondition.Id;
             WorkOrderStatusCondition.Initialization(WorkOrderStatusRecordConditions);
             WorkOrderStatusRecordConditions.RemoveAt(0);
 
@@ -115,7 +116,7 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
-
+        public int FilterWorkOrderStatusCondition { get; set; }
         #region 訊息說明之對話窗使用的變數
         /// <summary>
         /// 確認對話窗設定
