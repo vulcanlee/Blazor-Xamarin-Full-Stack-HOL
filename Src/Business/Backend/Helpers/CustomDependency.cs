@@ -12,6 +12,7 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<IMailQueueService, MailQueueService>();
             services.AddTransient<IWorkOrderService, WorkOrderService>();
             services.AddTransient<IMyUserPasswordHistoryService, MyUserPasswordHistoryService>();
             services.AddTransient<IPasswordPolicyService, PasswordPolicyService>();
@@ -39,6 +40,7 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
+            services.AddTransient<MailQueueViewModel>();
             services.AddTransient<WorkOrderViewModel>();
             services.AddTransient<SystemEnvironmentViewModel>();
             services.AddTransient<FlowInboxViewModel>();

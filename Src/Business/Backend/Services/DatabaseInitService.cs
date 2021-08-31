@@ -898,6 +898,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 郵件寄送紀錄
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = MagicHelper.郵件寄送紀錄,
+                CodeName = "MailQueue",
+                Enable = true,
+                Icon = "mdi-email-send",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 基本資料管理子功能表
             cc += 10;
             menuData = new MenuData()
@@ -1042,6 +1058,10 @@ namespace Backend.Services
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == MagicHelper.簽核流程政策));
+
+            defaultMenuData
+                .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == MagicHelper.郵件寄送紀錄));
 
             defaultMenuData
                 .Remove(defaultMenuData
