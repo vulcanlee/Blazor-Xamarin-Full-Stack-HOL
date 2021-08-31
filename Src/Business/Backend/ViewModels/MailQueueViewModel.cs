@@ -16,6 +16,8 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
     using System;
+    using Backend.Models;
+    using System.Linq;
 
     public class MailQueueViewModel
     {
@@ -29,6 +31,10 @@ namespace Backend.ViewModels
             mapper = Mapper;
             TranscationResultHelper = transcationResultHelper;
             MailQueueSort.Initialization(SortConditions);
+            MailQueueStatusCondition.Initialization(MailQueueStatusConditions);
+            CurrentMailQueueStatusCondition.Id = MailQueueStatusConditions[0].Id;
+            CurrentMailQueueStatusCondition.Title = MailQueueStatusConditions[0].Title;
+            FilterMailQueueStatusCondition = CurrentMailQueueStatusCondition.Id;
 
             Toolbaritems.Add(new ItemModel()
             {
@@ -84,10 +90,13 @@ namespace Backend.ViewModels
         /// 可以選擇排序條件清單
         /// </summary>
         public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
+        public List<MailQueueStatusCondition> MailQueueStatusConditions { get; set; } = new List<MailQueueStatusCondition>();
         /// <summary>
         /// 現在選擇排序條件項目
         /// </summary>
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        public MailQueueStatusCondition CurrentMailQueueStatusCondition { get; set; } = new MailQueueStatusCondition();
+        public int FilterMailQueueStatusCondition { get; set; }
         /// <summary>
         /// 用於控制、更新明細清單 Grid 
         /// </summary>
@@ -327,6 +336,22 @@ namespace Backend.ViewModels
             {
                 CurrentSortCondition.Id = args.Value;
                 dataGrid.RefreshGrid();
+            }
+        }
+
+
+        public async Task MailQueueStatusChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, MailQueueStatusCondition> args)
+        {
+            if (args.IsInteracted == true)
+            {
+                if (dataGrid.GridIsExist() == true)
+                {
+                    CurrentMailQueueStatusCondition.Id = args.Value;
+                    CurrentMailQueueStatusCondition.Title = MailQueueStatusConditions
+                        .FirstOrDefault(x => x.Id == CurrentMailQueueStatusCondition.Id).Title;
+                    await Task.Delay(200);
+                    dataGrid.RefreshGrid();
+                }
             }
         }
         #endregion

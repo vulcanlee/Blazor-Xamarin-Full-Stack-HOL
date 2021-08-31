@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
+using Backend.Models;
 using CommonDomain.DataModels;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> BeforeDeleteCheckAsync(MailQueueAdapterModel paraObject);
         Task<VerifyRecordResult> BeforeUpdateCheckAsync(MailQueueAdapterModel paraObject);
         Task<VerifyRecordResult> DeleteAsync(long id);
-        Task<DataRequestResult<MailQueueAdapterModel>> GetAsync(DataRequest dataRequest);
+        Task<DataRequestResult<MailQueueAdapterModel>> GetAsync(DataRequest dataRequest, MailQueueStatusCondition CurrentMailQueueStatusCondition);
         Task<MailQueueAdapterModel> GetAsync(long id);
         Task<List<MailQueueAdapterModel>> GetNotSentAsync();
         Task<VerifyRecordResult> UpdateAsync(MailQueueAdapterModel paraObject);

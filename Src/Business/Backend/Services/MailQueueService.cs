@@ -15,6 +15,7 @@ namespace Backend.Services
     using CommonDomain.DataModels;
     using CommonDomain.Enums;
     using System;
+    using Backend.Models;
 
     public class MailQueueService : IMailQueueService
     {
@@ -35,7 +36,8 @@ namespace Backend.Services
         #endregion
 
         #region CRUD 服務
-        public async Task<DataRequestResult<MailQueueAdapterModel>> GetAsync(DataRequest dataRequest)
+        public async Task<DataRequestResult<MailQueueAdapterModel>> GetAsync(DataRequest dataRequest,
+            MailQueueStatusCondition CurrentMailQueueStatusCondition=null)
         {
             List<MailQueueAdapterModel> data = new();
             DataRequestResult<MailQueueAdapterModel> result = new();
@@ -46,6 +48,17 @@ namespace Backend.Services
             {
                 DataSource = DataSource
                 .Where(x => x.Subject.Contains(dataRequest.Search));
+            }
+            #endregion
+
+            #region 過濾狀態
+            if (CurrentMailQueueStatusCondition != null)
+            {
+                if (CurrentMailQueueStatusCondition.Id != -1)
+                {
+                    DataSource = DataSource
+                    .Where(x => x.Status == CurrentMailQueueStatusCondition.Id);
+                }
             }
             #endregion
 

@@ -9,10 +9,14 @@
     using Newtonsoft.Json;
     using Syncfusion.Blazor;
     using Syncfusion.Blazor.Data;
+    using Backend.Models;
+
     public partial class MailQueueAdapter : DataAdaptor<IMailQueueService>
     {
         [Parameter]
         public SortCondition CurrentSortCondition { get; set; }
+        [Parameter]
+        public MailQueueStatusCondition CurrentMailQueueStatusCondition { get; set; }
 
         public override async Task<object> ReadAsync(DataManagerRequest dataManagerRequest, string key = null)
         {
@@ -34,7 +38,8 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<MailQueueAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
+            DataRequestResult<MailQueueAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest,
+                CurrentMailQueueStatusCondition);
             var item = dataManagerRequest.RequiresCounts
                 ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
                 : (object)adaptorModelObjects.Result;

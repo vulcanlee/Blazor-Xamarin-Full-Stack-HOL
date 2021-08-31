@@ -15,7 +15,8 @@
             AllowPaging="true" class="parentFullWidth"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <MailQueueAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></MailQueueAdapter>
+            <MailQueueAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
+                              CurrentMailQueueStatusCondition="@ViewModel.CurrentMailQueueStatusCondition" ></MailQueueAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -26,6 +27,15 @@
                                         Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
                             <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
                             <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                        <span class="ml-4 mr-2 mdi mdi-18px mdi-gamepad-circle-left" />
+                        <SfDropDownList TValue="int" TItem="MailQueueStatusCondition"
+                                        @bind-Value="@ViewModel.FilterMailQueueStatusCondition"
+                                        Placeholder="派工單狀態"
+                                        DataSource="@ViewModel.MailQueueStatusConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="MailQueueStatusCondition"
+                                                ValueChange="@ViewModel.MailQueueStatusChanged"></DropDownListEvents>
                         </SfDropDownList>
                     </Template>
                 </ToolbarItem>
