@@ -118,6 +118,15 @@
 
                     <div class="form-row">
                         <div class="form-group col">
+                            <label class="control-label">電子郵件信箱</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Email"
+                                       Placeholder="請輸入電子郵件信箱" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Email)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
                             <label class="control-label">
                                 強制登出期限
                                 <span class="mdi mdi-24px mdi-alarm-snooze"
