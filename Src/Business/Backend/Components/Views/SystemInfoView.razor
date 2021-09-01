@@ -4,6 +4,7 @@
 @using System.Threading
 @using System.Diagnostics
 @using Microsoft.AspNetCore.Http
+@using Prism.Events
 
 @inject DatabaseInitService DatabaseInitService
 @inject BackendDBContext context
@@ -13,6 +14,7 @@
 @inject IJSRuntime JSRuntime
 @inject BlazorAppContext BlazorAppContext
 @inject IHttpContextAccessor httpContextAccessor
+@inject IEventAggregator EventAggregator
 
 @implements IDisposable
 

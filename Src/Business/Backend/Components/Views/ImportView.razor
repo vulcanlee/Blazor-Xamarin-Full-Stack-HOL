@@ -30,24 +30,11 @@
         </div>
     </div>
 }
-
-<div class="my-4">
-    <input @bind="BroadcastMessage" />
-    <button @onclick="SendBroadcast">廣播</button>
-</div>
 @code {
     SfUploader upload1;
     string Message = "";
     string BroadcastMessage = "";
     string ProcessingLog = "";
-
-    void SendBroadcast()
-    {
-        EventAggregator.GetEvent<BroadcastEvent>().Publish(new BroadcastPayload()
-        {
-            Content = BroadcastMessage
-        });
-    }
 
     public async Task UploaderChange(UploadChangeEventArgs args)
     {

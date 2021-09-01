@@ -1,9 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
+    <ToastView />
     <div class="sidebar">
         @*   <NavMenu />*@
-        <ToastView />
         <CheckUserStatusView />
         <GlobalEventView />
         <NavDynamicMenu />
@@ -15,7 +15,7 @@
         </div>
 
         <div class="content px-4 mb-4">
-            @Body 
+            @Body
         </div>
 
         <div class="bottom-row px-4">

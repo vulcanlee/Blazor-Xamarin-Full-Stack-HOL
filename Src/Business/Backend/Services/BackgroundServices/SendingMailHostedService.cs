@@ -11,6 +11,7 @@ using BAL.Helpers;
 using Microsoft.Extensions.Options;
 using Backend.Models;
 using CommonDomain.DataModels;
+using Backend.Events;
 
 namespace Backend.Services
 {
@@ -18,12 +19,13 @@ namespace Backend.Services
     {
         public SendingMailHostedService(ILogger<SendingMailHostedService> logger,
             IServer server, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory,
-            IOptions<SmtpClientInformation> smtpClientInformation)
+            IOptions<SmtpClientInformation> smtpClientInformation, SystemBroadcast systemBroadcast)
         {
             Logger = logger;
             Server = server;
             Configuration = configuration;
             ServiceScopeFactory = serviceScopeFactory;
+            SystemBroadcast = systemBroadcast;
             SmtpClientInformation = smtpClientInformation.Value;
         }
 
@@ -31,6 +33,7 @@ namespace Backend.Services
         public IServer Server { get; }
         public IConfiguration Configuration { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
+        public SystemBroadcast SystemBroadcast { get; }
         public SmtpClientInformation SmtpClientInformation { get; }
 
         int checkCycle = 60 * 60;
@@ -46,7 +49,7 @@ namespace Backend.Services
 
             var backgroundService = Task.Run(async () =>
             {
-                #region 檢查使用者是否要強制變更密碼
+                #region 檢查使用者是否要發送電子郵件
                 try
                 {
                     StartupTime = DateTime.Now;

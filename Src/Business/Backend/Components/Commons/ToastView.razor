@@ -57,6 +57,7 @@
                 await InvokeAsync(() => StateHasChanged());
                 await Task.Yield();
                 await ToastObj.Show();
+                await InvokeAsync(() => StateHasChanged());
             });
         }
     }

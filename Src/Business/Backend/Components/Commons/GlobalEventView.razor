@@ -33,10 +33,10 @@
     {
         EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
         {
-            Title = "通知",
-            Content = $"{foo}",
-            Timeout = 4000,
-            Color="Green",
+            Title = "系統廣播",
+            Content = $"{foo} {DateTime.Now}",
+            Timeout = 10000,
+            Color="Red",
         });
     }
     public void Dispose()

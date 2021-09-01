@@ -914,6 +914,22 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 系統訊息廣播
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = MagicHelper.系統訊息廣播,
+                CodeName = "Broadcast",
+                Enable = true,
+                Icon = "mdi-message-alert",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 基本資料管理子功能表
             cc += 10;
             menuData = new MenuData()
@@ -1062,6 +1078,10 @@ namespace Backend.Services
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == MagicHelper.郵件寄送紀錄));
+
+            defaultMenuData
+                .Remove(defaultMenuData
+                .FirstOrDefault(x => x.Name == MagicHelper.系統訊息廣播));
 
             defaultMenuData
                 .Remove(defaultMenuData
