@@ -179,6 +179,7 @@ namespace Backend.ViewModels
 
                 CurrentRecord.CreatedAt = DateTime.Now;
                 CurrentRecord.Status = 0;
+                CurrentRecord.Code = UniqueStringHelper.GetCode();
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {

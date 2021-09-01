@@ -187,7 +187,7 @@ namespace Backend.ViewModels
                 CurrentRecord.MyUserName = user.Name;
                 CurrentRecord.Status = 0;
                 CurrentRecord.ProcessLevel = 0;
-
+                CurrentRecord.Code = UniqueStringHelper.GetCode();
                 CurrentRecord.CreateDate = DateTime.Now;
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)

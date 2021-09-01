@@ -52,6 +52,8 @@
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
+            <GridColumn Field=@nameof(FlowMasterAdapterModel.Code)
+                        HeaderText="代碼" Width="130" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.Title)
                         HeaderText="主旨" />
             <GridColumn Field=@nameof(FlowMasterAdapterModel.ProcessLevel)

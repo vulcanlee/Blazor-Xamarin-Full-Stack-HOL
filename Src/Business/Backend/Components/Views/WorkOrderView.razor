@@ -48,6 +48,8 @@
                     OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
+            <GridColumn Field=@nameof(WorkOrderAdapterModel.Code)
+                        HeaderText="代碼" Width="130" />
             <GridColumn Field=@nameof(WorkOrderAdapterModel.Description)
                         HeaderText="問題描述" />
             <GridColumn Field=@nameof(WorkOrderAdapterModel.CreatedAt)

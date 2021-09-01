@@ -11,6 +11,8 @@ namespace Backend.AdapterModels
         /// <summary>
         /// 問題描述
         /// </summary>
+        [StringLength(13)]
+        public string Code { get; set; }
         [Required(ErrorMessage = "需求描述 不可為空白")]
         public string Description { get; set; }
         /// <summary>

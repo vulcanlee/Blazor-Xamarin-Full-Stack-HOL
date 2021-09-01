@@ -13,6 +13,8 @@ namespace Backend.AdapterModels
             FlowUser = new HashSet<FlowUserAdapterModel>();
         }
         public int Id { get; set; }
+        [StringLength(13)]
+        public string Code { get; set; }
         [Required(ErrorMessage = "主旨 不可為空白")]
         public string Title { get; set; }
         public string Content { get; set; }

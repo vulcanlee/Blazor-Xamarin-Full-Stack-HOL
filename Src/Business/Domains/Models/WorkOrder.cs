@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
 namespace Domains.Models
 {
+    [Index(nameof(Code))]
     public partial class WorkOrder
     {
         //public virtual ICollection<OrderItem> OrderItems { get; set; }
@@ -14,6 +17,8 @@ namespace Domains.Models
         }
 
         public int Id { get; set; }
+        [StringLength(13)]
+        public string Code { get; set; }
         /// <summary>
         /// 問題描述
         /// </summary>

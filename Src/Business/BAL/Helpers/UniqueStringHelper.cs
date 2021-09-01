@@ -10,6 +10,19 @@ namespace BAL.Helpers
     // https://stackoverflow.com/questions/730268/unique-random-string-generation
     public static class UniqueStringHelper
     {
+        public static string GetCode()
+        {
+            var randomString = RandomString();
+            string value = randomString;
+            byte[] asciiBytes = Encoding.ASCII.GetBytes(value);
+            int total = 0;
+            foreach (var item in asciiBytes)
+            {
+                total += item;
+            }
+            string result = $"{randomString}{total%1000:000}";
+            return result;
+        }
         public static string RandomString(int length=10, string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         {
             if (length < 0) throw new ArgumentOutOfRangeException("length", "length cannot be less than zero.");

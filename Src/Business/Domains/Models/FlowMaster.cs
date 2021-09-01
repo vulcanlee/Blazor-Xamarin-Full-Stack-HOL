@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domains.Models
 {
+    [Index(nameof(Code))]
     public partial class FlowMaster
     {
         public virtual ICollection<FlowUser> FlowUser { get; set; }
@@ -17,6 +19,8 @@ namespace Domains.Models
         }
 
         public int Id { get; set; }
+        [StringLength(13)]
+        public string Code { get; set; }
         [Required(ErrorMessage = "主旨 不可為空白")]
         public string Title { get; set; }
         public string Content { get; set; }
