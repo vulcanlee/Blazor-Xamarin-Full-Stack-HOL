@@ -364,6 +364,13 @@ namespace Backend.ViewModels
         }
 
         #endregion
+
+        #region 送出
+        public async Task SendAsync(WorkOrderAdapterModel workOrderAdapterModel)
+        {
+            await Task.Yield();
+        }
+        #endregion
         #endregion
     }
 }

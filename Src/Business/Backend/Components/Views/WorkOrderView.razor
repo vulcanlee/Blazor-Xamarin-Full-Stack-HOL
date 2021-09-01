@@ -18,7 +18,7 @@
         <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <WorkOrderAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
-                              CurrentWorkOrderStatusCondition="@ViewModel.CurrentWorkOrderStatusCondition"/>
+                              CurrentWorkOrderStatusCondition="@ViewModel.CurrentWorkOrderStatusCondition" />
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -28,13 +28,13 @@
                         <SfDropDownList TValue="int" TItem="SortCondition"
                                         Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
                             <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                            <DropDownListEvents TValue="int" TItem="SortCondition" 
+                            <DropDownListEvents TValue="int" TItem="SortCondition"
                                                 ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
                         </SfDropDownList>
                         <span class="ml-4 mr-2 mdi mdi-18px mdi-gamepad-circle-left" />
                         <SfDropDownList TValue="int" TItem="WorkOrderStatusCondition"
                                         @bind-Value="ViewModel.FilterWorkOrderStatusCondition"
-                                        Placeholder="派工單狀態" 
+                                        Placeholder="派工單狀態"
                                         DataSource="@ViewModel.WorkOrderStatusConditions">
                             <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
                             <DropDownListEvents TValue="int" TItem="WorkOrderStatusCondition"
@@ -62,6 +62,19 @@
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(WorkOrderAdapterModel.StatusName)
                         HeaderText="狀態" />
+            <GridColumn Field=@nameof(WorkOrderAdapterModel.StatusName) HeaderText="簽核" Width="75">
+                <Template>
+                    @{
+                        var currentRec = (context as WorkOrderAdapterModel);
+                        var tpa1 = $"tpa{currentRec.Id}";
+                        var tpa2 = $"#{tpa1}";
+                        <SfTooltip Target="@tpa2" Content="送審">
+                            <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary"
+                                  @onclick="async () => { await ViewModel.SendAsync(currentRec); }" />
+                        </SfTooltip>
+                    }
+                </Template>
+            </GridColumn>
             <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowDetailOfMaster"
@@ -157,7 +170,7 @@
                             <label class="control-label">狀態<span> (@ViewModel.CurrentRecord.StatusName)</span></label>
                             <SfDropDownList TValue="int" TItem="WorkOrderStatusCondition"
                                             @bind-Value="ViewModel.CurrentRecord.Status"
-                                            Placeholder="派工單狀態" 
+                                            Placeholder="派工單狀態"
                                             DataSource="@ViewModel.WorkOrderStatusRecordConditions">
                                 <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
                             </SfDropDownList>
