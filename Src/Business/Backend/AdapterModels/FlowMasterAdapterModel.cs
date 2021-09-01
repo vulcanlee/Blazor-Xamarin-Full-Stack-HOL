@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Backend.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,6 +25,15 @@ namespace Backend.AdapterModels
         /// </summary>
         public int Status { get; set; }
         public string StatusName { get; set; }
+        /// <summary>
+        /// 簽核流程的嵌入來源 Json 紀錄
+        /// </summary>
+        public string SourceJson { get; set; }
+        /// <summary>
+        /// 簽核來源的類型
+        /// </summary>
+        public FlowSourceTypeEnum SourceType { get; set; }
+        public string SourceTypeName { get; set; }
         public DateTime CreateDate { get; set; }
         public int MyUserId { get; set; }
         public virtual MyUserAdapterModel MyUser { get; set; }

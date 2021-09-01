@@ -342,6 +342,7 @@ namespace Backend.Services
             data.MyUserName = data.MyUser.Name;
             data.PolicyHeaderName = data.PolicyHeader.Name;
             data.GetFlowName();
+            data.GetSourceTypeName();
             await Task.Yield();
             return;
         }

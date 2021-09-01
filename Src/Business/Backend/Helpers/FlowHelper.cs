@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend.AdapterModels;
+using Backend.Models;
 using Backend.Services;
 using Domains.Models;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -48,6 +49,18 @@ namespace Backend.Helpers
                 flowUserAdapterModel.CompletionName = "完成";
             }
             return flowUserAdapterModel;
+        }
+        public static FlowMasterAdapterModel GetSourceTypeName(this FlowMasterAdapterModel flowMasterAdapterModel)
+        {
+            if(flowMasterAdapterModel.SourceType == FlowSourceTypeEnum.None)
+            {
+                flowMasterAdapterModel.SourceTypeName= "無";
+            }
+            else if (flowMasterAdapterModel.SourceType == FlowSourceTypeEnum.WorkOrder)
+            {
+                flowMasterAdapterModel.SourceTypeName = "工作單";
+            }
+            return flowMasterAdapterModel;
         }
     }
 }

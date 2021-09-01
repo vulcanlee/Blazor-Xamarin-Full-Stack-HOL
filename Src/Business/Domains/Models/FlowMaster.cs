@@ -29,6 +29,14 @@ namespace Domains.Models
         /// </summary>
         public int Status { get; set; }
         public DateTime CreateDate { get; set; }
+        /// <summary>
+        /// 簽核流程的嵌入來源 Json 紀錄
+        /// </summary>
+        public string SourceJson { get; set; }
+        /// <summary>
+        /// 簽核來源的類型
+        /// </summary>
+        public int SourceType { get; set; }
         public int MyUserId { get; set; }
         public virtual MyUser MyUser { get; set; }
         public string NextMyUserName { get; set; }
