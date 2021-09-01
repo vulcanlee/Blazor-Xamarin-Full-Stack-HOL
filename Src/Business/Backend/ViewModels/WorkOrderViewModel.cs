@@ -19,18 +19,24 @@ namespace Backend.ViewModels
     using Backend.Models;
     using System.Linq;
     using System.Threading;
+    using Newtonsoft.Json;
 
     public class WorkOrderViewModel
     {
         #region Constructor
         public WorkOrderViewModel(IWorkOrderService CurrentService,
            BackendDBContext context, IMapper Mapper,
-           TranscationResultHelper transcationResultHelper)
+           TranscationResultHelper transcationResultHelper,
+           IFlowMasterService flowMasterService,
+           UserHelper currentUserHelper, CurrentUser currentUser)
         {
             this.CurrentService = CurrentService;
             this.context = context;
             mapper = Mapper;
             TranscationResultHelper = transcationResultHelper;
+            FlowMasterService = flowMasterService;
+            CurrentUserHelper = currentUserHelper;
+            CurrentUser = currentUser;
             WorkOrderSort.Initialization(SortConditions);
             WorkOrderStatusCondition.Initialization(WorkOrderStatusConditions);
             CurrentWorkOrderStatusCondition.Id = WorkOrderStatusConditions[0].Id;
@@ -85,6 +91,7 @@ namespace Backend.ViewModels
         /// 是否顯示選取其他清單記錄對話窗 
         /// </summary>
         public bool ShowAontherRecordPicker { get; set; } = false;
+        public bool ShowWorkOrderSendingDialog { get; set; } = false;
         /// <summary>
         /// 父參考物件的 Id 
         /// </summary>
@@ -127,6 +134,9 @@ namespace Backend.ViewModels
         /// </summary>
         public MessageBoxModel MessageBox { get; set; } = new MessageBoxModel();
         public TranscationResultHelper TranscationResultHelper { get; }
+        public IFlowMasterService FlowMasterService { get; }
+        public UserHelper CurrentUserHelper { get; }
+        public CurrentUser CurrentUser { get; }
         #endregion
         #endregion
 
@@ -335,6 +345,40 @@ namespace Backend.ViewModels
         //    }
         //    ShowAontherRecordPicker = false;
         //}
+
+        public void OnWorkOrderSendingDialog()
+        {
+            ShowWorkOrderSendingDialog = true;
+        }
+
+        public async Task OnWorkOrderSendingDialogCompletion(ApproveOpinionModel e)
+        {
+            if (e != null)
+            {
+                #region 產生一筆稽核送審記錄
+                var user = await CurrentUserHelper.GetCurrentUserAsync();
+                var code = UniqueStringHelper.GetCode();
+                FlowMasterAdapterModel flowMasterAdapterModel = new FlowMasterAdapterModel()
+                {
+                    Code = code,
+                    MyUserId = user.Id,
+                    PolicyHeaderId = e.PolicyHeaderAdapterModel.Id,
+                    CreateDate = DateTime.Now,
+                    ProcessLevel = 0,
+                    SourceType = FlowSourceTypeEnum.WorkOrder,
+                    Title = $"工單完工 - {CurrentRecord.Description}",
+                    Content = "",
+                    Status = 0,
+                    SourceJson = JsonConvert.SerializeObject(CurrentRecord),
+                };
+
+                await FlowMasterService.AddAsync(flowMasterAdapterModel);
+                flowMasterAdapterModel = await FlowMasterService.GetAsync(code);
+                await FlowMasterService.SendAsync(flowMasterAdapterModel, e);
+                #endregion
+            }
+            ShowWorkOrderSendingDialog = false;
+        }
         #endregion
 
         #region 排序搜尋事件
@@ -366,9 +410,10 @@ namespace Backend.ViewModels
         #endregion
 
         #region 送出
-        public async Task SendAsync(WorkOrderAdapterModel workOrderAdapterModel)
+        public void SendAsync(WorkOrderAdapterModel workOrderAdapterModel)
         {
-            await Task.Yield();
+            CurrentRecord = workOrderAdapterModel;
+            OnWorkOrderSendingDialog();
         }
         #endregion
         #endregion

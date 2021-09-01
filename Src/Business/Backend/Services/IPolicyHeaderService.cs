@@ -2,6 +2,7 @@
 using Backend.AdapterModels;
 using CommonDomain.DataModels;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Backend.Services
@@ -18,6 +19,7 @@ namespace Backend.Services
         Task<VerifyRecordResult> DeleteAsync(int id);
         Task DisableIt(PolicyHeaderAdapterModel paraObject);
         Task EnableIt(PolicyHeaderAdapterModel paraObject);
+        Task<List<PolicyHeaderAdapterModel>> GetAsync();
         Task<DataRequestResult<PolicyHeaderAdapterModel>> GetAsync(DataRequest dataRequest);
         Task<PolicyHeaderAdapterModel> GetAsync(int id);
         Task<VerifyRecordResult> UpdateAsync(PolicyHeaderAdapterModel paraObject);

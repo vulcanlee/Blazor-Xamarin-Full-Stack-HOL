@@ -29,7 +29,7 @@
 
 <div>
     <SfGrid @ref="Grid" TValue="FlowMasterAdapterModel"
-            AllowPaging="true" class="parentFullWidth"
+            AllowPaging="true" class="parentFullWidth"  AllowTextWrap="true"
             Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <FlowMasterAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></FlowMasterAdapter>
@@ -266,7 +266,7 @@
 </SfDialog>
 
 <FlowApproveView OpenPicker="ViewModel.ShowApproveOpinionDialog"
-              OnConfirmCallback="x=>ViewModel.OnShowApproveOpinionDialogCompletion(x)" />
+                 OnConfirmCallback="x=>ViewModel.OnShowApproveOpinionDialogCompletion(x)" />
 
 <MyUserPicker OpenPicker="ViewModel.ShowSimulatorUserPicker"
               OnConfirmCallback="x=>ViewModel.OnPickerSimulatorUserCompletion(x)" />

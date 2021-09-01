@@ -70,7 +70,7 @@
                         var tpa2 = $"#{tpa1}";
                         <SfTooltip Target="@tpa2" Content="送審">
                             <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary"
-                                  @onclick="async () => { await ViewModel.SendAsync(currentRec); }" />
+                                  @onclick="async () => { ViewModel.SendAsync(currentRec); }" />
                         </SfTooltip>
                     }
                 </Template>
@@ -207,6 +207,9 @@
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
+
+<WorkOrderSendingView OpenPicker="ViewModel.ShowWorkOrderSendingDialog"
+                      OnConfirmCallback="x=>ViewModel.OnWorkOrderSendingDialogCompletion(x)" />
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"

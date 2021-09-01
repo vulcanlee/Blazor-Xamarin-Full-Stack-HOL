@@ -15,6 +15,7 @@ namespace Backend.Services
     using CommonDomain.DataModels;
     using CommonDomain.Enums;
     using System;
+    using System.Linq;
 
     public class PolicyHeaderService : IPolicyHeaderService
     {
@@ -91,6 +92,19 @@ namespace Backend.Services
             result.Result = adapterModelObjects;
             await Task.Yield();
             return result;
+        }
+
+        public async Task<List<PolicyHeaderAdapterModel>> GetAsync()
+        {
+            List<PolicyHeaderAdapterModel> data = new();
+            var DataSource = context.PolicyHeader
+                .AsNoTracking()
+                .OrderBy(x => x.Name);
+
+            var allItems = await DataSource.ToListAsync();
+            data = Mapper.Map<List<PolicyHeaderAdapterModel>>(allItems);
+
+            return data;
         }
 
         public async Task<PolicyHeaderAdapterModel> GetAsync(int id)

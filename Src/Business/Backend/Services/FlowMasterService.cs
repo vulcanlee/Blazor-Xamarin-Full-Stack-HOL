@@ -123,6 +123,18 @@ namespace Backend.Services
             return result;
         }
 
+        public async Task<FlowMasterAdapterModel> GetAsync(string code)
+        {
+            FlowMaster item = await context.FlowMaster
+                .Include(x => x.MyUser)
+                .Include(x => x.PolicyHeader)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Code == code);
+            FlowMasterAdapterModel result = Mapper.Map<FlowMasterAdapterModel>(item);
+            await OhterDependencyData(result);
+            return result;
+        }
+
         public async Task<VerifyRecordResult> AddAsync(FlowMasterAdapterModel paraObject)
         {
             try
