@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BAL.Helpers
 {
+    // https://stackoverflow.com/questions/730268/unique-random-string-generation
     public static class UniqueStringHelper
     {
         public static string RandomString(int length=10, string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
