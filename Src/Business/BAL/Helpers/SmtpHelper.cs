@@ -30,7 +30,9 @@ namespace BAL.Helpers
                 Credentials = new NetworkCredential(
                     smtpClientInformation.UserName, smtpClientInformation.Password)
             };
+            Email.DefaultSender = new SmtpSender(smtp);
         }
+
         public static async Task<bool> SendSMTP(SendEmailModel sendEmailModel, CancellationToken cancellationToken)
         {
             var email = Email

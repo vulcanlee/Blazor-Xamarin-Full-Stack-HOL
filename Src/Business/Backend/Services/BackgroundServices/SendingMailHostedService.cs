@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using Backend.Models;
 using CommonDomain.DataModels;
 using Backend.Events;
+using Backend.Helpers;
+using Backend.AdapterModels;
 
 namespace Backend.Services
 {
@@ -43,6 +45,7 @@ namespace Backend.Services
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            int smtpExceptionTimes = 0;
             cancellationTokenSource = new CancellationTokenSource();
             Logger.LogInformation($"寄送郵件 服務開始啟動");
             int SendingMailInterval = Convert.ToInt32(Configuration["SendingMailInterval"]);
@@ -63,6 +66,7 @@ namespace Backend.Services
 #endif
 
                     SmtpHelper.Initialization(SmtpClientInformation);
+
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
                         var scope = ServiceScopeFactory.CreateScope();
@@ -76,7 +80,7 @@ namespace Backend.Services
                             var waitSendingMails = await mailQueueService.GetNotSentAsync();
                             cancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-#region 寄送郵件
+                            #region 寄送郵件
                             var allEmail = await mailQueueService.GetNotSentAsync();
                             SendEmailModel sendEmailModel = new SendEmailModel();
                             foreach (var email in allEmail)
@@ -87,6 +91,7 @@ namespace Backend.Services
                                 sendEmailModel.Subject = email.Subject;
                                 sendEmailModel.Body = email.Body;
                                 var successful = await SmtpHelper.SendSMTP(sendEmailModel, cancellationTokenSource.Token);
+                                smtpExceptionTimes = 0;
                                 email.SendTimes++;
                                 email.SendedAt = DateTime.Now;
                                 if (successful == false && email.SendTimes > MagicHelper.MaxEmailResend)
@@ -99,12 +104,34 @@ namespace Backend.Services
                                 }
                                 await mailQueueService.UpdateAsync(email);
                             }
-#endregion
+                            #endregion
                         }
                         catch (Exception ex)
                         {
-                            Logger.LogWarning(ex, $"寄送郵件 發生例外異常");
+                            smtpExceptionTimes++;
+                            Logger.LogWarning(ex, $"寄送郵件 發生例外異常 ({smtpExceptionTimes})");
                         }
+
+                        #region 超出最大嘗試送出 SMTP 郵件次數，要結束發信背景服務
+                        if (smtpExceptionTimes > MagicHelper.MaxSmtpRetryTimes)
+                        {
+                            string message = $"連續嘗試 {MagicHelper.MaxSmtpRetryTimes} 次，無法送出 SMTP 郵件";
+                            Logger.LogError(message);
+                            SystemLogHelper SystemLogHelper = scope.ServiceProvider
+                            .GetRequiredService<SystemLogHelper>();
+                            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                            {
+                                Message = message,
+                                Category = LogCategories.SMTP,
+                                Content = "",
+                                LogLevel = LogLevels.Error,
+                                Updatetime = DateTime.Now,
+                                IP = "",
+                            });
+                            //cancellationTokenSource.Cancel();
+                            smtpExceptionTimes = 0;
+                        }
+                        #endregion
 
                         scope.Dispose();
                         await Task.Delay(SendingMailInterval, cancellationTokenSource.Token);
@@ -118,7 +145,7 @@ namespace Backend.Services
                 {
                     Logger.LogWarning(ex, $"寄送郵件 服務產生例外異常");
                 }
-#endregion
+                #endregion
             });
             PasswordPolicyTask = backgroundService;
 
@@ -137,7 +164,7 @@ namespace Backend.Services
 #pragma warning restore CA2016 // 將 'CancellationToken' 參數傳遞給使用該參數的方法
             }
             TimeSpan timeSpan = DateTime.Now - StartupTime;
-            Logger.LogInformation($"Keep alive 服務即將停止，共花費 {timeSpan}");
+            Logger.LogInformation($"寄送郵件 服務即將停止，共花費 {timeSpan}");
 
             return;
         }
