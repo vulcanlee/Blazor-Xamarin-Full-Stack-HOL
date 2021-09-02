@@ -274,6 +274,7 @@ namespace Backend.Services
                     #region 刪除其他關連紀錄
                     CleanTrackingHelper.Clean<FlowUser>(context);
                     CleanTrackingHelper.Clean<FlowHistory>(context);
+                    CleanTrackingHelper.Clean<FlowInbox>(context);
                     var auditUsers = await context.FlowUser
                         .Where(x => x.FlowMasterId == id)
                         .ToListAsync();
@@ -282,12 +283,17 @@ namespace Backend.Services
                         .Where(x => x.FlowMasterId == id)
                         .ToListAsync();
                     context.FlowHistory.RemoveRange(auditHistories);
+                    var flowInbox = await context.FlowInbox
+                        .Where(x => x.FlowMasterId == id)
+                        .ToListAsync();
+                    context.FlowInbox.RemoveRange(flowInbox);
                     await context.SaveChangesAsync();
                     #endregion
 
                     CleanTrackingHelper.Clean<FlowMaster>(context);
                     context.Entry(item).State = EntityState.Deleted;
                     await context.SaveChangesAsync();
+                    CleanTrackingHelper.Clean<FlowInbox>(context);
                     CleanTrackingHelper.Clean<FlowMaster>(context);
                     CleanTrackingHelper.Clean<FlowHistory>(context);
                     return VerifyRecordResultFactory.Build(true);
@@ -345,15 +351,42 @@ namespace Backend.Services
             try
             {
                 CleanTrackingHelper.Clean<FlowMaster>(context);
-                CleanTrackingHelper.Clean<FlowMaster>(context);
+                CleanTrackingHelper.Clean<FlowInbox>(context);
+                CleanTrackingHelper.Clean<FlowHistory>(context);
+                CleanTrackingHelper.Clean<FlowUser>(context);
 
                 var searchItem = await context.FlowMaster
                  .AsNoTracking()
                  .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
                 if (searchItem == null)
                 {
-                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
+                    return VerifyRecordResultFactory.Build(false, "無法刪除紀錄，要刪除的紀錄已經不存在資料庫上");
                 }
+
+                var searchFlowInboxItem = await context.FlowInbox
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.Id);
+                if (searchFlowInboxItem != null)
+                {
+                    return VerifyRecordResultFactory.Build(false, "該筆紀錄還有 收件匣 資料表紀錄參考使用，無法刪除");
+                }
+
+                var searchFlowHistoryItem = await context.FlowHistory
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.Id);
+                if (searchFlowHistoryItem != null)
+                {
+                    return VerifyRecordResultFactory.Build(false, "該筆紀錄還有 簽核歷程 資料表紀錄參考使用，無法刪除");
+                }
+
+                var searchFlowUserItem = await context.FlowUser
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(x => x.FlowMasterId == paraObject.Id);
+                if (searchFlowUserItem != null)
+                {
+                    return VerifyRecordResultFactory.Build(false, "該筆紀錄還有 參與簽核使用者 資料表紀錄參考使用，無法刪除");
+                }
+
                 return VerifyRecordResultFactory.Build(true);
             }
             catch (Exception ex)

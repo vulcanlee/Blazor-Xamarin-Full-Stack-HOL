@@ -219,10 +219,17 @@ namespace Backend.ViewModels
                 var checkedResult = await CurrentService
                     .BeforeDeleteCheckAsync(CurrentNeedDeleteRecord);
                 await Task.Delay(100);
+                thisView.NeedRefresh();
                 if (checkedResult.Success == false)
                 {
-                    MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId), HiddenMessageBox);
+                    var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
+                         $"你確定真的要刪除與這筆紀錄相關紀錄嗎？例如：收件匣、簽呈使用者、簽成歷史紀錄 ({checkedResult.Message})", OnConfirmBoxCloseAsync);
+                    thisView.NeedRefresh();
+                    var checkAgain = await checkTask;
+                    if (checkAgain == true)
+                    {
+                        await RemoveThisRecord(true);
+                    }
                     await Task.Yield();
                     thisView.NeedRefresh();
                     return;
@@ -347,6 +354,12 @@ namespace Backend.ViewModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
+        public Task OnConfirmBoxCloseAsync(bool choise)
+        {
+            ConfirmMessageBox.TaskCompletionSource.SetResult(choise);
+            ConfirmMessageBox.Hidden();
+            return Task.CompletedTask;
+        }
         public void OnOpenPicker()
         {
             ShowAontherRecordPicker = true;

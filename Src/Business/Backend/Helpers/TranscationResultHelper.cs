@@ -18,14 +18,15 @@ namespace Backend.Helpers
         }
 
         public IEventAggregator EventAggregator { get; }
-
+        public MessageBoxModel MessageBox { get; set; }
         /// <summary>
         /// 訊息對話窗設定
         /// </summary>
         public async Task CheckDatabaseResult(MessageBoxModel messageBox,
             VerifyRecordResult verifyRecordResult)
         {
-            if(verifyRecordResult.Success == false)
+            MessageBox = messageBox;
+            if (verifyRecordResult.Success == false)
             {
                 if(verifyRecordResult.MessageId == CommonDomain.Enums.ErrorMessageEnum.客製化文字錯誤訊息)
                 {
@@ -38,7 +39,7 @@ namespace Backend.Helpers
                     {
                         message = $"{verifyRecordResult.Message}，例外異常:{verifyRecordResult.Exception.Message}";
                     }
-                    messageBox.Show("400px", "200px", "發生例外異常", message);
+                    MessageBox.Show("400px", "200px", "發生例外異常", message, HiddenMessageBox);
                     EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
                     {
                         Title = "重要通知",
@@ -51,5 +52,13 @@ namespace Backend.Helpers
             }
             await Task.Yield();
         }
+
+        #region 訊息與確認對話窗方法
+        public Task HiddenMessageBox()
+        {
+            MessageBox.Hidden();
+            return Task.CompletedTask;
+        }
+        #endregion
     }
 }
