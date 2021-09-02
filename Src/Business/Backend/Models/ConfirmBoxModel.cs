@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Backend.ViewModels
+namespace Backend.Models
 {
     public class ConfirmBoxModel
     {

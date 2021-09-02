@@ -17,6 +17,7 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
     using System;
+    using Backend.Models;
 
     public class MyUserViewModel
     {

@@ -15,6 +15,7 @@ namespace Backend.ViewModels
     using CommonDomain.DataModels;
     using Syncfusion.Blazor.Grids;
     using Syncfusion.Blazor.Navigations;
+    using Backend.Models;
 
     public class FlowHistoryViewModel
     {
