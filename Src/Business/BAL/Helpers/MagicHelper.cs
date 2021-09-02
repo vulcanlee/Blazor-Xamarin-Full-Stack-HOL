@@ -84,6 +84,13 @@ namespace BAL.Helpers
         public static readonly int MailStatus等待 = 0;
         public static readonly int MailStatus失敗 = 1;
         public static readonly int MailStatus成功 = 2;
+        public const int WorkOrderStatus全部 = -1;
+        public const int WorkOrderStatus建立 = 0;
+        public const int WorkOrderStatus指派人員 = 1;
+        public const int WorkOrderStatus派工 = 2;
+        public const int WorkOrderStatus完工 = 3;
+        public const int WorkOrderStatus送審 = 4;
+        public const int WorkOrderStatus結案 = 99;
         #endregion
     }
 }

@@ -410,10 +410,19 @@ namespace Backend.ViewModels
         #endregion
 
         #region 送出
-        public void SendAsync(WorkOrderAdapterModel workOrderAdapterModel)
+        public async Task SendAsync(WorkOrderAdapterModel workOrderAdapterModel)
         {
-            CurrentRecord = workOrderAdapterModel;
-            OnWorkOrderSendingDialog();
+            if (workOrderAdapterModel.Status == MagicHelper.WorkOrderStatus完工)
+            {
+                CurrentRecord = workOrderAdapterModel;
+                OnWorkOrderSendingDialog();
+            }
+            else
+            {
+                MessageBox.Show("400px", "200px", "警告","派工單狀態必須是在完工狀態才可以送審");
+                await Task.Yield();
+                thisView.NeedRefresh();
+            }
         }
         #endregion
         #endregion
