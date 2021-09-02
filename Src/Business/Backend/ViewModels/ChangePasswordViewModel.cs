@@ -63,7 +63,8 @@ namespace Backend.ViewModels
             {
                 MessageBox.Show("400px", "200px",
                     ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),
-                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.新密碼2次輸入須相同));
+                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.新密碼2次輸入須相同),
+                    CloseMessageBox);
                 return;
             }
             else
@@ -73,7 +74,8 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.使用者不存在));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.使用者不存在),
+                        CloseMessageBox);
                     return;
                 }
             }
@@ -84,7 +86,8 @@ namespace Backend.ViewModels
             if (string.IsNullOrEmpty(msg) == false)
             {
                 MessageBox.Show("400px", "200px",
-                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告), msg);
+                    ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告), msg,
+                        CloseMessageBox);
                 return;
             }
 
@@ -94,7 +97,8 @@ namespace Backend.ViewModels
             Relogin = true;
             MessageBox.Show("400px", "200px",
                 ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),
-                ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼已經變更成功));
+                ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼已經變更成功),
+                        CloseMessageBox);
 
             #endregion
         }

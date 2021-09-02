@@ -130,7 +130,6 @@ namespace Backend.ViewModels
         /// </summary>
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
         public ConfirmBoxModel ConfirmMessageBoxTask { get; set; } = new ConfirmBoxModel();
-        public TaskCompletionSource ConfirmBoxTaskCompletionSource { get; set; } = new TaskCompletionSource();
         /// <summary>
         /// 訊息對話窗設定
         /// </summary>
@@ -225,7 +224,8 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId),
+                    HiddenMessageBox);
                     await Task.Yield();
                     thisView.NeedRefresh();
                     return;
@@ -294,7 +294,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult));
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -306,7 +306,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult));
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -347,10 +347,11 @@ namespace Backend.ViewModels
         //    }
         //    ShowAontherRecordPicker = false;
         //}
-        public void OnConfirmBoxClose(bool choise)
+        public Task OnConfirmBoxCloseAsync(bool choise)
         {
             ConfirmMessageBoxTask.TaskCompletionSource.SetResult(choise);
             ConfirmMessageBoxTask.Hidden();
+            return Task.CompletedTask;
         }
         public void OnWorkOrderSendingDialog()
         {
@@ -433,7 +434,7 @@ namespace Backend.ViewModels
                     await Task.Yield();
                     var checkTask = ConfirmMessageBoxTask.ShowAsync(ConfirmMessageBoxTask.Width,
                          ConfirmMessageBoxTask.Height, ConfirmMessageBoxTask.Title,
-                         ConfirmMessageBoxTask.Body, OnConfirmBoxClose);
+                         ConfirmMessageBoxTask.Body, OnConfirmBoxCloseAsync);
                     thisView.NeedRefresh();
                     var checkAgain = await checkTask;
                     if (checkAgain == false)
@@ -446,11 +447,21 @@ namespace Backend.ViewModels
             }
             else
             {
-                MessageBox.Show("400px", "200px", "警告", "派工單狀態必須是在完工狀態才可以送審");
+                MessageBox.Show("400px", "200px", "警告", "派工單狀態必須是在完工狀態才可以送審",
+                    HiddenMessageBox);
                 await Task.Yield();
                 thisView.NeedRefresh();
             }
         }
+        #endregion
+
+        #region 訊息與確認對話窗方法
+        public Task HiddenMessageBox()
+        {
+            MessageBox.Hidden();
+            return Task.CompletedTask;
+        }
+
         #endregion
         #endregion
     }

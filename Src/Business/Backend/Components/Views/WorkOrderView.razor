@@ -70,7 +70,7 @@
                         var tpa2 = $"#{tpa1}";
                         <SfTooltip Target="@tpa2" Content="送審">
                             <span id="@tpa1" class="mdi mdi-24px mdi-send-circle text-primary"
-                                  @onclick="async () => { ViewModel.SendAsync(currentRec); }" />
+                                  @onclick="async () => { await ViewModel.SendAsync(currentRec); }" />
                         </SfTooltip>
                     }
                 </Template>
@@ -214,7 +214,7 @@
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"
             Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
-            Callback="x=>ViewModel.MessageBox.Hidden()" />
+            Callback="ViewModel.MessageBox.MessageCallbackDelegate" />
 
 <ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
             IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
@@ -224,7 +224,8 @@
 <ConfirmBox Height="@ViewModel.ConfirmMessageBoxTask.Height" Width="@ViewModel.ConfirmMessageBoxTask.Width"
             IsVisible="@ViewModel.ConfirmMessageBoxTask.IsVisible"
             Title="@ViewModel.ConfirmMessageBoxTask.Title" Message="@ViewModel.ConfirmMessageBoxTask.Body"
-            Callback="x=>ViewModel.ConfirmMessageBoxTask.ConfirmDelegate(x)" />
+            Callback="ViewModel.ConfirmMessageBoxTask.ConfirmDelegate"/>
+@*Callback="x=>ViewModel.ConfirmMessageBoxTask.ConfirmDelegate(x)" />*@
 
 <DialogBackground />
 

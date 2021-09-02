@@ -62,17 +62,20 @@ namespace Backend.ViewModels
 
             #region 進行密碼變更
             await SystemEnvironmentService.UpdateAsync(SystemEnvironmentModel);
-            MessageBox.Show("400px", "200px","通知","紀錄已經儲存成功");
+            MessageBox.Show("400px", "200px","通知","紀錄已經儲存成功", HiddenMessageBox);
 
             #endregion
         }
 
-        public async Task CloseMessageBox()
+        #region 訊息與確認對話窗方法
+        public async Task HiddenMessageBox()
         {
             MessageBox.Hidden();
             thisView.NeedRefresh();
             await Task.Yield();
             thisView.NeedRefresh();
         }
+
+        #endregion
     }
 }

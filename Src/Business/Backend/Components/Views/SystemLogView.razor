@@ -141,7 +141,7 @@
 <MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
             IsVisible="@RazorModel.MessageBox.IsVisible"
             Title="@RazorModel.MessageBox.Title" Message="@RazorModel.MessageBox.Body"
-            Callback="x=>RazorModel.MessageBox.Hidden()" />
+            Callback="RazorModel.MessageBox.MessageCallbackDelegate" />
 
 <ConfirmBox Height="@RazorModel.ConfirmMessageBox.Height" Width="@RazorModel.ConfirmMessageBox.Width"
             IsVisible="@RazorModel.ConfirmMessageBox.IsVisible"

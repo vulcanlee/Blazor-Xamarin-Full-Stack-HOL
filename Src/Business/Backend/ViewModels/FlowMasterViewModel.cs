@@ -222,7 +222,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId));
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId), HiddenMessageBox);
                     await Task.Yield();
                     thisView.NeedRefresh();
                     return;
@@ -308,7 +308,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult));
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -320,7 +320,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult));
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -495,6 +495,15 @@ namespace Backend.ViewModels
             return result;
         }
         #endregion
+        #endregion
+
+        #region 訊息與確認對話窗方法
+        public Task HiddenMessageBox()
+        {
+            MessageBox.Hidden();
+            return Task.CompletedTask;
+        }
+
         #endregion
         #endregion
     }
