@@ -224,14 +224,26 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId),
-                    HiddenMessageBox);
+                    MessageBox.HiddenAsync);
                     await Task.Yield();
                     thisView.NeedRefresh();
                     return;
                 }
                 #endregion
 
-                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？", RemoveThisRecord);
+                #region 刪除這筆紀錄
+                await Task.Yield();
+                var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
+                     "確認要刪除這筆紀錄嗎?", ConfirmMessageBox.HiddenAsync);
+                thisView.NeedRefresh();
+                var checkAgain = await checkTask;
+                if (checkAgain == true)
+                {
+                    var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
+                    dataGrid.RefreshGrid();
+                }
+                #endregion
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
@@ -251,17 +263,6 @@ namespace Backend.ViewModels
                 }
                 #endregion
             }
-        }
-
-        public async Task RemoveThisRecord(bool NeedDelete)
-        {
-            if (NeedDelete == true)
-            {
-                var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
-                await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
-                dataGrid.RefreshGrid();
-            }
-            ConfirmMessageBox.Hidden();
         }
         #endregion
 
@@ -293,7 +294,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -305,7 +306,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -346,12 +347,6 @@ namespace Backend.ViewModels
         //    }
         //    ShowAontherRecordPicker = false;
         //}
-        public Task OnConfirmBoxCloseAsync(bool choise)
-        {
-            ConfirmMessageBox.TaskCompletionSource.SetResult(choise);
-            ConfirmMessageBox.Hidden();
-            return Task.CompletedTask;
-        }
         public void OnWorkOrderSendingDialog()
         {
             ShowWorkOrderSendingDialog = true;
@@ -430,7 +425,7 @@ namespace Backend.ViewModels
                 {
                     await Task.Yield();
                     var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "確認",
-                         "這筆工單已經有送審過了，是否還要繼續送審", OnConfirmBoxCloseAsync);
+                         "這筆工單已經有送審過了，是否還要繼續送審", ConfirmMessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     var checkAgain = await checkTask;
                     if (checkAgain == false)
@@ -444,20 +439,11 @@ namespace Backend.ViewModels
             else
             {
                 MessageBox.Show("400px", "200px", "警告", "派工單狀態必須是在完工狀態才可以送審",
-                    HiddenMessageBox);
+                    MessageBox.HiddenAsync);
                 await Task.Yield();
                 thisView.NeedRefresh();
             }
         }
-        #endregion
-
-        #region 訊息與確認對話窗方法
-        public Task HiddenMessageBox()
-        {
-            MessageBox.Hidden();
-            return Task.CompletedTask;
-        }
-
         #endregion
         #endregion
     }

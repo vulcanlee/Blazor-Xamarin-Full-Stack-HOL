@@ -16,6 +16,7 @@ namespace Backend.ViewModels
         public void Show(string width, string height, string title, string body,
             Func<Task> messageCallbackDelegate = null)
         {
+            TaskCompletionSource = null;
             MessageCallbackDelegate = messageCallbackDelegate;
             Height = height;
             Width = width;
@@ -40,6 +41,14 @@ namespace Backend.ViewModels
         public void Hidden()
         {
             IsVisible = false;
+        }
+
+        public Task HiddenAsync()
+        {
+            if (TaskCompletionSource != null)
+                TaskCompletionSource.SetResult();
+            Hidden();
+            return Task.CompletedTask;
         }
     }
 }

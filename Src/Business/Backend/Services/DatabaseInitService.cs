@@ -949,6 +949,38 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 商品管理功能名稱
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.商品管理功能名稱,
+                CodeName = "Product",
+                Enable = true,
+                Icon = "mdi-lightbulb-group",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
+            #region 商品管理功能名稱
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.訂單管理功能名稱,
+                CodeName = "Order",
+                Enable = true,
+                Icon = "mdi-lightbulb-group",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
             #region 片語分類
             cc += 10;
             menuData = new MenuData()

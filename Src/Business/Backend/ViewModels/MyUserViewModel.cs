@@ -139,26 +139,28 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId), HiddenMessageBox);
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId),
+                        MessageBox.HiddenAsync);
                     await Task.Yield();
                     thisView.NeedRefresh();
                     return;
                 }
                 #endregion
 
-                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？", RemoveThisRecord);
+                #region 刪除這筆紀錄
+                await Task.Yield();
+                var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
+                     "確認要刪除這筆紀錄嗎?", ConfirmMessageBox.HiddenAsync);
+                thisView.NeedRefresh();
+                var checkAgain = await checkTask;
+                if (checkAgain == true)
+                {
+                    var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
+                    dataGrid.RefreshGrid();
+                }
+                #endregion
             }
-        }
-
-        public async Task RemoveThisRecord(bool NeedDelete)
-        {
-            if (NeedDelete == true)
-            {
-                var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
-                await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
-                dataGrid.RefreshGrid();
-            }
-            ConfirmMessageBox.Hidden();
         }
         #endregion
 
@@ -188,7 +190,8 @@ namespace Backend.ViewModels
                 if (string.IsNullOrEmpty(CurrentRecord.PasswordPlaintext))
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼不能為空白), HiddenMessageBox);
+                        ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.密碼不能為空白),
+                        MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -197,7 +200,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -212,7 +215,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -280,7 +283,7 @@ namespace Backend.ViewModels
             if (item.Account.ToLower() == MagicHelper.開發者帳號)
             {
                 MessageBox.Show("400px", "200px", "警告",
-                    "開發者帳號不可以被停用", HiddenMessageBox);
+                    "開發者帳號不可以被停用", MessageBox.HiddenAsync);
                 return;
             }
             await CurrentService.DisableIt(item);
@@ -298,15 +301,6 @@ namespace Backend.ViewModels
         {
             CurrentRecord.ForceLogoutDatetime = DateTime.Now;
         }
-        #endregion
-
-        #region 訊息與確認對話窗方法
-        public Task HiddenMessageBox()
-        {
-            MessageBox.Hidden();
-            return Task.CompletedTask;
-        }
-
         #endregion
         #endregion
     }

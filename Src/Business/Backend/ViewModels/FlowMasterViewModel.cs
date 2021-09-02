@@ -222,13 +222,16 @@ namespace Backend.ViewModels
                 thisView.NeedRefresh();
                 if (checkedResult.Success == false)
                 {
-                    var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
-                         $"你確定真的要刪除與這筆紀錄相關紀錄嗎？例如：收件匣、簽呈使用者、簽成歷史紀錄 ({checkedResult.Message})", OnConfirmBoxCloseAsync);
+                    var checkTask1 = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
+                         $"你確定真的要刪除與這筆紀錄相關紀錄嗎？例如：收件匣、簽呈使用者、簽成歷史紀錄 ({checkedResult.Message})",
+                         ConfirmMessageBox.HiddenAsync);
                     thisView.NeedRefresh();
-                    var checkAgain = await checkTask;
-                    if (checkAgain == true)
+                    var checkAgain1 = await checkTask1;
+                    if (checkAgain1 == true)
                     {
-                        await RemoveThisRecord(true);
+                        var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                        await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
+                        dataGrid.RefreshGrid();
                     }
                     await Task.Yield();
                     thisView.NeedRefresh();
@@ -236,7 +239,19 @@ namespace Backend.ViewModels
                 }
                 #endregion
 
-                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？", RemoveThisRecord);
+                #region 刪除這筆紀錄
+                await Task.Yield();
+                var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
+                     "確認要刪除這筆紀錄嗎?", ConfirmMessageBox.HiddenAsync);
+                thisView.NeedRefresh();
+                var checkAgain = await checkTask;
+                if (checkAgain == true)
+                {
+                    var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
+                    await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
+                    dataGrid.RefreshGrid();
+                }
+                #endregion
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowFlowUser)
@@ -274,17 +289,6 @@ namespace Backend.ViewModels
                 #endregion
             }
         }
-
-        public async Task RemoveThisRecord(bool NeedDelete)
-        {
-            if (NeedDelete == true)
-            {
-                var verifyRecordResult = await CurrentService.DeleteAsync(CurrentNeedDeleteRecord.Id);
-                await TranscationResultHelper.CheckDatabaseResult(MessageBox, verifyRecordResult);
-                dataGrid.RefreshGrid();
-            }
-            ConfirmMessageBox.Hidden();
-        }
         #endregion
 
         #region 修改紀錄對話窗的按鈕事件
@@ -315,7 +319,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -327,7 +331,7 @@ namespace Backend.ViewModels
                 if (checkedResult.Success == false)
                 {
                     MessageBox.Show("400px", "200px", "警告",
-                        VerifyRecordResultHelper.GetMessageString(checkedResult), HiddenMessageBox);
+                        VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
                     thisView.NeedRefresh();
                     return;
                 }
@@ -354,12 +358,6 @@ namespace Backend.ViewModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
-        public Task OnConfirmBoxCloseAsync(bool choise)
-        {
-            ConfirmMessageBox.TaskCompletionSource.SetResult(choise);
-            ConfirmMessageBox.Hidden();
-            return Task.CompletedTask;
-        }
         public void OnOpenPicker()
         {
             ShowAontherRecordPicker = true;
@@ -508,15 +506,6 @@ namespace Backend.ViewModels
             return result;
         }
         #endregion
-        #endregion
-
-        #region 訊息與確認對話窗方法
-        public Task HiddenMessageBox()
-        {
-            MessageBox.Hidden();
-            return Task.CompletedTask;
-        }
-
         #endregion
         #endregion
     }

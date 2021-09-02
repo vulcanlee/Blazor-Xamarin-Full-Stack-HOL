@@ -16,6 +16,7 @@ namespace Backend.ViewModels
             Func<bool, Task> confirmDelegate = null)
         {
             ConfirmDelegate = confirmDelegate;
+            TaskCompletionSource = null;
             Height = height;
             Width = width;
             Title = title;
@@ -39,6 +40,14 @@ namespace Backend.ViewModels
         public void Hidden()
         {
             IsVisible = false;
+        }
+
+        public Task HiddenAsync(bool choise)
+        {
+            if (TaskCompletionSource != null)
+                TaskCompletionSource.SetResult(choise);
+            Hidden();
+            return Task.CompletedTask;
         }
     }
 }
