@@ -10,6 +10,10 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
+            CreateMap<CategorySub, CategorySubAdapterModel>();
+            CreateMap<CategorySubAdapterModel, CategorySub>();
+            CreateMap<CategoryMain, CategoryMainAdapterModel>();
+            CreateMap<CategoryMainAdapterModel, CategoryMain>();
             CreateMap<MailQueue, MailQueueAdapterModel>();
             CreateMap<MailQueueAdapterModel, MailQueue>();
             CreateMap<WorkOrder, WorkOrderAdapterModel>();

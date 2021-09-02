@@ -12,6 +12,8 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
+            services.AddTransient<ICategorySubService, CategorySubService>();
+            services.AddTransient<ICategoryMainService, CategoryMainService>();
             services.AddTransient<IMailQueueService, MailQueueService>();
             services.AddTransient<IWorkOrderService, WorkOrderService>();
             services.AddTransient<IMyUserPasswordHistoryService, MyUserPasswordHistoryService>();

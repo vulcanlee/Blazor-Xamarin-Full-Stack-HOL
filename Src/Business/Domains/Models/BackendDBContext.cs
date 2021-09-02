@@ -40,6 +40,8 @@ namespace Domains.Models
         public virtual DbSet<SystemEnvironment> SystemEnvironment { get; set; }
         public virtual DbSet<WorkOrder> WorkOrder { get; set; }
         public virtual DbSet<MailQueue> MailQueue { get; set; }
+        public virtual DbSet<CategoryMain> CategoryMain { get; set; }
+        public virtual DbSet<CategorySub> CategorySub { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
