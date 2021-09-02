@@ -146,7 +146,7 @@
 <ConfirmBox Height="@RazorModel.ConfirmMessageBox.Height" Width="@RazorModel.ConfirmMessageBox.Width"
             IsVisible="@RazorModel.ConfirmMessageBox.IsVisible"
             Title="@RazorModel.ConfirmMessageBox.Title" Message="@RazorModel.ConfirmMessageBox.Body"
-            Callback="x=>RazorModel.RemoveThisRecord(x)" />
+            Callback="RazorModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
 

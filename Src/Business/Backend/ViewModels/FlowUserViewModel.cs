@@ -196,7 +196,7 @@ namespace Backend.ViewModels
                 }
                 #endregion
 
-                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
+                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？", RemoveThisRecord);
                 #endregion
             }
         }

@@ -129,7 +129,6 @@ namespace Backend.ViewModels
         /// 確認對話窗設定
         /// </summary>
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
-        public ConfirmBoxModel ConfirmMessageBoxTask { get; set; } = new ConfirmBoxModel();
         /// <summary>
         /// 訊息對話窗設定
         /// </summary>
@@ -232,7 +231,7 @@ namespace Backend.ViewModels
                 }
                 #endregion
 
-                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？");
+                ConfirmMessageBox.Show("400px", "200px", "警告", "確認要刪除這筆紀錄嗎？", RemoveThisRecord);
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdShowDetailOfMaster)
@@ -349,8 +348,8 @@ namespace Backend.ViewModels
         //}
         public Task OnConfirmBoxCloseAsync(bool choise)
         {
-            ConfirmMessageBoxTask.TaskCompletionSource.SetResult(choise);
-            ConfirmMessageBoxTask.Hidden();
+            ConfirmMessageBox.TaskCompletionSource.SetResult(choise);
+            ConfirmMessageBox.Hidden();
             return Task.CompletedTask;
         }
         public void OnWorkOrderSendingDialog()
@@ -429,12 +428,9 @@ namespace Backend.ViewModels
                 var flowMasterAdapterModel = await FlowMasterService.GetSourceCodeAsync(workOrderAdapterModel.Code);
                 if (flowMasterAdapterModel != null)
                 {
-                    ConfirmMessageBoxTask.Title = "確認";
-                    ConfirmMessageBoxTask.Body = "這筆工單已經有送審過了，是否還要繼續送審";
                     await Task.Yield();
-                    var checkTask = ConfirmMessageBoxTask.ShowAsync(ConfirmMessageBoxTask.Width,
-                         ConfirmMessageBoxTask.Height, ConfirmMessageBoxTask.Title,
-                         ConfirmMessageBoxTask.Body, OnConfirmBoxCloseAsync);
+                    var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "確認",
+                         "這筆工單已經有送審過了，是否還要繼續送審", OnConfirmBoxCloseAsync);
                     thisView.NeedRefresh();
                     var checkAgain = await checkTask;
                     if (checkAgain == false)

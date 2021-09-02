@@ -114,7 +114,7 @@
 <ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
             IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
             Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
-            Callback="x=>ViewModel.RemoveThisRecord(x)" />
+            Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
 
