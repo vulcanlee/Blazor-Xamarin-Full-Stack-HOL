@@ -33,6 +33,7 @@ namespace Backend.Services
         Task<DataRequestResult<FlowMasterAdapterModel>> GetAsync(DataRequest dataRequest, UserHelper UserHelper, CurrentUser CurrentUser);
         Task<FlowMasterAdapterModel> GetAsync(int id);
         Task<FlowMasterAdapterModel> GetAsync(string code);
+        Task<FlowMasterAdapterModel> GetSourceCodeAsync(string code);
         Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)> GetUsersDataAsync(FlowMasterAdapterModel flowMasterAdapterModel);
         Task<(List<FlowUser> flowUsers, MyUserAdapterModel user)> GetUsersDataByActionAsync(FlowMasterAdapterModel flowMasterAdapterModel, CurrentUser currentUser);
         Task NotifyInboxUsers(List<FlowUser> flowUsers, FlowMasterAdapterModel flowMasterAdapterModel, int level);

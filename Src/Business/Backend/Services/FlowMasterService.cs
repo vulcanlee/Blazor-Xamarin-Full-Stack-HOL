@@ -135,6 +135,19 @@ namespace Backend.Services
             return result;
         }
 
+        public async Task<FlowMasterAdapterModel> GetSourceCodeAsync(string code)
+        {
+            FlowMaster item = await context.FlowMaster
+                .Include(x => x.MyUser)
+                .Include(x => x.PolicyHeader)
+                .AsNoTracking()
+                .OrderByDescending(x=>x.CreateDate)
+                .FirstOrDefaultAsync(x => x.SourceCode == code);
+            FlowMasterAdapterModel result = Mapper.Map<FlowMasterAdapterModel>(item);
+            await OhterDependencyData(result);
+            return result;
+        }
+
         public async Task<VerifyRecordResult> AddAsync(FlowMasterAdapterModel paraObject)
         {
             try
@@ -593,6 +606,7 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);
+            CleanTrackingHelper.Clean<WorkOrder>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
 
             var thisLevel = flowMasterAdapterModel.ProcessLevel;
@@ -620,6 +634,23 @@ namespace Backend.Services
                 {
                     flowMasterAdapterModel.Status = 99;
                     flowMasterAdapterModel.ProcessLevel++;
+                    #region 若不是直接申請，則需要同步更新來源紀錄的狀態碼
+                    if (flowMasterAdapterModel.SourceType == FlowSourceTypeEnum.WorkOrder)
+                    {
+                        if(string.IsNullOrEmpty(flowMasterAdapterModel.SourceCode)== false)
+                        {
+                            var workOrder = await context.WorkOrder
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(x => x.Code == flowMasterAdapterModel.SourceCode);
+                            if(workOrder!=null)
+                            {
+                                workOrder.Status = MagicHelper.WorkOrderStatus結案;
+                                context.Update(workOrder);
+                                await context.SaveChangesAsync();
+                            }    
+                        }    
+                    }
+                    #endregion
                 }
                 else
                 {
@@ -651,6 +682,7 @@ namespace Backend.Services
 
             CleanTrackingHelper.Clean<FlowMaster>(context);
             CleanTrackingHelper.Clean<FlowUser>(context);
+            CleanTrackingHelper.Clean<WorkOrder>(context);
             CleanTrackingHelper.Clean<FlowHistory>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
         }

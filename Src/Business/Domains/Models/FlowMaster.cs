@@ -33,6 +33,7 @@ namespace Domains.Models
         /// </summary>
         public int Status { get; set; }
         public DateTime CreateDate { get; set; }
+        public DateTime UpdateAt { get; set; }
         /// <summary>
         /// 簽核流程的嵌入來源 Json 紀錄
         /// </summary>
@@ -41,6 +42,7 @@ namespace Domains.Models
         /// 簽核來源的類型
         /// </summary>
         public int SourceType { get; set; }
+        public string SourceCode { get; set; }
         public int MyUserId { get; set; }
         public virtual MyUser MyUser { get; set; }
         public string NextMyUserName { get; set; }

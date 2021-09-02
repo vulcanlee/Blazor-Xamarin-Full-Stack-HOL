@@ -365,16 +365,21 @@ namespace Backend.ViewModels
                     PolicyHeaderId = e.PolicyHeaderAdapterModel.Id,
                     CreateDate = DateTime.Now,
                     ProcessLevel = 0,
-                    SourceType = FlowSourceTypeEnum.WorkOrder,
                     Title = $"工單完工 - {CurrentRecord.Description}",
                     Content = "",
                     Status = 0,
+                    SourceType = FlowSourceTypeEnum.WorkOrder,
                     SourceJson = JsonConvert.SerializeObject(CurrentRecord),
+                    SourceCode = CurrentRecord.Code,
                 };
 
+                flowMasterAdapterModel.UpdateAt = DateTime.Now;
                 await FlowMasterService.AddAsync(flowMasterAdapterModel);
                 flowMasterAdapterModel = await FlowMasterService.GetAsync(code);
                 await FlowMasterService.SendAsync(flowMasterAdapterModel, e);
+                CurrentRecord.Status = MagicHelper.WorkOrderStatus送審;
+                await CurrentService.UpdateAsync(CurrentRecord);
+                this.dataGrid.RefreshGrid();
                 #endregion
             }
             ShowWorkOrderSendingDialog = false;
@@ -414,6 +419,7 @@ namespace Backend.ViewModels
         {
             if (workOrderAdapterModel.Status == MagicHelper.WorkOrderStatus完工)
             {
+                // Todo 加入非同步等待的對話窗功能，因為已經送審了，詢問是否要繼續
                 CurrentRecord = workOrderAdapterModel;
                 OnWorkOrderSendingDialog();
             }

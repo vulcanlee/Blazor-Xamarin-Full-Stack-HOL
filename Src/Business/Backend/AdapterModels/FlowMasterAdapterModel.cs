@@ -35,8 +35,10 @@ namespace Backend.AdapterModels
         /// 簽核來源的類型
         /// </summary>
         public FlowSourceTypeEnum SourceType { get; set; }
+        public string SourceCode { get; set; } = "";
         public string SourceTypeName { get; set; }
         public DateTime CreateDate { get; set; }
+        public DateTime UpdateAt { get; set; }
         public int MyUserId { get; set; }
         public virtual MyUserAdapterModel MyUser { get; set; }
         public string MyUserName { get; set; }
