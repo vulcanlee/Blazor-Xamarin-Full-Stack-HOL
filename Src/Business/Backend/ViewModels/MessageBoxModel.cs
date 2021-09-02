@@ -10,14 +10,14 @@ namespace Backend.ViewModels
         public string Width { get; set; } = "435px";
         public string Title { get; set; } = "通知訊息";
         public string Body { get; set; } = "訊息內容";
-        public Func<Task> MessageCallbackDelegate { get; set; }
+        public Func<Task> MessageDelegate { get; set; }
         public TaskCompletionSource TaskCompletionSource { get; set; }
 
         public void Show(string width, string height, string title, string body,
             Func<Task> messageCallbackDelegate = null)
         {
             TaskCompletionSource = null;
-            MessageCallbackDelegate = messageCallbackDelegate;
+            MessageDelegate = messageCallbackDelegate;
             Height = height;
             Width = width;
             Title = title;
@@ -28,7 +28,7 @@ namespace Backend.ViewModels
         public Task ShowAsync(string width, string height, string title, string body,
             Func<Task> messageCallbackDelegate = null)
         {
-            MessageCallbackDelegate = messageCallbackDelegate;
+            MessageDelegate = messageCallbackDelegate;
             TaskCompletionSource = new TaskCompletionSource();
             Height = height;
             Width = width;
