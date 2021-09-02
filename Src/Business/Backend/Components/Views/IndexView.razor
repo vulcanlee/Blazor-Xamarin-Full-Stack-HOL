@@ -68,7 +68,6 @@
     string userId = "";
     string versionNumber = "";
     string EmergenceDebugMessage = "";
-    long latency = 0;
     CancellationTokenSource cts;
     string IP;
 
@@ -120,7 +119,6 @@
     }
     void StopMeasureRTT()
     {
-        latency = 0;
         cts.Cancel();
     }
     void IDisposable.Dispose()

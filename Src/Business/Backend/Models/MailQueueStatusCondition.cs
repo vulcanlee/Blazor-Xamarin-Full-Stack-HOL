@@ -12,7 +12,6 @@ namespace Backend.Models
         public static void Initialization(List<MailQueueStatusCondition> MailQueueStatusConditions)
         {
             MailQueueStatusConditions.Clear();
-            int id = 0;
             MailQueueStatusConditions.Add(new MailQueueStatusCondition()
             {
                 Id = -1,

@@ -38,7 +38,6 @@ namespace Backend.Services
         public SystemBroadcast SystemBroadcast { get; }
         public SmtpClientInformation SmtpClientInformation { get; }
 
-        int checkCycle = 60 * 60;
         DateTime StartupTime = DateTime.Now;
         Task PasswordPolicyTask;
         CancellationTokenSource cancellationTokenSource = new();

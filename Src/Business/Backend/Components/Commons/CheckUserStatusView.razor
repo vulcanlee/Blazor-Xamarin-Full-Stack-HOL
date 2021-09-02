@@ -119,6 +119,8 @@
                             catch (TaskCanceledException ex)
                             {
                                 IsRunning = false;
+                                var Msg = $"檢查使用者發生取消例外異常";
+                                Logger.LogInformation(ex, $"{Msg}");
                             }
                             catch (Exception ex)
                             {
