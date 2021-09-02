@@ -7,16 +7,16 @@
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.Calendars
 
-@inject SystemLogViewModel RazorModel
+@inject SystemLogViewModel ViewModel
 @implements IRazorPage
 @implements IDataGrid
 
 <div>
     <SfGrid @ref="Grid" TValue="SystemLogAdapterModel"
             AllowPaging="true" class="parentFullWidth"
-            Toolbar="RazorModel.Toolbaritems">
+            Toolbar="ViewModel.Toolbaritems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
-            <SystemLogAdapter CurrentSortCondition="@RazorModel.CurrentSortCondition"></SystemLogAdapter>
+            <SystemLogAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></SystemLogAdapter>
         </SfDataManager>
         <SfToolbar>
             <ToolbarItems>
@@ -24,16 +24,16 @@
                     <Template>
                         <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
                         <SfDropDownList TValue="int" TItem="SortCondition"
-                                        Placeholder="選擇排序條件" DataSource="@RazorModel.SortConditions">
+                                        Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
                             <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
-                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@RazorModel.SortChanged"></DropDownListEvents>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
                         </SfDropDownList>
                     </Template>
                 </ToolbarItem>
             </ToolbarItems>
         </SfToolbar>
-        <GridEvents CommandClicked="RazorModel.OnCommandClicked" TValue="SystemLogAdapterModel"
-                    OnToolbarClick="RazorModel.ToolbarClickHandler" />
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="SystemLogAdapterModel"
+                    OnToolbarClick="ViewModel.ToolbarClickHandler" />
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(SystemLogAdapterModel.Message)
@@ -60,69 +60,69 @@
     </SfGrid>
 </div>
 
-<SfDialog @bind-Visible="@RazorModel.IsShowEditRecord" IsModal="true"
+<SfDialog @bind-Visible="@ViewModel.IsShowEditRecord" IsModal="true"
           Width="95%" Height="100%" CssClass="dialogSize">
     <DialogTemplates>
-        <Header>@RazorModel.EditRecordDialogTitle</Header>
+        <Header>@ViewModel.EditRecordDialogTitle</Header>
         <Content>
-            <EditForm Model="@RazorModel.CurrentRecord">
+            <EditForm Model="@ViewModel.CurrentRecord">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <InputWatcher EditContextActionChanged="@RazorModel.OnEditContestChanged" />
+                <InputWatcher EditContextActionChanged="@ViewModel.OnEditContestChanged" />
 
                 <div>
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">分類</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Category"
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Category"
                                        Readonly="true" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Category)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Category)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">日誌等級</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.LogLevel"
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.LogLevel"
                                        Readonly="true" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.LogLevel)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.LogLevel)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">訊息</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Message"
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Message"
                                        Readonly="true" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Message)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Message)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">其他內容</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.Content"
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Content"
                                        Readonly="true" Multiline="true" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Content)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Content)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">使用者 IP</label>
-                            <SfTextBox @bind-Value="RazorModel.CurrentRecord.IP"
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.IP"
                                        Readonly="true" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.IP)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.IP)" />
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="control-label">紀錄時間</label>
-                            <SfDateTimePicker @bind-Value="RazorModel.CurrentRecord.Updatetime"
+                            <SfDateTimePicker @bind-Value="ViewModel.CurrentRecord.Updatetime"
                                               Format="yyyyMMdd HHmmss"
                                               Readonly="true" />
-                            <ValidationMessage For="@(() => RazorModel.CurrentRecord.Updatetime)" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Updatetime)" />
                         </div>
                     </div>
 
@@ -131,22 +131,22 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button class="btn btn-secondary" @onclick="RazorModel.OnRecordEditCancel">關閉</button>
+                <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">關閉</button>
             </div>
         </FooterTemplate>
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
-<MessageBox Height="@RazorModel.MessageBox.Height" Width="@RazorModel.MessageBox.Width"
-            IsVisible="@RazorModel.MessageBox.IsVisible"
-            Title="@RazorModel.MessageBox.Title" Message="@RazorModel.MessageBox.Body"
-            Callback="RazorModel.MessageBox.MessageCallbackDelegate" />
+<MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
+            IsVisible="@ViewModel.MessageBox.IsVisible"
+            Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
+            Callback="ViewModel.MessageBox.MessageCallbackDelegate" />
 
-<ConfirmBox Height="@RazorModel.ConfirmMessageBox.Height" Width="@RazorModel.ConfirmMessageBox.Width"
-            IsVisible="@RazorModel.ConfirmMessageBox.IsVisible"
-            Title="@RazorModel.ConfirmMessageBox.Title" Message="@RazorModel.ConfirmMessageBox.Body"
-            Callback="RazorModel.ConfirmMessageBox.ConfirmDelegate" />
+<ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
+            IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
+            Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
+            Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
 
@@ -162,13 +162,13 @@
     #region 生命週期事件
     protected override void OnInitialized()
     {
-        RazorModel.Setup(this, this);
+        ViewModel.Setup(this, this);
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender == true)
         {
-            RazorModel.Setup(this, this);
+            ViewModel.Setup(this, this);
         }
         if (OnViewRender.HasDelegate)
         {
