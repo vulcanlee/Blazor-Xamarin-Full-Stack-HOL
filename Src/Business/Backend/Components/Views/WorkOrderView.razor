@@ -221,6 +221,11 @@
             Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
             Callback="x=>ViewModel.RemoveThisRecord(x)" />
 
+<ConfirmBox Height="@ViewModel.ConfirmMessageBoxTask.Height" Width="@ViewModel.ConfirmMessageBoxTask.Width"
+            IsVisible="@ViewModel.ConfirmMessageBoxTask.IsVisible"
+            Title="@ViewModel.ConfirmMessageBoxTask.Title" Message="@ViewModel.ConfirmMessageBoxTask.Body"
+            Callback="x=>ViewModel.ConfirmMessageBoxTask.ConfirmDelegate(x)" />
+
 <DialogBackground />
 
 @code{

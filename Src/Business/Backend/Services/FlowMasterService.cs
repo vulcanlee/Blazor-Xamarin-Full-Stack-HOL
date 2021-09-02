@@ -130,6 +130,7 @@ namespace Backend.Services
                 .Include(x => x.PolicyHeader)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Code == code);
+            if (item == null) return null;
             FlowMasterAdapterModel result = Mapper.Map<FlowMasterAdapterModel>(item);
             await OhterDependencyData(result);
             return result;
@@ -143,6 +144,7 @@ namespace Backend.Services
                 .AsNoTracking()
                 .OrderByDescending(x=>x.CreateDate)
                 .FirstOrDefaultAsync(x => x.SourceCode == code);
+            if (item == null) return null;
             FlowMasterAdapterModel result = Mapper.Map<FlowMasterAdapterModel>(item);
             await OhterDependencyData(result);
             return result;

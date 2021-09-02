@@ -129,6 +129,8 @@ namespace Backend.ViewModels
         /// 確認對話窗設定
         /// </summary>
         public ConfirmBoxModel ConfirmMessageBox { get; set; } = new ConfirmBoxModel();
+        public ConfirmBoxModel ConfirmMessageBoxTask { get; set; } = new ConfirmBoxModel();
+        public TaskCompletionSource ConfirmBoxTaskCompletionSource { get; set; } = new TaskCompletionSource();
         /// <summary>
         /// 訊息對話窗設定
         /// </summary>
@@ -345,7 +347,11 @@ namespace Backend.ViewModels
         //    }
         //    ShowAontherRecordPicker = false;
         //}
-
+        public void OnConfirmBoxClose(bool choise)
+        {
+            ConfirmMessageBoxTask.TaskCompletionSource.SetResult(choise);
+            ConfirmMessageBoxTask.Hidden();
+        }
         public void OnWorkOrderSendingDialog()
         {
             ShowWorkOrderSendingDialog = true;
@@ -419,13 +425,28 @@ namespace Backend.ViewModels
         {
             if (workOrderAdapterModel.Status == MagicHelper.WorkOrderStatus完工)
             {
-                // Todo 加入非同步等待的對話窗功能，因為已經送審了，詢問是否要繼續
+                var flowMasterAdapterModel = await FlowMasterService.GetSourceCodeAsync(workOrderAdapterModel.Code);
+                if (flowMasterAdapterModel != null)
+                {
+                    ConfirmMessageBoxTask.Title = "確認";
+                    ConfirmMessageBoxTask.Body = "這筆工單已經有送審過了，是否還要繼續送審";
+                    await Task.Yield();
+                    var checkTask = ConfirmMessageBoxTask.ShowAsync(ConfirmMessageBoxTask.Width,
+                         ConfirmMessageBoxTask.Height, ConfirmMessageBoxTask.Title,
+                         ConfirmMessageBoxTask.Body, OnConfirmBoxClose);
+                    thisView.NeedRefresh();
+                    var checkAgain = await checkTask;
+                    if (checkAgain == false)
+                    {
+                        return;
+                    }
+                }
                 CurrentRecord = workOrderAdapterModel;
                 OnWorkOrderSendingDialog();
             }
             else
             {
-                MessageBox.Show("400px", "200px", "警告","派工單狀態必須是在完工狀態才可以送審");
+                MessageBox.Show("400px", "200px", "警告", "派工單狀態必須是在完工狀態才可以送審");
                 await Task.Yield();
                 thisView.NeedRefresh();
             }
