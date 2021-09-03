@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Backend.Interfaces;
+using Microsoft.AspNetCore.Components;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Backend.Models
@@ -12,10 +15,16 @@ namespace Backend.Models
         public string Body { get; set; } = "訊息內容";
         public Func<Task> MessageDelegate { get; set; }
         public TaskCompletionSource TaskCompletionSource { get; set; }
+        public int TimeElapsing { get; set; }
+        public CancellationTokenSource CTS { get; set; }
+        public Task WaitTask { get; set; }
+        public IRazorPage RazorPage { get; set; }
 
         public void Show(string width, string height, string title, string body,
-            Func<Task> messageCallbackDelegate = null)
+            Func<Task> messageCallbackDelegate = null, int timeElapsing = 0, IRazorPage razorPage = null)
         {
+            TimeElapsing = timeElapsing;
+            RazorPage = razorPage;
             TaskCompletionSource = null;
             MessageDelegate = messageCallbackDelegate;
             Height = height;
@@ -23,11 +32,35 @@ namespace Backend.Models
             Title = title;
             Body = body;
             IsVisible = true;
+            if (TimeElapsing > 0 && RazorPage != null)
+            {
+                WaitTask = Task.Run(async () =>
+                {
+                    int timeCounter = 0;
+                    while (true)
+                    {
+                        if (timeCounter > TimeElapsing)
+                        {
+                            if (messageCallbackDelegate != null)
+                                await messageCallbackDelegate();
+                            await RazorPage.NeedInvokeAsync(() =>
+                            {
+                                RazorPage.NeedRefresh();
+                            });
+                            break;
+                        }
+                        await Task.Delay(500);
+                        timeCounter += 500;
+                    }
+                });
+            }
         }
 
         public Task ShowAsync(string width, string height, string title, string body,
-            Func<Task> messageCallbackDelegate = null)
+            Func<Task> messageCallbackDelegate = null, int timeElapsing = 0, IRazorPage razorPage = null)
         {
+            TimeElapsing = timeElapsing;
+            RazorPage = razorPage;
             MessageDelegate = messageCallbackDelegate;
             TaskCompletionSource = new TaskCompletionSource();
             Height = height;
@@ -35,6 +68,28 @@ namespace Backend.Models
             Title = title;
             Body = body;
             IsVisible = true;
+            if (TimeElapsing > 0 && RazorPage != null)
+            {
+                WaitTask = Task.Run(async () =>
+                {
+                    int timeCounter = 0;
+                    while (true)
+                    {
+                        if (timeCounter > TimeElapsing)
+                        {
+                            if (messageCallbackDelegate != null)
+                                await messageCallbackDelegate();
+                            await RazorPage.NeedInvokeAsync(() =>
+                            {
+                                RazorPage.NeedRefresh();
+                            });
+                            break;
+                        }
+                        await Task.Delay(500);
+                        timeCounter += 500;
+                    }
+                });
+            }
             return TaskCompletionSource.Task;
         }
 
