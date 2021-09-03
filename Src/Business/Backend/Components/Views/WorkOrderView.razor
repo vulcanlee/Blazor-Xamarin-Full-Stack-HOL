@@ -49,16 +49,11 @@
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(WorkOrderAdapterModel.Code)
-                        HeaderText="代碼" Width="130" />
+                        HeaderText="代碼" Width="150" />
             <GridColumn Field=@nameof(WorkOrderAdapterModel.Description)
                         HeaderText="問題描述" />
             <GridColumn Field=@nameof(WorkOrderAdapterModel.CreatedAt)
                         HeaderText="建立時間" Format="yyyy-MM-dd"
-                        HideAtMedia="(min-width: 640px)" />
-            <GridColumn Field=@nameof(WorkOrderAdapterModel.StartDate)
-                        HeaderText="開始時間" Format="yyyy-MM-dd" />
-            <GridColumn Field=@nameof(WorkOrderAdapterModel.EndDate)
-                        HeaderText="結束時間" Format="yyyy-MM-dd"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(WorkOrderAdapterModel.StatusName)
                         HeaderText="狀態" />
@@ -123,6 +118,36 @@
 
                     <div class="form-row">
                         <div class="form-group col">
+                            <label class="control-label">主分類</label>
+                            <SfDropDownList TValue="int" TItem="CategoryMainAdapterModel"
+                                            DataSource="ViewModel.CategoryMainAdapterModels"
+                                            @bind-Value="ViewModel.CurrentRecord.CategoryMainId"
+                                            Placeholder="請選擇派工單主分類">
+                                <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                <DropDownListEvents TValue="int" TItem="CategoryMainAdapterModel"
+                                                    ValueChange="@ViewModel.CategoryMainChanged"></DropDownListEvents>
+                            </SfDropDownList>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Comment)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">次分類</label>
+                            <SfDropDownList TValue="int" TItem="CategorySubAdapterModel"
+                                            DataSource="ViewModel.CategorySubAdapterModels"
+                                            @bind-Value="ViewModel.CurrentRecord.CategorySubId"
+                                            Placeholder="請選擇派工單次分類">
+                                <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                <DropDownListEvents TValue="int" TItem="CategorySubAdapterModel"
+                                                    ValueChange="@ViewModel.CategorySubChanged"></DropDownListEvents>
+                            </SfDropDownList>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Comment)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
                             <label class="control-label">建立時間</label>
                             <SfDatePicker TValue="DateTime"
                                           @bind-Value="ViewModel.CurrentRecord.CreatedAt"
@@ -162,6 +187,19 @@
                                           Format="yyyy-MM-dd HH:mm:ss"
                                           Placeholder="請選擇一個日期" />
                             <ValidationMessage For="@(() => ViewModel.CurrentRecord.EndDate)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">
+                                指派處理人員
+                                <span class="mdi mdi-24px mdi-magnify"
+                                      @onclick="ViewModel.OnOpenUserPicker"></span>
+                            </label>
+                            <SfTextBox Value="@ViewModel.CurrentRecord.EngineerName"
+                                       Enabled="false"></SfTextBox>
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.EngineerName)" />
                         </div>
                     </div>
 
@@ -208,6 +246,10 @@
     <DialogPositionData X="center" Y="center"></DialogPositionData>
 </SfDialog>
 
+
+<MyUserPicker OpenPicker="ViewModel.ShowUserPicker"
+              OnConfirmCallback="x=>ViewModel.OnPickerUserCompletion(x)" />
+
 <WorkOrderSendingView OpenPicker="ViewModel.ShowWorkOrderSendingDialog"
                       OnConfirmCallback="x=>ViewModel.OnWorkOrderSendingDialogCompletion(x)" />
 
@@ -219,7 +261,7 @@
 <ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
             IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
             Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
-            Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate"/>
+            Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
 

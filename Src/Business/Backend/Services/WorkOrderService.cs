@@ -53,12 +53,12 @@ namespace Backend.Services
             #endregion
 
             #region 過濾派工單狀態
-            if(CurrentWorkOrderStatusCondition!=null)
+            if (CurrentWorkOrderStatusCondition != null)
             {
-                if(CurrentWorkOrderStatusCondition.Id != -1)
+                if (CurrentWorkOrderStatusCondition.Id != -1)
                 {
                     DataSource = DataSource
-                    .Where(x => x.Status== CurrentWorkOrderStatusCondition.Id);
+                    .Where(x => x.Status == CurrentWorkOrderStatusCondition.Id);
                 }
             }
             #endregion
@@ -252,9 +252,13 @@ namespace Backend.Services
         #endregion
 
         #region 其他服務方法
-        Task OhterDependencyData(WorkOrderAdapterModel data)
+        async Task OhterDependencyData(WorkOrderAdapterModel data)
         {
-            return Task.FromResult(0);
+            var user = await context.MyUser
+                .FirstOrDefaultAsync(x => x.Id == data.EngineerId);
+            if (user != null)
+                data.EngineerName = user.Name;
+            return ;
         }
         #endregion
     }

@@ -28,7 +28,8 @@ namespace Backend.ViewModels
            BackendDBContext context, IMapper Mapper,
            TranscationResultHelper transcationResultHelper,
            IFlowMasterService flowMasterService,
-           UserHelper currentUserHelper, CurrentUser currentUser)
+           UserHelper currentUserHelper, CurrentUser currentUser,
+           ICategoryMainService categoryMainService, ICategorySubService categorySubService)
         {
             this.CurrentService = CurrentService;
             this.context = context;
@@ -37,6 +38,8 @@ namespace Backend.ViewModels
             FlowMasterService = flowMasterService;
             CurrentUserHelper = currentUserHelper;
             CurrentUser = currentUser;
+            CategoryMainService = categoryMainService;
+            CategorySubService = categorySubService;
             WorkOrderSort.Initialization(SortConditions);
             WorkOrderStatusCondition.Initialization(WorkOrderStatusConditions);
             CurrentWorkOrderStatusCondition.Id = WorkOrderStatusConditions[0].Id;
@@ -91,6 +94,7 @@ namespace Backend.ViewModels
         /// 是否顯示選取其他清單記錄對話窗 
         /// </summary>
         public bool ShowAontherRecordPicker { get; set; } = false;
+        public bool ShowUserPicker { get; set; } = false;
         public bool ShowWorkOrderSendingDialog { get; set; } = false;
         /// <summary>
         /// 父參考物件的 Id 
@@ -106,6 +110,14 @@ namespace Backend.ViewModels
         /// 現在選擇排序條件項目
         /// </summary>
         public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+        public SortCondition CurrentCategoryMainCondition { get; set; } = new SortCondition()
+        {
+            Id = (int)CategoryMainSortEnum.NameAscending
+        };
+        public SortCondition CurrentCategorySubCondition { get; set; } = new SortCondition()
+        {
+            Id = (int)CategorySubSortEnum.OrderNumberAscending
+        };
         public WorkOrderStatusCondition CurrentWorkOrderStatusCondition { get; set; } = new WorkOrderStatusCondition();
         /// <summary>
         /// 用於控制、更新明細清單 Grid 
@@ -124,6 +136,10 @@ namespace Backend.ViewModels
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
         public int FilterWorkOrderStatusCondition { get; set; }
+
+        public List<CategoryMainAdapterModel> CategoryMainAdapterModels { get; set; } = new List<CategoryMainAdapterModel>();
+        public List<CategorySubAdapterModel> CategorySubAdapterModels { get; set; } = new List<CategorySubAdapterModel>();
+
         #region 訊息說明之對話窗使用的變數
         /// <summary>
         /// 確認對話窗設定
@@ -137,6 +153,8 @@ namespace Backend.ViewModels
         public IFlowMasterService FlowMasterService { get; }
         public UserHelper CurrentUserHelper { get; }
         public CurrentUser CurrentUser { get; }
+        public ICategoryMainService CategoryMainService { get; }
+        public ICategorySubService CategorySubService { get; }
         #endregion
         #endregion
 
@@ -176,7 +194,7 @@ namespace Backend.ViewModels
         #endregion
 
         #region 工具列事件 (新增)
-        public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+        public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
         {
             if (args.Item.Id == ButtonIdHelper.ButtonIdAdd)
             {
@@ -190,6 +208,8 @@ namespace Backend.ViewModels
                 CurrentRecord.CreatedAt = DateTime.Now;
                 CurrentRecord.Status = 0;
                 CurrentRecord.Code = UniqueStringHelper.GetCode();
+
+                await GetCategoryMainAdapterModels();
             }
             else if (args.Item.Id == ButtonIdHelper.ButtonIdRefresh)
             {
@@ -209,6 +229,11 @@ namespace Backend.ViewModels
                 EditRecordDialogTitle = "修改紀錄";
                 IsShowEditRecord = true;
                 isNewRecordMode = false;
+
+                await GetCategoryMainAdapterModels();
+                await GetCategorySubAdapterModels(item.CategoryMainId);
+
+                thisView.NeedRefresh();
                 #endregion
             }
             else if (args.CommandColumn.ButtonOption.IconCss == ButtonIdHelper.ButtonIdDelete)
@@ -333,20 +358,21 @@ namespace Backend.ViewModels
         #endregion
 
         #region 開窗選取紀錄使用到的方法
-        //public void OnOpenPicker()
-        //{
-        //    ShowAontherRecordPicker = true;
-        //}
+        public void OnOpenUserPicker()
+        {
+            ShowUserPicker = true;
+        }
 
-        //public void OnPickerCompletion(DepartmentAdapterModel e)
-        //{
-        //    if (e != null)
-        //    {
-        //        CurrentRecord.DepartmentId = e.DepartmentId;
-        //        CurrentRecord.DepartmentName = e.Name;
-        //    }
-        //    ShowAontherRecordPicker = false;
-        //}
+        public void OnPickerUserCompletion(MyUserAdapterModel e)
+        {
+            if (e != null)
+            {
+                CurrentRecord.EngineerId = e.Id;
+                CurrentRecord.EngineerName = e.Name;
+            }
+            ShowUserPicker = false;
+        }
+
         public void OnWorkOrderSendingDialog()
         {
             ShowWorkOrderSendingDialog = true;
@@ -413,6 +439,47 @@ namespace Backend.ViewModels
             }
         }
 
+        public async Task CategoryMainChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, CategoryMainAdapterModel> args)
+        {
+            if (args.IsInteracted == true)
+            {
+                if (dataGrid.GridIsExist() == true)
+                {
+                    CurrentRecord.CategoryMainId = args.Value;
+                    CurrentRecord.CategoryMainName = args.ItemData.Name;
+                    if (args.PreviousItemData != null)
+                    {
+                        if (args.PreviousItemData.Id != args.ItemData.Id)
+                        {
+                            await GetCategorySubAdapterModels(CurrentRecord.CategoryMainId);
+                            CurrentRecord.CategorySubId = 0;
+                            CurrentRecord.CategorySubName = "";
+                        }
+                    }
+                    else
+                    {
+                        await GetCategorySubAdapterModels(CurrentRecord.CategoryMainId);
+                        CurrentRecord.CategorySubId = 0;
+                        CurrentRecord.CategorySubName = "";
+                    }
+                }
+            }
+        }
+
+        public async Task CategorySubChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, CategorySubAdapterModel> args)
+        {
+            if (args.IsInteracted == true)
+            {
+                if (dataGrid.GridIsExist() == true)
+                {
+                    CurrentRecord.CategorySubId = args.Value;
+                    CurrentRecord.CategorySubName = args.ItemData.Name;
+                    await Task.Yield();
+                    thisView.NeedRefresh();
+                }
+            }
+        }
+
         #endregion
 
         #region 送出
@@ -444,6 +511,39 @@ namespace Backend.ViewModels
                 thisView.NeedRefresh();
             }
         }
+        #endregion
+
+        #region DropList 相關方法
+        public async Task GetCategoryMainAdapterModels()
+        {
+            if(CategoryMainAdapterModels.Count==0)
+            {
+                CategoryMainAdapterModels = new List<CategoryMainAdapterModel>();
+                var Items = await CategoryMainService.GetAsync();
+                CategoryMainAdapterModels.AddRange(Items);
+            }
+        }
+        public async Task GetCategorySubAdapterModels(int categoryMainId)
+        {
+            CategorySubAdapterModels = new List<CategorySubAdapterModel>();
+            thisView.NeedRefresh();
+            var Items = await CategorySubService.GetByHeaderIDAsync(categoryMainId,
+                new DataRequest()
+                {
+                    Sorted = new SortCondition()
+                    {
+                        Id = (int)CategorySubSortEnum.OrderNumberAscending
+                    },
+                    Skip = 0,
+                    Take = 0,
+                });
+            var itemAdapterModels = Items.Result.ToList();
+            if (itemAdapterModels.Count > 0)
+            {
+                CategorySubAdapterModels.AddRange(itemAdapterModels);
+            }
+        }
+
         #endregion
         #endregion
     }

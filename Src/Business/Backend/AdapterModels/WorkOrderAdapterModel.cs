@@ -54,7 +54,7 @@ namespace Backend.AdapterModels
         public CategorySubAdapterModel CategorySub { get; set; }
         public string CategorySubName { get; set; }
         public int EngineerId { get; set; }
-        public int EngineerName { get; set; }
+        public string EngineerName { get; set; }
 
         public WorkOrderAdapterModel Clone()
         {
