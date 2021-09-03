@@ -1037,7 +1037,7 @@ namespace Backend.Services
                 Name = BAL.Helpers.MagicHelper.派工單分類清單,
                 CodeName = "Category",
                 Enable = true,
-                Icon = "mdi-playlist-check",
+                Icon = "mdi-label-multiple",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
@@ -1053,7 +1053,7 @@ namespace Backend.Services
                 Name = BAL.Helpers.MagicHelper.片語分類,
                 CodeName = "PhaseCategory",
                 Enable = true,
-                Icon = "mdi-lightbulb-group",
+                Icon = "mdi-lightbulb-on-outline",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
@@ -1062,11 +1062,11 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
-            #region 簽核文件子功能表
+            #region 設備維護
             cc += 10;
             menuData = new MenuData()
             {
-                Name = "簽核管理",
+                Name = "設備維護",
                 CodeName = "",
                 Enable = true,
                 Icon = "mdi-file-document-multiple",
@@ -1085,7 +1085,7 @@ namespace Backend.Services
                 Name = BAL.Helpers.MagicHelper.派工單,
                 CodeName = "WorkOrder",
                 Enable = true,
-                Icon = "mdi-cog-transfer-outline",
+                Icon = "mdi-calendar-plus",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
