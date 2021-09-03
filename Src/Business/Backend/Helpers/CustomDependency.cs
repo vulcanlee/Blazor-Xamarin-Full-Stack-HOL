@@ -42,6 +42,8 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
+            services.AddTransient<CategorySubViewModel>();
+            services.AddTransient<CategoryMainViewModel>();
             services.AddTransient<MailQueueViewModel>();
             services.AddTransient<WorkOrderViewModel>();
             services.AddTransient<SystemEnvironmentViewModel>();

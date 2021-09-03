@@ -166,6 +166,21 @@ namespace Backend.Services
             Logger.LogInformation($"{Msg}");
             #endregion
 
+            #region 建立派工單分類清單
+            await 建立派工單分類清單Async();
+            Msg = $"建立派工單分類清單";
+            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            {
+                Message = Msg,
+                Category = LogCategories.Initialization,
+                Content = "",
+                LogLevel = LogLevels.Information,
+                Updatetime = DateTime.Now,
+                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+            });
+            Logger.LogInformation($"{Msg}");
+            #endregion
+
             #endregion
         }
 
@@ -592,6 +607,40 @@ namespace Backend.Services
 
         }
 
+        async Task 建立派工單分類清單Async()
+        {
+            List<CategorySub> categorySubs = new List<CategorySub>();
+            int cc = 1;
+            #region 派工單主分類
+            for (int i = 0; i < 20; i++)
+            {
+                int main = i;
+                var categoryMain = new CategoryMain()
+                {
+                    Name = $"派工單主分類{i}",
+                    Enable = true,
+                };
+                await context.CategoryMain.AddAsync(categoryMain);
+                await context.SaveChangesAsync();
+                categorySubs.Clear();
+                for (int j = 0; j < 20; j++)
+                {
+                    CategorySub categorySub = new CategorySub()
+                    {
+                        CategoryMainId = categoryMain.Id,
+                        Code = $"{cc:#####}",
+                        Enable = true,
+                        Name = $"派工單次分類 {main}-{j}",
+                        OrderNumber = cc,
+                    };
+                    categorySubs.Add(categorySub);
+                }
+                await context.BulkInsertAsync(categorySubs);
+            }
+            #endregion
+
+        }
+
         #endregion
 
         #region 建立相關紀錄
@@ -973,6 +1022,22 @@ namespace Backend.Services
                 CodeName = "Order",
                 Enable = true,
                 Icon = "mdi-lightbulb-group",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+
+            #region 派工單分類清單
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = BAL.Helpers.MagicHelper.派工單分類清單,
+                CodeName = "Category",
+                Enable = true,
+                Icon = "mdi-playlist-check",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
