@@ -4,30 +4,48 @@
 
 因此，便誕生了這個專案範本，這個專案範本具有底下的特色與功能
 
-- [提供 Cookie 的身分認證與授權](#提供-Cookie-的身分認證與授權)
-- [提供 Jwt 的身分認證與授權](#提供-Jwt-的身分認證與授權)
+- [提供 Cookie 的身分認證與授權](#提供-cookie-的身分認證與授權)
+- [提供 Jwt 的身分認證與授權](#提供-jwt-的身分認證與授權)
+- [內建使用者紀錄 CRUD](#內建使用者紀錄-crud)
+- [內建功能表角色 CRUD](#內建功能表角色-crud)
+- [內建功能表項目清單 CRUD](#內建功能表項目清單-crud)
+- [提供單一資料表的 CRUD 範例程式碼 產品清單](#提供單一資料表的-crud-範例程式碼-產品清單)
+- [提供一對多資料表的 CRUD 範例程式碼 訂單 與 訂單明細](#提供一對多資料表的-crud-範例程式碼-訂單-與-訂單明細)
+- [提供登入時候可以拒絕已經停用的帳號](#提供登入時候可以拒絕已經停用的帳號)
+- [帳號突然被停用將會強制登出被停用的帳號](#帳號突然被停用將會強制登出被停用的帳號)
+- [緊急除錯模式下可以Production模式下看到例外異常呼叫堆疊](#緊急除錯模式下可以production模式下看到例外異常呼叫堆疊)
+- [](#)
+- [](#)
+- [](#)
+- [](#)
+- [](#)
 
-Asynchronous programming has been around for several years on the .NET platform but has historically been very difficult to do well. Since the introduction of async/await
-in C# 5 asynchronous programming has become mainstream. Modern frameworks (like ASP.NET Core) are fully asynchronous and it's very hard to avoid the async keyword when writing
-web services. As a result, there's been lots of confusion on the best practices for async and how to use it properly. This section will try to lay out some guidance with examples of bad and good patterns of how to write asynchronous code.
+## 提供 Cookie 的身分認證與授權
 
+## 提供 Jwt 的身分認證與授權
 
-Asynchronous programming has been around for several years on the .NET platform but has historically been very difficult to do well. Since the introduction of async/await
-in C# 5 asynchronous programming has become mainstream. Modern frameworks (like ASP.NET Core) are fully asynchronous and it's very hard to avoid the async keyword when writing
-web services. As a result, there's been lots of confusion on the best practices for async and how to use it properly. This section will try to lay out some guidance with examples of bad and good patterns of how to write asynchronous code.
+## 內建使用者紀錄 CRUD
 
+## 內建功能表角色 CRUD
 
- 
-# 提供 Jwt 的身分認證與授權
+## 內建功能表項目清單 CRUD
 
-Asynchronous programming has been around for several years on the .NET platform but has historically been very difficult to do well. Since the introduction of async/await
+## 提供單一資料表的 CRUD 範例程式碼 產品清單
 
-# 提供 Jwt 的身分認證與授權
+## 提供一對多資料表的 CRUD 範例程式碼 訂單 與 訂單明細
 
-Asynchronous programming has been around for several years on the .NET platform but has historically been very difficult to do well. Since the introduction of async/await
-in C# 5 asynchronous programming has become mainstream. Modern frameworks (like ASP.NET Core) are fully asynchronous and it's very hard to avoid the async keyword when writing
-web services. As a result, there's been lots of confusion on the best practices for async and how to use it properly. This section will try to lay out some guidance with examples of bad and good patterns of how to write asynchronous code.
+## 提供登入時候可以拒絕已經停用的帳號
 
-## Asynchrony is viral 
+## 帳號突然被停用將會強制登出被停用的帳號
 
-Once you go async, all of your callers **SHOULD** be async, since efforts to be async amount to nothing unless the entire callstack is async. In many cases, being partially async can be worse than being entirely synchronous. Therefore it is best to go all in, and make everything async at once.
+## 緊急除錯模式下可以Production模式下看到例外異常呼叫堆疊
+
+#
+
+#
+
+#
+
+#
+
+#
