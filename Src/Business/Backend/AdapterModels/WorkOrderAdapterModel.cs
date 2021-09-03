@@ -47,6 +47,14 @@ namespace Backend.AdapterModels
                 return Status.GetWorkOrderStatus();
             }
         }
+        public int CategoryMainId { get; set; }
+        public CategoryMainAdapterModel CategoryMain { get; set; }
+        public string CategoryMainName { get; set; }
+        public int CategorySubId { get; set; }
+        public CategorySubAdapterModel CategorySub { get; set; }
+        public string CategorySubName { get; set; }
+        public int EngineerId { get; set; }
+        public int EngineerName { get; set; }
 
         public WorkOrderAdapterModel Clone()
         {

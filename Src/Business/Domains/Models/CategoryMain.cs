@@ -10,9 +10,11 @@ namespace Domains.Models
     public class CategoryMain
     {
         public virtual ICollection<CategorySub> CategorySub { get; set; }
+        public virtual ICollection<WorkOrder> WorkOrder { get; set; }
         public CategoryMain()
         {
             CategorySub = new HashSet<CategorySub>();
+            WorkOrder = new HashSet<WorkOrder>();
         }
         public int Id { get; set; }
         /// <summary>

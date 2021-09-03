@@ -47,6 +47,10 @@ namespace Domains.Models
         /// 狀態
         /// </summary>
         public int Status { get; set; }
-
+        public int CategoryMainId { get; set; }
+        public CategoryMain CategoryMain { get; set; }
+        public int CategorySubId { get; set; }
+        public CategorySub CategorySub { get; set; }
+        public int EngineerId { get; set; }
     }
 }
