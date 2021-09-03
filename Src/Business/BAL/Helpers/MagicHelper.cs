@@ -8,7 +8,7 @@ namespace BAL.Helpers
     {
         #region 定義神奇字串或者神奇數值
         #region 系統預設參數
-        public static readonly string AppName = "Blazor + Xamarin 超全端程式設計 動手練習系列";
+        public static readonly string AppName = "Blazor 商業用專案範本";
         public static readonly string MenuMainTitle = "Blazor 商業用專案範本";
         public static readonly string DefaultConnectionString = "BackendDefaultConnection";
         public const string CookieAuthenticationScheme = "BackendCookieAuthenticationScheme"; // CookieAuthenticationDefaults.AuthenticationScheme
