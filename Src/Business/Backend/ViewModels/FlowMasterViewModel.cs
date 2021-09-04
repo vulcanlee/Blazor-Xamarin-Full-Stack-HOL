@@ -545,6 +545,15 @@ namespace Backend.ViewModels
                 await SendAsync(CurrentRecord);
             }
         }
+
+
+        public void OnReviewSourceDialogCompletion(object e)
+        {
+            if (CurrentRecord.SourceType == FlowSourceTypeEnum.WorkOrder)
+            {
+                ShowReviewWorkOrderDialog = false;
+            }
+        }
         #endregion
         #endregion
     }

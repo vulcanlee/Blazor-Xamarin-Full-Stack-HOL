@@ -586,6 +586,11 @@ namespace Backend.ViewModels
                 await SendAsync(CurrentRecord);
             }
         }
+
+        public void OnReviewFlowDialogCompletion(object e)
+        {
+            ShowReviewFlowDialog = false;
+        }
         #endregion
         #endregion
     }

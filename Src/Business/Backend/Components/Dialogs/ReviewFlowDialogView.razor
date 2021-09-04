@@ -50,6 +50,8 @@
     public bool OpenPicker { get; set; }
     [Parameter]
     public FlowMasterAdapterModel CurrentRecord { get; set; }
+    [Parameter]
+    public EventCallback<FlowMasterAdapterModel> OnCloseCallback { get; set; }
     string DialogTitle = "簽核明細資訊";
 
     protected override void OnInitialized()
@@ -61,8 +63,8 @@
         OpenPicker = true;
     }
 
-    void OnPickerCancel()
+    async Task OnPickerCancel()
     {
-        OpenPicker = false;
+        await OnCloseCallback.InvokeAsync(CurrentRecord);
     }
 }

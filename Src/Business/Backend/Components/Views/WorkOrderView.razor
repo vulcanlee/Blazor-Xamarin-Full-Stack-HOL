@@ -255,7 +255,8 @@
                       OnConfirmCallback="x=>ViewModel.OnWorkOrderSendingDialogCompletion(x)" />
 
 <ReviewFlowDialogView OpenPicker="ViewModel.ShowReviewFlowDialog"
-                      CurrentRecord="ViewModel.CurrentFlowMasterAdapterModel" />
+                      CurrentRecord="ViewModel.CurrentFlowMasterAdapterModel"
+                      OnCloseCallback="ViewModel.OnReviewFlowDialogCompletion"/>
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"

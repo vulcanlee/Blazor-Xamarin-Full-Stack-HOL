@@ -279,7 +279,8 @@
                     OnConfirmCallback="x=>ViewModel.OnPickerPolicyCompletion(x)" />
 
 <ReviewWorkOrderDialogView OpenPicker="ViewModel.ShowReviewWorkOrderDialog"
-                           CurrentRecord="ViewModel.CurrentWorkOrderAdapterModel" />
+                           CurrentRecord="ViewModel.CurrentWorkOrderAdapterModel"
+                      OnCloseCallback="ViewModel.OnReviewSourceDialogCompletion" />
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"
