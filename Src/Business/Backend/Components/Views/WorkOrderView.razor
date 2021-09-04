@@ -270,13 +270,13 @@
 <DialogBackground />
 
 @code{
-    SfGrid<WorkOrderAdapterModel> Grid;
-    [Parameter]
-    public int PageSize { get; set; } = 15;
-    [Parameter]
-    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
-    [Parameter]
-    public EventCallback<object> OnViewRender { get; set; }
+        SfGrid<WorkOrderAdapterModel> Grid;
+        [Parameter]
+        public int PageSize { get; set; } = 15;
+        [Parameter]
+        public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+        [Parameter]
+        public EventCallback<object> OnViewRender { get; set; }
 
     #region 生命週期事件
     protected override void OnInitialized()
@@ -299,7 +299,7 @@
     #region 頁面需要介面實作
     public void NeedRefresh()
     {
-        StateHasChanged();
+        InvokeAsync(() => { StateHasChanged(); });
     }
     public async Task NeedInvokeAsync(System.Action action)
     {

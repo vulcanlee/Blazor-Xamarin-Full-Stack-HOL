@@ -104,7 +104,7 @@
     #region 頁面需要介面實作
     public void NeedRefresh()
     {
-        StateHasChanged();
+        InvokeAsync(() => { StateHasChanged(); });
     }
     public async Task NeedInvokeAsync(System.Action action)
     {

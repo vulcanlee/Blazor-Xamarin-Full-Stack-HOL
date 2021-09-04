@@ -99,16 +99,16 @@
             await OnViewRender.InvokeAsync(null);
         }
     }
-        protected override Task OnParametersSetAsync()
-        {
-            return base.OnParametersSetAsync();
-        }
-        #endregion
-
-        #region 頁面需要介面實作
-        public void NeedRefresh()
+    protected override Task OnParametersSetAsync()
     {
-        StateHasChanged();
+        return base.OnParametersSetAsync();
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        InvokeAsync(() => { StateHasChanged(); });
     }
     public async Task NeedInvokeAsync(System.Action action)
     {
