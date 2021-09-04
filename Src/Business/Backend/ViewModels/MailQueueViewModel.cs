@@ -36,6 +36,7 @@ namespace Backend.ViewModels
             CurrentMailQueueStatusCondition.Title = MailQueueStatusConditions[0].Title;
             FilterMailQueueStatusCondition = CurrentMailQueueStatusCondition.Id;
 
+            #region 工具列按鈕初始化
             Toolbaritems.Add(new ItemModel()
             {
                 Id = ButtonIdHelper.ButtonIdAdd,
@@ -54,6 +55,7 @@ namespace Backend.ViewModels
                 Align = ItemAlign.Left,
             });
             Toolbaritems.Add("Search");
+            #endregion
         }
         #endregion
 

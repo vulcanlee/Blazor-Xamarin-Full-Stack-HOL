@@ -76,8 +76,10 @@
     {
         PhaseCategorySort.Initialization(SortConditions);
 
+        #region 工具列按鈕初始化
         Toolbaritems.Add(new ItemModel() { Text = "重新整理", TooltipText = "重新整理", CssClass = "mdi mdi-refresh" });
         Toolbaritems.Add("Search");
+        #endregion
     }
 
     public void ShowDialog()
