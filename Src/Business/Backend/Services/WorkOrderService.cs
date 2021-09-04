@@ -42,6 +42,8 @@ namespace Backend.Services
             List<WorkOrderAdapterModel> data = new();
             DataRequestResult<WorkOrderAdapterModel> result = new();
             var DataSource = context.WorkOrder
+                .Include(x=>x.CategoryMain)
+                .Include(x=>x.CategorySub)
                 .AsNoTracking();
             #region 進行搜尋動作
             if (!string.IsNullOrWhiteSpace(dataRequest.Search))
@@ -122,6 +124,8 @@ namespace Backend.Services
         public async Task<WorkOrderAdapterModel> GetAsync(int id)
         {
             WorkOrder item = await context.WorkOrder
+                .Include(x => x.CategoryMain)
+                .Include(x => x.CategorySub)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
             WorkOrderAdapterModel result = Mapper.Map<WorkOrderAdapterModel>(item);
@@ -211,6 +215,14 @@ namespace Backend.Services
         public async Task<VerifyRecordResult> BeforeAddCheckAsync(WorkOrderAdapterModel paraObject)
         {
             await Task.Yield();
+            if (paraObject.CategoryMainId == 0)
+            {
+                return VerifyRecordResultFactory.Build(false, "請選擇派工單主分類");
+            }
+            if (paraObject.CategorySubId == 0)
+            {
+                return VerifyRecordResultFactory.Build(false, "請選擇派工單次分類");
+            }
             return VerifyRecordResultFactory.Build(true);
         }
 

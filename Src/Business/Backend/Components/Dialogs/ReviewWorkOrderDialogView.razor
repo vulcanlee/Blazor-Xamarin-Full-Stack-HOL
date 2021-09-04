@@ -1,0 +1,85 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+
+<SfDialog @bind-Visible="@OpenPicker" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@DialogTitle</Header>
+        <Content>
+            <div class="m-2">
+                <div class="card">
+                    <div class="card-header">
+                        送審單據紀錄明細
+                    </div>
+                    <div class="card-body">
+                        <label>代碼</label>
+                        <div class="mb-2">@CurrentRecord.Code</div>
+                        <label>需求描述</label>
+                        <div class="mb-2">@CurrentRecord.Description</div>
+                        <label>備註說明</label>
+                        <div class="mb-2">@CurrentRecord.Comment</div>
+                        <label>主分類</label>
+                        <div class="mb-2">@CurrentRecord.CategoryMainName</div>
+                        <label>次分類</label>
+                        <div class="mb-2">@CurrentRecord.CategorySubName</div>
+                        <label>建立時間</label>
+                        <div class="mb-2">@CurrentRecord.CreatedAt</div>
+                        <label>修改時間</label>
+                        @if (CurrentRecord.UpdatedAt != null)
+                        {
+                            <div class="mb-2">@CurrentRecord.UpdatedAt</div>
+                        }
+                        <label>開始時間</label>
+                        @if (CurrentRecord.StartDate != null)
+                        {
+                            <div class="mb-2">@CurrentRecord.StartDate</div>
+                        }
+                        <label>結束時間</label>
+                        @if (CurrentRecord.EndDate != null)
+                        {
+                            <div class="mb-2">@CurrentRecord.EndDate</div>
+                        }
+                        <label>指派處理人員</label>
+                        <div class="mb-2">@CurrentRecord.EngineerName</div>
+                        <label>狀態</label>
+                        <div class="mb-2">@CurrentRecord.StatusName</div>
+                    </div>
+
+                </div>
+            </div>
+        </Content>
+        <FooterTemplate>
+            <button @onclick="@OnPickerCancel" class='btn btn-secondary'>關閉</button>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<DialogBackground />
+
+@code{
+    [Parameter]
+    public bool OpenPicker { get; set; }
+    [Parameter]
+    public WorkOrderAdapterModel CurrentRecord { get; set; }
+    string DialogTitle = "簽核明細資訊";
+
+    protected override void OnInitialized()
+    {
+    }
+
+    public void ShowDialog()
+    {
+        OpenPicker = true;
+    }
+
+    void OnPickerCancel()
+    {
+        OpenPicker = false;
+    }
+}

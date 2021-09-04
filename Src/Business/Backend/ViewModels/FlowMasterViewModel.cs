@@ -17,6 +17,7 @@ namespace Backend.ViewModels
     using Syncfusion.Blazor.Navigations;
     using System;
     using Backend.Models;
+    using Newtonsoft.Json;
 
     public class FlowMasterViewModel
     {
@@ -35,6 +36,7 @@ namespace Backend.ViewModels
             CurrentUser = currentUser;
             FlowMasterSort.Initialization(SortConditions);
 
+            #region 工具列按鈕初始化
             Toolbaritems.Add(new ItemModel()
             {
                 Id = ButtonIdHelper.ButtonIdAdd,
@@ -53,6 +55,18 @@ namespace Backend.ViewModels
                 Align = ItemAlign.Left,
             });
             Toolbaritems.Add("Search");
+            #endregion
+
+
+            #region 互動式彈出功能表 ContextMenu 初始化
+            ContextMenuItems.Add(new ContextMenuItemModel
+            {
+                Text = "查看來源記錄",
+                Target = ".e-content",
+                Id = "查看來源記錄",
+                IconCss = "mdi mdi-file-find",
+            });
+            #endregion
         }
         #endregion
 
@@ -79,6 +93,7 @@ namespace Backend.ViewModels
         /// 現在正在刪除的紀錄  
         /// </summary>
         public FlowMasterAdapterModel CurrentNeedDeleteRecord { get; set; } = new FlowMasterAdapterModel();
+        public WorkOrderAdapterModel CurrentWorkOrderAdapterModel { get; set; } = new WorkOrderAdapterModel();
         /// <summary>
         /// 保存與資料編輯程式相關的中繼資料
         /// </summary>
@@ -90,6 +105,7 @@ namespace Backend.ViewModels
         public bool ShowSimulatorUserPicker { get; set; } = false;
         public bool ShowPolicyRecordPicker { get; set; } = false;
         public bool ShowApproveOpinionDialog { get; set; } = false;
+        public bool ShowReviewWorkOrderDialog { get; set; } = false;
         public FlowActionEnum FlowActionEnum { get; set; }
         public FlowMasterAdapterModel FlowMasterAdapterModel { get; set; }
         /// <summary>
@@ -122,6 +138,7 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
+        public List<object> ContextMenuItems { get; set; } = new List<object>();
         public bool IsGod { get; set; } = false;
 
         #region 訊息說明之對話窗使用的變數
@@ -506,6 +523,28 @@ namespace Backend.ViewModels
             return result;
         }
         #endregion
+        #endregion
+
+
+        #region 互動式彈出按鈕事件
+        public async Task OnContextMenuClick(ContextMenuClickEventArgs<FlowMasterAdapterModel> args)
+        {
+            CurrentRecord = args.RowInfo.RowData;
+            if (args.Item.Id == "查看來源記錄")
+            {
+                if(CurrentRecord.SourceType== FlowSourceTypeEnum.WorkOrder)
+                {
+                    WorkOrderAdapterModel workOrderAdapterModel = JsonConvert
+                        .DeserializeObject<WorkOrderAdapterModel>(CurrentRecord.SourceJson);
+                    CurrentWorkOrderAdapterModel = workOrderAdapterModel;
+                    ShowReviewWorkOrderDialog = true;
+                }
+            }
+            else if (args.Item.Id == "送審")
+            {
+                await SendAsync(CurrentRecord);
+            }
+        }
         #endregion
         #endregion
     }

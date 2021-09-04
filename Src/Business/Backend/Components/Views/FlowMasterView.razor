@@ -29,8 +29,8 @@
 
 <div>
     <SfGrid @ref="Grid" TValue="FlowMasterAdapterModel"
-            AllowPaging="true" class="parentFullWidth"  AllowTextWrap="true"
-            Toolbar="ViewModel.Toolbaritems">
+            AllowPaging="true" class="parentFullWidth" AllowTextWrap="true"
+            Toolbar="ViewModel.Toolbaritems" ContextMenuItems="ViewModel.ContextMenuItems">
         <SfDataManager Adaptor="Adaptors.CustomAdaptor">
             <FlowMasterAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></FlowMasterAdapter>
         </SfDataManager>
@@ -49,7 +49,8 @@
             </ToolbarItems>
         </SfToolbar>
         <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="FlowMasterAdapterModel"
-                    OnToolbarClick="ViewModel.ToolbarClickHandler" />
+                    OnToolbarClick="ViewModel.ToolbarClickHandler"
+                    ContextMenuItemClicked="ViewModel.OnContextMenuClick"/>
         <GridPageSettings PageSize="@PageSize" />
         <GridColumns>
             <GridColumn Field=@nameof(FlowMasterAdapterModel.Code)
@@ -277,6 +278,8 @@
 <PolicyHeaderPicker OpenPicker="ViewModel.ShowPolicyRecordPicker"
                     OnConfirmCallback="x=>ViewModel.OnPickerPolicyCompletion(x)" />
 
+<ReviewWorkOrderDialogView OpenPicker="ViewModel.ShowReviewWorkOrderDialog"
+                           CurrentRecord="ViewModel.CurrentWorkOrderAdapterModel" />
 
 <MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
             IsVisible="@ViewModel.MessageBox.IsVisible"

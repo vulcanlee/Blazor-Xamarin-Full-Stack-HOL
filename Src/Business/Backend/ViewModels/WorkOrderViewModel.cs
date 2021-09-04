@@ -48,6 +48,7 @@ namespace Backend.ViewModels
             WorkOrderStatusCondition.Initialization(WorkOrderStatusRecordConditions);
             WorkOrderStatusRecordConditions.RemoveAt(0);
 
+            #region 工具列按鈕初始化
             Toolbaritems.Add(new ItemModel()
             {
                 Id = ButtonIdHelper.ButtonIdAdd,
@@ -66,6 +67,24 @@ namespace Backend.ViewModels
                 Align = ItemAlign.Left,
             });
             Toolbaritems.Add("Search");
+            #endregion
+
+            #region 互動式彈出功能表 ContextMenu 初始化
+            ContextMenuItems.Add(new ContextMenuItemModel
+            {
+                Text = "送審",
+                Target = ".e-content",
+                Id = "送審",
+                IconCss = "mdi mdi-send-circle",
+            });
+            ContextMenuItems.Add(new ContextMenuItemModel
+            {
+                Text = "查看送審記錄",
+                Target = ".e-content",
+                Id = "查看送審記錄",
+                IconCss = "mdi mdi-file-find",
+            });
+            #endregion
         }
         #endregion
 
@@ -82,6 +101,7 @@ namespace Backend.ViewModels
         /// 現在正在新增或修改的紀錄  
         /// </summary>
         public WorkOrderAdapterModel CurrentRecord { get; set; } = new WorkOrderAdapterModel();
+        public FlowMasterAdapterModel CurrentFlowMasterAdapterModel { get; set; } = new FlowMasterAdapterModel();
         /// <summary>
         /// 現在正在刪除的紀錄  
         /// </summary>
@@ -95,6 +115,7 @@ namespace Backend.ViewModels
         /// </summary>
         public bool ShowAontherRecordPicker { get; set; } = false;
         public bool ShowUserPicker { get; set; } = false;
+        public bool ShowReviewFlowDialog { get; set; } = false;
         public bool ShowWorkOrderSendingDialog { get; set; } = false;
         /// <summary>
         /// 父參考物件的 Id 
@@ -135,6 +156,7 @@ namespace Backend.ViewModels
         /// 指定 Grid 上方可以使用的按鈕項目清單
         /// </summary>
         public List<object> Toolbaritems { get; set; } = new List<object>();
+        public List<object> ContextMenuItems { get; set; } = new List<object>();
         public int FilterWorkOrderStatusCondition { get; set; }
 
         public List<CategoryMainAdapterModel> CategoryMainAdapterModels { get; set; } = new List<CategoryMainAdapterModel>();
@@ -516,7 +538,7 @@ namespace Backend.ViewModels
         #region DropList 相關方法
         public async Task GetCategoryMainAdapterModels()
         {
-            if(CategoryMainAdapterModels.Count==0)
+            if (CategoryMainAdapterModels.Count == 0)
             {
                 CategoryMainAdapterModels = new List<CategoryMainAdapterModel>();
                 var Items = await CategoryMainService.GetAsync();
@@ -544,6 +566,26 @@ namespace Backend.ViewModels
             }
         }
 
+        #endregion
+
+        #region 互動式彈出按鈕事件
+        public async Task OnContextMenuClick(ContextMenuClickEventArgs<WorkOrderAdapterModel> args)
+        {
+            CurrentRecord = args.RowInfo.RowData;
+            if (args.Item.Id == "查看送審記錄")
+            {
+                var flowMasterAdapterModel = await FlowMasterService.GetSourceCodeAsync(CurrentRecord.Code);
+                if(flowMasterAdapterModel!=null)
+                {
+                    CurrentFlowMasterAdapterModel = flowMasterAdapterModel;
+                    ShowReviewFlowDialog = true;
+                }
+            }
+            else if (args.Item.Id == "送審")
+            {
+                await SendAsync(CurrentRecord);
+            }
+        }
         #endregion
         #endregion
     }
