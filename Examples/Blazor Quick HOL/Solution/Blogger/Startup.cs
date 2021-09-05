@@ -1,8 +1,10 @@
 using Blogger.Data;
+using Blogger.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +31,13 @@ namespace Blogger
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+
+            #region 宣告 BlogDbContext 會用到的服務
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<BlogDbContext>(
+                options =>
+                options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,23 @@
+﻿@using Blogger.Models
+@inject BlogDbContext BlogDbContext
+
+<button class="btn btn-danger"
+        @onclick="DbInitAsync">
+    重新建立資料庫
+</button>
+<h2>@Message</h2>
+@code {
+    public string Message { get; set; }
+
+    async Task DbInitAsync()
+    {
+        Message = "準備刪除資料庫";
+        await Task.Yield();
+        BlogDbContext.Database.EnsureDeleted();
+        Message = "準備建立資料庫";
+        StateHasChanged();
+        await Task.Yield();
+        BlogDbContext.Database.EnsureCreated();
+        Message = "資料庫已經建立成功";
+    }
+}
