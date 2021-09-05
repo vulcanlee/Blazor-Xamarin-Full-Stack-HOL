@@ -1,5 +1,16 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
 
-<DbInitView/>
+<DbInitView />
 
-<PostView/>
+<button class="btn btn-primary mt-3"
+        @onclick="OnNavigationBlogPost">
+    管理部落格文章
+</button>
+
+@code{
+    void OnNavigationBlogPost()
+    {
+        NavigationManager.NavigateTo("Blog");
+    }
+}

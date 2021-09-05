@@ -6,7 +6,7 @@
 
 @if (ShowEditRecord)
 {
-    <div>
+    <div class="my-2">
         <div class="card">
             <div class="card-header">
                 Featured
@@ -24,20 +24,16 @@
                         <InputText id="name" class="form-control" @bind-Value="@CurrentBlogPost.Text" />
                     </div>
                     <div class="row">
-                        <button type="submit" class="btn btn-primary col">儲存</button>
-                        <button class="btn btn-secondary col"
+                        <button type="submit" class="btn btn-primary col mr-3">儲存</button>
+                        <button class="btn btn-secondary col ml-3"
                                 @onclick="OnCalcelEditRecord">取消</button>
                     </div>
                 </EditForm>
             </div>
-            <div class="card-footer">
-                2 days ago
-            </div>
         </div>
-
     </div>
 }
-<div>
+<div class="my-3">
     @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
     <input type="button" class="btn btn-primary" @onclick="OnAdd" value="新增" />
 </div>
