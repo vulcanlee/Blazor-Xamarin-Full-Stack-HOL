@@ -1,7 +1,7 @@
 # Blazor 商業用專案範本
 
 對於一般的商業應用 Web 網站專案，存在著許多共同都需要進行設計的需求與功能，因此，為了要能夠加速商業應用類型的 Web 網站專案開發速度，便著手進行採用 Blazor Server UI Framework 開發框架來進行設計出一個適用於商業專案需求的專案範本。
-
+使用-blazor-view-與-viewvodel-開發模式
 因此，便誕生了這個專案範本，這個專案範本具有底下的特色與功能
 
 - [透過Blazor商業用專案範本來建立一個新的專案](#透過blazor商業用專案範本來建立一個新的專案)
@@ -11,6 +11,12 @@
 - [使用者身分驗證與授權](#使用者身分驗證與授權)
 - [動態功能表](#動態功能表)
 - [無登入轉首頁與踢出停用帳號](#無登入轉首頁與踢出停用帳號)
+- [使用 Blazor View 與 ViewModel 開發模式](#使用-blazor-view-與-viewmodel-開發模式)
+- [在 ViewModel 內呼叫 StateHasChanged](#在-viewmodel-內呼叫-statehaschanged)
+- [適用於 Syncfusion 元件的分層設計方法](#適用於-syncfusion-元件的分層設計方法)
+- [Syncfusion 註冊開發許可證](#syncfusion-註冊開發許可證)
+- [](#)
+- [](#)
 - [](#)
 - [](#)
 - [](#)
@@ -53,6 +59,16 @@
 ## 無登入轉首頁與踢出停用帳號
 
 [Blazor Server 快速開發專案樣板 7 - 無登入轉首頁與踢出停用帳號](https://csharpkh.blogspot.com/2021/06/Blazor-Backend-project-template-syncfusion-NET5-Part7-Notification-Navigation-Login-Disable-User.html)
+
+## Syncfusion 註冊開發許可證
+
+[Blazor Server 快速開發專案樣板 - Syncfusion 註冊開發許可證](https://csharpkh.blogspot.com/2021/06/Blazor-Backend-project-template-syncfusion-NET5-COMMUNITY-LICENSE-RegisterLicense.html)
+
+## 使用 Blazor View 與 ViewModel 開發模式
+
+## 在 ViewModel 內呼叫 StateHasChanged
+
+## 適用於 Syncfusion 元件的分層設計方法
 
 ## 提供 Cookie 的身分認證與授權
 

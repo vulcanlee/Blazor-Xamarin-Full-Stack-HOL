@@ -23,6 +23,10 @@ namespace Domains.Models
         /// 啟用
         /// </summary>
         public bool Enable { get; set; }
+        /// <summary>
+        /// 啟用電子郵件通知
+        /// </summary>
+        public bool EnableEmailNotification { get; set; }
         public virtual ICollection<PolicyDetail> PolicyDetail { get; set; }
     }
 }

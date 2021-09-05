@@ -29,6 +29,10 @@ namespace Backend.AdapterModels
                 }
             }
         }
+        /// <summary>
+        /// 啟用電子郵件通知
+        /// </summary>
+        public bool EnableEmailNotification { get; set; }
 
         public PolicyHeaderAdapterModel Clone()
         {
