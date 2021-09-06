@@ -1,4 +1,6 @@
-﻿@using Blogger.Models
+﻿@page "/Blog1"
+
+@using Blogger.Models
 @using System.Linq
 @using Microsoft.EntityFrameworkCore
 @inject BlogDbContext BlogDbContext
@@ -6,14 +8,21 @@
 
 @if (ShowEditRecord)
 {
+    #region 修改當前紀錄的 UI
     <div class="my-2">
         <div class="card">
             <div class="card-header">
-                Featured
+                // Razor 運算式編碼用法，在這裡不能使用 隱含 Razor 運算式
+                @(ShowEditRecord==true?"新增":"修改") 紀錄
             </div>
             <div class="card-body">
-                <EditForm Model="@CurrentBlogPost" OnValidSubmit="@HandleValidSubmitAsync">
+                @*Blazor表單和驗證*@
+                @*HandleValidSubmitAsync 表單通過用戶端驗證後觸發的事件*@
+                <EditForm Model="@CurrentBlogPost"
+                          OnValidSubmit="@HandleValidSubmitAsync">
+                    @*資料批註驗證程式*@
                     <DataAnnotationsValidator />
+                    @*驗證摘要和驗證訊息元件*@
                     <ValidationSummary />
                     <div class="form-group">
                         <label for="taskName">文章主題</label>
@@ -25,13 +34,13 @@
                     </div>
                     <div class="row">
                         <button type="submit" class="btn btn-primary col mr-3">儲存</button>
-                        <button class="btn btn-secondary col ml-3"
-                                @onclick="OnCalcelEditRecord">取消</button>
+                        <button class="btn btn-secondary col ml-3" @onclick="OnCalcelEditRecord"> 取消 </button>
                     </div>
                 </EditForm>
             </div>
         </div>
     </div>
+    #endregion
 }
 <div class="my-3">
     @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
@@ -69,22 +78,39 @@
 </table>
 
 @code {
+    /// <summary>
+    /// 要顯示在畫面上的集合紀錄
+    /// </summary>
     public List<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
+    /// <summary>
+    /// 現在正在新增或者修改和刪除的當前紀錄
+    /// </summary>
     public BlogPost CurrentBlogPost { get; set; } = new BlogPost();
+    /// <summary>
+    /// 是否顯示編輯當前紀錄的 UI
+    /// </summary>
     public bool ShowEditRecord { get; set; } = false;
+    /// <summary>
+    /// 現在操作屬於 新增 還是 修改
+    /// </summary>
     public bool IsAddRecord { get; set; } = false;
 
+    #region 元件生命週期事件
     protected override async Task OnInitializedAsync()
     {
         await Reload();
     }
+    #endregion
 
+    #region 讀取資料庫內的紀錄
     async Task Reload()
     {
         BlogPosts = await BlogDbContext.BlogPost
         .ToListAsync();
     }
+    #endregion
 
+    #region UI 綁定事件委派方法
     void OnAdd()
     {
         CurrentBlogPost = new BlogPost();
@@ -112,9 +138,10 @@
         await Reload();
         return;
     }
+
     async Task HandleValidSubmitAsync()
     {
-        if(IsAddRecord == true)
+        if (IsAddRecord == true)
         {
             await BlogDbContext.BlogPost
                 .AddAsync(CurrentBlogPost);
@@ -129,4 +156,5 @@
         }
         ShowEditRecord = false;
     }
+    #endregion
 }
