@@ -43,9 +43,14 @@
     </tbody>
 </table>
 
-<Post3RecordDialogView CurrentBlogPost="CurrentBlogPost"
-                       IsAddRecord="IsAddRecord" ShowEditRecord="ShowEditRecord"
-                       RecordEditCallback="OnRecordEditAsync" />
+@*<Post3RecordDialogView CurrentBlogPost="CurrentBlogPost"
+    IsAddRecord="IsAddRecord" ShowEditRecord="ShowEditRecord"
+    RecordEditCallback="OnRecordEditAsync" />*@
+
+@*使用 EditContext 來判斷是否要取消或者確認修改紀錄*@
+<Post3RecordDialog2View CurrentBlogPost="CurrentBlogPost"
+                        IsAddRecord="IsAddRecord" ShowEditRecord="ShowEditRecord"
+                        RecordEditCallback="OnRecordEditAsync" />
 
 <DeleteConfirmDialogView ShowConfirmDeleteRecord="ShowConfirmDeleteRecord"
                          ConfirmCallback="OnConfirmDialogAsync" />
