@@ -11,41 +11,43 @@
     #region 修改當前紀錄的 UI
     <div class="my-2">
         <div class="card">
-            <div class="card-header">
-                // Razor 運算式編碼用法，在這裡不能使用 隱含 Razor 運算式
-                @(ShowEditRecord==true?"新增":"修改") 紀錄
-            </div>
-            <div class="card-body">
-                @*Blazor表單和驗證*@
-                @*HandleValidSubmitAsync 表單通過用戶端驗證後觸發的事件*@
-                <EditForm Model="@CurrentBlogPost"
-                          OnValidSubmit="@HandleValidSubmitAsync">
+            <EditForm Model="@CurrentBlogPost"
+                      OnValidSubmit="@HandleValidSubmitAsync">
+                <div class="card-header">
+                    @IsAddRecordName 紀錄
+                </div>
+                <div class="card-body">
                     @*資料批註驗證程式*@
                     <DataAnnotationsValidator />
                     @*驗證摘要和驗證訊息元件*@
                     <ValidationSummary />
                     <div class="form-group">
                         <label for="taskName">文章主題</label>
-                        <InputText id="name" class="form-control" @bind-Value="@CurrentBlogPost.Title" />
+                        <InputText class="form-control" @bind-Value="@CurrentBlogPost.Title" />
                     </div>
                     <div class="form-group">
                         <label for="taskName">文章內容</label>
-                        <InputText id="name" class="form-control" @bind-Value="@CurrentBlogPost.Text" />
+                        <InputTextArea class="form-control" @bind-Value="@CurrentBlogPost.Text" rows="6" />
                     </div>
+                </div>
+                <div class="card-footer">
                     <div class="row">
                         <button type="submit" class="btn btn-primary col mr-3">儲存</button>
                         <button class="btn btn-secondary col ml-3" @onclick="OnCalcelEditRecord"> 取消 </button>
                     </div>
-                </EditForm>
-            </div>
+                </div>
+            </EditForm>
         </div>
     </div>
     #endregion
 }
+
 <div class="my-3">
     @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
     <input type="button" class="btn btn-primary" @onclick="OnAdd" value="新增" />
 </div>
+
+@*列出資料庫內 BlogPost 資料表內的紀錄*@
 <table class="table">
     <thead>
         <tr>
@@ -94,6 +96,17 @@
     /// 現在操作屬於 新增 還是 修改
     /// </summary>
     public bool IsAddRecord { get; set; } = false;
+    /// <summary>
+    /// 得到現在是新增或者修改模式的說明文字
+    /// </summary>
+    public string IsAddRecordName
+    {
+        get
+        {
+            if (IsAddRecord) return "新增";
+            else return "修改";
+        }
+    }
 
     #region 元件生命週期事件
     protected override async Task OnInitializedAsync()
