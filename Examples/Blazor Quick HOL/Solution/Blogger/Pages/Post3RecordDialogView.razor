@@ -64,6 +64,10 @@
     [Parameter]
     public bool IsAddRecord { get; set; } = false;
     /// <summary>
+    /// 對於當前紀錄的操作，是否已經取消
+    /// </summary>
+    public bool IsCancleRecord { get; set; } = false;
+    /// <summary>
     /// 得到現在是新增或者修改模式的說明文字
     /// </summary>
     public string IsAddRecordName
@@ -84,12 +88,18 @@
     void OnCalcelEditRecord()
     {
         ShowEditRecord = false;
+        IsCancleRecord = true;
         if (RecordEditCallback.HasDelegate)
             RecordEditCallback.InvokeAsync(false);
     }
 
     void HandleValidSubmitAsync()
     {
+        if(IsCancleRecord == true)
+        {
+            IsCancleRecord = false;
+            return;
+        }
         ShowEditRecord = false;
         if (RecordEditCallback.HasDelegate)
             RecordEditCallback.InvokeAsync(true);

@@ -51,8 +51,7 @@ else
     #region 修改當前紀錄的 UI
     <div class="my-2">
         <div class="card">
-            <EditForm Model="@CurrentBlogPost"
-                      OnValidSubmit="@HandleValidSubmitAsync">
+            <EditForm Model="@CurrentBlogPost">
                 <div class="card-header">
                     @IsAddRecordName 紀錄
                 </div>
@@ -100,6 +99,10 @@ else
     /// </summary>
     public bool IsAddRecord { get; set; } = false;
     /// <summary>
+    /// 對於當前紀錄的操作，是否已經取消
+    /// </summary>
+    public bool IsCancleRecord { get; set; } = false;
+    /// <summary>
     /// 得到現在是新增或者修改模式的說明文字
     /// </summary>
     public string IsAddRecordName
@@ -132,24 +135,37 @@ else
         CurrentBlogPost = new BlogPost();
         IsAddRecord = true;
         ShowEditRecord = true;
+        IsCancleRecord = false;
     }
 
     void OnEdit(BlogPost postItem)
     {
-        CurrentBlogPost = postItem;
+        #region 複製要修該物件的值
+        CurrentBlogPost.Id = postItem.Id;
+        CurrentBlogPost.Title = postItem.Title;
+        CurrentBlogPost.Text = postItem.Text;
+
+        CurrentBlogPost.Category = postItem.Category;
+        CurrentBlogPost.PublishDate = postItem.PublishDate;
+        CurrentBlogPost.Tag = postItem.Tag;
+        #endregion
+
         IsAddRecord = false;
         ShowEditRecord = true;
+        IsCancleRecord = false;
     }
 
     void OnCalcelEditRecord()
     {
         ShowEditRecord = false;
+        IsCancleRecord = true;
     }
 
     async Task OnDeleteAsync(BlogPost postItem)
     {
+        BlogDbContext.ChangeTracker.Clear();
         BlogDbContext.BlogPost
-            .Remove(postItem);
+        .Remove(postItem);
         await BlogDbContext.SaveChangesAsync();
         await Reload();
         return;
@@ -157,6 +173,11 @@ else
 
     async Task HandleValidSubmitAsync()
     {
+        if(IsCancleRecord == true)
+        {
+            IsCancleRecord = false;
+            return;
+        }
         if (IsAddRecord == true)
         {
             await BlogDbContext.BlogPost
@@ -166,6 +187,7 @@ else
         }
         else
         {
+            BlogDbContext.ChangeTracker.Clear();
             BlogDbContext.BlogPost.Update(CurrentBlogPost);
             await BlogDbContext.SaveChangesAsync();
             await Reload();

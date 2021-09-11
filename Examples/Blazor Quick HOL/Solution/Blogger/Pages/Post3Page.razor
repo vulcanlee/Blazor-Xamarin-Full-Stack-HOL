@@ -108,7 +108,16 @@
 
     void OnEdit(BlogPost postItem)
     {
-        CurrentBlogPost = postItem;
+        #region 複製要修該物件的值
+        CurrentBlogPost.Id = postItem.Id;
+        CurrentBlogPost.Title = postItem.Title;
+        CurrentBlogPost.Text = postItem.Text;
+
+        CurrentBlogPost.Category = postItem.Category;
+        CurrentBlogPost.PublishDate = postItem.PublishDate;
+        CurrentBlogPost.Tag = postItem.Tag;
+        #endregion
+
         IsAddRecord = false;
         ShowEditRecord = true;
     }
@@ -126,6 +135,7 @@
             }
             else
             {
+                BlogDbContext.ChangeTracker.Clear();
                 BlogDbContext.BlogPost.Update(CurrentBlogPost);
                 await BlogDbContext.SaveChangesAsync();
                 await Reload();
@@ -148,8 +158,9 @@
         ShowConfirmDeleteRecord = false;
         if (confirm == true)
         {
+            BlogDbContext.ChangeTracker.Clear();
             BlogDbContext.BlogPost
-                .Remove(CurrentBlogPost);
+            .Remove(CurrentBlogPost);
             await BlogDbContext.SaveChangesAsync();
             await Reload();
         }
