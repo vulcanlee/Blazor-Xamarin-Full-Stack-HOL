@@ -7,42 +7,7 @@
 <h3>部落格文章</h3>
 
 @*由 C# 的變數 ShowPopup 來控制，這裡的 HTML 標記是否要顯示出來，這裡完全不需要使用到 JavaScript 或者 jQuery*@
-@if (ShowEditRecord)
-{
-    #region 修改當前紀錄的 UI
-    <div class="my-2">
-        <div class="card">
-            <EditForm Model="@CurrentBlogPost"
-                      OnValidSubmit="@HandleValidSubmitAsync">
-                <div class="card-header">
-                    @IsAddRecordName 紀錄
-                </div>
-                <div class="card-body">
-                    @*資料批註驗證程式*@
-                    <DataAnnotationsValidator />
-                    @*驗證摘要和驗證訊息元件*@
-                    <ValidationSummary />
-                    <div class="form-group">
-                        <label for="taskName">文章主題</label>
-                        <InputText class="form-control" @bind-Value="@CurrentBlogPost.Title" />
-                    </div>
-                    <div class="form-group">
-                        <label for="taskName">文章內容</label>
-                        <InputTextArea class="form-control" @bind-Value="@CurrentBlogPost.Text" rows="6" />
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <button type="submit" class="btn btn-primary col mr-3">儲存</button>
-                        <button class="btn btn-secondary col ml-3" @onclick="OnCalcelEditRecord"> 取消 </button>
-                    </div>
-                </div>
-            </EditForm>
-        </div>
-    </div>
-    #endregion
-}
-else
+@if (ShowEditRecord == false)
 {
     <div class="my-3">
         @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
@@ -80,6 +45,41 @@ else
             }
         </tbody>
     </table>
+}
+else
+{
+    #region 修改當前紀錄的 UI
+    <div class="my-2">
+        <div class="card">
+            <EditForm Model="@CurrentBlogPost"
+                      OnValidSubmit="@HandleValidSubmitAsync">
+                <div class="card-header">
+                    @IsAddRecordName 紀錄
+                </div>
+                <div class="card-body">
+                    @*資料批註驗證程式*@
+                    <DataAnnotationsValidator />
+                    @*驗證摘要和驗證訊息元件*@
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label for="taskName">文章主題</label>
+                        <InputText class="form-control" @bind-Value="@CurrentBlogPost.Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="taskName">文章內容</label>
+                        <InputTextArea class="form-control" @bind-Value="@CurrentBlogPost.Text" rows="6" />
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary col mr-3">儲存</button>
+                        <button class="btn btn-secondary col ml-3" @onclick="OnCalcelEditRecord"> 取消 </button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+    #endregion
 }
 
 @code {

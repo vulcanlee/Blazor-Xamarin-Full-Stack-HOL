@@ -6,6 +6,43 @@
 @inject BlogDbContext BlogDbContext
 <h3>部落格文章</h3>
 
+<div class="my-3">
+    @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
+    <input type="button" class="btn btn-primary" @onclick="OnAdd" value="新增" />
+</div>
+
+@*列出資料庫內 BlogPost 資料表內的紀錄*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>文章</th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*列出集合清單中的每一筆紀錄到 HTML Table 內*@
+        @foreach (var postItem in BlogPosts)
+        {
+            <tr>
+                @*透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上*@
+                <td>@postItem.Title</td>
+                <td>
+                    @*透過 Blazor 的資料綁定，將修改按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    @*當該修改按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去*@
+                    <input type="button" class="btn btn-primary" value="修改"
+                           @onclick="()=>OnEdit(postItem)" />
+                </td>
+                <td>
+                    @*透過 Blazor 的資料綁定，將刪除按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    <input type="button" class="btn btn-danger" value="刪除"
+                           @onclick="async ()=>OnShowDeleteConfirm(postItem)" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 @*由 C# 的變數 ShowPopup 來控制，這裡的 HTML 標記是否要顯示出來，這裡完全不需要使用到 JavaScript 或者 jQuery*@
 @if (ShowEditRecord)
 {
@@ -52,42 +89,36 @@
     #endregion
 }
 
-<div class="my-3">
-    @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
-    <input type="button" class="btn btn-primary" @onclick="OnAdd" value="新增" />
-</div>
-
-@*列出資料庫內 BlogPost 資料表內的紀錄*@
-<table class="table">
-    <thead>
-        <tr>
-            <th>文章</th>
-            <th>修改</th>
-            <th>刪除</th>
-        </tr>
-    </thead>
-    <tbody>
-        @*列出集合清單中的每一筆紀錄到 HTML Table 內*@
-        @foreach (var postItem in BlogPosts)
-        {
-            <tr>
-                @*透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上*@
-                <td>@postItem.Title</td>
-                <td>
-                    @*透過 Blazor 的資料綁定，將修改按鈕的點選事件，綁定到 C# 的委派處理方法*@
-                    @*當該修改按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去*@
-                    <input type="button" class="btn btn-primary" value="修改"
-                           @onclick="()=>OnEdit(postItem)" />
-                </td>
-                <td>
-                    @*透過 Blazor 的資料綁定，將刪除按鈕的點選事件，綁定到 C# 的委派處理方法*@
-                    <input type="button" class="btn btn-danger" value="刪除"
-                           @onclick="async ()=>await OnDeleteAsync(postItem)" />
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (ShowConfirmDeleteRecord)
+{
+    //這裡是 BootStrap 的標準對話窗標記宣告
+    <div class="modal" tabindex="-1" role="dialog" style="display:block">
+        <div class="modal-dialog" role="document" style="max-width: 80vw">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">警告</h5>
+                        @*這裡將會宣告一個按鈕，點選這個按鈕，將會關閉此對話窗*@
+                        <button type="button" class="close" @onclick="OnCalcelConfirm">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="h3">
+                            請確認是否要刪除這筆紀錄
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="">
+                            <button class="btn btn-danger mr-2" @onclick="OnOkConfirmAsync">確認</button>
+                            <button class="btn btn-secondary" @onclick="OnCalcelConfirm"> 取消 </button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    //顯示對話窗的半透明背景遮罩
+    <div class="modal-backdrop fade show"></div>
+}
 
 @code {
     /// <summary>
@@ -102,6 +133,10 @@
     /// 是否顯示編輯當前紀錄的 UI
     /// </summary>
     public bool ShowEditRecord { get; set; } = false;
+    /// <summary>
+    /// 是否顯示確認是否要刪除的對話窗
+    /// </summary>
+    public bool ShowConfirmDeleteRecord { get; set; } = false;
     /// <summary>
     /// 現在操作屬於 新增 還是 修改
     /// </summary>
@@ -153,12 +188,10 @@
         ShowEditRecord = false;
     }
 
-    async Task OnDeleteAsync(BlogPost postItem)
+    void OnShowDeleteConfirm(BlogPost postItem)
     {
-        BlogDbContext.BlogPost
-            .Remove(postItem);
-        await BlogDbContext.SaveChangesAsync();
-        await Reload();
+        CurrentBlogPost = postItem;
+        ShowConfirmDeleteRecord = true;
         return;
     }
 
@@ -178,6 +211,21 @@
             await Reload();
         }
         ShowEditRecord = false;
+    }
+    #endregion
+
+    #region 刪除確認對話窗的方法
+    void OnCalcelConfirm()
+    {
+        ShowConfirmDeleteRecord = false;
+    }
+    async Task OnOkConfirmAsync()
+    {
+        ShowConfirmDeleteRecord = false;
+        BlogDbContext.BlogPost
+            .Remove(CurrentBlogPost);
+        await BlogDbContext.SaveChangesAsync();
+        await Reload();
     }
     #endregion
 }
