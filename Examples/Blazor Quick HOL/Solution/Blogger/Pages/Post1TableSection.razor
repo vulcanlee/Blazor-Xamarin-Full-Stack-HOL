@@ -1,0 +1,41 @@
+﻿<!-- #region 瀏覽所有紀錄 -->
+<div class="my-3">
+    @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
+    <button class="btn btn-primary">新增</button>
+</div>
+
+@*列出資料庫內 BlogPost 資料表內的紀錄*@
+<table class="table">
+    <!-- #region 在這裡填入表格的標題宣告 -->
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <!-- #endregion -->
+    <!-- #region 在這裡填入要顯示每筆紀錄宣告 -->
+    <tbody>
+        @*列出集合清單中的每一筆紀錄到 HTML Table 內*@
+        @foreach (var postItem in new List<string>())
+        {
+            <tr>
+                <!-- #region 透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上 -->
+                <td></td>
+                <!-- #endregion -->
+                <!-- #region 每筆紀錄可以進行的額外處理動作 -->
+                <td>
+                    @*透過 Blazor 的資料綁定，將修改按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    @*當該修改按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去*@
+                    <button class="btn btn-primary">修改</button>
+                </td>
+                <td>
+                    @*透過 Blazor 的資料綁定，將刪除按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    <button class="btn btn-danger">刪除</button>
+                </td>
+                <!-- #endregion -->
+            </tr>
+        }
+    </tbody>
+    <!-- #endregion -->
+</table>
+<!-- #endregion -->

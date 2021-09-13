@@ -1,0 +1,33 @@
+﻿<!-- #region 修改當前紀錄的 UI -->
+<div class="my-2">
+    <!-- 使用 Bootstrap Card -->
+    <div class="card">
+        <!-- 使用 Blazor 內建的表單和驗證功能 -->
+        <EditForm Model="@(new object())">
+            <div class="card-header">
+                新增或者修改 紀錄
+            </div>
+            <div class="card-body">
+                @*資料批註驗證程式*@
+                <DataAnnotationsValidator />
+                @*驗證摘要和驗證訊息元件*@
+                <ValidationSummary />
+                <!-- #region 在此宣告要輸入的欄位 -->
+                <div class="form-group">
+                    <label class="control-label">欄位名稱</label>
+                    <InputText class="form-control" />
+                </div>
+                <!-- #endregion -->
+            </div>
+            <div class="card-footer">
+                <!-- #region 在此宣告這筆紀錄要處理的動作 -->
+                <div class="row">
+                    <button type="submit" class="btn btn-primary col mr-3">儲存</button>
+                    <button class="btn btn-secondary col ml-3" value="取消"/>
+                </div>
+                <!-- #endregion -->
+            </div>
+        </EditForm>
+    </div>
+</div>
+<!-- #endregion -->
