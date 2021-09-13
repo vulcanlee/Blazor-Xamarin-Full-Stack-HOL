@@ -4,6 +4,7 @@
 @using System.Linq
 @using Microsoft.EntityFrameworkCore
 @inject BlogDbContext BlogDbContext
+
 <h3>部落格文章</h3>
 
 @*由 C# 的變數 ShowPopup 來控制，這裡的 HTML 標記是否要顯示出來，這裡完全不需要使用到 JavaScript 或者 jQuery*@
@@ -17,6 +18,7 @@
 
     @*列出資料庫內 BlogPost 資料表內的紀錄*@
     <table class="table">
+        <!-- #region 在這裡填入表格的標題宣告 -->
         <thead>
             <tr>
                 <th>文章</th>
@@ -24,13 +26,17 @@
                 <th>刪除</th>
             </tr>
         </thead>
+        <!-- #endregion -->
+        <!-- #region 在這裡填入要顯示每筆紀錄宣告 -->
         <tbody>
             @*列出集合清單中的每一筆紀錄到 HTML Table 內*@
             @foreach (var postItem in BlogPosts)
             {
                 <tr>
-                    @*透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上*@
+                    <!-- #region 透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上 -->
                     <td>@postItem.Title</td>
+                    <!-- #endregion -->
+                    <!-- #region 每筆紀錄可以進行的額外處理動作 -->
                     <td>
                         @*透過 Blazor 的資料綁定，將修改按鈕的點選事件，綁定到 C# 的委派處理方法*@
                         @*當該修改按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去*@
@@ -42,9 +48,11 @@
                         <input type="button" class="btn btn-danger" value="刪除"
                                @onclick="async ()=>await OnDeleteAsync(postItem)" />
                     </td>
+                    <!-- #endregion -->
                 </tr>
             }
         </tbody>
+        <!-- #endregion -->
     </table>
     <!-- #endregion -->
 }
@@ -52,7 +60,9 @@ else
 {
     #region 修改當前紀錄的 UI
     <div class="my-2">
+        <!-- 使用 Bootstrap Card -->
         <div class="card">
+            <!-- 使用 Blazor 內建的表單和驗證功能 -->
             <EditForm Model="@CurrentBlogPost">
                 <div class="card-header">
                     @IsAddRecordName 紀錄
@@ -62,20 +72,24 @@ else
                     <DataAnnotationsValidator />
                     @*驗證摘要和驗證訊息元件*@
                     <ValidationSummary />
+                    <!-- #region 在此宣告要輸入的欄位 -->
                     <div class="form-group">
-                        <label for="taskName">文章主題</label>
+                        <label class="control-label">文章主題</label>
                         <InputText class="form-control" @bind-Value="@CurrentBlogPost.Title" />
                     </div>
                     <div class="form-group">
-                        <label for="taskName">文章內容</label>
+                        <label class="control-label">文章內容</label>
                         <InputTextArea class="form-control" @bind-Value="@CurrentBlogPost.Text" rows="6" />
                     </div>
+                    <!-- #endregion -->
                 </div>
                 <div class="card-footer">
+                    <!-- #region 在此宣告這筆紀錄要處理的動作 -->
                     <div class="row">
                         <button type="submit" class="btn btn-primary col mr-3">儲存</button>
                         <button class="btn btn-secondary col ml-3" @onclick="OnCalcelEditRecord"> 取消 </button>
                     </div>
+                    <!-- #endregion -->
                 </div>
             </EditForm>
         </div>
@@ -84,6 +98,7 @@ else
 }
 
 @code {
+    #region 宣告該 Blazor 元件會用到的變數
     /// <summary>
     /// 要顯示在畫面上的集合紀錄
     /// </summary>
@@ -115,6 +130,7 @@ else
             else return "修改";
         }
     }
+    #endregion
 
     #region 元件生命週期事件
     protected override async Task OnInitializedAsync()
