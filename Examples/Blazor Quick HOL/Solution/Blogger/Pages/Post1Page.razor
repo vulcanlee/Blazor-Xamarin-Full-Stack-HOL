@@ -61,7 +61,8 @@ else
         <!-- 使用 Bootstrap Card -->
         <div class="card">
             <!-- 使用 Blazor 內建的表單和驗證功能 -->
-            <EditForm Model="@CurrentBlogPost">
+            <EditForm Model="@CurrentBlogPost" 
+                      OnValidSubmit="@HandleValidSubmitAsync">
                 <div class="card-header">
                     @IsAddRecordName 紀錄
                 </div>
@@ -78,6 +79,14 @@ else
                     <div class="form-group">
                         <label class="control-label">文章內容</label>
                         <InputTextArea class="form-control" @bind-Value="@CurrentBlogPost.Text" rows="6" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">發佈時間</label>
+                        <InputDate  class="form-control ml-auto" @bind-Value="@CurrentBlogPost.PublishDate" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">發佈</label>
+                        <InputCheckbox class="" @bind-Value="@CurrentBlogPost.IsPublish" />
                     </div>
                     <!-- #endregion -->
                 </div>

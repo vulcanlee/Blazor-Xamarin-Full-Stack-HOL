@@ -13,7 +13,8 @@ namespace Blogger.Models
         public string Title { get; set; }
         [Required(ErrorMessage ="文章內容 必須存在")]
         public string Text { get; set; }
-        public DateTime PublishDate { get; set; }
+        public DateTime? PublishDate { get; set; }
+        public bool IsPublish { get; set; }
         public Category Category { get; set; }
         public ICollection<Tag> Tag { get; set; }
     }
