@@ -6,7 +6,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">警告</h5>
                 @*這裡將會宣告一個按鈕，點選這個按鈕，將會關閉此對話窗*@
-                <!-- Todo : 宣告 @onclick 使用 OnCalcelConfirm 事件委派方法，關閉該對話窗 -->
+                <!-- Todo 宣告該取消按鈕綁定事件委派方法 onclick 使用 OnCalcelEditRecord ，關閉該對話窗 -->
                 <button type="button" class="close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -21,9 +21,9 @@
             <!-- #region 該確認對話窗可以進行的動作按鈕宣告 -->
             <div class="modal-footer">
                 <div class="">
-                    <!-- Todo : 宣告 @onclick 使用 OnOkConfirmAsync 事件委派方法，點選確定按鈕 -->
+                    <!-- Todo 宣告按鈕綁定事件 onclick="OnCalcelEditRecord" ，點選確定按鈕 -->
                     <button class="btn btn-danger mr-2">確認</button>
-                    <!-- Todo : 宣告 @onclick 使用 OnCalcelConfirm 事件委派方法，點選取消按鈕 -->
+                    <!-- Todo 宣告按鈕綁定事件 onclick="OnCalcelConfirm" ，點選取消按鈕 -->
                     <button class="btn btn-secondary"> 取消 </button>
                 </div>
             </div>

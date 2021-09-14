@@ -4,13 +4,15 @@
     <div class="modal-dialog" role="document" style="max-width: 80vw">
         <div class="modal-content">
             <!-- 使用 Blazor 內建的表單和驗證功能 -->
-            <!-- Todo : 宣告 OnValidSubmit 使用 HandleValidSubmitAsync 事件委派方法 -->
+            <!-- Todo 在此指定要編輯的紀錄物件 CurrentBlogPost -->
+            <!-- Todo 指派 OnValidSubmit 事件的委派處理方法 OnValidSubmit="HandleValidSubmitAsync" -->
             <EditForm Model="@(new object())"
                       OnValidSubmit="()=> { }">
                 <div class="modal-header">
+                    <!-- Todo 在此指定 IsAddRecordName 字串變數，顯示當時的動作是 新增 還是 修改 -->
                     <h5 class="modal-title">新增或者修改 紀錄</h5>
                     @*這裡將會宣告一個按鈕，點選這個按鈕，將會關閉此對話窗*@
-                    <!-- Todo : 宣告 @onclick 使用 OnCalcelEditRecord 事件委派方法，關閉該對話窗 -->
+                    <!-- Todo 宣告該取消按鈕綁定事件委派方法 onclick 使用 OnCalcelEditRecord ，關閉該對話窗 -->
                     <button type="button" class="close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -22,7 +24,9 @@
                     <ValidationSummary />
                     <!-- #region 在此宣告要輸入的欄位 -->
                     <div class="form-group">
-                        <label class="control-label">文章主題</label>
+                        <!-- Todo 在此指定要編輯的欄位中文名稱 -->
+                        <label class="control-label">欄位名稱</label>
+                        <!-- Todo 在此指定要綁定的欄位屬性 bind-Value="CurrentBlogPost.Title" -->
                         <InputText class="form-control" />
                     </div>
                     <!-- #endregion -->
@@ -31,7 +35,7 @@
                     <!-- #region 在此宣告這筆紀錄要處理的動作 -->
                     <div class="">
                         <button type="submit" class="btn btn-primary mr-2">儲存</button>
-                        <!-- Todo : 宣告 @onclick 使用 OnCalcelEditRecord 事件委派方法，關閉該對話窗 -->
+                        <!-- Todo 當該取消按鈕點選事件被觸發的委派方法 onclick="OnCalcelEditRecord" ，關閉該對話窗 -->
                         <button class="btn btn-secondary"> 取消 </button>
                     </div>
                     <!-- #endregion -->

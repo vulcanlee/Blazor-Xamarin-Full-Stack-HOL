@@ -59,7 +59,7 @@
             <div class="modal-content">
                 <!-- 使用 Blazor 內建的表單和驗證功能 -->
                 <EditForm Model="@CurrentBlogPost"
-                          OnValidSubmit="@HandleValidSubmitAsync">
+                          OnValidSubmit="HandleValidSubmitAsync">
                     <div class="modal-header">
                         <h5 class="modal-title">@IsAddRecordName 紀錄</h5>
                         @*這裡將會宣告一個按鈕，點選這個按鈕，將會關閉此對話窗*@

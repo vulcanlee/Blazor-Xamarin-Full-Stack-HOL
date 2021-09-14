@@ -3,7 +3,10 @@
     <!-- 使用 Bootstrap Card -->
     <div class="card">
         <!-- 使用 Blazor 內建的表單和驗證功能 -->
+        <!-- Todo 在此指定要編輯的紀錄物件 CurrentBlogPost -->
+        <!-- Todo 指派 OnValidSubmit 事件的委派處理方法 OnValidSubmit="HandleValidSubmitAsync" -->
         <EditForm Model="@(new object())">
+            <!-- Todo 在此指定 IsAddRecordName 字串變數，顯示當時的動作是 新增 還是 修改 -->
             <div class="card-header">
                 新增或者修改 紀錄
             </div>
@@ -14,7 +17,9 @@
                 <ValidationSummary />
                 <!-- #region 在此宣告要輸入的欄位 -->
                 <div class="form-group">
+                    <!-- Todo 在此指定要編輯的欄位中文名稱 -->
                     <label class="control-label">欄位名稱</label>
+                    <!-- Todo 在此指定要綁定的欄位屬性 bind-Value="CurrentBlogPost.Title" -->
                     <InputText class="form-control" />
                 </div>
                 <!-- #endregion -->
@@ -23,7 +28,8 @@
                 <!-- #region 在此宣告這筆紀錄要處理的動作 -->
                 <div class="row">
                     <button type="submit" class="btn btn-primary col mr-3">儲存</button>
-                    <button class="btn btn-secondary col ml-3" value="取消"/>
+                    <!-- Todo 當該取消按鈕點選事件被觸發的委派方法 onclick="OnCalcelEditRecord" ，關閉該對話窗 -->
+                    <button class="btn btn-secondary col ml-3" value="取消" />
                 </div>
                 <!-- #endregion -->
             </div>
