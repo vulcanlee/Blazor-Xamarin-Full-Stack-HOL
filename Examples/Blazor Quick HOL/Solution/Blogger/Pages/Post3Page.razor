@@ -122,6 +122,7 @@
     void OnEdit(BlogPost postItem)
     {
         #region 複製要修該物件的值
+        CurrentBlogPost = new BlogPost();
         CurrentBlogPost.Id = postItem.Id;
         CurrentBlogPost.Title = postItem.Title;
         CurrentBlogPost.Text = postItem.Text;
