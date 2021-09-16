@@ -54,7 +54,7 @@ namespace Blogger.Pages
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Role, "User"),
-                    new Claim(ClaimTypes.NameIdentifier, Username),
+                    new Claim(ClaimTypes.Name, Username),
                 };
                 #endregion
 
