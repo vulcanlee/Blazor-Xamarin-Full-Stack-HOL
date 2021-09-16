@@ -1,0 +1,65 @@
+﻿@if (ShowConfirmDeleteRecord)
+{
+    <!-- #region 確認是否刪除對話窗 -->
+    <!-- 使用 Bootstrap 的標準對話窗標記宣告 -->
+    <div class="modal" tabindex="-1" role="dialog" style="display:block">
+        <div class="modal-dialog" role="document" style="max-width: 80vw">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">警告</h5>
+                    @*這裡將會宣告一個按鈕，點選這個按鈕，將會關閉此對話窗*@
+                    <!-- Todo 宣告該取消按鈕綁定事件委派方法 onclick 使用 OnCalcelEditRecord ，關閉該對話窗 -->
+                    <button type="button" class="close" @onclick="OnCalcelConfirm">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <!-- #region 提示給使用者要知道的訊息內容 -->
+                <div class="modal-body">
+                    <div class="h3">
+                        請確認是否要刪除這筆紀錄
+                    </div>
+                </div>
+                <!-- #endregion -->
+                <!-- #region 該確認對話窗可以進行的動作按鈕宣告 -->
+                <div class="modal-footer">
+                    <div class="">
+                        <button class="btn btn-danger mr-2" @onclick="OnOkConfirmAsync">確認</button>
+                        <button class="btn btn-secondary" @onclick="OnCalcelConfirm"> 取消 </button>
+                    </div>
+                </div>
+                <!-- #endregion -->
+            </div>
+        </div>
+    </div>
+    <!-- 顯示對話窗的半透明背景遮罩 -->
+    <div class="modal-backdrop fade show"></div>
+    <!-- #endregion -->
+}
+
+@code {
+    /// <summary>
+    /// 是否顯示確認是否要刪除的對話窗
+    /// </summary>
+    [Parameter]
+    public bool ShowConfirmDeleteRecord { get; set; } = false;
+    [Parameter]
+    public EventCallback<bool> ConfirmCallback { get; set; }
+
+    #region 元件生命週期事件
+    #endregion
+
+    #region 刪除確認對話窗的方法
+    void OnCalcelConfirm()
+    {
+        ShowConfirmDeleteRecord = false;
+        if (ConfirmCallback.HasDelegate)
+            ConfirmCallback.InvokeAsync(false);
+    }
+    void OnOkConfirmAsync()
+    {
+        ShowConfirmDeleteRecord = false;
+        if (ConfirmCallback.HasDelegate)
+            ConfirmCallback.InvokeAsync(true);
+    }
+    #endregion
+}
