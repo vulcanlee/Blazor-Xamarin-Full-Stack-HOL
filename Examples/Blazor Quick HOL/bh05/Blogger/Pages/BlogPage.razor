@@ -1,0 +1,187 @@
+﻿@page "/Blog"
+
+@using Blogger.Models
+@using System.Linq
+@using Microsoft.EntityFrameworkCore
+@inject BlogDbContext BlogDbContext
+
+<h3>部落格文章</h3>
+
+@*由 C# 的變數 ShowPopup 來控制，這裡的 HTML 標記是否要顯示出來，這裡完全不需要使用到 JavaScript 或者 jQuery*@
+<!-- #region 瀏覽所有紀錄 -->
+<div class="my-3">
+    @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
+    <!-- Todo 在此加入該按鈕的綁定事件宣告  onclick="OnAdd" -->
+    <button class="btn btn-primary" @onclick="OnAdd">新增</button>
+</div>
+
+@*列出資料庫內 BlogPost 資料表內的紀錄*@
+<table class="table">
+    <!-- #region 在這裡填入表格的標題宣告 -->
+    <thead>
+        <tr>
+            <!-- Todo 在此加入要顯示的每個欄位標題名稱 -->
+            <th>文章</th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <!-- #endregion -->
+    <!-- #region 在這裡填入要顯示每筆紀錄宣告 -->
+    <tbody>
+        @*列出集合清單中的每一筆紀錄到 HTML Table 內*@
+        <!-- Todo 在此加入要顯示的每筆紀錄的集合物件變數 foreach (var postItem in BlogPosts) -->
+        @foreach (var postItem in BlogPosts)
+        {
+            <tr>
+                <!-- #region 透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上 -->
+                <!-- Todo 在此加入要每筆紀錄的欄位值 -->
+                <td>@postItem.Title</td>
+                <!-- #endregion -->
+                <!-- #region 每筆紀錄可以進行的額外處理動作 -->
+                <td>
+                    @*透過 Blazor 的資料綁定，將修改按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    <!-- Todo 當該修改按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去 onclick="()=>OnEdit(postItem)" -->
+                    <button class="btn btn-primary" @onclick="()=>OnEdit(postItem)">修改</button>
+                </td>
+                <td>
+                    @*透過 Blazor 的資料綁定，將刪除按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    <!-- Todo 當該刪除按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去 onclick="async ()=>await OnDeleteAsync(postItem)" -->
+                    <button class="btn btn-danger" @onclick="()=>OnShowDeleteConfirm(postItem)">刪除</button>
+                </td>
+                <!-- #endregion -->
+            </tr>
+        }
+    </tbody>
+    <!-- #endregion -->
+</table>
+<!-- #endregion -->
+@**@
+<!-- #region 該頁面會使用到的子元件 -->
+@*使用 EditContext 來判斷是否要取消或者確認修改紀錄*@
+<BlogRecordDialog CurrentBlogPost="CurrentBlogPost"
+                  IsAddRecord="IsAddRecord" ShowEditRecord="ShowEditRecord"
+                  RecordEditCallback="OnRecordEditAsync" />
+
+<DeleteConfirmDialog ShowConfirmDeleteRecord="ShowConfirmDeleteRecord"
+                         ConfirmCallback="OnConfirmDialogAsync" />
+<!-- #endregion -->
+
+@code {
+    /// <summary>
+    /// 要顯示在畫面上的集合紀錄
+    /// </summary>
+    public List<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
+    /// <summary>
+    /// 現在正在新增或者修改和刪除的當前紀錄
+    /// </summary>
+    public BlogPost CurrentBlogPost { get; set; } = new BlogPost();
+    /// <summary>
+    /// 是否顯示編輯當前紀錄的 UI
+    /// </summary>
+    public bool ShowEditRecord { get; set; } = false;
+    /// <summary>
+    /// 是否顯示確認是否要刪除的對話窗
+    /// </summary>
+    public bool ShowConfirmDeleteRecord { get; set; } = false;
+    /// <summary>
+    /// 現在操作屬於 新增 還是 修改
+    /// </summary>
+    public bool IsAddRecord { get; set; } = false;
+    /// <summary>
+    /// 得到現在是新增或者修改模式的說明文字
+    /// </summary>
+    public string IsAddRecordName
+    {
+        get
+        {
+            if (IsAddRecord) return "新增";
+            else return "修改";
+        }
+    }
+
+    #region 元件生命週期事件
+    protected override async Task OnInitializedAsync()
+    {
+        await Reload();
+    }
+    #endregion
+
+    #region 讀取資料庫內的紀錄
+    async Task Reload()
+    {
+        BlogPosts = await BlogDbContext.BlogPost
+        .ToListAsync();
+    }
+    #endregion
+
+    #region UI 綁定事件委派方法
+    void OnAdd()
+    {
+        CurrentBlogPost = new BlogPost();
+        IsAddRecord = true;
+        ShowEditRecord = true;
+    }
+
+    void OnEdit(BlogPost postItem)
+    {
+        #region 複製要修該物件的值
+        CurrentBlogPost = new BlogPost();
+        CurrentBlogPost.Id = postItem.Id;
+        CurrentBlogPost.Title = postItem.Title;
+        CurrentBlogPost.Text = postItem.Text;
+
+        CurrentBlogPost.Category = postItem.Category;
+        CurrentBlogPost.PublishDate = postItem.PublishDate;
+        CurrentBlogPost.Tag = postItem.Tag;
+        #endregion
+
+        IsAddRecord = false;
+        ShowEditRecord = true;
+    }
+
+    async Task OnRecordEditAsync(bool recordChanged)
+    {
+        if (recordChanged == true)
+        {
+            if (IsAddRecord == true)
+            {
+                await BlogDbContext.BlogPost
+                    .AddAsync(CurrentBlogPost);
+                await BlogDbContext.SaveChangesAsync();
+                await Reload();
+            }
+            else
+            {
+                BlogDbContext.ChangeTracker.Clear();
+                BlogDbContext.BlogPost.Update(CurrentBlogPost);
+                await BlogDbContext.SaveChangesAsync();
+                await Reload();
+            }
+        }
+        ShowEditRecord = false;
+    }
+
+    void OnShowDeleteConfirm(BlogPost postItem)
+    {
+        CurrentBlogPost = postItem;
+        ShowConfirmDeleteRecord = true;
+        return;
+    }
+    #endregion
+
+    #region 刪除確認對話窗的方法
+    async Task OnConfirmDialogAsync(bool confirm)
+    {
+        ShowConfirmDeleteRecord = false;
+        if (confirm == true)
+        {
+            BlogDbContext.ChangeTracker.Clear();
+            BlogDbContext.BlogPost
+            .Remove(CurrentBlogPost);
+            await BlogDbContext.SaveChangesAsync();
+            await Reload();
+        }
+    }
+    #endregion
+}
