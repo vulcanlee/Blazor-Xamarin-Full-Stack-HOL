@@ -1,0 +1,44 @@
+﻿@page "/"
+
+@using Blogger.Models
+@inject BlogDbContext BlogDbContext
+
+<button class="btn btn-danger"
+        @onclick="DbInitAsync">
+    重新建立資料庫
+</button>
+<h2>@Message</h2>
+@code {
+    public string Message { get; set; }
+
+    async Task DbInitAsync()
+    {
+        Message = "準備刪除資料庫";
+        await Task.Yield();
+        BlogDbContext.Database.EnsureDeleted();
+        Message = "準備建立資料庫";
+        StateHasChanged();
+        await Task.Yield();
+        BlogDbContext.Database.EnsureCreated();
+        Message = "資料庫已經建立成功";
+        StateHasChanged();
+        await Task.Yield();
+        Message = "產生測試用的紀錄";
+        await RecordInitAsync();
+        Message = "資料庫初始化作業完成";
+    }
+    async Task RecordInitAsync()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            BlogPost blogPost = new BlogPost()
+            {
+                PublishDate = DateTime.Now.AddDays(-1 * i),
+                Text = $"部落格文章內容 {i}",
+                Title = $"部落格文章主題 {i}",
+            };
+            await BlogDbContext.BlogPost.AddAsync(blogPost);
+        }
+        await BlogDbContext.SaveChangesAsync();
+    }
+}
