@@ -1,0 +1,74 @@
+﻿@page
+@model Blogger.Pages.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "身分驗證";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>請進行 身分驗證</title>
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/customSite.css" rel="stylesheet" />
+    <link rel="stylesheet" href="fonts/MaterialDesign/css/materialdesignicons.min.css">
+    <style>
+        .centered {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="centered">
+        <div class="">
+            <div class="card cardcenter">
+                <div class="card-header">
+                    <span class="h2">超簡易部落格登入</span>
+                </div>
+                <article class="card-body">
+                    <h4 class="card-title text-center mb-4 mt-1">請輸入帳號與密碼</h4>
+                    <hr>
+                    <p class="text-danger text-center">@Model.Msg</p>
+                    <form method="post" autocomplete="off" id="loginForm">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mdi mdi-18px mdi-account"> </span>
+                                </div>
+                                <input class="form-control m-auto" autocomplete="off"
+                                       asp-for="Username" placeholder="使用者的帳號">
+                            </div>
+                        </div> <!-- form-group// -->
+
+                        <div class="form-group mt-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mdi mdi-18px mdi-shield-lock"> </span>
+                                </div>
+                                <input class="form-control m-auto" autocomplete="off"
+                                       asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
+                            </div>
+                        </div> <!-- form-group// -->
+
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <div class="form-group ">
+                                    <button type="submit" class="btn btn-primary btn-block text-center"> 登入  </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

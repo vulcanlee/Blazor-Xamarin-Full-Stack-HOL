@@ -1,0 +1,121 @@
+﻿@using Blogger.Models
+@using System.Linq
+
+@*由 C# 的變數 ShowPopup 來控制，這裡的 HTML 標記是否要顯示出來，這裡完全不需要使用到 JavaScript 或者 jQuery*@
+@if (ShowEditRecord)
+{
+    <!-- #region 修改當前紀錄的 UI -->
+    <!-- #region 使用 Bootstrap 的標準對話窗標記宣告 -->
+    <div class="modal" tabindex="-1" role="dialog" style="display:block">
+        <div class="modal-dialog" role="document" style="max-width: 80vw">
+            <div class="modal-content">
+                <!-- 使用 Blazor 內建的表單和驗證功能 -->
+                <!-- Todo 在此指定要編輯的紀錄物件 CurrentBlogPost -->
+                <!-- Todo 指派 OnValidSubmit 事件的委派處理方法 OnValidSubmit="HandleValidSubmitAsync" -->
+                <EditForm Model="CurrentBlogPost" Context="formContext">
+                    <div class="modal-header">
+                        <!-- Todo 在此指定 IsAddRecordName 字串變數，顯示當時的動作是 新增 還是 修改 -->
+                        <h5 class="modal-title">@IsAddRecordName 紀錄</h5>
+                        @*這裡將會宣告一個按鈕，點選這個按鈕，將會關閉此對話窗*@
+                        <!-- Todo 宣告該取消按鈕綁定事件委派方法 onclick 使用 OnCalcelEditRecord ，關閉該對話窗 -->
+                        <button type="button" class="close" @onclick="OnCalcelEditRecord">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @*資料批註驗證程式*@
+                        <DataAnnotationsValidator />
+                        @*驗證摘要和驗證訊息元件*@
+                        <ValidationSummary />
+                        <!-- #region 在此宣告要輸入的欄位 -->
+                        <div class="form-group">
+                            <!-- Todo 在此指定要編輯的欄位中文名稱 -->
+                            <label class="control-label">文章主題</label>
+                            <!-- Todo 在此指定要綁定的欄位屬性 bind-Value="CurrentBlogPost.Title" -->
+                            <InputText class="form-control" @bind-Value="CurrentBlogPost.Title" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">文章內容</label>
+                            <InputTextArea class="form-control" @bind-Value="CurrentBlogPost.Text" rows="6" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">發佈時間</label>
+                            <InputDate class="form-control ml-auto" @bind-Value="CurrentBlogPost.PublishDate" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">發佈</label>
+                            <InputCheckbox class="" @bind-Value="CurrentBlogPost.IsPublish" />
+                        </div>
+                        <!-- #endregion -->
+                    </div>
+                    <div class="modal-footer">
+                        <!-- #region 在此宣告這筆紀錄要處理的動作 -->
+                        <div class="">
+                            <button class="btn btn-primary mr-2" @onclick="()=>{OnOKEditRecord(formContext);}"> 儲存 </button>
+                            <!-- Todo 當該取消按鈕點選事件被觸發的委派方法 onclick="OnCalcelEditRecord" ，關閉該對話窗 -->
+                            <button class="btn btn-secondary" @onclick="OnCalcelEditRecord"> 取消 </button>
+                        </div>
+                        <!-- #endregion -->
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion -->
+    <!-- 顯示對話窗的半透明背景遮罩 -->
+    <div class="modal-backdrop fade show"></div>
+    <!-- #endregion -->
+}
+
+@code {
+    /// <summary>
+    /// 現在正在新增或者修改和刪除的當前紀錄
+    /// </summary>
+    [Parameter]
+    public BlogPost CurrentBlogPost { get; set; } = new BlogPost();
+    /// <summary>
+    /// 是否顯示編輯當前紀錄的 UI
+    /// </summary>
+    [Parameter]
+    public bool ShowEditRecord { get; set; } = false;
+    /// <summary>
+    /// 現在操作屬於 新增 還是 修改
+    /// </summary>
+    [Parameter]
+    public bool IsAddRecord { get; set; } = false;
+    /// <summary>
+    /// 得到現在是新增或者修改模式的說明文字
+    /// </summary>
+    public string IsAddRecordName
+    {
+        get
+        {
+            if (IsAddRecord) return "新增";
+            else return "修改";
+        }
+    }
+    [Parameter]
+    public EventCallback<bool> RecordEditCallback { get; set; }
+
+    #region 元件生命週期事件
+    #endregion
+
+    #region UI 綁定事件委派方法
+    void OnOKEditRecord(EditContext editContext)
+    {
+        bool formIsValid = editContext.Validate();
+        if (formIsValid == false)
+            return;
+
+        ShowEditRecord = false;
+        if (RecordEditCallback.HasDelegate)
+            RecordEditCallback.InvokeAsync(true);
+    }
+    void OnCalcelEditRecord()
+    {
+        ShowEditRecord = false;
+        if (RecordEditCallback.HasDelegate)
+            RecordEditCallback.InvokeAsync(false);
+    }
+    #endregion
+}
