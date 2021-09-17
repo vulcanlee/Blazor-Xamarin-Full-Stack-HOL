@@ -9,6 +9,7 @@ namespace BAL.Helpers
 {
     public static class PasswordHelper
     {
+        public static readonly string GodSalt版本 = "Version20210917";
         public static string GetPasswordSHA(string salt, string password)
         {
             string assemblyPassword = $"{password}-{salt}@";
@@ -24,7 +25,7 @@ namespace BAL.Helpers
         }
         public static string GetGodPasswordSHA(string salt, string password)
         {
-            string assemblyPassword = $"{password}-{salt}@Vulcan-Backend";
+            string assemblyPassword = $"{password}-{salt}@Vulcan-Backend{PasswordHelper.GodSalt版本}";
             SHA256 sha = SHA256.Create();
             byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(assemblyPassword));
             StringBuilder builder = new StringBuilder();

@@ -233,10 +233,10 @@ namespace Backend.Services
 
         public async Task<VerifyRecordResult> BeforeUpdateCheckAsync(MyUserAdapterModel paraObject)
         {
-            if (paraObject.Account.ToLower() == MagicHelper.開發者帳號)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
-            }
+            //if (paraObject.Account.ToLower() == MagicHelper.開發者帳號)
+            //{
+            //    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
+            //}
 
             CleanTrackingHelper.Clean<MyUser>(context);
             var searchItem = await context.MyUser
@@ -252,10 +252,10 @@ namespace Backend.Services
                 .FirstOrDefaultAsync(x => x.Id == paraObject.Id);
             if (searchItem != null)
             {
-                if (searchItem.Account.ToLower() == MagicHelper.開發者帳號)
-                {
-                    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
-                }
+                //if (searchItem.Account.ToLower() == MagicHelper.開發者帳號)
+                //{
+                //    return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
+                //}
             }
             else
             {
@@ -303,10 +303,6 @@ namespace Backend.Services
             else
             {
                 return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.無法刪除紀錄_要刪除的紀錄已經不存在資料庫上);
-            }
-            if (searchItem.Account.ToLower() == MagicHelper.開發者帳號)
-            {
-                return VerifyRecordResultFactory.Build(false, ErrorMessageEnum.開發者帳號不可以被修改);
             }
             return VerifyRecordResultFactory.Build(true);
         }
