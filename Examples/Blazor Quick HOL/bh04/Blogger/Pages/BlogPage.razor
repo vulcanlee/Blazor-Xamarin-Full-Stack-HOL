@@ -201,12 +201,12 @@
     #region 元件生命週期事件
     protected override async Task OnInitializedAsync()
     {
-        await Reload();
+        await ReloadAsync();
     }
     #endregion
 
     #region 讀取資料庫內的紀錄
-    async Task Reload()
+    async Task ReloadAsync()
     {
         BlogPosts = await BlogDbContext.BlogPost
         .ToListAsync();

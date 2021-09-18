@@ -52,7 +52,7 @@ namespace Blogger.ViewModels
         #endregion
 
         #region 讀取資料庫內的紀錄
-        public async Task Reload()
+        public async Task ReloadAsync()
         {
             BlogPosts = await BlogPostService.GetAsync();
         }
@@ -90,12 +90,12 @@ namespace Blogger.ViewModels
                 if (IsAddRecord == true)
                 {
                     await BlogPostService.PostAsync(CurrentBlogPost);
-                    await Reload();
+                    await ReloadAsync();
                 }
                 else
                 {
                     await BlogPostService.PutAsync(CurrentBlogPost);
-                    await Reload();
+                    await ReloadAsync();
                 }
             }
             ShowEditRecord = false;
@@ -116,7 +116,7 @@ namespace Blogger.ViewModels
             if (confirm == true)
             {
                 await BlogPostService.DeleteAsync(CurrentBlogPost);
-                await Reload();
+                await ReloadAsync();
             }
         }
         #endregion

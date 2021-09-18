@@ -153,12 +153,12 @@ else
     #region 元件生命週期事件
     protected override async Task OnInitializedAsync()
     {
-        await Reload();
+        await ReloadAsync();
     }
     #endregion
 
     #region 讀取資料庫內的紀錄
-    async Task Reload()
+    async Task ReloadAsync()
     {
         BlogPosts = await BlogDbContext.BlogPost
         .ToListAsync();
@@ -204,7 +204,7 @@ else
         BlogDbContext.BlogPost
         .Remove(postItem);
         await BlogDbContext.SaveChangesAsync();
-        await Reload();
+        await ReloadAsync();
         return;
     }
 
@@ -220,14 +220,14 @@ else
             await BlogDbContext.BlogPost
                 .AddAsync(CurrentBlogPost);
             await BlogDbContext.SaveChangesAsync();
-            await Reload();
+            await ReloadAsync();
         }
         else
         {
             BlogDbContext.ChangeTracker.Clear();
             BlogDbContext.BlogPost.Update(CurrentBlogPost);
             await BlogDbContext.SaveChangesAsync();
-            await Reload();
+            await ReloadAsync();
         }
         ShowEditRecord = false;
     }
