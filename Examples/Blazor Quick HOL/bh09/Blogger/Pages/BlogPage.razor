@@ -1,0 +1,75 @@
+﻿@page "/Blog"
+@attribute [Authorize(Roles = "User")]
+
+@inject BlogViewModel ViewModel
+
+<h3>部落格文章</h3>
+
+@*由 C# 的變數 ShowPopup 來控制，這裡的 HTML 標記是否要顯示出來，這裡完全不需要使用到 JavaScript 或者 jQuery*@
+<!-- #region 瀏覽所有紀錄 -->
+<div class="my-3">
+    @*透過 Blazor 的資料綁定，將新增按鈕的點選事件，綁定到 C# 的委派處理方法*@
+    <!-- Todo 在此加入該按鈕的綁定事件宣告  onclick="OnAdd" -->
+    <button class="btn btn-primary" @onclick="ViewModel.OnAdd">新增</button>
+</div>
+
+@*列出資料庫內 BlogPost 資料表內的紀錄*@
+<table class="table">
+    <!-- #region 在這裡填入表格的標題宣告 -->
+    <thead>
+        <tr>
+            <!-- Todo 在此加入要顯示的每個欄位標題名稱 -->
+            <th>文章</th>
+            <th>修改</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <!-- #endregion -->
+    <!-- #region 在這裡填入要顯示每筆紀錄宣告 -->
+    <tbody>
+        @*列出集合清單中的每一筆紀錄到 HTML Table 內*@
+        <!-- Todo 在此加入要顯示的每筆紀錄的集合物件變數 foreach (var postItem in BlogPosts) -->
+        @foreach (var postItem in ViewModel.BlogPosts)
+        {
+            <tr>
+                <!-- #region 透過資料綁定，把集合清單內的紀錄屬性，顯示在網頁上 -->
+                <!-- Todo 在此加入要每筆紀錄的欄位值 -->
+                <td>@postItem.Title</td>
+                <!-- #endregion -->
+                <!-- #region 每筆紀錄可以進行的額外處理動作 -->
+                <td>
+                    @*透過 Blazor 的資料綁定，將修改按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    <!-- Todo 當該修改按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去 onclick="()=>OnEdit(postItem)" -->
+                    <button class="btn btn-primary" @onclick="()=>ViewModel.OnEdit(postItem)">修改</button>
+                </td>
+                <td>
+                    @*透過 Blazor 的資料綁定，將刪除按鈕的點選事件，綁定到 C# 的委派處理方法*@
+                    <!-- Todo 當該刪除按鈕點選事件被觸發的時候，將會把現在顯示的紀錄物件傳送過去 onclick="async ()=>await OnDeleteAsync(postItem)" -->
+                    <button class="btn btn-danger" @onclick="()=>ViewModel.OnShowDeleteConfirm(postItem)">刪除</button>
+                </td>
+                <!-- #endregion -->
+            </tr>
+        }
+    </tbody>
+    <!-- #endregion -->
+</table>
+<!-- #endregion -->
+<!-- #region 該頁面會使用到的子元件 -->
+@*使用 EditContext 來判斷是否要取消或者確認修改紀錄*@
+<BlogRecordDialog CurrentBlogPost="ViewModel.CurrentBlogPost"
+                  IsAddRecord="ViewModel.IsAddRecord" ShowEditRecord="ViewModel.ShowEditRecord"
+                  RecordEditCallback="ViewModel.OnRecordEditAsync" />
+
+<DeleteConfirmDialog ShowConfirmDeleteRecord="ViewModel.ShowConfirmDeleteRecord"
+                     ConfirmCallback="ViewModel.OnConfirmDialogAsync" />
+<!-- #endregion -->
+
+@code {
+
+    #region 元件生命週期事件
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.ReloadAsync();
+    }
+    #endregion
+}
