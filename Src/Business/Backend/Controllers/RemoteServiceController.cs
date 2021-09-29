@@ -19,13 +19,7 @@ namespace Backend.Controllers
             #region 取得當前執行緒集區的狀態
             int workerThreadsAvailable;
             int completionPortThreadsAvailable;
-            int workerThreadsMax;
-            int completionPortThreadsMax;
-            int workerThreadsMin;
-            int completionPortThreadsMin;
             ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
-            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
-            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
             #endregion
 
             await Task.Delay(delay);
@@ -33,10 +27,6 @@ namespace Backend.Controllers
             int sum = value1 + value2;
 
             DateTime Complete = DateTime.Now;
-            //return $"Result:{sum} " +
-            //    $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
-            //    $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
-            //    $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ({Begin.TimeOfDay} - {Complete.TimeOfDay})";
             return $"Result:{sum} " +
                 $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
              $" ({Begin:ss} - {Complete:ss} = {(Complete - Begin).TotalSeconds})";
@@ -48,13 +38,7 @@ namespace Backend.Controllers
             #region 取得當前執行緒集區的狀態
             int workerThreadsAvailable;
             int completionPortThreadsAvailable;
-            int workerThreadsMax;
-            int completionPortThreadsMax;
-            int workerThreadsMin;
-            int completionPortThreadsMin;
             ThreadPool.GetAvailableThreads(out workerThreadsAvailable, out completionPortThreadsAvailable);
-            ThreadPool.GetMaxThreads(out workerThreadsMax, out completionPortThreadsMax);
-            ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
             #endregion
 
             Thread.Sleep(delay);
@@ -62,10 +46,6 @@ namespace Backend.Controllers
             int sum = value1 + value2;
 
             DateTime Complete = DateTime.Now;
-            //    return $"Result:{sum} " +
-            //        $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
-            //        $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
-            //        $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ({Begin.TimeOfDay} - {Complete.TimeOfDay})";
             return $"Result:{sum} " +
              $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
              $" ({Begin:ss} - {Complete:ss} = {(Complete-Begin).TotalSeconds})";
