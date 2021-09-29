@@ -12,8 +12,6 @@ namespace Blogger.Models
         {
         }
         public DbSet<BlogPost> BlogPost { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<Tag> Tag { get; set; }
         public DbSet<MyUser> MyUser { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

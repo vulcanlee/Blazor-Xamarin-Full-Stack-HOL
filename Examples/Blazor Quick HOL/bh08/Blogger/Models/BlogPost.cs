@@ -15,7 +15,5 @@ namespace Blogger.Models
         public string Text { get; set; }
         public DateTime? PublishDate { get; set; }
         public bool IsPublish { get; set; }
-        public Category Category { get; set; }
-        public ICollection<Tag> Tag { get; set; }
     }
 }

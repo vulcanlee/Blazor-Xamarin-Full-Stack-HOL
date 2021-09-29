@@ -230,9 +230,7 @@
         CurrentBlogPost.Title = postItem.Title;
         CurrentBlogPost.Text = postItem.Text;
 
-        CurrentBlogPost.Category = postItem.Category;
         CurrentBlogPost.PublishDate = postItem.PublishDate;
-        CurrentBlogPost.Tag = postItem.Tag;
         #endregion
 
         IsAddRecord = false;
@@ -265,14 +263,14 @@
             await BlogDbContext.BlogPost
                 .AddAsync(CurrentBlogPost);
             await BlogDbContext.SaveChangesAsync();
-            await Reload();
+            await ReloadAsync();
         }
         else
         {
             BlogDbContext.ChangeTracker.Clear();
             BlogDbContext.BlogPost.Update(CurrentBlogPost);
             await BlogDbContext.SaveChangesAsync();
-            await Reload();
+            await ReloadAsync();
         }
         ShowEditRecord = false;
     }
@@ -290,7 +288,7 @@
         BlogDbContext.BlogPost
         .Remove(CurrentBlogPost);
         await BlogDbContext.SaveChangesAsync();
-        await Reload();
+        await ReloadAsync();
     }
     #endregion
 }

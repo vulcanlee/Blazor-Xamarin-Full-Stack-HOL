@@ -74,9 +74,7 @@ namespace Blogger.ViewModels
             CurrentBlogPost.Title = postItem.Title;
             CurrentBlogPost.Text = postItem.Text;
 
-            CurrentBlogPost.Category = postItem.Category;
             CurrentBlogPost.PublishDate = postItem.PublishDate;
-            CurrentBlogPost.Tag = postItem.Tag;
             #endregion
 
             IsAddRecord = false;
