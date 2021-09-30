@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace Backend.Controllers
             DateTime Complete = DateTime.Now;
             return $"Result:{sum} " +
              $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
-             $" ({Begin:ss} - {Complete:ss} = {(Complete-Begin).TotalSeconds})";
+             $" ({Begin:ss} - {Complete:ss} = {(Complete - Begin).TotalSeconds})";
         }
         [HttpGet("SetThreadPool/{value1}/{value2}")]
         public string SetThreadPool(int value1, int value2)
@@ -111,11 +112,45 @@ namespace Backend.Controllers
             ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
 
             DateTime Complete = DateTime.Now;
-            result = " " + $"AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
+            var memoryMetrics = GetWindowsMetrics();
+            result = "" +
+                $" Processor:{Environment.ProcessorCount} Memory:{memoryMetrics.Total}" +
+                $" AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
                 $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
                 $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ";
 
             return result;
         }
+        private MemoryMetrics GetWindowsMetrics()
+        {
+            var output = "";
+
+            var info = new ProcessStartInfo();
+            info.FileName = "wmic";
+            info.Arguments = "OS get FreePhysicalMemory,TotalVisibleMemorySize /Value";
+            info.RedirectStandardOutput = true;
+
+            using (var process = Process.Start(info))
+            {
+                output = process.StandardOutput.ReadToEnd();
+            }
+
+            var lines = output.Trim().Split("\n");
+            var freeMemoryParts = lines[0].Split("=", StringSplitOptions.RemoveEmptyEntries);
+            var totalMemoryParts = lines[1].Split("=", StringSplitOptions.RemoveEmptyEntries);
+
+            var metrics = new MemoryMetrics();
+            metrics.Total = Math.Round(double.Parse(totalMemoryParts[1]) / 1024, 0);
+            metrics.Free = Math.Round(double.Parse(freeMemoryParts[1]) / 1024, 0);
+            metrics.Used = metrics.Total - metrics.Free;
+
+            return metrics;
+        }
+    }
+    public class MemoryMetrics
+    {
+        public double Total;
+        public double Used;
+        public double Free;
     }
 }
