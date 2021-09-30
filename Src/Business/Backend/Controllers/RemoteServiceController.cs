@@ -112,9 +112,9 @@ namespace Backend.Controllers
             ThreadPool.GetMinThreads(out workerThreadsMin, out completionPortThreadsMin);
 
             DateTime Complete = DateTime.Now;
-            var memoryMetrics = GetWindowsMetrics();
+            //var memoryMetrics = GetWindowsMetrics();
             result = "" +
-                $" Processor:{Environment.ProcessorCount} Memory:{memoryMetrics.Total}" +
+                $" Processor:{Environment.ProcessorCount} " +
                 $" AW:{workerThreadsAvailable} AC:{completionPortThreadsAvailable}" +
                 $" MaxW:{workerThreadsMax} MaxC:{completionPortThreadsMax}" +
                 $" MinW:{workerThreadsMin} MinC:{completionPortThreadsMin} ";
