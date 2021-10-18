@@ -117,7 +117,7 @@ namespace Backend.Pages
                             Content = "",
                             LogLevel = LogLevels.Information,
                             Updatetime = DateTime.Now,
-                            IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                            IP = HttpContextAccessor.GetConnectionIP(),
                         });
                         logger.LogInformation($"{Msg}");
                         GetCaptchaImage();
@@ -136,7 +136,7 @@ namespace Backend.Pages
                             Content = "",
                             LogLevel = LogLevels.Information,
                             Updatetime = DateTime.Now,
-                            IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                            IP = HttpContextAccessor.GetConnectionIP(),
                         });
                         logger.LogInformation($"{Msg}");
                         GetCaptchaImage();
@@ -157,7 +157,7 @@ namespace Backend.Pages
                                 Content = "",
                                 LogLevel = LogLevels.Information,
                                 Updatetime = DateTime.Now,
-                                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                                IP = HttpContextAccessor.GetConnectionIP(),
                             });
                             logger.LogInformation($"{Msg}");
                             GetCaptchaImage();
@@ -181,7 +181,7 @@ namespace Backend.Pages
                         Content = "",
                         LogLevel = LogLevels.Information,
                         Updatetime = DateTime.Now,
-                        IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        IP = HttpContextAccessor.GetConnectionIP(),
                     });
                     logger.LogInformation($"{Msg}");
                     GetCaptchaImage();
@@ -275,7 +275,7 @@ namespace Backend.Pages
                     Content = "",
                     LogLevel = LogLevels.Information,
                     Updatetime = DateTime.Now,
-                    IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                    IP = HttpContextAccessor.GetConnectionIP(),
                 });
                 logger.LogInformation($"{Msg}");
 

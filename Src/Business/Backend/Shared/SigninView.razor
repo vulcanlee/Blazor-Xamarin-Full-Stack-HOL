@@ -23,7 +23,7 @@
     {
         if (firstRender)
         {
-            IP = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
+            IP = httpContextAccessor.GetConnectionIP();
             StateHasChanged();
         }
     }

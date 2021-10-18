@@ -114,7 +114,7 @@ namespace Backend.Pages
                         Content = "",
                         LogLevel = LogLevels.Information,
                         Updatetime = DateTime.Now,
-                        IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        IP = HttpContextAccessor.GetConnectionIP(),
                     });
                     logger.LogInformation($"{Msg}");
                     return Page();
@@ -126,7 +126,7 @@ namespace Backend.Pages
                     return Page();
                 }
                 await changePasswordService.ChangePassword(myUser, NewPassword,
-                    HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
+                    HttpContextAccessor.GetConnectionIP());
 
                 Msg = $"使用者 {myUser.Account} / {myUser.Name} " +
                     $"已經變更密碼 {DateTime.Now}";
@@ -137,7 +137,7 @@ namespace Backend.Pages
                     Content = "",
                     LogLevel = LogLevels.Information,
                     Updatetime = DateTime.Now,
-                    IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
+                    IP = HttpContextAccessor.GetConnectionIP(),
                 });
                 logger.LogInformation($"{Msg}");
             }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Backend.Helpers;
 
 namespace Backend.ViewModels
 {
@@ -93,7 +94,7 @@ namespace Backend.ViewModels
 
             #region 進行密碼變更
             await ChangePasswordService.ChangePassword(myUserAdapterModel, ChangePasswordModel.NewPassword,
-                HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString());
+                HttpContextAccessor.GetConnectionIP());
             Relogin = true;
             MessageBox.Show("400px", "200px",
                 ErrorMessageMappingHelper.Instance.GetErrorMessage(ErrorMessageEnum.警告),

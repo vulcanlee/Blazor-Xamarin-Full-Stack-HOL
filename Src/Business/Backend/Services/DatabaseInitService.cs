@@ -52,15 +52,21 @@ namespace Backend.Services
             Logger.LogInformation($"{Msg}");
             await context.Database.EnsureCreatedAsync();
             Msg = $"建立資料庫";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
         }
@@ -78,15 +84,21 @@ namespace Backend.Services
             Logger.LogInformation($"{Msg}");
             await context.Database.EnsureCreatedAsync();
             Msg = $"建立資料庫";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 
@@ -94,90 +106,126 @@ namespace Backend.Services
             #region 建立系統定義參數
             await 建立系統定義參數Async();
             Msg = $"建立系統定義參數";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 
             #region 建立功能表角色與項目清單
             await 建立功能表角色與項目清單Async();
             Msg = $"建立功能表角色與項目清單";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 
             #region 建立使用者紀錄
             await 建立使用者紀錄Async();
             Msg = $"建立使用者紀錄";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 
             #region 建立片語分類與文字Async
             await 建立片語分類與文字Async();
             Msg = $"建立片語分類與文字";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 
             #region 建立簽核政策
             await 建立簽核政策Async();
             Msg = $"建立簽核政策";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 
             #region 建立派工單分類清單
             await 建立派工單分類清單Async();
             Msg = $"建立派工單分類清單";
-            await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+            try
             {
-                Message = Msg,
-                Category = LogCategories.Initialization,
-                Content = "",
-                LogLevel = LogLevels.Information,
-                Updatetime = DateTime.Now,
-                IP = HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(),
-            });
+                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
+                {
+                    Message = Msg,
+                    Category = LogCategories.Initialization,
+                    Content = "",
+                    LogLevel = LogLevels.Information,
+                    Updatetime = DateTime.Now,
+                    IP = HttpContextAccessor.GetConnectionIP(),
+                });
+            }
+            catch (Exception)
+            {
+            }
             Logger.LogInformation($"{Msg}");
             #endregion
 

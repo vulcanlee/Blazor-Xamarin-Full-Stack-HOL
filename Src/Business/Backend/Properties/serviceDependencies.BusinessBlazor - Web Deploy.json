@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "mssql2": {
+    "mssql1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/businessblazordbserver/databases/BusinessBlazorDB",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:BackendDefaultConnection",

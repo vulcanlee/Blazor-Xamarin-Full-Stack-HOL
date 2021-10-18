@@ -109,7 +109,7 @@
     {
         if (firstRender)
         {
-            IP = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress.ToString();
+            IP = httpContextAccessor.GetConnectionIP();
             cts = new CancellationTokenSource();
             bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
             EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
