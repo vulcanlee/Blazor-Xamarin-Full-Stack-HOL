@@ -224,7 +224,7 @@ namespace Backend
             #endregion
 
             #region Syncfusion License Registration
-            string key = Configuration["Syncfusion:License"];
+            string key = Configuration["Syncfusion:BackendLicense"];
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
             #endregion
 
