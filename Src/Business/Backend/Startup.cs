@@ -246,8 +246,19 @@ namespace Backend
             #endregion
 
             #region 開發模式的設定
+
+            #region 若在 緊急除錯 模式下，列出 Configuration 取得的實際值
             bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
-            if (emergenceDebugStatus == true) logger.LogInformation("緊急除錯模式 : 啟用");
+            if (emergenceDebugStatus == true)
+            {
+                    logger.LogInformation("緊急除錯模式 : 啟用");
+                    var allConfiguration = JsonConvert
+                    .SerializeObject(IConfigrationToJsonHelp.Serialize(Configuration),
+                    Formatting.Indented);
+                logger.LogInformation(allConfiguration);
+            }
+            #endregion
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
