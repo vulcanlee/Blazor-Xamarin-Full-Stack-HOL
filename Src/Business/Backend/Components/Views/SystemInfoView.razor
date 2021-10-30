@@ -111,7 +111,8 @@
         {
             IP = httpContextAccessor.GetConnectionIP();
             cts = new CancellationTokenSource();
-            bool EmergenceDebugStatus = Convert.ToBoolean(configuration["EmergenceDebug"]);
+            bool EmergenceDebugStatus = Convert
+                .ToBoolean(configuration[AppSettingHelper.EmergenceDebug]);
             EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
             Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
             versionNumber = version.ToString();

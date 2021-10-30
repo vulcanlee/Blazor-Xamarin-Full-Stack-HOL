@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Models
 {
-    public class CustomNLog
+    public class BackendCustomNLog
     {
         public string LogRootPath { get; set; }
         public string AllLogMessagesFilename { get; set; }

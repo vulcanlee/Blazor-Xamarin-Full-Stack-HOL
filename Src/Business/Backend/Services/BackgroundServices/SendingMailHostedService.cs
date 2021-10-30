@@ -21,7 +21,7 @@ namespace Backend.Services
     {
         public SendingMailHostedService(ILogger<SendingMailHostedService> logger,
             IServer server, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory,
-            IOptions<SmtpClientInformation> smtpClientInformation, SystemBroadcast systemBroadcast)
+            IOptions<BackendSmtpClientInformation> smtpClientInformation, SystemBroadcast systemBroadcast)
         {
             Logger = logger;
             Server = server;
@@ -36,7 +36,7 @@ namespace Backend.Services
         public IConfiguration Configuration { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public SystemBroadcast SystemBroadcast { get; }
-        public SmtpClientInformation SmtpClientInformation { get; }
+        public BackendSmtpClientInformation SmtpClientInformation { get; }
 
         DateTime StartupTime = DateTime.Now;
         Task PasswordPolicyTask;
@@ -47,7 +47,7 @@ namespace Backend.Services
             int smtpExceptionTimes = 0;
             cancellationTokenSource = new CancellationTokenSource();
             Logger.LogInformation($"寄送郵件 服務開始啟動");
-            int SendingMailInterval = Convert.ToInt32(Configuration["SendingMailInterval"]);
+            int SendingMailInterval = Convert.ToInt32(Configuration[AppSettingHelper.SendingMailInterval]);
 
             var backgroundService = Task.Run(async () =>
             {

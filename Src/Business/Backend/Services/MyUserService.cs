@@ -330,8 +330,8 @@ namespace Backend.Services
             if (account == MagicHelper.開發者帳號)
             {
                 #region 進行開發者帳號、密碼的驗證
-                var GodPasswordSlat = Configuration["GodPasswordSlat"];
-                var GodrPasswordHash = Configuration["GodrPasswordHash"];
+                var GodPasswordSlat = Configuration[AppSettingHelper.GodPasswordSlat];
+                var GodrPasswordHash = Configuration[AppSettingHelper.GodrPasswordHash];
 
                 var EncodePassword =
                       PasswordHelper.GetGodPasswordSHA(GodPasswordSlat, password);

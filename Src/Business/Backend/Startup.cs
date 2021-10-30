@@ -47,7 +47,8 @@ namespace Backend
         public void ConfigureServices(IServiceCollection services)
         {
             #region 顯示所讀取的 Configuration 內容值
-            bool showImportanceConfigurationInforation = Convert.ToBoolean(Configuration["ShowImportanceConfigurationInforation"]);
+            bool showImportanceConfigurationInforation = Convert
+                .ToBoolean(Configuration[AppSettingHelper.ShowImportanceConfigurationInforation]);
             if (showImportanceConfigurationInforation)
             {
                 AllConfigurationHelper.Show(Configuration);
@@ -57,7 +58,7 @@ namespace Backend
             #region Blazor & Razor Page 用到服務
             services.AddRazorPages();
             #region Blazor Server 註冊服務，正式部署下，是否要顯示明確的例外異常資訊
-            bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
+            bool emergenceDebugStatus = Convert.ToBoolean(Configuration[AppSettingHelper.EmergenceDebug]);
             if (emergenceDebugStatus == true)
             {
                 Console.WriteLine($"啟用正式部署可以顯示錯誤詳細資訊");
@@ -107,8 +108,10 @@ namespace Backend
             #endregion
 
             #region 加入設定強型別注入宣告
-            services.Configure<TokenConfiguration>(Configuration.GetSection("Tokens"));
-            services.Configure<SmtpClientInformation>(Configuration.GetSection("SmtpClientInformation"));
+            services.Configure<BackendTokenConfiguration>(Configuration
+                .GetSection(AppSettingHelper.Tokens));
+            services.Configure<BackendSmtpClientInformation>(Configuration
+                .GetSection(AppSettingHelper.BackendSmtpClientInformation));
             #endregion
 
             #region 加入使用 Cookie & JWT 認證需要的宣告
@@ -128,9 +131,10 @@ namespace Backend
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Tokens:ValidIssuer"],
-                        ValidAudience = Configuration["Tokens:ValidAudience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:IssuerSigningKey"])),
+                        ValidIssuer = Configuration[AppSettingHelper.ValidIssuer],
+                        ValidAudience = Configuration[AppSettingHelper.ValidAudience],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                        .GetBytes(Configuration[AppSettingHelper.ValidAudience])),
                         RequireExpirationTime = true,
                         ClockSkew = TimeSpan.Zero,
                     };
@@ -187,7 +191,7 @@ namespace Backend
             #endregion
 
             #region 加入背景服務
-            var EnableKeepAliveEndpoint = Convert.ToBoolean(Configuration["EnableKeepAliveEndpoint"]);
+            var EnableKeepAliveEndpoint = Convert.ToBoolean(Configuration[AppSettingHelper.EnableKeepAliveEndpoint]);
             if (EnableKeepAliveEndpoint == true)
             {
                 services.AddHostedService<KeepAliveHostedService>();
@@ -201,14 +205,14 @@ namespace Backend
             #endregion
 
             #region 相關選項模式
-            services.Configure<CustomNLog>(Configuration
-                .GetSection(nameof(CustomNLog)));
+            services.Configure<BackendCustomNLog>(Configuration
+                .GetSection(nameof(BackendCustomNLog)));
             #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            ILogger<Startup> logger, IOptions<CustomNLog> optionsCustomNLog)
+            ILogger<Startup> logger, IOptions<BackendCustomNLog> optionsCustomNLog)
         {
             #region 當呼叫 API ( /api/someController ) 且該服務端點不存在的時候，將會替換網頁為 404 的 APIResult 訊息
             app.UseApiNotFoundPageToAPIResult();
@@ -224,7 +228,7 @@ namespace Backend
             #endregion
 
             #region Syncfusion License Registration
-            string key = Configuration["Syncfusion:BackendLicense"];
+            string key = Configuration[AppSettingHelper.SyncfusionLicense];
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
             #endregion
 
@@ -248,7 +252,7 @@ namespace Backend
             #region 開發模式的設定
 
             #region 若在 緊急除錯 模式下，列出 Configuration 取得的實際值
-            bool emergenceDebugStatus = Convert.ToBoolean(Configuration["EmergenceDebug"]);
+            bool emergenceDebugStatus = Convert.ToBoolean(Configuration[AppSettingHelper.EmergenceDebug]);
             if (emergenceDebugStatus == true)
             {
                     logger.LogInformation("緊急除錯模式 : 啟用");

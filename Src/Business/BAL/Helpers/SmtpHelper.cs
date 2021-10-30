@@ -16,7 +16,7 @@ namespace BAL.Helpers
 {
     public static class SmtpHelper
     {
-        public static void Initialization(SmtpClientInformation smtpClientInformation)
+        public static void Initialization(BackendSmtpClientInformation smtpClientInformation)
         {
             // Google Mail 低安全性應用程式存取權
             // https://blog.no2don.com/2021/01/c-gmail-smtp-server-requires-secure.html

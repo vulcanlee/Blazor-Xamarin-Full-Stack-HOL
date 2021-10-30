@@ -26,10 +26,10 @@ namespace Backend.Controllers
     {
         private readonly Microsoft.Extensions.Configuration.IConfiguration configuration;
         private readonly IMyUserService myUserService;
-        private readonly TokenConfiguration tokenConfiguration;
+        private readonly BackendTokenConfiguration tokenConfiguration;
 
         public LoginController(Microsoft.Extensions.Configuration.IConfiguration configuration,
-            IMyUserService myUserService, IOptions<TokenConfiguration> tokenConfiguration)
+            IMyUserService myUserService, IOptions<BackendTokenConfiguration> tokenConfiguration)
         {
             this.configuration = configuration;
             this.myUserService = myUserService;

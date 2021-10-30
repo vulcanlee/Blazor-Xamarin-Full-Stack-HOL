@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using BAL.Helpers;
 
 namespace Backend.Services
 {
@@ -47,7 +48,7 @@ namespace Backend.Services
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
                         if (DateTime.Now > nextTime)
                         {
-                            var address = Configuration["KeepAliveEndpoint"];
+                            var address = Configuration[AppSettingHelper.KeepAliveEndpoint];
                             var dateOffset = DateTime.UtcNow.AddHours(8);
                             TimeSpan timeSpan = DateTime.Now - StartupTime;
                             // Todo : 這樣的用法要學起來

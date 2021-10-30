@@ -1,6 +1,6 @@
 ﻿namespace CommonDomain.DataModels
 {
-    public class SmtpClientInformation
+    public class BackendSmtpClientInformation
     {
         public string Host { get; set; }
         public int Port { get; set; }

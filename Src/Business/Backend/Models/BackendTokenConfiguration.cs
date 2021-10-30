@@ -1,6 +1,6 @@
 ﻿namespace Backend.Models
 {
-    public class TokenConfiguration
+    public class BackendTokenConfiguration
     {
         public string ValidIssuer { get; set; }
         public string ValidAudience { get; set; }
