@@ -1,0 +1,3 @@
+﻿function ping() {
+    return "pong!";
+}
