@@ -1,5 +1,6 @@
 using Backend.Data;
 using Backend.Helpers;
+using Backend.Middlewares;
 using Backend.Models;
 using Backend.Services;
 using BAL.Helpers;
@@ -12,9 +13,11 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NLog;
 using NLog.Web;
 using Syncfusion.Blazor;
 using System.Globalization;
@@ -29,10 +32,11 @@ try
 
     #region .NET 5 專案內的 CreateHostBuilder
     IHostBuilder hostBuilder=builder.Host;
+
     hostBuilder.ConfigureLogging(logging =>
     {
         logging.ClearProviders();
-        logging.SetMinimumLevel(LogLevel.Trace);
+        logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
     }).UseNLog();
     #endregion
 
@@ -100,7 +104,7 @@ try
     options.UseSqlServer(builder.Configuration.GetConnectionString(
         MagicHelper.DefaultConnectionString)), ServiceLifetime.Transient);
     builder.Services.AddCustomServices();
-    //builder.Services.AddAutoMapper(c => c.AddProfile<AutoMapping>(), typeof(Startup));
+    builder.Services.AddAutoMapper(c => c.AddProfile<AutoMapping>());
     #endregion
 
     #region 加入設定強型別注入宣告
@@ -208,22 +212,152 @@ try
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
-    if (!app.Environment.IsDevelopment())
+    #region .NET 5 的 Configure
+    #region 當呼叫 API ( /api/someController ) 且該服務端點不存在的時候，將會替換網頁為 404 的 APIResult 訊息
+    app.UseApiNotFoundPageToAPIResult();
+    #endregion
+    IOptions<BackendCustomNLog> optionsCustomNLog = app.Services.GetRequiredService<IOptions<BackendCustomNLog>>();
+    #region 宣告 NLog 要使用到的變數內容
+    LogManager.Configuration.Variables["LogRootPath"] =
+        optionsCustomNLog.Value.LogRootPath;
+    LogManager.Configuration.Variables["AllLogMessagesFilename"] =
+        optionsCustomNLog.Value.AllLogMessagesFilename;
+    LogManager.Configuration.Variables["AllWebDetailsLogMessagesFilename"] =
+        optionsCustomNLog.Value.AllWebDetailsLogMessagesFilename;
+    #endregion
+
+    #region MyRegion
+    if (app.Environment.IsDevelopment())
+    {
+        IConfigurationBuilder configurationBuilder = builder.Configuration;
+        configurationBuilder.AddUserSecrets<Program>();
+    }
+
+    #endregion
+    #region Syncfusion License Registration
+    string key = builder.Configuration[AppSettingHelper.SyncfusionLicense];
+    Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
+    #endregion
+
+    #region Localization
+    app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+    #endregion
+
+    #region Set X-FRAME-OPTIONS in ASP.NET Core
+    // https://blog.johnwu.cc/article/asp-net-core-response-header.html
+    // https://dotnetcoretutorials.com/2017/01/08/set-x-frame-options-asp-net-core/
+    // https://developer.mozilla.org/zh-TW/docs/Web/HTTP/Headers/X-Frame-Options
+    // https://blog.darkthread.net/blog/remove-iis-response-server-header/
+    app.Use(async (context, next) =>
+    {
+        context.Response.Headers.Remove("X-Frame-Options");
+        context.Response.Headers.TryAdd("X-Frame-Options", "DENY");
+        await next();
+    });
+    #endregion
+
+    #region 開發模式的設定
+
+    #region 若在 緊急除錯 模式下，列出 Configuration 取得的實際值
+    emergenceDebugStatus = Convert.ToBoolean(builder.Configuration[AppSettingHelper.EmergenceDebug]);
+    ILogger<Program> loggerEmergence = app.Services.GetRequiredService<ILogger<Program>>();
+    if (emergenceDebugStatus == true)
+    {
+        loggerEmergence.LogInformation("緊急除錯模式 : 啟用");
+        var allConfiguration = JsonConvert
+        .SerializeObject(IConfigrationToJsonHelp.Serialize(builder.Configuration),
+        Formatting.Indented);
+        loggerEmergence.LogInformation(allConfiguration);
+    }
+    #endregion
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    else
     {
         app.UseExceptionHandler("/Error");
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 
-    app.UseHttpsRedirection();
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseHttpsRedirection();
+    }
+    #endregion
 
+    #region 針對目前的要求路徑啟用靜態檔案服務
     app.UseStaticFiles();
+    #endregion
 
+    #region 啟用 Swagger 中介軟體
+    // Enable middleware to serve generated Swagger as a JSON endpoint.
+    app.UseSwagger();
+
+    // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+    // specifying the Swagger JSON endpoint.
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API V1");
+    });
+    #endregion
+
+    #region 將路由對應新增至中介軟體管線
     app.UseRouting();
+    #endregion
 
+    #region 指定要使用使用者認證的中介軟體
+    app.UseCookiePolicy();
+    app.UseAuthentication();
+    #endregion
+
+    #region 指定使用授權檢查的中介軟體
+    app.UseAuthorization();
+    #endregion
+
+    #region 取得來源 IP
+    app.UseMyMiddleware();
+    #endregion
+
+    #region 自訂一個Middleware
+    app.Use(async (context, next) =>
+    {
+        //Doworkthatdoesn'twritetotheResponse.
+        var url = $"[{context.Request.Method}] {context.Request.Scheme}://" +
+        $"{context.Request.Host.Value}{context.Request.Path.Value}";
+        Console.WriteLine(url);
+        await next.Invoke();
+        //Dologgingorotherworkthatdoesn'twritetotheResponse.
+    });
+    #endregion
+
+    #region 將端點執行新增至中介軟體管線
+    app.MapControllers();
     app.MapBlazorHub();
     app.MapFallbackToPage("/_Host");
+    #endregion
+
+    #endregion
+
+
+    //// Configure the HTTP request pipeline.
+    //if (!app.Environment.IsDevelopment())
+    //{
+    //    app.UseExceptionHandler("/Error");
+    //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    //    app.UseHsts();
+    //}
+
+    //app.UseHttpsRedirection();
+
+    //app.UseStaticFiles();
+
+    //app.UseRouting();
+
+    //app.MapBlazorHub();
+    //app.MapFallbackToPage("/_Host");
 
     app.Run();
     #endregion
