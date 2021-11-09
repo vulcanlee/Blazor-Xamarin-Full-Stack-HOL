@@ -226,14 +226,6 @@ try
         optionsCustomNLog.Value.AllWebDetailsLogMessagesFilename;
     #endregion
 
-    #region MyRegion
-    if (app.Environment.IsDevelopment())
-    {
-        IConfigurationBuilder configurationBuilder = builder.Configuration;
-        configurationBuilder.AddUserSecrets<Program>();
-    }
-
-    #endregion
     #region Syncfusion License Registration
     string key = builder.Configuration[AppSettingHelper.SyncfusionLicense];
     Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(key);
