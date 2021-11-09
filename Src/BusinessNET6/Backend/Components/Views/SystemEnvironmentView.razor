@@ -1,0 +1,132 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Calendars
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+
+@inject SystemEnvironmentViewModel ViewModel
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@implements IRazorPage
+
+<EditForm Model="@ViewModel.SystemEnvironmentModel">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputWatcher EditContextActionChanged="@ViewModel.OnEditContestChanged" />
+    <div class="info-container">
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">是否啟用登入失敗偵測</label>
+                <SfCheckBox @bind-Checked="ViewModel.SystemEnvironmentModel.EnableLoginFailDetection" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.EnableLoginFailDetection)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">輸入錯誤密碼的最大次數</label>
+                <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.LoginFailMaxTimes"
+                                  Placeholder="請輸入正整數數值"
+                                  Format="0" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.LoginFailMaxTimes)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">觸發過多密碼錯誤條件，帳號被鎖定期限(分鐘)</label>
+                <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.LoginFailTimesLockMinutes"
+                                  Placeholder="請輸入正整數數值"
+                                  Format="0" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.LoginFailTimesLockMinutes)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">需要檢查密碼是否要定期更新</label>
+                <SfCheckBox @bind-Checked="ViewModel.SystemEnvironmentModel.EnableCheckPasswordAge" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.EnableCheckPasswordAge)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">需要變更密碼的週期(天)</label>
+                <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.PasswordAge"
+                                  Placeholder="請輸入正整數數值"
+                                  Format="##0" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.PasswordAge)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">是否啟用偵測變更密碼歷史紀錄</label>
+                <SfCheckBox @bind-Checked="ViewModel.SystemEnvironmentModel.EnablePasswordHistory" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.EnablePasswordHistory)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">紀錄變更密碼數量，以便免重覆變更之前密碼</label>
+                <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.PasswordHistory"
+                                  Placeholder="請輸入正整數數值"
+                                  Format="##0" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.PasswordHistory)" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="Name" class="control-label">輸入密碼的複雜度</label>
+                <div>0:空白 1:非常弱 2:弱 3:中 4:強 5:非常強</div>
+                <SfNumericTextBox @bind-Value="ViewModel.SystemEnvironmentModel.PasswordComplexity"
+                                  Placeholder="請輸入正整數數值"
+                                  Format="0" />
+                <ValidationMessage For="@(() => ViewModel.SystemEnvironmentModel.PasswordComplexity)" />
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+<div class="footer-button">
+    <button class="btn btn-primary save-btn" @onclick="ViewModel.OnSaveAsync">儲存</button>
+</div>
+
+<div>@ViewModel.PasswordStrengthName</div>
+
+<MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
+            IsVisible="@ViewModel.MessageBox.IsVisible"
+            Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
+            Callback="ViewModel.MessageBox.HiddenAsync" />
+
+<DialogBackground />
+
+@code {
+    protected override void OnInitialized()
+    {
+        ViewModel.Setup(this);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ViewModel.SystemEnvironmentModel =
+                await ViewModel.SystemEnvironmentService.GetAsync();
+            StateHasChanged();
+        }
+    }
+
+
+    #region 頁面需要介面實作
+    public void NeedRefresh()
+    {
+        InvokeAsync(() => { StateHasChanged(); });
+    }
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    #endregion
+}
+

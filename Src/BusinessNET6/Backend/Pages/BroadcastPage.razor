@@ -1,0 +1,8 @@
+﻿@page "/Broadcast"
+@attribute [Authorize(Roles = "Broadcast")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.系統訊息廣播</div>
+    <BroadcastView />
+
+</div>

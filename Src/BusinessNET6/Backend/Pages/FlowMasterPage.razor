@@ -1,0 +1,8 @@
+﻿@page "/Flow"
+@attribute [Authorize(Roles = "Flow")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.簽核文件</div>
+    <FlowMasterView PageSize="@MagicHelper.GridPageSize" />
+
+</div>

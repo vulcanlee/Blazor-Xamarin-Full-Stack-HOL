@@ -1,0 +1,8 @@
+﻿@page "/SystemInfo"
+@attribute [Authorize(Roles = BAL.Helpers.MagicHelper.開發者的角色聲明)]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.系統摘要資訊</div>
+    <SystemInfoView />
+
+</div>

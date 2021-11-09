@@ -1,0 +1,8 @@
+﻿@page "/WorkOrder"
+@attribute [Authorize(Roles = "WorkOrder")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.派工單</div>
+    <WorkOrderView PageSize="@MagicHelper.GridPageSize" />
+
+</div>

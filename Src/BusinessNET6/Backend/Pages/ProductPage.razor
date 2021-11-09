@@ -1,0 +1,7 @@
+﻿@page "/Product"
+@attribute [Authorize(Roles = "Product")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.商品管理功能名稱</div>
+    <ProductView PageSize="@MagicHelper.GridPageSize" />
+</div>
