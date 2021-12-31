@@ -129,7 +129,7 @@
 }
 
 .layout-theme-main-footer-background {
-    background-color: #7e4dfd !important;
+    background-color: var(--layout-theme-main-footer-background-color) !important;
     color: var(--layout-theme-main-footer-text-color);
 }
 
