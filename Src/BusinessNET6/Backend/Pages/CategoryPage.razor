@@ -1,7 +1,0 @@
-﻿@page "/Category"
-@attribute [Authorize(Roles = "Category")]
-
-<div>
-    <div class="page-title">@BAL.Helpers.MagicHelper.派工單分類清單</div>
-    <CategoryMainView PageSize="@MagicHelper.GridPageSize" />
-</div>

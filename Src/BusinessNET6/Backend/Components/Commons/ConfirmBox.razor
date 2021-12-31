@@ -1,4 +1,5 @@
 ﻿@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Buttons
 
 <SfDialog @bind-Visible="@IsVisible" CssClass="confirm-box-width" 
           Height="@Height" Width="@Width" ShowCloseIcon="false" IsModal="true">
@@ -7,8 +8,8 @@
         <Content>@Message</Content>
         <FooterTemplate>
             <div>
-                <button @onclick="@OnOKBtnclick" class='btn btn-danger'>確定</button>
-                <button @onclick="@OnCancelBtnclick" class='btn btn-primary'>取消</button>
+                <SfButton @onclick="@OnOKBtnclick" CssClass='e-danger'>確定</SfButton>
+                <SfButton @onclick="@OnCancelBtnclick" CssClass='e-primary'>取消</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>

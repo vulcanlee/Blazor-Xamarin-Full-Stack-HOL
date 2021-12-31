@@ -7,22 +7,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using BAL.Helpers;
+using Backend.Models;
 
 namespace Backend.Services
 {
     public class KeepAliveHostedService : IHostedService
     {
         public KeepAliveHostedService(ILogger<KeepAliveHostedService> logger,
-            IServer server, IConfiguration configuration)
+            IServer server, IConfiguration configuration, BackgroundExecuteMode backgroundExecuteMode)
         {
             Logger = logger;
             Server = server;
             Configuration = configuration;
+            BackgroundExecuteMode = backgroundExecuteMode;
         }
 
         public ILogger<KeepAliveHostedService> Logger { get; }
         public IServer Server { get; }
         public IConfiguration Configuration { get; }
+        public BackgroundExecuteMode BackgroundExecuteMode { get; }
 
         DateTime lastLogTime;
         readonly int keepAliveCycle = 360; // 約六分鐘
@@ -40,11 +43,20 @@ namespace Backend.Services
                 #region 確保 IIS 不會自動停止的背景服務
                 try
                 {
+                    await Task.Delay(75000, cancellationTokenSource.Token);
+
                     StartupTime = DateTime.Now;
                     lastLogTime = DateTime.Now;
                     HttpClient client = new();
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
+                        #region 若在進行資料庫重建與初始化的時候，需要暫緩執行背景工作
+                        while (BackgroundExecuteMode.IsInitialization == true)
+                        {
+                            await Task.Delay(60000, cancellationTokenSource.Token);
+                        }
+                        #endregion
+
                         var nextTime = lastLogTime.AddSeconds(keepAliveCycle);
                         if (DateTime.Now > nextTime)
                         {

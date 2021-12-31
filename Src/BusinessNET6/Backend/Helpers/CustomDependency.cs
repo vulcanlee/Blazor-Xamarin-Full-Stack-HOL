@@ -12,21 +12,12 @@ namespace Backend.Helpers
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             #region 註冊服務
-            services.AddTransient<ICategorySubService, CategorySubService>();
-            services.AddTransient<ICategoryMainService, CategoryMainService>();
+            services.AddTransient<IExportDataService, ExportDataService>();
+            services.AddTransient<IExceptionRecordService, ExceptionRecordService>();
             services.AddTransient<IMailQueueService, MailQueueService>();
-            services.AddTransient<IWorkOrderService, WorkOrderService>();
             services.AddTransient<IMyUserPasswordHistoryService, MyUserPasswordHistoryService>();
             services.AddTransient<IPasswordPolicyService, PasswordPolicyService>();
-            services.AddTransient<ISystemEnvironmentService, SystemEnvironmentService>();
-            services.AddTransient<IFlowInboxService, FlowInboxService>();
-            services.AddTransient<IFlowHistoryService, FlowHistoryService>();
-            services.AddTransient<IFlowUserService, FlowUserService>();
-            services.AddTransient<IFlowMasterService, FlowMasterService>();
-            services.AddTransient<IPhaseMessageService, PhaseMessageService>();
-            services.AddTransient<IPhaseCategoryService, PhaseCategoryService>();
-            services.AddTransient<IPolicyDetailService, PolicyDetailService>();
-            services.AddTransient<IPolicyHeaderService, PolicyHeaderService>();
+            services.AddTransient<IAccountPolicyService, AccountPolicyService>();
 
             services.AddTransient<ISystemLogService, SystemLogService>();
             services.AddTransient<IChangePasswordService, ChangePasswordService>();
@@ -42,19 +33,9 @@ namespace Backend.Helpers
             #endregion
 
             #region 註冊 ViewModel
-            services.AddTransient<CategorySubViewModel>();
-            services.AddTransient<CategoryMainViewModel>();
+            services.AddTransient<ExceptionRecordViewModel>();
             services.AddTransient<MailQueueViewModel>();
-            services.AddTransient<WorkOrderViewModel>();
-            services.AddTransient<SystemEnvironmentViewModel>();
-            services.AddTransient<FlowInboxViewModel>();
-            services.AddTransient<FlowHistoryViewModel>();
-            services.AddTransient<FlowUserViewModel>();
-            services.AddTransient<FlowMasterViewModel>();
-            services.AddTransient<PhaseMessageViewModel>();
-            services.AddTransient<PhaseCategoryViewModel>();
-            services.AddTransient<PolicyDetailViewModel>();
-            services.AddTransient<PolicyHeaderViewModel>();
+            services.AddTransient<AccountPolicyViewModel>();
 
             services.AddTransient<SystemLogViewModel>();
             services.AddTransient<ChangePasswordViewModel>();

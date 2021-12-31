@@ -10,34 +10,15 @@
         public AutoMapping()
         {
             #region Blazor AdapterModel
-            CreateMap<CategorySub, CategorySubAdapterModel>();
-            CreateMap<CategorySubAdapterModel, CategorySub>();
-            CreateMap<CategoryMain, CategoryMainAdapterModel>();
-            CreateMap<CategoryMainAdapterModel, CategoryMain>();
+            CreateMap<ExceptionRecord, ExceptionRecordAdapterModel>();
+            CreateMap<ExceptionRecordAdapterModel, ExceptionRecord>();
+
             CreateMap<MailQueue, MailQueueAdapterModel>();
             CreateMap<MailQueueAdapterModel, MailQueue>();
-            CreateMap<WorkOrder, WorkOrderAdapterModel>();
-            CreateMap<WorkOrderAdapterModel, WorkOrder>();
             CreateMap<MyUserPasswordHistory, MyUserPasswordHistoryAdapterModel>();
             CreateMap<MyUserPasswordHistoryAdapterModel, MyUserPasswordHistory>();
-            CreateMap<SystemEnvironment, SystemEnvironmentAdapterModel>();
-            CreateMap<SystemEnvironmentAdapterModel, SystemEnvironment>();
-            CreateMap<FlowInbox, FlowInboxAdapterModel>();
-            CreateMap<FlowInboxAdapterModel, FlowInbox>();
-            CreateMap<FlowHistory, FlowHistoryAdapterModel>();
-            CreateMap<FlowHistoryAdapterModel, FlowHistory>();
-            CreateMap<FlowUser, FlowUserAdapterModel>();
-            CreateMap<FlowUserAdapterModel, FlowUser>();
-            CreateMap<FlowMaster, FlowMasterAdapterModel>();
-            CreateMap<FlowMasterAdapterModel, FlowMaster>();
-            CreateMap<PhaseMessage, PhaseMessageAdapterModel>();
-            CreateMap<PhaseMessageAdapterModel, PhaseMessage>();
-            CreateMap<PhaseCategory, PhaseCategoryAdapterModel>();
-            CreateMap<PhaseCategoryAdapterModel, PhaseCategory>();
-            CreateMap<PolicyDetail, PolicyDetailAdapterModel>();
-            CreateMap<PolicyDetailAdapterModel, PolicyDetail>();
-            CreateMap<PolicyHeader, PolicyHeaderAdapterModel>();
-            CreateMap<PolicyHeaderAdapterModel, PolicyHeader>();
+            CreateMap<AccountPolicy, AccountPolicyAdapterModel>();
+            CreateMap<AccountPolicyAdapterModel, AccountPolicy>();
 
             CreateMap<SystemLog, SystemLogAdapterModel>();
             CreateMap<SystemLogAdapterModel, SystemLog>();
@@ -57,6 +38,11 @@
             #endregion
 
             #region DTO
+            CreateMap<ExceptionRecord, ExceptionRecordDto>();
+            CreateMap<ExceptionRecordDto, ExceptionRecord>();
+            CreateMap<ExceptionRecordAdapterModel, ExceptionRecordDto>();
+            CreateMap<ExceptionRecordDto, ExceptionRecordAdapterModel>();
+
             CreateMap<MenuData, MenuDataDto>();
             CreateMap<MenuDataDto, MenuData>();
             CreateMap<MenuDataAdapterModel, MenuDataDto>();

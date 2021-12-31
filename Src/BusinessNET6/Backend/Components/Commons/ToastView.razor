@@ -3,7 +3,7 @@
 @using Prism.Events
 @implements IDisposable
 @inject IEventAggregator EventAggregator
-@*<button @onclick="click">Send</button>*@
+
 <SfToast @ref="ToastObj"
          Title="@ToastModel.Title" Content="@ToastModel.Content"
          Timeout="@ToastModel.Timeout">

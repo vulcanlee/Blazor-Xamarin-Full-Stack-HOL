@@ -8,7 +8,7 @@ namespace Backend.Interfaces
         /// <summary>
         /// 呼叫元件的 StateHasChanged()
         /// </summary>
-        void NeedRefresh();
+        Task NeedRefreshAsync();
         /// <summary>
         /// 在 UI 執行緒下執行委派方法
         /// </summary>

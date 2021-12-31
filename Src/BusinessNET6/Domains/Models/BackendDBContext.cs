@@ -29,20 +29,8 @@ namespace Domains.Models
         public virtual DbSet<MenuData> MenuData { get; set; }
         public virtual DbSet<SystemLog> SystemLog { get; set; }
         public virtual DbSet<ExceptionRecord> ExceptionRecord { get; set; }
-        public virtual DbSet<PolicyHeader> PolicyHeader { get; set; }
-        public virtual DbSet<PolicyDetail> PolicyDetail { get; set; }
-        public virtual DbSet<FlowMaster> FlowMaster { get; set; }
-        public virtual DbSet<FlowUser> FlowUser { get; set; }
-        public virtual DbSet<FlowHistory> FlowHistory { get; set; }
-        public virtual DbSet<FlowInbox> FlowInbox { get; set; }
-        public virtual DbSet<PhaseCategory> PhaseCategory { get; set; }
-        public virtual DbSet<PhaseMessage> PhaseMessage { get; set; }
-        public virtual DbSet<SystemEnvironment> SystemEnvironment { get; set; }
-        public virtual DbSet<WorkOrder> WorkOrder { get; set; }
+        public virtual DbSet<AccountPolicy> AccountPolicy { get; set; }
         public virtual DbSet<MailQueue> MailQueue { get; set; }
-        public virtual DbSet<CategoryMain> CategoryMain { get; set; }
-        public virtual DbSet<CategorySub> CategorySub { get; set; }
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -55,7 +43,7 @@ namespace Domains.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
+            modelBuilder.UseCollation("Chinese_Taiwan_Stroke_CI_AS");
 
             #region 設定階層級的刪除政策(預設若關聯子資料表有紀錄，父資料表不可強制刪除
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
@@ -63,18 +51,6 @@ namespace Domains.Models
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
             #endregion
-
-            modelBuilder.Entity<Product>()
-                .Property(x => x.ListPrice)
-                .HasPrecision(10, 2);
-
-            modelBuilder.Entity<OrderItem>()
-                .Property(x => x.ListPrice)
-                .HasPrecision(10, 2);
-
-            modelBuilder.Entity<OrderItem>()
-                .Property(x => x.Discount)
-                .HasPrecision(5, 2);
 
             OnModelCreatingPartial(modelBuilder);
         }

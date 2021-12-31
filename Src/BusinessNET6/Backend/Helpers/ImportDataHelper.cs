@@ -73,6 +73,7 @@ namespace Backend.Helpers
             workbook = null;
             sheet = null;
         }
+
         #region 匯入資料
         #region 使用者匯入
         public async Task Import使用者匯入Async()
@@ -101,6 +102,7 @@ namespace Backend.Helpers
                 var 密碼 = sheet[i, 3].Value;
                 var 啟用 = sheet[i, 4].Value;
                 var 角色 = sheet[i, 5].Value;
+                var Email = sheet[i, 6].Value;
 
                 var menuItem = menuRoles.FirstOrDefault(x => x.Name == 角色);
                 if (menuItem == null) continue;
@@ -115,8 +117,14 @@ namespace Backend.Helpers
                         Account = 帳號,
                         Name = 姓名,
                         Status = (啟用 == "TRUE") ? true : false,
-                        Password = "",
                         Salt = Guid.NewGuid().ToString(),
+                        ForceLogoutDatetime = DateTime.Now.AddDays(-1),
+                        ForceChangePassword = false,
+                        ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
+                        LoginFailTimes = 0,
+                        LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
+                        LastLoginDatetime = DateTime.Now,
+                        Email = Email,
                     };
                     item.Password = PasswordHelper.GetPasswordSHA(item.Salt, 密碼);
                     item.MenuRoleId = menuItem.Id;
@@ -240,7 +248,7 @@ namespace Backend.Helpers
                         var searchItemMenuData = await Context.MenuData
                             .FirstOrDefaultAsync(x => x.MenuRoleId == searchItem.Id &&
                             x.CodeName == itemData.CodeName);
-                        if(searchItemMenuData == null)
+                        if (searchItemMenuData == null)
                         {
                             itemData.MenuRoleId = searchItem.Id;
                             needMenuDataInsert.Add(itemData);
@@ -253,7 +261,7 @@ namespace Backend.Helpers
                 await Context.BulkInsertAsync(needMenuDataInsert);
             }
             #endregion
-      
+
             CleanTrackingHelper.Clean<MenuRole>(Context);
             CleanTrackingHelper.Clean<MenuData>(Context);
             #endregion

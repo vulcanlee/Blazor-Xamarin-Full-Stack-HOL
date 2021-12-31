@@ -39,10 +39,10 @@ namespace Backend.Services
         #region 檢查密碼政策
         public async Task CheckPasswordAge(CancellationToken cancellationToken)
         {
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
 
-            SystemEnvironment systemEnvironment = await context.SystemEnvironment
+            AccountPolicy AccountPolicy = await context.AccountPolicy
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync();
             cancellationToken.ThrowIfCancellationRequested();
@@ -50,8 +50,8 @@ namespace Backend.Services
                 .ToListAsync();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var enableCheckPasswordAge = systemEnvironment.EnableCheckPasswordAge;
-            var passwordAge = systemEnvironment.PasswordAge;
+            var enableCheckPasswordAge = AccountPolicy.EnableCheckPasswordAge;
+            var passwordAge = AccountPolicy.PasswordAge;
 
             if (enableCheckPasswordAge == true)
             {
@@ -71,7 +71,7 @@ namespace Backend.Services
             }
 
             CleanTrackingHelper.Clean<MyUser>(context);
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
 
         }
         #endregion

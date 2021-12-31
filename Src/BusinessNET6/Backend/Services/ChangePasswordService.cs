@@ -52,9 +52,9 @@ namespace Backend.Services
         public async Task<string> CheckWetherCanChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword)
         {
             string result = "";
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
-            SystemEnvironment systemEnvironment = await context.SystemEnvironment
+            AccountPolicy AccountPolicy = await context.AccountPolicy
                 .OrderBy(x=>x.Id)
                 .FirstOrDefaultAsync();
             string encodePassword = PasswordHelper.GetPasswordSHA(myUserAdapterModel.Salt, newPassword);
@@ -64,7 +64,7 @@ namespace Backend.Services
             }
             else
             {
-                if (systemEnvironment.EnablePasswordHistory)
+                if (AccountPolicy.EnablePasswordHistory)
                 {
                     var history = await context.MyUserPasswordHistory
                         .FirstOrDefaultAsync(x => x.MyUserId == myUserAdapterModel.Id &&
@@ -80,9 +80,9 @@ namespace Backend.Services
         public async Task ChangePassword(MyUserAdapterModel myUserAdapterModel, string newPassword,
             string ip)
         {
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
-            SystemEnvironment systemEnvironment = await context.SystemEnvironment
+            AccountPolicy AccountPolicy = await context.AccountPolicy
                 .OrderBy(x => x.Id)
                 .FirstOrDefaultAsync();
             string encodePassword =
@@ -92,10 +92,10 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MyUser>(context);
 
             #region 更新下次要變更密碼的時間
-            if (systemEnvironment.EnableCheckPasswordAge)
+            if (AccountPolicy.EnableCheckPasswordAge)
             {
                 myUser.ForceChangePasswordDatetime = DateTime.Now
-                    .AddDays(systemEnvironment.PasswordAge);
+                    .AddDays(AccountPolicy.PasswordAge);
             }
             myUser.ForceChangePassword = false;
             #endregion
@@ -103,7 +103,7 @@ namespace Backend.Services
             context.Entry(myUser).State = EntityState.Modified;
             await context.SaveChangesAsync();
 
-            if (systemEnvironment.EnablePasswordHistory == true)
+            if (AccountPolicy.EnablePasswordHistory == true)
             {
                 MyUserPasswordHistory myUserPasswordHistory = new MyUserPasswordHistory()
                 {
@@ -118,12 +118,12 @@ namespace Backend.Services
 
                 while(true)
                 {
-                    #region 只會記錄下系統指定的變更密碼數量 systemEnvironment.PasswordHistory
+                    #region 只會記錄下系統指定的變更密碼數量 AccountPolicy.PasswordHistory
                     var myUserPasswordHistories = await context.MyUserPasswordHistory
                         .Where(x => x.MyUserId == myUser.Id)
                         .OrderBy(x => x.ChangePasswordDatetime)
                         .ToListAsync();
-                    if(myUserPasswordHistories.Count > systemEnvironment.PasswordHistory)
+                    if(myUserPasswordHistories.Count > AccountPolicy.PasswordHistory)
                     {
                         var first = myUserPasswordHistories.First();
                         context.Remove(first);
@@ -137,7 +137,7 @@ namespace Backend.Services
                     #endregion
                 }
             }
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
             CleanTrackingHelper.Clean<MyUser>(context);
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
         }

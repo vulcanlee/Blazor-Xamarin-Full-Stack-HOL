@@ -17,7 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EFCore.BulkExtensions" Version="5.4.0" />
+		<PackageReference Include="EFCore.BulkExtensions" Version="6.2.5" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 	</ItemGroup>
 

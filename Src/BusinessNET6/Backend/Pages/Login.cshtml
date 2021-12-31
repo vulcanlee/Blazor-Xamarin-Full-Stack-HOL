@@ -23,6 +23,9 @@
             text-align: center;
             min-height: 100vh;
         }
+        .btn-38px{
+            height:38px;
+        }
     </style>
 </head>
 <body>
@@ -67,8 +70,8 @@
                                         </div>
                                         <input class="form-control m-auto" asp-for="Captcha" value="@Model.Captcha" placeholder="驗證碼" autocomplete="off">
                                         <input type="hidden" asp-for="CaptchaOrigin" value="@Model.CaptchaOrigin" />
-                                        <button asp-page-handler="RefreshCode" class="btn btn-link"><i class="mdi mdi-refresh mdi-24px"></i></button>
-                                        <img class="captcha align-middle" src="@Model.CaptchaImage" />
+                                        <button asp-page-handler="RefreshCode" class="btn btn-link btn-38px p-0 mx-2"><i class="mdi mdi-refresh mdi-24px"></i></button>
+                                        <img class="captcha align-middle btn-38px" src="@Model.CaptchaImage" />
                                     </div>
                                 </div>
                             </div>

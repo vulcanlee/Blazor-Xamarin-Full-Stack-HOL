@@ -21,13 +21,15 @@ namespace Backend.Services
     {
         public SendingMailHostedService(ILogger<SendingMailHostedService> logger,
             IServer server, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory,
-            IOptions<BackendSmtpClientInformation> smtpClientInformation, SystemBroadcast systemBroadcast)
+            IOptions<BackendSmtpClientInformation> smtpClientInformation, SystemBroadcast systemBroadcast,
+            BackgroundExecuteMode backgroundExecuteMode)
         {
             Logger = logger;
             Server = server;
             Configuration = configuration;
             ServiceScopeFactory = serviceScopeFactory;
             SystemBroadcast = systemBroadcast;
+            BackgroundExecuteMode = backgroundExecuteMode;
             SmtpClientInformation = smtpClientInformation.Value;
         }
 
@@ -36,6 +38,7 @@ namespace Backend.Services
         public IConfiguration Configuration { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
         public SystemBroadcast SystemBroadcast { get; }
+        public BackgroundExecuteMode BackgroundExecuteMode { get; }
         public BackendSmtpClientInformation SmtpClientInformation { get; }
 
         DateTime StartupTime = DateTime.Now;
@@ -54,6 +57,8 @@ namespace Backend.Services
                 #region 檢查使用者是否要發送電子郵件
                 try
                 {
+                    await Task.Delay(120000, cancellationTokenSource.Token);
+
                     StartupTime = DateTime.Now;
                     Random random = new Random();
                     var firstDelay = random.Next(60 * 1000, 3 * 60 * 1000);
@@ -68,6 +73,13 @@ namespace Backend.Services
 
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
+                        #region 若在進行資料庫重建與初始化的時候，需要暫緩執行背景工作
+                        while (BackgroundExecuteMode.IsInitialization == true)
+                        {
+                            await Task.Delay(60000, cancellationTokenSource.Token);
+                        }
+                        #endregion
+
                         var scope = ServiceScopeFactory.CreateScope();
                         IMailQueueService mailQueueService = scope.ServiceProvider.GetRequiredService<IMailQueueService>();
 

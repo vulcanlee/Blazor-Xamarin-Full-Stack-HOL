@@ -22,6 +22,8 @@ using NLog.Web;
 using Syncfusion.Blazor;
 using System.Globalization;
 using System.Text;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.StaticFiles;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
@@ -31,7 +33,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     #region .NET 5 專案內的 CreateHostBuilder
-    IHostBuilder hostBuilder=builder.Host;
+    IHostBuilder hostBuilder = builder.Host;
 
     hostBuilder.ConfigureLogging(logging =>
     {
@@ -100,9 +102,19 @@ try
 
     #region EF Core & AutoMapper 使用的宣告
     string connectionString = builder.Configuration.GetConnectionString(MagicHelper.DefaultConnectionString);
-    builder.Services.AddDbContext<BackendDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString(
-        MagicHelper.DefaultConnectionString)), ServiceLifetime.Transient);
+    string connectionStringSQLite = builder.Configuration.GetConnectionString(MagicHelper.DefaultSQLiteConnectionString);
+    bool UseSQLite = Convert.ToBoolean(builder.Configuration["BackendSystemAssistant:UseSQLite"]);
+    if (UseSQLite == false)
+    {
+        builder.Services.AddDbContext<BackendDBContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString(
+            MagicHelper.DefaultConnectionString)), ServiceLifetime.Transient);
+    }
+    else
+    {
+        builder.Services.AddDbContext<BackendDBContext>(options =>
+        options.UseSqlite(connectionStringSQLite), ServiceLifetime.Transient);
+    }
     builder.Services.AddCustomServices();
     builder.Services.AddAutoMapper(c => c.AddProfile<AutoMapping>());
     #endregion
@@ -112,6 +124,8 @@ try
         .GetSection(AppSettingHelper.Tokens));
     builder.Services.Configure<BackendSmtpClientInformation>(builder.Configuration
         .GetSection(AppSettingHelper.BackendSmtpClientInformation));
+    builder.Services.Configure<BackendInitializer>(builder.Configuration
+        .GetSection(AppSettingHelper.BackendInitializer));
     #endregion
 
     #region 加入使用 Cookie & JWT 認證需要的宣告
@@ -152,14 +166,14 @@ try
                 },
                 OnChallenge = context =>
                 {
-                            ////context.HandleResponse();
-                            return Task.CompletedTask;
+                    ////context.HandleResponse();
+                    return Task.CompletedTask;
                 },
                 OnTokenValidated = context =>
                 {
-                            //Console.WriteLine("OnTokenValidated: " +
-                            //    context.SecurityToken);
-                            return Task.CompletedTask;
+                    //Console.WriteLine("OnTokenValidated: " +
+                    //    context.SecurityToken);
+                    return Task.CompletedTask;
                 }
 
             };
@@ -198,6 +212,9 @@ try
     }
     builder.Services.AddHostedService<PasswordPolicyHostedService>();
     builder.Services.AddHostedService<SendingMailHostedService>();
+
+    // 背景服務是否需要暫停執行
+    builder.Services.AddSingleton<BackgroundExecuteMode>();
     #endregion
 
     #region 使用 HttpContext
@@ -282,6 +299,24 @@ try
 
     #region 針對目前的要求路徑啟用靜態檔案服務
     app.UseStaticFiles();
+
+    #region 圖片靜態檔案
+    // https://stackoverflow.com/questions/1029740/get-mime-type-from-filename-extension
+    UploadImageHelper.PrepareUploadImageFolder(builder.Configuration).Wait();
+    var providerImage = new FileExtensionContentTypeProvider();
+    // Add new mappings
+    providerImage.Mappings[".jpg"] = "image/jpeg";
+    providerImage.Mappings[".jpeg"] = "image/jpeg";
+    providerImage.Mappings[".mp4"] = "video/mp4";
+    string keyUploadImagePath = builder.Configuration[AppSettingHelper.UploadImagePath];
+    app.UseStaticFiles(new StaticFileOptions()
+    {
+        FileProvider = new PhysicalFileProvider(
+         Path.Combine(keyUploadImagePath, "Images")),
+        RequestPath = "/Images",
+        ContentTypeProvider = providerImage
+    });
+    #endregion
     #endregion
 
     #region 啟用 Swagger 中介軟體

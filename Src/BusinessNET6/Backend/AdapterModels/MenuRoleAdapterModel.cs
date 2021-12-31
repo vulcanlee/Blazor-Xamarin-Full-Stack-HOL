@@ -14,8 +14,8 @@ namespace Backend.AdapterModels
         }
         public int Id { get; set; }
         [Required(ErrorMessage = "名稱 不可為空白")]
-        public string Name { get; set; }
-        public string Remark { get; set; }
+        public string Name { get; set; } = String.Empty;
+        public string? Remark { get; set; }
 
         public virtual ICollection<MenuDataAdapterModel> MenuData { get; set; }
 

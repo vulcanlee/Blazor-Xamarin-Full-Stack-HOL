@@ -16,7 +16,9 @@ namespace BAL.Helpers
         public static readonly string CheckUserStateInterval = "BackendSystemAssistant:CheckUserStateInterval";
         public static readonly string SendingMailInterval = "BackendSystemAssistant:SendingMailInterval";
         public static readonly string BackendSmtpClientInformation = "BackendSmtpClientInformation";
+        public static readonly string BackendInitializer = "BackendInitializer";
         public static readonly string SyncfusionLicense = "BackendSyncfusion:License";
+        public static readonly string UploadImagePath = "BackendUpload:Images";
         public static readonly string CustomNLog = "BackendCustomNLog";
         public static readonly string Tokens = "BackendTokens";
         public static readonly string ValidIssuer = "BackendTokens:ValidIssuer";

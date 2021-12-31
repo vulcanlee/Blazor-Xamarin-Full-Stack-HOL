@@ -45,18 +45,19 @@
             <GridColumn Field=@nameof(MenuDataAdapterModel.Sequence) HeaderText="順序"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(MenuDataAdapterModel.Enable)
-                        HeaderText="啟用" Width="70">
+                        HeaderText="啟用" Width="@MagicHelper.DataGrid狀態寬度" TextAlign="TextAlign.Center" 
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
                 <Template>
                     @{
                         var currentRec = (context as MenuDataAdapterModel);
                         if (currentRec.Enable == true)
                         {
-                            <span class="mdi mdi-24px mdi-play-circle mx-2 text-success cursor-pointer"
+                            <span class="mdi @MagicHelper.DataGrid圖示大小 mdi-play-circle mx-2 text-success cursor-pointer"
                                   @onclick="x=>ViewModel.DisableIt(currentRec)" />
                         }
                         else
                         {
-                            <span class="mdi mdi-24px mdi-stop-circle mx-2 text-danger cursor-pointer"
+                            <span class="mdi @MagicHelper.DataGrid圖示大小 mdi-stop-circle mx-2 text-danger cursor-pointer"
                                   @onclick="x=>ViewModel.EnableIt(currentRec)" />
                         }
                     }
@@ -64,7 +65,8 @@
 
 
             </GridColumn>
-            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+            <GridColumn HeaderText="命令" Width="@MagicHelper.DataGrid2個命令寬度" TextAlign="@TextAlign.Center"
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
                                        ButtonOption="@(new CommandButtonOptions()
@@ -163,8 +165,8 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button type="submit" class="btn btn-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</button>
-                <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</button>
+                <SfButton type="submit" CssClass="e-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</SfButton>
+                <SfButton CssClass="e-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>
@@ -185,6 +187,7 @@
             Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
+<DataGridCss/>
 
 @code{
     SfGrid<MenuDataAdapterModel> Grid;
@@ -223,10 +226,15 @@
     #endregion
 
     #region 頁面需要介面實作
-    public void NeedRefresh()
+    public async Task NeedRefreshAsync()
     {
-        InvokeAsync(() => { StateHasChanged(); });
+        await InvokeAsync(async () =>
+        {
+            await RenderDelayHelper.Delay();
+            StateHasChanged();
+        });
     }
+
     public async Task NeedInvokeAsync(System.Action action)
     {
         await InvokeAsync(action);

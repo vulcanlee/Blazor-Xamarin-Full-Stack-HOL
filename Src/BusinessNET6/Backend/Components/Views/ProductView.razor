@@ -5,6 +5,7 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
 
 @inject ProductViewModel ViewModel
 @implements IRazorPage
@@ -43,7 +44,8 @@
             <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) 
                         HeaderText="售價"
                          HideAtMedia="(min-width: 640px)"/>
-            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+            <GridColumn HeaderText="命令" Width="@MagicHelper.DataGrid2個命令寬度" TextAlign="@TextAlign.Center"
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
                                        ButtonOption="@(new CommandButtonOptions()
@@ -101,8 +103,8 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button type="submit" class="btn btn-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</button>
-                <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</button>
+                <SfButton type="submit" CssClass="e-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</SfButton>
+                <SfButton CssClass="e-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>
@@ -120,6 +122,7 @@
             Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
+<DataGridCss/>
 
 @code{
     SfGrid<ProductAdapterModel> Grid;
@@ -149,10 +152,15 @@
     #endregion
 
     #region 頁面需要介面實作
-    public void NeedRefresh()
+    public async Task NeedRefreshAsync()
     {
-        InvokeAsync(() => { StateHasChanged(); });
+        await InvokeAsync(async () =>
+        {
+            await RenderDelayHelper.Delay();
+            StateHasChanged();
+        });
     }
+
     public async Task NeedInvokeAsync(System.Action action)
     {
         await InvokeAsync(action);

@@ -38,13 +38,20 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<MailQueueAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest,
-                CurrentMailQueueStatusCondition);
-            var item = dataManagerRequest.RequiresCounts
-                ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
-                : (object)adaptorModelObjects.Result;
-            await Task.Yield();
-            return item;
+            try
+            {
+                DataRequestResult<MailQueueAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest,
+                    CurrentMailQueueStatusCondition);
+                var item = dataManagerRequest.RequiresCounts
+                    ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
+                    : (object)adaptorModelObjects.Result;
+                await Task.Yield();
+                return item;
+            }
+            catch (Exception)
+            {
+                return new DataResult() { Result = new List<MailQueueAdapterModel>(), Count = 0 };
+            }
             #endregion
         }
     }

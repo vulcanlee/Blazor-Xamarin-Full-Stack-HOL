@@ -16,6 +16,7 @@ namespace Backend.Services
     using BAL.Helpers;
     using System;
     using System.Linq;
+    using Newtonsoft.Json;
 
     public class DatabaseInitService
     {
@@ -26,6 +27,7 @@ namespace Backend.Services
         public ILogger<DatabaseInitService> Logger { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public SystemLogHelper SystemLogHelper { get; }
+        public InitDatas InitDatas { get; set; } = new InitDatas();
 
         public DatabaseInitService(BackendDBContext context, IMapper mapper,
             IConfiguration configuration, ILogger<DatabaseInitService> logger,
@@ -39,19 +41,26 @@ namespace Backend.Services
             SystemLogHelper = systemLogHelper;
         }
 
-        public async Task InitDBAsync()
+        public async Task InitDBAsync(string path, Action<string> OnUpdateMessage)
         {
+            string content = await File.ReadAllTextAsync(path);
+            InitDatas = JsonConvert.DeserializeObject<InitDatas>(content);
             Random random = new Random();
+
+            context.Database.SetCommandTimeout(TimeSpan.FromMinutes(3));
 
             #region 適用於 Code First ，刪除資料庫與移除資料庫
             string Msg = "";
             Msg = $"適用於 Code First ，刪除資料庫與移除資料庫";
+            OnUpdateMessage(Msg);
             Logger.LogInformation($"{Msg}");
             await context.Database.EnsureDeletedAsync();
             Msg = $"刪除資料庫";
+            OnUpdateMessage(Msg);
             Logger.LogInformation($"{Msg}");
             await context.Database.EnsureCreatedAsync();
             Msg = $"建立資料庫";
+            OnUpdateMessage(Msg);
             try
             {
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -69,21 +78,100 @@ namespace Backend.Services
             }
             Logger.LogInformation($"{Msg}");
             #endregion
+
+            #region 還原預設紀錄
+            DateTime currentNow;
+            #region AccountPolicy
+            currentNow = DateTime.Now;
+            Msg = $"建立 AccountPolicy";
+            OnUpdateMessage(Msg);
+            await context.AccountPolicy.AddRangeAsync(InitDatas.AccountPolicy);
+            await context.SaveChangesWithoutIdentityInsertAsync<AccountPolicy>();
+            OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            #endregion
+
+            #region MenuRole
+            currentNow = DateTime.Now;
+            Msg = $"建立 MenuRole";
+            OnUpdateMessage(Msg);
+            await context.MenuRole.AddRangeAsync(InitDatas.MenuRole);
+            await context.SaveChangesWithoutIdentityInsertAsync<MenuRole>();
+            OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            #endregion
+
+            #region MenuData
+            currentNow = DateTime.Now;
+            Msg = $"建立 MenuData";
+            OnUpdateMessage(Msg);
+            await context.MenuData.AddRangeAsync(InitDatas.MenuData);
+            await context.SaveChangesWithoutIdentityInsertAsync<MenuData>();
+            OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            #endregion
+
+            #region MyUser
+            currentNow = DateTime.Now;
+            Msg = $"建立 MyUser";
+            OnUpdateMessage(Msg);
+            await context.MyUser.AddRangeAsync(InitDatas.MyUser);
+            await context.SaveChangesWithoutIdentityInsertAsync<MyUser>();
+            OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            #endregion
+
+            #region MyUserPasswordHistory
+            currentNow = DateTime.Now;
+            Msg = $"建立 MyUserPasswordHistory";
+            OnUpdateMessage(Msg);
+            await context.MyUserPasswordHistory.AddRangeAsync(InitDatas.MyUserPasswordHistory);
+            await context.SaveChangesWithoutIdentityInsertAsync<MyUserPasswordHistory>();
+            OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            #endregion
+            #endregion
         }
 
-        public async Task InitDataAsync()
+        public async Task InitDataAsync(string InitializationMode, Action<string> OnUpdateMessage)
         {
             Random random = new Random();
+            DateTime currentNow = DateTime.Now;
+
+            context.Database.SetCommandTimeout(TimeSpan.FromMinutes(3));
 
             #region 適用於 Code First ，刪除資料庫與移除資料庫
             string Msg = "";
             Msg = $"適用於 Code First ，刪除資料庫與移除資料庫";
+            OnUpdateMessage(Msg);
             Logger.LogInformation($"{Msg}");
-            await context.Database.EnsureDeletedAsync();
-            Msg = $"刪除資料庫";
-            Logger.LogInformation($"{Msg}");
-            await context.Database.EnsureCreatedAsync();
-            Msg = $"建立資料庫";
+            try
+            {
+                currentNow = DateTime.Now;
+                Msg = $"刪除資料庫";
+                OnUpdateMessage($"{Msg}");
+                await context.Database.EnsureDeletedAsync();
+                OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+                Logger.LogInformation($"{Msg} ({DateTime.Now - currentNow})");
+            }
+            catch (Exception ex)
+            {
+                OnUpdateMessage($"{Msg} 發生例外異常 ({DateTime.Now - currentNow})");
+                OnUpdateMessage(ex.Message);
+                Logger.LogError(Msg, ex);
+                return;
+            }
+            try
+            {
+                currentNow = DateTime.Now;
+                Msg = $"建立資料庫";
+                OnUpdateMessage($"{Msg}");
+                await context.Database.EnsureCreatedAsync();
+                OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+                Logger.LogInformation($"{Msg} ({DateTime.Now - currentNow})");
+            }
+            catch (Exception ex)
+            {
+                OnUpdateMessage($"{Msg} 發生例外異常 ({DateTime.Now - currentNow})");
+                OnUpdateMessage(ex.Message);
+                Logger.LogError(Msg, ex);
+                return;
+            }
             try
             {
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -104,8 +192,22 @@ namespace Backend.Services
 
             #region 建立開發環境要用到的測試紀錄
             #region 建立系統定義參數
-            await 建立系統定義參數Async();
-            Msg = $"建立系統定義參數";
+            try
+            {
+                currentNow = DateTime.Now;
+                Msg = $"建立系統定義參數";
+                OnUpdateMessage(Msg);
+                await 建立系統定義參數Async();
+                OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            }
+            catch (Exception ex)
+            {
+                OnUpdateMessage($"{Msg} 發生例外異常 ({DateTime.Now - currentNow})");
+                OnUpdateMessage(ex.Message);
+                Logger.LogError(Msg, ex);
+                return;
+            }
+
             try
             {
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -125,8 +227,21 @@ namespace Backend.Services
             #endregion
 
             #region 建立功能表角色與項目清單
-            await 建立功能表角色與項目清單Async();
-            Msg = $"建立功能表角色與項目清單";
+            try
+            {
+                currentNow = DateTime.Now;
+                Msg = $"建立功能表角色與項目清單";
+                OnUpdateMessage(Msg);
+                await 建立功能表角色與項目清單Async();
+                OnUpdateMessage($"{Msg} ({DateTime.Now - currentNow})");
+            }
+            catch (Exception ex)
+            {
+                OnUpdateMessage($"{Msg} 發生例外異常 ({DateTime.Now - currentNow})");
+                OnUpdateMessage(ex.Message);
+                Logger.LogError(Msg, ex);
+                return;
+            }
             try
             {
                 await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
@@ -146,7 +261,7 @@ namespace Backend.Services
             #endregion
 
             #region 建立使用者紀錄
-            await 建立使用者紀錄Async();
+            await 建立使用者紀錄Async(InitializationMode);
             Msg = $"建立使用者紀錄";
             try
             {
@@ -166,529 +281,16 @@ namespace Backend.Services
             Logger.LogInformation($"{Msg}");
             #endregion
 
-            #region 建立片語分類與文字Async
-            await 建立片語分類與文字Async();
-            Msg = $"建立片語分類與文字";
-            try
-            {
-                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
-                {
-                    Message = Msg,
-                    Category = LogCategories.Initialization,
-                    Content = "",
-                    LogLevel = LogLevels.Information,
-                    Updatetime = DateTime.Now,
-                    IP = HttpContextAccessor.GetConnectionIP(),
-                });
-            }
-            catch (Exception)
+            if (InitializationMode == "開發模式")
             {
             }
-            Logger.LogInformation($"{Msg}");
             #endregion
 
-            #region 建立簽核政策
-            await 建立簽核政策Async();
-            Msg = $"建立簽核政策";
-            try
-            {
-                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
-                {
-                    Message = Msg,
-                    Category = LogCategories.Initialization,
-                    Content = "",
-                    LogLevel = LogLevels.Information,
-                    Updatetime = DateTime.Now,
-                    IP = HttpContextAccessor.GetConnectionIP(),
-                });
-            }
-            catch (Exception)
-            {
-            }
-            Logger.LogInformation($"{Msg}");
-            #endregion
-
-            #region 建立派工單分類清單
-            await 建立派工單分類清單Async();
-            Msg = $"建立派工單分類清單";
-            try
-            {
-                await SystemLogHelper.LogAsync(new SystemLogAdapterModel()
-                {
-                    Message = Msg,
-                    Category = LogCategories.Initialization,
-                    Content = "",
-                    LogLevel = LogLevels.Information,
-                    Updatetime = DateTime.Now,
-                    IP = HttpContextAccessor.GetConnectionIP(),
-                });
-            }
-            catch (Exception)
-            {
-            }
-            Logger.LogInformation($"{Msg}");
-            #endregion
-
-            #endregion
+            Msg = $"資料庫初始化作業完成";
+            OnUpdateMessage(Msg);
         }
 
         #region 建立測試紀錄
-        async Task 建立片語分類與文字Async()
-        {
-            List<PhaseMessage> PhaseMessage = new List<PhaseMessage>();
-
-            int cc = 10;
-            #region 簽核表單使用的輸入片語
-            var phaseCategory = new PhaseCategory()
-            {
-                Name = "簽核表單使用的輸入片語",
-                Enable = true,
-                OrderNumber = cc++,
-                PhaseMessage = new List<PhaseMessage>()
-            };
-            await context.PhaseCategory.AddAsync(phaseCategory);
-            await context.SaveChangesAsync();
-            PhaseMessage = new List<PhaseMessage>()
-                {
-                    new PhaseMessage()
-                    {
-                        Content = "做得很好，繼續努力",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "用來形容情緒不會表露出來的人",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "像魚一樣的喝，表示喝很多，尤其指喝很多酒",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "意指非常重要、有權力或是具有影響力的人",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                };
-            await context.BulkInsertAsync(PhaseMessage);
-            #endregion
-            #region 改善報告的輸入片語
-            phaseCategory = new PhaseCategory()
-            {
-                Name = "改善報告的輸入片語",
-                Enable = true,
-                OrderNumber = cc++,
-                PhaseMessage = new List<PhaseMessage>()
-            };
-            await context.PhaseCategory.AddAsync(phaseCategory);
-            await context.SaveChangesAsync();
-            PhaseMessage = new List<PhaseMessage>()
-                {
-                    new PhaseMessage()
-                    {
-                        Content = "加速意見溝通",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "○○○○案，簽會意見綜合說明如下，請鑒核",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "會簽意見一略以，○○○○○○○○○…",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "會簽意見二略以，○○○○○○○○○…",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "「是否允當」?",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "……因故不克擔任…，予以改派…",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                };
-            await context.BulkInsertAsync(PhaseMessage);
-            #endregion
-            #region 雜項輸入片語
-            phaseCategory = new PhaseCategory()
-            {
-                Name = "雜項輸入片語",
-                Enable = true,
-                OrderNumber = cc++,
-                PhaseMessage = new List<PhaseMessage>()
-            };
-            await context.PhaseCategory.AddAsync(phaseCategory);
-            await context.SaveChangesAsync();
-            PhaseMessage = new List<PhaseMessage>()
-                {
-                    new PhaseMessage()
-                    {
-                        Content = "可以嗎?",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                    new PhaseMessage()
-                    {
-                        Content = "有關本校進修部學生向 鈞部「部長信箱」反映課程標準一案，本校已查明原委，謹檢陳查核報告乙份（如附件），敬請 鑒核。",
-                        Enable = true,
-                        Code = cc.ToString("D5"),
-                        OrderNumber = cc++,
-                        PhaseCategoryId = phaseCategory.Id,
-                    },
-                };
-            await context.BulkInsertAsync(PhaseMessage);
-            #endregion
-        }
-
-        async Task 建立簽核政策Async()
-        {
-            List<PolicyDetail> policyDetail = new List<PolicyDetail>();
-            var allUsers = await context.MyUser.ToListAsync();
-            #region 稽核室簽核流程
-            var policyHeader = new PolicyHeader()
-            {
-                Name = "稽核室簽核流程",
-                Enable = true,
-            };
-            await context.PolicyHeader.AddAsync(policyHeader);
-            await context.SaveChangesAsync();
-            policyDetail = new List<PolicyDetail>()
-                {
-                    new PolicyDetail()
-                    {
-                        Name = "主任",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user11").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "副課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "經理",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
-                    },
-                };
-            await context.BulkInsertAsync(policyDetail);
-            #endregion
-
-            #region 稽核室簽核流程(都有副本)
-            policyHeader = new PolicyHeader()
-            {
-                Name = "稽核室簽核流程(都有副本)",
-                Enable = true,
-            };
-            await context.PolicyHeader.AddAsync(policyHeader);
-            await context.SaveChangesAsync();
-            policyDetail = new List<PolicyDetail>()
-                {
-                    new PolicyDetail()
-                    {
-                        Name = "主任",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "組長",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user1").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user11").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "副課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "經理",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "總經理",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
-                    },
-                };
-            await context.BulkInsertAsync(policyDetail);
-            #endregion
-
-            #region 稽核室簽核流程(有副本與會簽)
-            policyHeader = new PolicyHeader()
-            {
-                Name = "稽核室簽核流程(有副本與會簽)",
-                Enable = true,
-            };
-            await context.PolicyHeader.AddAsync(policyHeader);
-            await context.SaveChangesAsync();
-            policyDetail = new List<PolicyDetail>()
-                {
-                    new PolicyDetail()
-                    {
-                        Name = "主任",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "組長",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user1").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user11").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "總務課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user14").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "副課長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user12").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "經理",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "總經理",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user13").Id,
-                    },
-                };
-            await context.BulkInsertAsync(policyDetail);
-            #endregion
-
-            #region 異常問題簽核流程
-            policyHeader = new PolicyHeader()
-            {
-                Name = "異常問題簽核流程",
-                Enable = true,
-            };
-            await context.PolicyHeader.AddAsync(policyHeader);
-            await context.SaveChangesAsync();
-            policyDetail = new List<PolicyDetail>()
-                {
-                    new PolicyDetail()
-                    {
-                        Name = "現場領班",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user15").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "廠長",
-                        Enable = true,
-                        Level = 2,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user16").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "總經理",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=true,
-                        MyUserId = allUsers.First(x=>x.Account=="user17").Id,
-                    },
-                    new PolicyDetail()
-                    {
-                        Name = "處長",
-                        Enable = true,
-                        Level = 3,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user18").Id,
-                    },
-                };
-            await context.BulkInsertAsync(policyDetail);
-            #endregion
-
-            #region 一般事項簽核流程
-            policyHeader = new PolicyHeader()
-            {
-                Name = "一般事項簽核流程",
-                Enable = true,
-            };
-            await context.PolicyHeader.AddAsync(policyHeader);
-            await context.SaveChangesAsync();
-            policyDetail = new List<PolicyDetail>()
-                {
-                    new PolicyDetail()
-                    {
-                        Name = "主任",
-                        Enable = true,
-                        Level = 1,
-                        PolicyHeaderId = policyHeader.Id,
-                        OnlyCC=false,
-                        MyUserId = allUsers.First(x=>x.Account=="user10").Id,
-                    },
-                };
-            await context.BulkInsertAsync(policyDetail);
-            #endregion
-
-        }
-
-        async Task 建立派工單分類清單Async()
-        {
-            List<CategorySub> categorySubs = new List<CategorySub>();
-            int cc = 1;
-            #region 派工單主分類
-            for (int i = 0; i < 20; i++)
-            {
-                int main = i;
-                var categoryMain = new CategoryMain()
-                {
-                    Name = $"派工單主分類{i}",
-                    Enable = true,
-                };
-                await context.CategoryMain.AddAsync(categoryMain);
-                await context.SaveChangesAsync();
-                categorySubs.Clear();
-                for (int j = 0; j < 20; j++)
-                {
-                    CategorySub categorySub = new CategorySub()
-                    {
-                        CategoryMainId = categoryMain.Id,
-                        Code = $"{cc:#####}",
-                        Enable = true,
-                        Name = $"派工單次分類 {main}-{j}",
-                        OrderNumber = cc,
-                    };
-                    categorySubs.Add(categorySub);
-                }
-                await context.BulkInsertAsync(categorySubs);
-            }
-            #endregion
-
-        }
-
         #endregion
 
         #region 建立相關紀錄
@@ -696,9 +298,9 @@ namespace Backend.Services
         {
             #region 建立系統定義參數 
 
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
             #region 新增系統定義紀錄
-            SystemEnvironment systemEnvironment = new SystemEnvironment()
+            AccountPolicy AccountPolicy = new AccountPolicy()
             {
                 EnableLoginFailDetection = true,
                 LoginFailMaxTimes = 3,
@@ -710,13 +312,13 @@ namespace Backend.Services
                 EnableCheckPasswordAge = true,
             };
 
-            context.SystemEnvironment.Add(systemEnvironment);
+            context.AccountPolicy.Add(AccountPolicy);
             await context.SaveChangesAsync();
-            CleanTrackingHelper.Clean<SystemEnvironment>(context);
+            CleanTrackingHelper.Clean<AccountPolicy>(context);
             #endregion
             #endregion
         }
-        private async Task 建立使用者紀錄Async()
+        private async Task 建立使用者紀錄Async(string InitializationMode)
         {
             #region 建立使用者紀錄 
 
@@ -811,51 +413,54 @@ namespace Backend.Services
             CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
             #endregion
 
-            #region 建立 使用者
-            foreach (var item in MagicHelper.使用者帳號)
+            if (InitializationMode == "開發模式")
             {
-                var itemMyUser = await context.MyUser
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Name == item);
-                if (itemMyUser == null)
+                #region 建立 使用者
+                foreach (var item in MagicHelper.使用者帳號)
                 {
-                    itemMyUser = new MyUser()
+                    var itemMyUser = await context.MyUser
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.Name == item);
+                    if (itemMyUser == null)
                     {
-                        Account = $"{item}",
-                        Name = $"使用者 {item}",
-                        MenuRoleId = menuRole使用者.Id,
-                        Status = true,
-                        Salt = Guid.NewGuid().ToString(),
-                        ForceLogoutDatetime = DateTime.Now.AddDays(-1),
-                        ForceChangePassword = false,
-                        ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
-                        LoginFailTimes = 0,
-                        LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
-                        LastLoginDatetime = DateTime.Now,
-                        Email = "vulcan.lee@gmail.com",
-                    };
-                    var userRawPassword = "123";
-                    itemMyUser.Password =
-                        PasswordHelper.GetPasswordSHA(itemMyUser.Salt, userRawPassword);
+                        itemMyUser = new MyUser()
+                        {
+                            Account = $"{item}",
+                            Name = $"使用者 {item}",
+                            MenuRoleId = menuRole使用者.Id,
+                            Status = true,
+                            Salt = Guid.NewGuid().ToString(),
+                            ForceLogoutDatetime = DateTime.Now.AddDays(-1),
+                            ForceChangePassword = false,
+                            ForceChangePasswordDatetime = DateTime.Now.AddDays(42),
+                            LoginFailTimes = 0,
+                            LoginFailUnlockDatetime = DateTime.Now.AddDays(-1),
+                            LastLoginDatetime = DateTime.Now,
+                            Email = "vulcan.lee@gmail.com",
+                        };
+                        var userRawPassword = "123";
+                        itemMyUser.Password =
+                            PasswordHelper.GetPasswordSHA(itemMyUser.Salt, userRawPassword);
 
-                    context.Add(itemMyUser);
-                    await context.SaveChangesAsync();
+                        context.Add(itemMyUser);
+                        await context.SaveChangesAsync();
 
-                    myUserPasswordHistoryAdapterModel = new MyUserPasswordHistory()
-                    {
-                        MyUserId = itemMyUser.Id,
-                        IP = "",
-                        Password = itemMyUser.Password,
-                        ChangePasswordDatetime = DateTime.Now,
-                    };
-                    await context.AddAsync(myUserPasswordHistoryAdapterModel);
-                    await context.SaveChangesAsync();
+                        myUserPasswordHistoryAdapterModel = new MyUserPasswordHistory()
+                        {
+                            MyUserId = itemMyUser.Id,
+                            IP = "",
+                            Password = itemMyUser.Password,
+                            ChangePasswordDatetime = DateTime.Now,
+                        };
+                        await context.AddAsync(myUserPasswordHistoryAdapterModel);
+                        await context.SaveChangesAsync();
 
-                    CleanTrackingHelper.Clean<MyUser>(context);
-                    CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
+                        CleanTrackingHelper.Clean<MyUser>(context);
+                        CleanTrackingHelper.Clean<MyUserPasswordHistory>(context);
+                    }
                 }
+                #endregion
             }
-            #endregion
             #endregion
         }
         private async Task 建立功能表角色與項目清單Async()
@@ -934,14 +539,15 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
-            #region 系統資料管理子功能表
+            #region 系統資料管理   子功能表
+            #region 系統資料管理   子功能表
             cc += 10;
             menuData = new MenuData()
             {
                 Name = "系統資料管理",
                 CodeName = "",
                 Enable = true,
-                Icon = "mdi-star-box",
+                Icon = "mdi-power-plug",
                 IsGroup = true,
                 Level = 0,
                 MenuRoleId = menuRole開發者.Id,
@@ -954,8 +560,8 @@ namespace Backend.Services
             cc += 10;
             menuData = new MenuData()
             {
-                Name = MagicHelper.系統運作條件,
-                CodeName = "Environment",
+                Name = MagicHelper.帳號密碼政策,
+                CodeName = "AccoutnPolicy",
                 Enable = true,
                 Icon = "mdi-cog",
                 IsGroup = false,
@@ -974,22 +580,6 @@ namespace Backend.Services
                 CodeName = "MyUser",
                 Enable = true,
                 Icon = "mdi-clipboard-account",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 簽核流程政策
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = MagicHelper.簽核流程政策,
-                CodeName = "Policy",
-                Enable = true,
-                Icon = "mdi-head-heart",
                 IsGroup = false,
                 Level = 1,
                 MenuRoleId = menuRole開發者.Id,
@@ -1030,7 +620,25 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
-            #region 基本資料管理子功能表
+            #region App例外異常
+            cc += 10;
+            menuData = new MenuData()
+            {
+                Name = MagicHelper.App例外異常,
+                CodeName = "ExceptionRecord",
+                Enable = true,
+                Icon = "mdi-message-alert",
+                IsGroup = false,
+                Level = 1,
+                MenuRoleId = menuRole開發者.Id,
+                Sequence = cc,
+            };
+            context.Add(menuData);
+            #endregion
+            #endregion
+
+            #region 基本資料管理   子功能表
+            #region 基本資料管理
             cc += 10;
             menuData = new MenuData()
             {
@@ -1046,6 +654,7 @@ namespace Backend.Services
             context.Add(menuData);
             #endregion
 
+            #region 範例程式碼，隱藏其功能表清單
             #region 商品管理功能名稱
             cc += 10;
             menuData = new MenuData()
@@ -1077,101 +686,7 @@ namespace Backend.Services
             };
             context.Add(menuData);
             #endregion
-
-            #region 派工單分類清單
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = BAL.Helpers.MagicHelper.派工單分類清單,
-                CodeName = "Category",
-                Enable = true,
-                Icon = "mdi-label-multiple",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
             #endregion
-
-            #region 片語分類
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = BAL.Helpers.MagicHelper.片語分類,
-                CodeName = "PhaseCategory",
-                Enable = true,
-                Icon = "mdi-lightbulb-on-outline",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 設備維護
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = "設備維護",
-                CodeName = "",
-                Enable = true,
-                Icon = "mdi-file-document-multiple",
-                IsGroup = true,
-                Level = 0,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 工單
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = BAL.Helpers.MagicHelper.派工單,
-                CodeName = "WorkOrder",
-                Enable = true,
-                Icon = "mdi-calendar-plus",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 簽核文件
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = BAL.Helpers.MagicHelper.簽核文件,
-                CodeName = "Flow",
-                Enable = true,
-                Icon = "mdi-file-document-edit",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
-            #endregion
-
-            #region 簽核收件匣
-            cc += 10;
-            menuData = new MenuData()
-            {
-                Name = BAL.Helpers.MagicHelper.簽核收件匣,
-                CodeName = "FlowInbox",
-                Enable = true,
-                Icon = "mdi-email-outline",
-                IsGroup = false,
-                Level = 1,
-                MenuRoleId = menuRole開發者.Id,
-                Sequence = cc,
-            };
-            context.Add(menuData);
             #endregion
 
             await context.SaveChangesAsync();
@@ -1213,31 +728,11 @@ namespace Backend.Services
 
             defaultMenuData
                 .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.系統運作條件));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.帳號管理功能名稱));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.簽核流程政策));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.郵件寄送紀錄));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.系統訊息廣播));
+                .FirstOrDefault(x => x.Name == MagicHelper.帳號密碼政策));
 
             defaultMenuData
                 .Remove(defaultMenuData
                 .FirstOrDefault(x => x.Name == "基本資料管理"));
-
-            defaultMenuData
-                .Remove(defaultMenuData
-                .FirstOrDefault(x => x.Name == MagicHelper.片語分類));
 
             #endregion
 

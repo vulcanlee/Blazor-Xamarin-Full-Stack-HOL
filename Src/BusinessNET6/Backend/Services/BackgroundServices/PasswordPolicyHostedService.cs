@@ -7,24 +7,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Backend.Models;
 
 namespace Backend.Services
 {
     public class PasswordPolicyHostedService : IHostedService
     {
         public PasswordPolicyHostedService(ILogger<PasswordPolicyHostedService> logger,
-            IServer server, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
+            IServer server, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory,
+            BackgroundExecuteMode backgroundExecuteMode)
         {
             Logger = logger;
             Server = server;
             Configuration = configuration;
             ServiceScopeFactory = serviceScopeFactory;
+            BackgroundExecuteMode = backgroundExecuteMode;
         }
 
         public ILogger<PasswordPolicyHostedService> Logger { get; }
         public IServer Server { get; }
         public IConfiguration Configuration { get; }
         public IServiceScopeFactory ServiceScopeFactory { get; }
+        public BackgroundExecuteMode BackgroundExecuteMode { get; }
 
         int checkCycle = 60 * 60;
         DateTime StartupTime = DateTime.Now;
@@ -43,10 +47,17 @@ namespace Backend.Services
                 {
                     StartupTime = DateTime.Now;
 
-                    await Task.Delay(15000);
+                    await Task.Delay(85000, cancellationTokenSource.Token);
 
                     while (cancellationTokenSource.Token.IsCancellationRequested == false)
                     {
+                        #region 若在進行資料庫重建與初始化的時候，需要暫緩執行背景工作
+                        while (BackgroundExecuteMode.IsInitialization == true)
+                        {
+                            await Task.Delay(60000, cancellationTokenSource.Token);
+                        }
+                        #endregion
+
                         var scope = ServiceScopeFactory.CreateScope();
                         IPasswordPolicyService passwordPolicyService = scope.ServiceProvider.GetRequiredService<IPasswordPolicyService>();
                         

@@ -4,9 +4,14 @@
 @using System.Threading.Tasks
 @using System.Threading
 @using System.Diagnostics
+@using Microsoft.Extensions.Options
+@using Syncfusion.Blazor.Buttons
 
 @inject IWebHostEnvironment env
 @inject DatabaseInitService DatabaseInitService
+@inject BackgroundExecuteMode BackgroundExecuteMode
+@inject IOptions<BackendInitializer> BackendInitializer
+@inject IExportDataService ExportDataService
 
 @layout EmptyLayout
 
@@ -15,8 +20,10 @@
 @using Microsoft.Extensions.Hosting
 @using Syncfusion.Blazor.Spinner
 @using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Popups
 
-<h1 class="bg-primary text-white-50 my-1">資料庫初始化作業!</h1>
+<h1 class="bg-success text-white-50 my-1">資料庫初始化作業!</h1>
 
 <environment include="Staging,Production">
     @if (verified == false)
@@ -26,14 +33,14 @@
             <p>請輸入驗證碼</p>
             <div class="input-group mb-3">
                 <input type="text" class="form-control"
-                       placeholder="驗證碼" aria-label="Username" aria-describedby="basic-addon1"
-                       @bind="verifyCode">
+                   placeholder="驗證碼" aria-label="Username" aria-describedby="basic-addon1"
+                   @bind="verifyCode">
             </div>
             <div class="input-group mb-3">
-                <button class="btn btn-primary"
-                        @onclick="OnVerifyCode">
+                <SfButton CssClass="e-primary"
+                    @onclick="OnVerifyCode">
                     送出
-                </button>
+                </SfButton>
             </div>
         </div>
     }
@@ -44,16 +51,42 @@
     <div class="card mb-4">
         <div class="card mb-4">
             <div class="card-header bg-danger text-white">
-                <span class="h2">資料庫初始化</span>
+                <span class="h2">匯出預設資料庫紀錄</span>
             </div>
             <article class="card-body bg-light">
                 <div>
-                    <button class="btn btn-danger mb-4" @onclick="InitDB">資料庫重新建立</button>
-                </div>
-                <div>
-                    <button class="btn btn-danger" @onclick="Init">資料庫重新建立與資料初始化</button>
+                    <SfButton CssClass="e-danger mb-4" @onclick="OutputJsonAsync">產生 JSON 檔案</SfButton>
                 </div>
             </article>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <span class="h2">資料庫初始化</span>
+            </div>
+            <article class="card-body bg-light">
+                <div class="mb-4">
+                    <SfDropDownList TValue="string" TItem="InitMode" Placeholder="初始化模式"
+                                @bind-Value=InitializationMode
+                                DataSource="@InitializationModeSet">
+                        <DropDownListFieldSettings Value="Name" Text="Name"></DropDownListFieldSettings>
+                    </SfDropDownList>
+                </div>
+                <div>
+                    <SfButton CssClass="e-danger mb-4" @onclick="InitDB">資料庫重新建立</SfButton>
+                </div>
+                <div>
+                    <SfButton CssClass="e-danger" @onclick="Init">資料庫重新建立與資料初始化</SfButton>
+                </div>
+            </article>
+            <div>
+                @foreach (var msg in Messages)
+                {
+                    <div>@msg</div>
+                }
+            </div>
         </div>
         <div class="card mb-4">
             <div class="card-header bg-secondary text-white">
@@ -66,21 +99,21 @@
             </article>
         </div>
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-success text-white">
                 <span class="h2">取得密碼與SALT</span>
             </div>
             <article class="card-body bg-light">
                 <div>
                     <div class="form-row">
                         <div class="form-group col">
-                            <label class="control-label">帳號</label>
+                            <label class="control-label">新密碼</label>
                             <SfTextBox @bind-Value="NewPassword"
-                                       Placeholder="請輸入密碼" />
+                                   Placeholder="請輸入密碼" />
                         </div>
                     </div>
                 </div>
                 <div>
-                    <button class="btn btn-primary" @onclick="OnNewPassword">產生編碼密碼</button>
+                    <SfButton CssClass="e-primary" @onclick="OnNewPassword">產生編碼密碼</SfButton>
                 </div>
             </article>
             <div class="card-footer">
@@ -105,6 +138,9 @@
     public string NewPassword { get; set; } = "";
     public string Slat { get; set; }
     public string EncodePassword { get; set; }
+    public List<InitMode> InitializationModeSet { get; set; } = new();
+    public string InitializationMode { get; set; }
+    List<string> Messages = new();
 
     protected override void OnInitialized()
     {
@@ -114,18 +150,42 @@
             verified = true;
             verifyCode = Question.ToString();
         }
+        InitializationModeSet.Add(new InitMode() { Id = 1, Name = "開發模式" });
+        InitializationModeSet.Add(new InitMode() { Id = 2, Name = "正式模式" });
+        InitializationMode = InitializationModeSet[1].Name;
+    }
+    public async Task OutputJsonAsync()
+    {
+        this.VisibleProperty = true;
+        string jsonPath = Path.Combine(env.ContentRootPath, "InitData", "Default.json");
+        await Task.Delay(3000);
+        await ExportDataService.WriteToDirectoryAsync(jsonPath);
+        this.VisibleProperty = false;
     }
     public async Task InitDB()
     {
         this.VisibleProperty = true;
-        await DatabaseInitService.InitDBAsync();
+        BackgroundExecuteMode.IsInitialization = true;
+        await Task.Delay(1000);
+        string jsonPath = Path.Combine(env.ContentRootPath, "InitData", "Default.json");
+        await DatabaseInitService.InitDBAsync(jsonPath, UpdateMessage);
         this.VisibleProperty = false;
+        BackgroundExecuteMode.IsInitialization = false;
     }
     public async Task Init()
     {
+        Messages.Clear();
         this.VisibleProperty = true;
-        await DatabaseInitService.InitDataAsync();
+        BackgroundExecuteMode.IsInitialization = true;
+        await Task.Delay(3000);
+        await DatabaseInitService.InitDataAsync(InitializationMode, UpdateMessage);
         this.VisibleProperty = false;
+        BackgroundExecuteMode.IsInitialization = false;
+    }
+    void UpdateMessage(string message)
+    {
+        Messages.Add(message);
+        StateHasChanged();
     }
     void OnVerifyCode()
     {
@@ -134,7 +194,8 @@
             int verifyNumber = 0;
             int answer = 0;
             verifyNumber = Convert.ToInt32(verifyCode);
-            answer = 98765 - Question;
+            BackendInitializer BackendInitializerObject = BackendInitializer.Value;
+            answer = BackendInitializerObject.SeedNumber - Question;
             if (verifyNumber == answer)
             {
                 verified = true;
@@ -147,5 +208,11 @@
         Slat = Guid.NewGuid().ToString();
         EncodePassword =
         PasswordHelper.GetGodPasswordSHA(Slat, NewPassword);
+    }
+
+    public class InitMode
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

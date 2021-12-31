@@ -1,0 +1,195 @@
+﻿
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.25;
+    color: #495057;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+    .form-control::-ms-expand {
+        background-color: transparent;
+        border: 0;
+    }
+
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #80bdff;
+        outline: none;
+    }
+
+    .form-control::-webkit-input-placeholder {
+        color: #868e96;
+        opacity: 1;
+    }
+
+    .form-control:-ms-input-placeholder {
+        color: #868e96;
+        opacity: 1;
+    }
+
+    .form-control::placeholder {
+        color: #868e96;
+        opacity: 1;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef;
+        opacity: 1;
+    }
+
+select.form-control:not([size]):not([multiple]) {
+    height: calc(2.25rem + 2px);
+}
+
+select.form-control:focus::-ms-value {
+    color: #495057;
+    background-color: #fff;
+}
+
+.form-control-file,
+.form-control-range {
+    display: block;
+}
+
+.col-form-label {
+    padding-top: calc(0.5rem - 1px * 2);
+    padding-bottom: calc(0.5rem - 1px * 2);
+    margin-bottom: 0;
+}
+
+.col-form-label-lg {
+    padding-top: calc(0.5rem - 1px * 2);
+    padding-bottom: calc(0.5rem - 1px * 2);
+    font-size: 1.25rem;
+}
+
+.col-form-label-sm {
+    padding-top: calc(0.25rem - 1px * 2);
+    padding-bottom: calc(0.25rem - 1px * 2);
+    font-size: 0.875rem;
+}
+
+.col-form-legend {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.form-control-plaintext {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+    line-height: 1.25;
+    border: solid transparent;
+    border-width: 1px 0;
+}
+
+    .form-control-plaintext.form-control-sm, .input-group-sm > .form-control-plaintext.form-control,
+    .input-group-sm > .form-control-plaintext.input-group-addon,
+    .input-group-sm > .input-group-btn > .form-control-plaintext.btn, .form-control-plaintext.form-control-lg, .input-group-lg > .form-control-plaintext.form-control,
+    .input-group-lg > .form-control-plaintext.input-group-addon,
+    .input-group-lg > .input-group-btn > .form-control-plaintext.btn {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+.form-control-sm, .input-group-sm > .form-control,
+.input-group-sm > .input-group-addon,
+.input-group-sm > .input-group-btn > .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+select.form-control-sm:not([size]):not([multiple]), .input-group-sm > select.form-control:not([size]):not([multiple]),
+.input-group-sm > select.input-group-addon:not([size]):not([multiple]),
+.input-group-sm > .input-group-btn > select.btn:not([size]):not([multiple]) {
+    height: calc(1.8125rem + 2px);
+}
+
+.form-control-lg, .input-group-lg > .form-control,
+.input-group-lg > .input-group-addon,
+.input-group-lg > .input-group-btn > .btn {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+}
+
+select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.form-control:not([size]):not([multiple]),
+.input-group-lg > select.input-group-addon:not([size]):not([multiple]),
+.input-group-lg > .input-group-btn > select.btn:not([size]):not([multiple]) {
+    height: calc(2.3125rem + 2px);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-text {
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.form-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
+}
+
+    .form-row > .col,
+    .form-row > [class*="col-"] {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+.form-check {
+    position: relative;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+    .form-check.disabled .form-check-label {
+        color: #868e96;
+    }
+
+.form-check-label {
+    padding-left: 1.25rem;
+    margin-bottom: 0;
+}
+
+.form-check-input {
+    position: absolute;
+    margin-top: 0.25rem;
+    margin-left: -1.25rem;
+}
+
+    .form-check-input:only-child {
+        position: static;
+    }
+
+.form-check-inline {
+    display: inline-block;
+}
+
+    .form-check-inline .form-check-label {
+        vertical-align: middle;
+    }
+
+    .form-check-inline + .form-check-inline {
+        margin-left: 0.75rem;
+    }

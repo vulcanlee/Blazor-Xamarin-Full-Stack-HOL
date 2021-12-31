@@ -6,6 +6,7 @@
 @using Syncfusion.Blazor.Calendars
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
 
 @inject OrderMasterViewModel ViewModel
 @implements IRazorPage
@@ -48,8 +49,10 @@
                         HeaderText="出貨日期" Format="yyyy-MM-dd"
                          HideAtMedia="(min-width: 640px)"/>
             <GridColumn Field=@nameof(OrderMasterAdapterModel.StatusName) 
-                        HeaderText="狀態" />
-            <GridColumn HeaderText="命令" Width="150" TextAlign="@TextAlign.Center">
+                        HeaderText="狀態" 
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})" />
+            <GridColumn HeaderText="命令" Width="@MagicHelper.DataGrid3個命令寬度" TextAlign="@TextAlign.Center"
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameShowDetailOfMaster"
                                        ButtonOption="@(new CommandButtonOptions()
@@ -133,8 +136,8 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button type="submit" class="btn btn-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</button>
-                <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</button>
+                <SfButton type="submit" CssClass="e-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</SfButton>
+                <SfButton CssClass="e-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>
@@ -151,7 +154,7 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button class="btn btn-secondary" @onclick="()=> { ViewModel.IsShowMoreDetailsRecord = false; }">關閉</button>
+                <SfButton CssClass="e-secondary" @onclick="()=> { ViewModel.IsShowMoreDetailsRecord = false; }">關閉</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>
@@ -169,6 +172,7 @@
             Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
+<DataGridCss/>
 
 @code{
     SfGrid<OrderMasterAdapterModel> Grid;
@@ -198,10 +202,15 @@
     #endregion
 
     #region 頁面需要介面實作
-    public void NeedRefresh()
+    public async Task NeedRefreshAsync()
     {
-        InvokeAsync(() => { StateHasChanged(); });
+        await InvokeAsync(async () =>
+        {
+            await RenderDelayHelper.Delay();
+            StateHasChanged();
+        });
     }
+
     public async Task NeedInvokeAsync(System.Action action)
     {
         await InvokeAsync(action);

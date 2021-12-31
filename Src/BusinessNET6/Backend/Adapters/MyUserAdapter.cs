@@ -34,12 +34,19 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<MyUserAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
-            var item = dataManagerRequest.RequiresCounts
-                ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
-                : (object)adaptorModelObjects.Result;
-            await Task.Yield();
-            return item;
+            try
+            {
+                DataRequestResult<MyUserAdapterModel> adaptorModelObjects = await Service.GetAsync(dataRequest);
+                var item = dataManagerRequest.RequiresCounts
+                    ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
+                    : (object)adaptorModelObjects.Result;
+                await Task.Yield();
+                return item;
+            }
+            catch (Exception)
+            {
+                return new DataResult() { Result = new List<MyUserAdapterModel>(), Count = 0 };
+            }
             #endregion
         }
     }

@@ -224,7 +224,7 @@ namespace Backend.ViewModels
                         ErrorMessageMappingHelper.Instance.GetErrorMessage(checkedResult.MessageId),
                         MessageBox.HiddenAsync);
                     await Task.Yield();
-                    thisView.NeedRefresh();
+                    await thisView.NeedRefreshAsync();
                     return;
                 }
                 #endregion
@@ -233,7 +233,7 @@ namespace Backend.ViewModels
                 await Task.Yield();
                 var checkTask = ConfirmMessageBox.ShowAsync("400px", "200px", "警告",
                      "確認要刪除這筆紀錄嗎?", ConfirmMessageBox.HiddenAsync);
-                thisView.NeedRefresh();
+                await thisView.NeedRefreshAsync();
                 var checkAgain = await checkTask;
                 if (checkAgain == true)
                 {
@@ -276,7 +276,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告", 
                         VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
-                    thisView.NeedRefresh();
+                    await thisView.NeedRefreshAsync();
                     return;
                 }
             }
@@ -288,7 +288,7 @@ namespace Backend.ViewModels
                 {
                     MessageBox.Show("400px", "200px", "警告",
                         VerifyRecordResultHelper.GetMessageString(checkedResult), MessageBox.HiddenAsync);
-                    thisView.NeedRefresh();
+                    await thisView.NeedRefreshAsync();
                     return;
                 }
             }

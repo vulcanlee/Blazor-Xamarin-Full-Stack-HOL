@@ -16,9 +16,9 @@ namespace Domains.Models
 
         public int Id { get; set; }
         [Required(ErrorMessage = "名稱 不可為空白")]
-        public string Name { get; set; }
-        public string Remark { get; set; }
+        public string Name { get; set; } = String.Empty;
+        public string? Remark { get; set; }
 
-        public virtual ICollection<MenuData> MenuData { get; set; }
+        public ICollection<MenuData> MenuData { get; set; }
     }
 }

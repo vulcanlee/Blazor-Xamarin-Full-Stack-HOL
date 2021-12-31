@@ -4,6 +4,7 @@
 @using Syncfusion.Blazor.Popups
 @using Syncfusion.Blazor.Navigations
 @using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons
 
 @inject IProductService CurrentService
 
@@ -48,8 +49,8 @@
             </SfGrid>
         </Content>
         <FooterTemplate>
-            <button @onclick="@OnPickerOK" class='btn btn-primary'>確認</button>
-            <button @onclick="@OnPickerCancel" class='btn btn-secondary'>取消</button>
+            <SfButton @onclick="@OnPickerOK" CssClass='e-primary'>確認</SfButton>
+            <SfButton @onclick="@OnPickerCancel" CssClass='e-secondary'>取消</SfButton>
         </FooterTemplate>
     </DialogTemplates>
     <DialogPositionData X="center" Y="center"></DialogPositionData>
@@ -60,6 +61,7 @@
             Callback="x=>ShowMessageBox =false" />
 
 <DialogBackground />
+<DataGridCss/>
 
 @code{
     SfGrid<ProductAdapterModel> GridDialog;

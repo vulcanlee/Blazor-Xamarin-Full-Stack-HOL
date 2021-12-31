@@ -9,7 +9,7 @@ namespace BAL.Helpers
 {
     public static class PasswordHelper
     {
-        public static readonly string GodSalt版本 = "Version20210917";
+        public static readonly string GodSalt版本 = "Version20220102";
         public static string GetPasswordSHA(string salt, string password)
         {
             string assemblyPassword = $"{password}-{salt}@";

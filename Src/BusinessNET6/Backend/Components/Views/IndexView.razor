@@ -4,6 +4,7 @@
 @using System.Threading
 @using System.Diagnostics
 @using Microsoft.AspNetCore.Http
+@using Syncfusion.Blazor.Buttons
 
 @inject DatabaseInitService DatabaseInitService
 @inject BackendDBContext context
@@ -14,13 +15,12 @@
 @inject BlazorAppContext BlazorAppContext
 @inject IHttpContextAccessor httpContextAccessor
 
-@implements IDisposable
-
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Hosting
 @using Syncfusion.Blazor.Spinner
+@using Syncfusion.Blazor.Buttons
 
-<h1>Hello 你好, 超全端程式設計 Blazor 專案範本!</h1>
+<h1>Blazor Backend</h1>
 
 <div class="card mb-4">
     <div class="card-header bg-success text-white">
@@ -36,39 +36,8 @@
     </article>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header bg-dark text-white">
-        <span class="h3">專案原始碼</span>
-    </div>
-    <article class="card-body bg-light">
-        <div class="mb-4">
-            <a href="https://github.com/vulcanlee/Blazor-Xamarin-Full-Stack-HOL/" target="_blank"> Blazor 商業用專案範本 </a>
-        </div>
-        <div class="mb-4">
-            <a href="https://csharpkh.blogspot.com/" target="_blank"> 更多部落格文章 </a>
-        </div>
-        <div class="mb-4">
-            <a href="https://www.facebook.com/vulcanlabtw" target="_blank"> 歡迎加入 Xamarin Blazor 實驗室 粉絲團 </a>
-        </div>
-        <div class="">
-            <a href="https://www.facebook.com/groups/201660094303797" target="_blank"> 歡迎加入 Xamarin Blazor 討論社團 </a>
-        </div>
-    </article>
-</div>
-
-<div id="container">
-    <SfSpinner @bind-Visible="@VisibleProperty">
-    </SfSpinner>
-</div>
-
-
 @code {
-    private bool VisibleProperty { get; set; } = false;
-    string authMessage = "";
-    string userId = "";
     string versionNumber = "";
-    string EmergenceDebugMessage = "";
-    CancellationTokenSource cts;
     string IP;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -76,55 +45,14 @@
         if (firstRender)
         {
             IP = httpContextAccessor.GetConnectionIP();
-            cts = new CancellationTokenSource();
-            bool EmergenceDebugStatus = Convert
-                .ToBoolean(configuration[AppSettingHelper.EmergenceDebug]);
-            EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
             Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
             versionNumber = version.ToString();
 
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user.Identity.IsAuthenticated)
-            {
-                authMessage = $"現在登入的使用者為 {user.Identity.Name}";
-                IEnumerable<Claim> _claims = user.Claims;
-                userId =
-                $"該使用者在資料庫內的 Id 為: {user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value}";
-            }
-            else
-            {
-                authMessage = "沒有任何使用者登入";
-                userId = "";
-            }
-
-            #region 測試緊急除錯功能
-            if (EmergenceDebugStatus == true)
-            {
-                var users = await context.MyUser.ToListAsync();
-            }
-            #endregion
             StateHasChanged();
         }
     }
     protected override async Task OnInitializedAsync()
     {
         await Task.Yield();
-    }
-    public async Task Init()
-    {
-        this.VisibleProperty = true;
-        await DatabaseInitService.InitDataAsync();
-        this.VisibleProperty = false;
-    }
-    void StopMeasureRTT()
-    {
-        cts.Cancel();
-    }
-    void IDisposable.Dispose()
-    {
-        if (cts != null)
-            cts.Cancel();
     }
 }

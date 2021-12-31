@@ -1,7 +1,0 @@
-﻿@page "/FlowInbox"
-@attribute [Authorize(Roles = "FlowInbox")]
-
-<div>
-    <div class="page-title">@BAL.Helpers.MagicHelper.簽核收件匣</div>
-    <FlowInboxView PageSize="@MagicHelper.GridPageSize" />
-</div>

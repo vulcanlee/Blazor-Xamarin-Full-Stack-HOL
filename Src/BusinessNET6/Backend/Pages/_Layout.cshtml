@@ -9,16 +9,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/customMyColor.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
+    <link href="css/constantColor.css" rel="stylesheet" />
     <link href="css/customSite.css" rel="stylesheet" />
+    <link href="css/bs4Forms.css" rel="stylesheet" />
     <link href="Backend.styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/bootstrap5.css" />
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/bootstrap5.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/bootstrap5-dark.css" />*@
+    <link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/material.css" />
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/material-dark.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/tailwind.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/tailwind-dark.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/fabric.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/fabric-dark.css" />*@
     <link rel="stylesheet" href="fonts/MaterialDesign/css/materialdesignicons.min.css">
     <script src="JavaScript/ping.js"></script>
-    <component type="typeof(HeadOutlet)" render-mode="Server" />
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
-@*    <environment include="Staging,Production">
+    <environment include="Staging,Production">
         <div id="components-reconnect-modal" class="my-reconnect-modal components-reconnect-hide">
             <div class="show">
                 <p>
@@ -64,7 +74,7 @@
             </div>
         </div>
     </environment>
-*@
+
     @RenderBody()
 
     <environment include="Staging,Production">

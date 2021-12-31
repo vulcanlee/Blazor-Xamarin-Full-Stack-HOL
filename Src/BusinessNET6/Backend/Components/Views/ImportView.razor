@@ -1,6 +1,8 @@
 ﻿@using Syncfusion.Blazor.Inputs
 @using Microsoft.Extensions.Logging
 @using Prism.Events
+@using Syncfusion.Blazor.Buttons
+
 @inject ImportDataHelper DataHelper
 @inject ILogger<ImportView> Loggr
 @inject IEventAggregator EventAggregator
@@ -20,7 +22,7 @@
 {
     <div>
         <div>
-            <button class="btn btn-primary" @onclick="ImportAsync">開始匯入 @DataHelper.ImportName</button>
+            <SfButton CssClass="e-primary" @onclick="ImportAsync">開始匯入 @DataHelper.ImportName</SfButton>
         </div>
         <div class="display-4 text-danger">
             @Message

@@ -5,6 +5,7 @@
 @using System.Diagnostics
 @using Microsoft.AspNetCore.Http
 @using Prism.Events
+@using Syncfusion.Blazor.Buttons
 
 @inject DatabaseInitService DatabaseInitService
 @inject BackendDBContext context
@@ -54,14 +55,14 @@
         <div>
             <div>@latency ms</div>
             <div>
-                <button class="btn btn-dark"
+                <SfButton CssClass="e-dark"
                         @onclick="MeasureRTT">
                     開始量測
-                </button>
-                <button class="btn btn-dark"
+                </SfButton>
+                <SfButton CssClass="e-dark"
                         @onclick="StopMeasureRTT">
                     結束量測
-                </button>
+                </SfButton>
             </div>
         </div>
     </article>
@@ -90,7 +91,7 @@
     </div>
     <article class="card-body bg-light">
         <div>
-            <button class="btn btn-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</button>
+            <SfButton CssClass="e-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</SfButton>
         </div>
     </article>
 </div>
@@ -145,12 +146,6 @@
     protected override async Task OnInitializedAsync()
     {
         await Task.Yield();
-    }
-    public async Task Init()
-    {
-        this.VisibleProperty = true;
-        await DatabaseInitService.InitDataAsync();
-        this.VisibleProperty = false;
     }
     void StopMeasureRTT()
     {

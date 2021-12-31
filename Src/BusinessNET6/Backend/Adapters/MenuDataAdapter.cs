@@ -37,20 +37,27 @@
             #endregion
 
             #region 發出查詢要求
-            DataRequestResult<MenuDataAdapterModel> adaptorModelObjects;
-            if (HeaderID == -1)
+            try
             {
-                adaptorModelObjects = await Service.GetAsync(dataRequest);
+                DataRequestResult<MenuDataAdapterModel> adaptorModelObjects;
+                if (HeaderID == -1)
+                {
+                    adaptorModelObjects = await Service.GetAsync(dataRequest);
+                }
+                else
+                {
+                    adaptorModelObjects = await Service.GetByHeaderIDAsync(HeaderID, dataRequest);
+                }
+                var item = dataManagerRequest.RequiresCounts
+                    ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
+                    : (object)adaptorModelObjects.Result;
+                await Task.Yield();
+                return item;
             }
-            else
+            catch (Exception)
             {
-                adaptorModelObjects = await Service.GetByHeaderIDAsync(HeaderID, dataRequest);
+                return new DataResult() { Result = new List<MenuDataAdapterModel>(), Count = 0 };
             }
-            var item = dataManagerRequest.RequiresCounts
-                ? new DataResult() { Result = adaptorModelObjects.Result, Count = adaptorModelObjects.Count }
-                : (object)adaptorModelObjects.Result;
-            await Task.Yield();
-            return item;
             #endregion
         }
     }

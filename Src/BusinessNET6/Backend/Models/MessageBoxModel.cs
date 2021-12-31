@@ -43,10 +43,7 @@ namespace Backend.Models
                         {
                             if (messageCallbackDelegate != null)
                                 await messageCallbackDelegate();
-                            await RazorPage.NeedInvokeAsync(() =>
-                            {
-                                RazorPage.NeedRefresh();
-                            });
+                            await RazorPage.NeedRefreshAsync();
                             break;
                         }
                         await Task.Delay(500);
@@ -79,10 +76,7 @@ namespace Backend.Models
                         {
                             if (messageCallbackDelegate != null)
                                 await messageCallbackDelegate();
-                            await RazorPage.NeedInvokeAsync(() =>
-                            {
-                                RazorPage.NeedRefresh();
-                            });
+                            await RazorPage.NeedRefreshAsync();
                             break;
                         }
                         await Task.Delay(500);

@@ -1,5 +1,20 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+
+.page-title {
+    border-radius: 5px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    padding: 3px 15px;
+    background-color: #d2d6de;
+    font-weight: bold;
+    color: #5e5e5e;
+}
+
+.menu-title {
+    padding: 0px 0px 0px 10px !important;
+}
+
 .cardcenter {
     margin: 0 auto; /* Added */
     float: none; /* Added */
@@ -25,9 +40,10 @@
     position: fixed;
     overflow-y: scroll;
     height: 100%;
-    width: 250px;
+    width: var(--fixSidebar-width);
     -ms-overflow-style: none; /* IE and Edge */
 }
+
     .fixSidebar::-webkit-scrollbar {
         display: none;
     }
@@ -73,14 +89,69 @@
 .components-reconnect-refused > .refused {
     display: block;
 }
-﻿.confirm-box-width {
+
+.confirm-box-width {
 }
-﻿.message-box-width {
+
+.message-box-width {
 }
 
 .cursor-pointer {
     cursor: pointer;
 }
+
+.layout-theme-top-background {
+    background-color: var(--layout-theme-top-background-color) !important;
+}
+
+.layout-theme-top-textColor {
+    color: var(--layout-theme-top-textColor-color) !important;
+}
+
+.layout-theme-left-top-background {
+    background-color: var(--layout-theme-left-top-background-color) !important;
+}
+
+.layout-theme-left-top-textColor {
+    color: var(--layout-theme-left-top-textColor-color) !important;
+}
+
+.layout-theme-left-background {
+    background-color: var(--layout-theme-left-background-color) !important;
+}
+
+.layout-theme-left-textColor {
+    color: var(--layout-theme-left-textColor-color) !important;
+}
+
+.layout-theme-main-background {
+    background-color: var(--layout-theme-main-background-color);
+}
+
+.layout-theme-main-footer-background {
+    background-color: var(--layout-theme-main-footer-background-color) !important;
+    color: var(--layout-theme-main-footer-text-color);
+}
+
+.submenu-item-offset{
+    margin-left:12px;
+}
+
+.layout-main-app-name {
+    text-align: center;
+    margin-left: -20px;
+    width: var(--fixSidebar-width);
+    font-weight: bold;
+}
+
+.clicked {
+    background-color: var(--menu-clicked-color);
+    border-right: solid 8px var(--menu-clicked-color-border-right);
+}
+
+    .clicked span {
+        color: var(--menu-clicked-span-color) !important;
+    }
 
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -94,6 +165,10 @@
 
 .flow-acton-icon {
     display: inline-block;
+}
+
+.command-icon-width {
+    width: 18px !important;
 }
 
 @media (max-width: 640px) {
@@ -118,7 +193,7 @@
         position: initial;
         /*overflow-y: initial;*/
         height: 100%;
-        width: 100vw ;
+        width: 100vw;
         -ms-overflow-style: initial; /* IE and Edge */
     }
 
@@ -129,14 +204,14 @@
     .cardcenter {
         width: 20rem;
     }
+
     .parentFullWidth {
-        max-width: 100vw;
+        max-width: calc(100vw);
     }
-/*    #My-ConfirmBox {
-        max-width: 90vw;
+
+    .layout-main-app-name {
+        text-align: start;
+        margin-left: 70px;
+        margin-top:-40px;
     }
-    #My-MessageBox {
-        max-width: 90vw;
-    }
-*/
 }

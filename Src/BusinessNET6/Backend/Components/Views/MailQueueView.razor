@@ -5,6 +5,7 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
 
 @inject MailQueueViewModel ViewModel
 @implements IRazorPage
@@ -54,10 +55,12 @@
                         HeaderText="建立時間" Format="yyyyMMdd HHmmss"
                         HideAtMedia="(min-width: 640px)" />
             <GridColumn Field=@nameof(MailQueueAdapterModel.StatusName)
-                        HeaderText="狀態" />
+                        HeaderText="狀態" 
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})" />
             <GridColumn Field=@nameof(MailQueueAdapterModel.SendTimes)
                         HeaderText="次數" />
-            <GridColumn HeaderText="命令" Width="110" TextAlign="@TextAlign.Center">
+            <GridColumn HeaderText="命令" Width="@MagicHelper.DataGrid2個命令寬度" TextAlign="@TextAlign.Center"
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
                 <GridCommandColumns>
                     <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
                                        ButtonOption="@(new CommandButtonOptions()
@@ -144,7 +147,7 @@
         </Content>
         <FooterTemplate>
             <div>
-                <button class="btn btn-secondary" @onclick="ViewModel.OnRecordEditCancel">關閉</button>
+                <SfButton CssClass="e-secondary" @onclick="ViewModel.OnRecordEditCancel">關閉</SfButton>
             </div>
         </FooterTemplate>
     </DialogTemplates>
@@ -162,6 +165,7 @@
             Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
 
 <DialogBackground />
+<DataGridCss/>
 
 @code{
     SfGrid<MailQueueAdapterModel> Grid;
@@ -191,10 +195,15 @@
     #endregion
 
     #region 頁面需要介面實作
-    public void NeedRefresh()
+    public async Task NeedRefreshAsync()
     {
-        InvokeAsync(() => { StateHasChanged(); });
+        await InvokeAsync(async () =>
+        {
+            await RenderDelayHelper.Delay();
+            StateHasChanged();
+        });
     }
+
     public async Task NeedInvokeAsync(System.Action action)
     {
         await InvokeAsync(action);

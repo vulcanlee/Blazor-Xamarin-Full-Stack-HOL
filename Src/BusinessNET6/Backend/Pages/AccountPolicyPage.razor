@@ -1,0 +1,14 @@
+﻿@page "/AccoutnPolicy"
+@attribute [Authorize(Roles = "AccoutnPolicy")]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.帳號密碼政策</div>
+    <AccountPolicyView />
+</div>
+
+@code {
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.帳號密碼政策);
+}

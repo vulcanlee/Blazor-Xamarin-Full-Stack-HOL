@@ -25,7 +25,7 @@ namespace Backend.Pages
 
         public NeedChangePasswordModel(IMyUserService myUserService, ILogger<NeedChangePasswordModel> logger,
             SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor,
-            ISystemEnvironmentService systemEnvironmentService, IChangePasswordService changePasswordService)
+            IAccountPolicyService AccountPolicyService, IChangePasswordService changePasswordService)
         {
 #if DEBUG
             NewPassword = "";
@@ -36,7 +36,7 @@ namespace Backend.Pages
             this.logger = logger;
             SystemLogHelper = systemLogHelper;
             HttpContextAccessor = httpContextAccessor;
-            SystemEnvironmentService = systemEnvironmentService;
+            AccountPolicyService = AccountPolicyService;
             this.changePasswordService = changePasswordService;
         }
         [BindProperty]
@@ -55,8 +55,8 @@ namespace Backend.Pages
         public string ReturnUrl { get; set; }
         public SystemLogHelper SystemLogHelper { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
-        public ISystemEnvironmentService SystemEnvironmentService { get; }
-        SystemEnvironmentAdapterModel systemEnvironmentAdapterModel = null;
+        public IAccountPolicyService AccountPolicyService { get; }
+        AccountPolicyAdapterModel AccountPolicyAdapterModel = null;
         public async Task OnGetAsync()
         {
             await GetPasswordHint();
@@ -68,18 +68,18 @@ namespace Backend.Pages
         }
         public async Task GetPasswordHint()
         {
-            if (systemEnvironmentAdapterModel == null)
+            if (AccountPolicyAdapterModel == null)
             {
-                systemEnvironmentAdapterModel =
-                    await SystemEnvironmentService.GetAsync();
+                AccountPolicyAdapterModel =
+                    await AccountPolicyService.GetAsync();
             }
-            PasswordStrength passwordStrength = (PasswordStrength)systemEnvironmentAdapterModel.PasswordComplexity;
+            PasswordStrength passwordStrength = (PasswordStrength)AccountPolicyAdapterModel.PasswordComplexity;
             PasswordHint = PasswordCheck.PasswordHint(passwordStrength);
         }
         public async Task<IActionResult> OnPostAsync()
         {
             await GetPasswordHint();
-            PasswordStrength passwordStrength = (PasswordStrength)systemEnvironmentAdapterModel.PasswordComplexity;
+            PasswordStrength passwordStrength = (PasswordStrength)AccountPolicyAdapterModel.PasswordComplexity;
 
             ClaimsPrincipal claimsPrincipal = HttpContextAccessor.HttpContext.User;
             if (claimsPrincipal.Identity.IsAuthenticated == false)

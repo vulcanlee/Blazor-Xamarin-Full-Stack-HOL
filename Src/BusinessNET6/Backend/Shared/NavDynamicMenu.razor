@@ -4,20 +4,24 @@
 @inject IJSRuntime JSRuntime;
 @inject CurrentUser CurrentUser
 
-<div class="top-row pl-4 navbar navbar-dark">
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="">@BAL.Helpers.MagicHelper.MenuMainTitle</a>
+<div class="top-row pl-4 navbar navbar-dark layout-theme-left-top-background">
+    <div class="menu-title @NavMenuCenterCssClass">
+        <div>
+            <button class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="navbar-brand layout-theme-left-top-textColor layout-main-app-name" href="">@BAL.Helpers.MagicHelper.MenuMainTitle</div>
+    </div>
 </div>
 
 <div class="@NavMenuCssClass">
-    <div class="fixSidebar">
+    <div class="fixSidebar layout-theme-left-background">
 
         @if (mainMenus.Count == 0)
         {
             <div class="h-100 d-flex align-items-center justify-content-center">
-                <span class="mdi mdi-48px mdi-spin mdi-reload m-4 text-white" />
+                <span class="mdi mdi-48px mdi-spin mdi-reload m-4 layout-theme-left-textColor" />
             </div>
         }
         else
@@ -30,8 +34,8 @@
                     {
                         <li class="@currentMenuData.MenuClass nav-item px-3">
                             <div @onclick="async () => {await MenuDataClickedAsync(currentMenuData); }" class="noselect">
-                                <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
-                                <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                <span class="layout-theme-left-textColor">@currentMenuData.MenuData.Name</span>
                             </div>
                         </li>
                     }
@@ -41,8 +45,8 @@
                         {
                             <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
                                 <div @onclick="async () => {await MenuDataClickedAsync(currentMenuData); }">
-                                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
-                                    <span class="text-white">@currentMenuData.MenuData.Name</span>
+                                    <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="layout-theme-left-textColor">@currentMenuData.MenuData.Name</span>
                                 </div>
                             </li>
                         }
@@ -60,9 +64,9 @@
                                                        currentMenuData.ExpandIcon="mdi mdi-18px mdi-chevron-right";
                                                    }
                                        }'>
-                                    <span class="text-white mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
-                                    <span class="text-white">@currentMenuData.MenuData.Name</span>
-                                    <span class="text-white text-right @currentMenuData.ExpandIcon"></span>
+                                    <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="layout-theme-left-textColor">@currentMenuData.MenuData.Name</span>
+                                    <span class="layout-theme-left-textColor text-right @currentMenuData.ExpandIcon"></span>
                                 </div>
                             </li>
                             if (currentMenuData.IsExpand)
@@ -70,10 +74,10 @@
                                 foreach (var itemSub in item.SubMenus)
                                 {
                                     var currentSubMenuData = itemSub;
-                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 ml-3 noselect">
+                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 submenu-item-offset noselect">
                                         <div @onclick="async ()=> { await SubMenuDataClickedAsync(currentSubMenuData); }">
-                                            <span class="text-white mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
-                                            <span class="text-white">@currentSubMenuData.MenuData.Name</span>
+                                            <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
+                                            <span class="layout-theme-left-textColor">@currentSubMenuData.MenuData.Name</span>
                                         </div>
                                     </li>
                                 }
@@ -92,6 +96,7 @@
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCenterCssClass => collapseNavMenu ? "" : "";
     List<MainMenu> mainMenus = new List<MainMenu>();
 
     private void ToggleNavMenu()

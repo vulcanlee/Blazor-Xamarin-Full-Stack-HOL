@@ -28,11 +28,11 @@ namespace Backend.Pages
     {
         private readonly IMyUserService myUserService;
         private readonly ILogger<LoginModel> logger;
-        private readonly ISystemEnvironmentService systemEnvironmentService;
+        private readonly IAccountPolicyService AccountPolicyService;
 
         public LoginModel(IMyUserService myUserService, ILogger<LoginModel> logger,
             SystemLogHelper systemLogHelper, IHttpContextAccessor httpContextAccessor,
-            ISystemEnvironmentService systemEnvironmentService)
+            IAccountPolicyService AccountPolicyService)
         {
 #if DEBUG
             Username = "god";
@@ -43,7 +43,7 @@ namespace Backend.Pages
             this.logger = logger;
             SystemLogHelper = systemLogHelper;
             HttpContextAccessor = httpContextAccessor;
-            this.systemEnvironmentService = systemEnvironmentService;
+            this.AccountPolicyService = AccountPolicyService;
         }
         [BindProperty]
         public string Username { get; set; } = "";
@@ -81,7 +81,7 @@ namespace Backend.Pages
         public async Task<IActionResult> OnPostAsync()
         {
             Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
-            SystemEnvironmentAdapterModel systemEnvironmentAdapterModel = await systemEnvironmentService.GetAsync();
+            AccountPolicyAdapterModel AccountPolicyAdapterModel = await AccountPolicyService.GetAsync();
             bool checkPreLoginData = true;
             if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password) ||
                 string.IsNullOrEmpty(Username.Trim()) || string.IsNullOrEmpty(Password.Trim()))
@@ -144,7 +144,7 @@ namespace Backend.Pages
                         #endregion
                     }
 
-                    if (systemEnvironmentAdapterModel.EnableLoginFailDetection)
+                    if (AccountPolicyAdapterModel.EnableLoginFailDetection)
                     {
                         if (accUser.LoginFailUnlockDatetime > DateTime.Now)
                         {

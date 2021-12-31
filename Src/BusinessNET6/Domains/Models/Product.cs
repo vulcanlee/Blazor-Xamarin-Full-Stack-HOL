@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 #nullable disable
@@ -15,6 +16,7 @@ namespace Domains.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public short ModelYear { get; set; }
+        [Precision(precision: 10, scale: 2)]
         public decimal ListPrice { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }

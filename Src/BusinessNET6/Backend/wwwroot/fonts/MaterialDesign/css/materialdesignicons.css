@@ -23443,8 +23443,16 @@
   visibility: hidden;
 }
 
+.mdi-12px.mdi-set, .mdi-12px.mdi:before {
+    font-size: 12px;
+}
+
+.mdi-15px.mdi-set, .mdi-15px.mdi:before {
+    font-size: 15px;
+}
+
 .mdi-18px.mdi-set, .mdi-18px.mdi:before {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .mdi-24px.mdi-set, .mdi-24px.mdi:before {

@@ -107,7 +107,7 @@
                                         Color = "Green",
 
                                     });
-                                    await Task.Delay(5000);
+                                    await Task.Delay(5000,cts.Token);
                                     NavigationManager.NavigateTo("/Logout", true);
                                     IsRunning = false;
                                     continue;

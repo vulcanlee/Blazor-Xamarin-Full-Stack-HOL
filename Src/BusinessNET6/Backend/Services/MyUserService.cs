@@ -396,13 +396,13 @@ namespace Backend.Services
 
                 if (user.Password != shaPassword)
                 {
-                    var systemEnvironment = await context.SystemEnvironment
+                    var AccountPolicy = await context.AccountPolicy
                         .OrderBy(x => x.Id).FirstOrDefaultAsync();
                     user.LoginFailTimes++;
-                    if (user.LoginFailTimes >= systemEnvironment.LoginFailMaxTimes)
+                    if (user.LoginFailTimes >= AccountPolicy.LoginFailMaxTimes)
                     {
                         user.LoginFailUnlockDatetime = DateTime
-                            .Now.AddMinutes(systemEnvironment.LoginFailTimesLockMinutes);
+                            .Now.AddMinutes(AccountPolicy.LoginFailTimesLockMinutes);
                     }
 
                     context.MyUser.Update(user);
