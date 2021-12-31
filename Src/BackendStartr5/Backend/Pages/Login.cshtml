@@ -1,0 +1,116 @@
+﻿@page
+@model Backend.Pages.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "身分驗證";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>請進行 身分驗證</title>
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/customSite.css" rel="stylesheet" />
+    <link rel="stylesheet" href="fonts/MaterialDesign/css/materialdesignicons.min.css">
+    <style>
+        .centered {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+        }
+        .btn-38px{
+            height:38px;
+        }
+    </style>
+</head>
+<body>
+    <div class="centered">
+        <div class="">
+            <div class="card cardcenter">
+                <div class="card-header">
+                    <span class="h2">超全端 Blazor 專案範本</span>
+                </div>
+                <article class="card-body">
+                    <h4 class="card-title text-center mb-4 mt-1">請輸入帳號與密碼</h4>
+                    <hr>
+                    <p class="text-danger text-center">@Model.Msg</p>
+                    <form method="post" autocomplete="off" id="loginForm">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mdi mdi-18px mdi-account"> </span>
+                                </div>
+                                <input class="form-control m-auto" autocomplete="off"
+                                       asp-for="Username" placeholder="使用者的帳號">
+                            </div>
+                        </div> <!-- form-group// -->
+
+                        <div class="form-group mt-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text mdi mdi-18px mdi-shield-lock"> </span>
+                                </div>
+                                <input class="form-control m-auto" autocomplete="off"
+                                       asp-for="Password" placeholder="使用者的密碼" type="@Model.PasswordType">
+                            </div>
+                        </div> <!-- form-group// -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text mdi mdi-18px mdi-shield-key"> </span>
+                                        </div>
+                                        <input class="form-control m-auto" asp-for="Captcha" value="@Model.Captcha" placeholder="驗證碼" autocomplete="off">
+                                        <input type="hidden" asp-for="CaptchaOrigin" value="@Model.CaptchaOrigin" />
+                                        <button asp-page-handler="RefreshCode" class="btn btn-link btn-38px p-0 mx-2"><i class="mdi mdi-refresh mdi-24px"></i></button>
+                                        <img class="captcha align-middle btn-38px" src="@Model.CaptchaImage" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mt-2">
+                                <div class="form-group ">
+                                    <button type="submit" asp-page-handler="" class="btn btn-primary btn-block text-center"> 登入  </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </article>
+                <div class="card-footer">
+                    <div class="">
+                        <div class="text-success">
+                            系統開發者帳密 : god / 123
+                        </div>
+                        <div class="text-success">
+                            管理者帳密 : admin / 123
+                        </div>
+                        <div class="text-success">
+                            一般使用者帳密 : user1~4 / 123
+                        </div>
+                    </div>
+                    <div class="mb-2"><a href="https://csharpkh.blogspot.com/">Vulcan Lee</a></div>
+                    <div>版本 @Model.Version</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        window.document.onkeydown = CheckEnter;
+        function CheckEnter() {
+            if (event.keyCode == 13)
+                return false;
+            return true;
+        }
+    </script>
+</body>
+</html>

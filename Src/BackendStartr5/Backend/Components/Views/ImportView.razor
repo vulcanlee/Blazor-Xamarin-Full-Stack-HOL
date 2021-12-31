@@ -1,0 +1,64 @@
+﻿@using Syncfusion.Blazor.Inputs
+@using Microsoft.Extensions.Logging
+@using Prism.Events
+@using Syncfusion.Blazor.Buttons
+
+@inject ImportDataHelper DataHelper
+@inject ILogger<ImportView> Loggr
+@inject IEventAggregator EventAggregator
+
+<div class="page-title">Excel 資料匯入</div>
+
+<div class="form-row">
+    <div class="form-group col">
+        <label class="control-label">上傳檔案</label>
+        <SfUploader @ref="upload1" AutoUpload="true"
+                    AllowedExtensions=".xls, .xlsx">
+            <UploaderEvents ValueChange="UploaderChange"></UploaderEvents>
+        </SfUploader>
+    </div>
+</div>
+@if (DataHelper.IsLoad)
+{
+    <div>
+        <div>
+            <SfButton CssClass="e-primary" @onclick="ImportAsync">開始匯入 @DataHelper.ImportName</SfButton>
+        </div>
+        <div class="display-4 text-danger">
+            @Message
+        </div>
+        <div class="text-primary">
+            @ProcessingLog
+        </div>
+    </div>
+}
+@code {
+    SfUploader upload1;
+    string Message = "";
+    string ProcessingLog = "";
+
+    public async Task UploaderChange(UploadChangeEventArgs args)
+    {
+        DataHelper.IsLoad = false;
+        if (args.Files.Count > 0)
+        {
+            await DataHelper.GetUploadFileAsync(args.Files[0].Stream);
+        }
+        await upload1.ClearAll();
+    }
+    public async Task ImportAsync()
+    {
+        DataHelper.ShowStatusHandler = null;
+        DataHelper.ShowStatusHandler = (x) =>
+        {
+            InvokeAsync(() =>
+            {
+                ProcessingLog = x;
+                StateHasChanged();
+            });
+        };
+        Message = "匯入中，請稍後";
+        await DataHelper.ImportAsync();
+        Message = "";
+    }
+}

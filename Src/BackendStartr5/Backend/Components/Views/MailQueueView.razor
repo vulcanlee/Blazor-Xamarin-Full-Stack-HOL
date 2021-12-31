@@ -1,0 +1,225 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+
+@inject MailQueueViewModel ViewModel
+@implements IRazorPage
+@implements IDataGrid
+
+<div>
+    <SfGrid @ref="Grid" TValue="MailQueueAdapterModel"
+            AllowPaging="true" class="parentFullWidth"
+            Toolbar="ViewModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <MailQueueAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"
+                              CurrentMailQueueStatusCondition="@ViewModel.CurrentMailQueueStatusCondition" ></MailQueueAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                        <span class="ml-4 mr-2 mdi mdi-18px mdi-gamepad-circle-left" />
+                        <SfDropDownList TValue="int" TItem="MailQueueStatusCondition"
+                                        @bind-Value="@ViewModel.FilterMailQueueStatusCondition"
+                                        Placeholder="派工單狀態"
+                                        DataSource="@ViewModel.MailQueueStatusConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="MailQueueStatusCondition"
+                                                ValueChange="@ViewModel.MailQueueStatusChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="MailQueueAdapterModel"
+                    OnToolbarClick="ViewModel.ToolbarClickHandler" />
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(MailQueueAdapterModel.Subject)
+                        HeaderText="主旨" />
+            <GridColumn Field=@nameof(MailQueueAdapterModel.CreatedAt)
+                        HeaderText="建立時間" Format="yyyyMMdd HHmmss"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(MailQueueAdapterModel.SendedAt)
+                        HeaderText="建立時間" Format="yyyyMMdd HHmmss"
+                        HideAtMedia="(min-width: 640px)" />
+            <GridColumn Field=@nameof(MailQueueAdapterModel.StatusName)
+                        HeaderText="狀態" 
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})" />
+            <GridColumn Field=@nameof(MailQueueAdapterModel.SendTimes)
+                        HeaderText="次數" />
+            <GridColumn HeaderText="命令" Width="@MagicHelper.DataGrid2個命令寬度" TextAlign="@TextAlign.Center"
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
+                <GridCommandColumns>
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameDelete"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<SfDialog @bind-Visible="@ViewModel.IsShowEditRecord" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@ViewModel.EditRecordDialogTitle</Header>
+        <Content>
+            <div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">收件者</label>
+                        <div>
+                            ViewModel.CurrentRecord.To
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">主旨</label>
+                        <div>
+                            ViewModel.CurrentRecord.Subject
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">內容</label>
+                        <div>
+                            ViewModel.CurrentRecord.Body
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">建立時間</label>
+                        <div>
+                            ViewModel.CurrentRecord.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss");
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">送出時間</label>
+                        <div>
+                            ViewModel.CurrentRecord.CreatedAt?.ToString("yyyy-MM-dd HH:mm:ss");
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">狀態</label>
+                        <div>
+                            ViewModel.CurrentRecord.StatusName
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="control-label">次數</label>
+                        <div>
+                            ViewModel.CurrentRecord.SendTimes
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </Content>
+        <FooterTemplate>
+            <div>
+                <SfButton CssClass="e-secondary" @onclick="ViewModel.OnRecordEditCancel">關閉</SfButton>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
+            IsVisible="@ViewModel.MessageBox.IsVisible"
+            Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
+            Callback="ViewModel.MessageBox.MessageDelegate" />
+
+<ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
+            IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
+            Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
+            Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
+
+<DialogBackground />
+<DataGridCss/>
+
+@code{
+    SfGrid<MailQueueAdapterModel> Grid;
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    [Parameter]
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+    [Parameter]
+    public EventCallback<object> OnViewRender { get; set; }
+
+    #region 生命週期事件
+    protected override void OnInitialized()
+    {
+        ViewModel.Setup(this, this);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            ViewModel.Setup(this, this);
+        }
+        if (OnViewRender.HasDelegate)
+        {
+            await OnViewRender.InvokeAsync(null);
+        }
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public async Task NeedRefreshAsync()
+    {
+        await InvokeAsync(async () =>
+        {
+            await RenderDelayHelper.Delay();
+            StateHasChanged();
+        });
+    }
+
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    public void RefreshGrid()
+    {
+        Grid?.Refresh();
+    }
+    public bool GridIsExist()
+    {
+        return Grid == null ? false : true;
+    }
+    public Task InvokeGridAsync(string actionName)
+    {
+        return Task.CompletedTask;
+    }
+    #endregion
+
+}

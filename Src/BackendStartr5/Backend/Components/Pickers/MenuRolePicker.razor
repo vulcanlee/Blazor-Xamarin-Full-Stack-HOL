@@ -1,0 +1,135 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Buttons
+
+@inject IMenuRoleService CurrentService
+
+<SfDialog @bind-Visible="@OpenPicker" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@DialogTitle</Header>
+        <Content>
+            <SfGrid @ref="GridDialog" TValue="MenuRoleAdapterModel"
+                    AllowPaging="true"
+                    Toolbar="Toolbaritems">
+                <SfToolbar>
+                    <ToolbarItems>
+                        <ToolbarItem Type="ItemType.Input">
+                            <Template>
+                                <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                                <SfDropDownList TValue="int" TItem="SortCondition"
+                                                Placeholder="選擇排序條件" DataSource="@SortConditions">
+                                    <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                                    <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@SortChanged"></DropDownListEvents>
+                                </SfDropDownList>
+                            </Template>
+                        </ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
+                <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+                    <MenuRoleAdapter CurrentSortCondition="@CurrentSortCondition"></MenuRoleAdapter>
+                </SfDataManager>
+                <GridSelectionSettings Type="@Syncfusion.Blazor.Grids.SelectionType.Single"></GridSelectionSettings>
+                <GridEvents RowSelected="GetSelectedRecords" TValue="MenuRoleAdapterModel"
+                            OnToolbarClick="ToolbarClickHandler" />
+                <GridPageSettings PageSize="8"></GridPageSettings>
+                <GridSearchSettings Fields="@(new string[] { "Name"})"
+                                    Operator=Syncfusion.Blazor.Operator.Contains IgnoreCase="true" />
+                <GridColumns>
+                    <GridColumn Field=@nameof(MenuRoleAdapterModel.Name) HeaderText="名稱"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </Content>
+        <FooterTemplate>
+            <SfButton @onclick="@OnPickerOK" CssClass='e-primary'>確認</SfButton>
+            <SfButton @onclick="@OnPickerCancel" CssClass='e-secondary'>取消</SfButton>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<MessageBox Height="400" Width="600" IsVisible="@ShowMessageBox"
+            Title="@MessageBoxTitle" Message="@MessageBoxBody"
+            Callback="x=>ShowMessageBox =false" />
+
+<DialogBackground />
+<DataGridCss/>
+
+@code{
+    SfGrid<MenuRoleAdapterModel> GridDialog;
+    public List<object> Toolbaritems = new List<object>();
+    [Parameter]
+    public bool OpenPicker { get; set; } = false;
+    string DialogTitle = "請選取紀錄";
+    MenuRoleAdapterModel CurrentRecord;
+    [Parameter]
+    public EventCallback<MenuRoleAdapterModel> OnConfirmCallback { get; set; }
+    public bool ShowMessageBox { get; set; } = false;
+    public string MessageBoxBody { get; set; } = "";
+    public string MessageBoxTitle { get; set; } = "";
+    public List<SortCondition> SortConditions { get; set; } = new List<SortCondition>();
+    public SortCondition CurrentSortCondition { get; set; } = new SortCondition();
+
+    protected override void OnInitialized()
+    {
+        MenuRoleSort.Initialization(SortConditions);
+
+        #region 工具列按鈕初始化
+        Toolbaritems.Add(new ItemModel() { Text = "重新整理", TooltipText = "重新整理", CssClass = "mdi mdi-refresh" });
+        Toolbaritems.Add("Search");
+        #endregion
+    }
+
+    public void ShowDialog()
+    {
+        OpenPicker = true;
+    }
+
+    async Task OnPickerOK()
+    {
+        if (CurrentRecord != null)
+        {
+            await OnConfirmCallback.InvokeAsync(CurrentRecord);
+        }
+        else
+        {
+            MessageBoxTitle = "通知訊息";
+            MessageBoxBody = "請選取一筆紀錄";
+            ShowMessageBox = true;
+        }
+    }
+    async Task OnPickerCancel()
+    {
+        await OnConfirmCallback.InvokeAsync(null);
+    }
+    public void GetSelectedRecords(RowSelectEventArgs<MenuRoleAdapterModel> args)
+    {
+        CurrentRecord = args.Data as MenuRoleAdapterModel;
+    }
+    #region 排序搜尋事件
+
+    public void SortChanged(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, SortCondition> args)
+    {
+        if (GridDialog != null)
+        {
+            CurrentSortCondition.Id = args.Value;
+            GridDialog.Refresh();
+        }
+    }
+
+    #endregion
+
+    #region 工具列事件
+    public void ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Text == "重新整理")
+        {
+            GridDialog.Refresh();
+        }
+    }
+    #endregion
+}

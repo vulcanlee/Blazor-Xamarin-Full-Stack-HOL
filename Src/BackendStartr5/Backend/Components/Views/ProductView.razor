@@ -1,0 +1,182 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+
+@inject ProductViewModel ViewModel
+@implements IRazorPage
+@implements IDataGrid
+
+<div >
+    <SfGrid @ref="Grid" TValue="ProductAdapterModel"
+            AllowPaging="true" class="parentFullWidth"
+            Toolbar="ViewModel.Toolbaritems">
+        <SfDataManager Adaptor="Adaptors.CustomAdaptor">
+            <ProductAdapter CurrentSortCondition="@ViewModel.CurrentSortCondition"></ProductAdapter>
+        </SfDataManager>
+        <SfToolbar>
+            <ToolbarItems>
+                <ToolbarItem Type="ItemType.Input">
+                    <Template>
+                        <span class="mx-2 mdi mdi-18px mdi-sort-variant" />
+                        <SfDropDownList TValue="int" TItem="SortCondition"
+                                        Placeholder="選擇排序條件" DataSource="@ViewModel.SortConditions">
+                            <DropDownListFieldSettings Value="Id" Text="Title"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="int" TItem="SortCondition" ValueChange="@ViewModel.SortChanged"></DropDownListEvents>
+                        </SfDropDownList>
+                    </Template>
+                </ToolbarItem>
+            </ToolbarItems>
+        </SfToolbar>
+        <GridEvents CommandClicked="ViewModel.OnCommandClicked" TValue="ProductAdapterModel"
+                    OnToolbarClick="ViewModel.ToolbarClickHandler"/>
+        <GridPageSettings PageSize="@PageSize" />
+        <GridColumns>
+            <GridColumn Field=@nameof(ProductAdapterModel.Name) 
+                        HeaderText="名稱" />
+            <GridColumn Field=@nameof(ProductAdapterModel.ModelYear) 
+                        HeaderText="年份"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn Field=@nameof(ProductAdapterModel.ListPrice) 
+                        HeaderText="售價"
+                         HideAtMedia="(min-width: 640px)"/>
+            <GridColumn HeaderText="命令" Width="@MagicHelper.DataGrid2個命令寬度" TextAlign="@TextAlign.Center"
+                        CustomAttributes="@(new Dictionary<string, object>(){ { "class", "p-0 m-0" }})">
+                <GridCommandColumns>
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameEdit"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = @ButtonIdHelper.ButtonIdEdit})" />
+                    <GridCommandColumn Title="@ButtonIdHelper.ButtonNameDelete"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   { Content = "", IconCss = ButtonIdHelper.ButtonIdDelete})" />
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+
+<SfDialog @bind-Visible="@ViewModel.IsShowEditRecord" IsModal="true"
+          Width="95%" Height="100%" CssClass="dialogSize">
+    <DialogTemplates>
+        <Header>@ViewModel.EditRecordDialogTitle</Header>
+        <Content>
+            <EditForm Model="@ViewModel.CurrentRecord">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <InputWatcher EditContextActionChanged="@ViewModel.OnEditContestChanged" />
+
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">名稱</label>
+                            <SfTextBox @bind-Value="ViewModel.CurrentRecord.Name"
+                                       Placeholder="請輸入商品名稱" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.Name)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">年份</label>
+                            <SfNumericTextBox @bind-Value="ViewModel.CurrentRecord.ModelYear"
+                                              Placeholder="請輸入大於0的整數數值" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.ModelYear)" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="control-label">售價</label>
+                            <SfNumericTextBox @bind-Value="ViewModel.CurrentRecord.ListPrice"
+                                              Placeholder="請輸入大於0的整數數值"
+                                              Format="#####.##" />
+                            <ValidationMessage For="@(() => ViewModel.CurrentRecord.ListPrice)" />
+                        </div>
+                    </div>
+
+                </div>
+            </EditForm>
+        </Content>
+        <FooterTemplate>
+            <div>
+                <SfButton type="submit" CssClass="e-primary" @onclick="ViewModel.OnRecordEditConfirm">儲存</SfButton>
+                <SfButton CssClass="e-secondary" @onclick="ViewModel.OnRecordEditCancel">取消</SfButton>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+    <DialogPositionData X="center" Y="center"></DialogPositionData>
+</SfDialog>
+
+<MessageBox Height="@ViewModel.MessageBox.Height" Width="@ViewModel.MessageBox.Width"
+            IsVisible="@ViewModel.MessageBox.IsVisible"
+            Title="@ViewModel.MessageBox.Title" Message="@ViewModel.MessageBox.Body"
+            Callback="ViewModel.MessageBox.MessageDelegate" />
+
+<ConfirmBox Height="@ViewModel.ConfirmMessageBox.Height" Width="@ViewModel.ConfirmMessageBox.Width"
+            IsVisible="@ViewModel.ConfirmMessageBox.IsVisible"
+            Title="@ViewModel.ConfirmMessageBox.Title" Message="@ViewModel.ConfirmMessageBox.Body"
+            Callback="ViewModel.ConfirmMessageBox.ConfirmDelegate" />
+
+<DialogBackground />
+<DataGridCss/>
+
+@code{
+    SfGrid<ProductAdapterModel> Grid;
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+    [Parameter]
+    public EventCallback<MasterRecord> OnRecordChanged { get; set; }
+    [Parameter]
+    public EventCallback<object> OnViewRender { get; set; }
+
+    #region 生命週期事件
+    protected override void OnInitialized()
+    {
+        ViewModel.Setup(this, this);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender == true)
+        {
+            ViewModel.Setup(this, this);
+        }
+        if (OnViewRender.HasDelegate)
+        {
+            await OnViewRender.InvokeAsync(null);
+        }
+    }
+    #endregion
+
+    #region 頁面需要介面實作
+    public async Task NeedRefreshAsync()
+    {
+        await InvokeAsync(async () =>
+        {
+            await RenderDelayHelper.Delay();
+            StateHasChanged();
+        });
+    }
+
+    public async Task NeedInvokeAsync(System.Action action)
+    {
+        await InvokeAsync(action);
+    }
+    public void RefreshGrid()
+    {
+        Grid?.Refresh();
+    }
+    public bool GridIsExist()
+    {
+        return Grid == null ? false : true;
+    }
+    public Task InvokeGridAsync(string actionName)
+    {
+        return Task.CompletedTask;
+    }
+    #endregion
+
+}

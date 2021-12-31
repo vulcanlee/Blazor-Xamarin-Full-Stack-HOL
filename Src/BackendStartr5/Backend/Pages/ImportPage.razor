@@ -1,0 +1,10 @@
+﻿@page "/Import"
+
+<PageTitle>@Title</PageTitle>
+
+<ImportView />
+
+@code{
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.Excel匯入功能名稱);
+}

@@ -1,0 +1,8 @@
+﻿@page "/Order"
+@attribute [Authorize(Roles = "Order")]
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.訂單管理功能名稱</div>
+    <OrderMasterView PageSize="@MagicHelper.GridPageSize" />
+
+</div>

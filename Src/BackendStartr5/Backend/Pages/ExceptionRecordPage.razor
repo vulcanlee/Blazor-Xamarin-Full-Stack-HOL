@@ -1,0 +1,14 @@
+﻿@page "/ExceptionRecord"
+@attribute [Authorize(Roles = "ExceptionRecord")]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.App例外異常</div>
+    <ExceptionRecordView PageSize="@MagicHelper.GridPageSize" />
+</div>
+
+@code{
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.App例外異常);
+}

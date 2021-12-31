@@ -1,0 +1,54 @@
+﻿@using Microsoft.Extensions.Logging
+@using Prism.Events
+@inject IEventAggregator EventAggregator
+@inject ILogger<GlobalEventView> Logger
+@inject SystemBroadcast SystemBroadcast
+@implements IDisposable
+
+@code {
+    Guid NotificationKey;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Yield();
+            NotificationKey = Guid.NewGuid();
+            //Logger.LogDebug("GlobalEventView OnAfterRenderAsync");
+            SystemBroadcast.Unsubscribe(NotificationKey);
+            SystemBroadcast.Subscribe(NotificationKey, OnMessageConnection);
+
+            EventAggregator.GetEvent<BroadcastEvent>().Subscribe(x =>
+            {
+                SystemBroadcast.Publish(x.Content);
+            });
+            var allSubscriber = SystemBroadcast.GetAllSubscriber();
+            EventAggregator.GetEvent<BroadcastEvent>().Publish(new BroadcastPayload()
+            {
+                Content = $"使用者開啟網頁 {allSubscriber}"
+            });
+        }
+    }
+
+    public void OnMessageConnection(string foo)
+    {
+        EventAggregator.GetEvent<ToastEvent>().Publish(new ToastPayload()
+        {
+            Title = "系統廣播",
+            Content = $"{foo} {DateTime.Now}",
+            Timeout = 10000,
+            Color="Red",
+        });
+    }
+    public void Dispose()
+    {
+        var allSubscriber = SystemBroadcast.GetAllSubscriber();
+        //Logger.LogDebug($"Dispose {allSubscriber}");
+        SystemBroadcast.Unsubscribe(NotificationKey);
+        allSubscriber = SystemBroadcast.GetAllSubscriber();
+        EventAggregator.GetEvent<BroadcastEvent>().Publish(new BroadcastPayload()
+        {
+            Content = $"使用者關閉網頁 {allSubscriber}"
+        });
+        //Logger.LogDebug($"Disposed {allSubscriber}");
+    }
+}

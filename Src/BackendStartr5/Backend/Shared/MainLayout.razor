@@ -1,0 +1,24 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <ToastView />
+    <div class="sidebar">
+        <CheckUserStatusView />
+        <GlobalEventView />
+        <NavDynamicMenu />
+    </div>
+
+    <div class="main layout-theme-main-background">
+        <div class="top-row px-4 layout-theme-top-background">
+            <SigninView />
+        </div>
+
+        <div class="content px-4 mb-4">
+            @Body
+        </div>
+
+        <div class="bottom-row px-4 layout-theme-main-footer-background">
+            <CopywriteView />
+        </div>
+    </div>
+</div>

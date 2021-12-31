@@ -1,0 +1,191 @@
+﻿@inject IMenuDataService menuDataService
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime;
+@inject CurrentUser CurrentUser
+
+<div class="top-row pl-4 navbar navbar-dark layout-theme-left-top-background">
+    <div class="menu-title @NavMenuCenterCssClass">
+        <div>
+            <button class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="navbar-brand layout-theme-left-top-textColor layout-main-app-name" href="">@BAL.Helpers.MagicHelper.MenuMainTitle</div>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass">
+    <div class="fixSidebar layout-theme-left-background">
+
+        @if (mainMenus.Count == 0)
+        {
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <span class="mdi mdi-48px mdi-spin mdi-reload m-4 layout-theme-left-textColor" />
+            </div>
+        }
+        else
+        {
+            <ul class="nav flex-column">
+                @foreach (var item in mainMenus)
+                {
+                    var currentMenuData = item;
+                    if (currentMenuData.MenuData.CodeName == "/")
+                    {
+                        <li class="@currentMenuData.MenuClass nav-item px-3">
+                            <div @onclick="async () => {await MenuDataClickedAsync(currentMenuData); }" class="noselect">
+                                <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                <span class="layout-theme-left-textColor">@currentMenuData.MenuData.Name</span>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        if (currentMenuData.MenuData.IsGroup == false)
+                        {
+                            <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
+                                <div @onclick="async () => {await MenuDataClickedAsync(currentMenuData); }">
+                                    <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="layout-theme-left-textColor">@currentMenuData.MenuData.Name</span>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@currentMenuData.MenuClass nav-item px-3 noselect">
+                                <div @onclick='()=> {
+                                           currentMenuData.IsExpand=!currentMenuData.IsExpand;
+                                                   if(currentMenuData.IsExpand == true)
+                                                   {
+                                                       currentMenuData.ExpandIcon="mdi mdi-18px mdi-chevron-down";
+                                                   }
+                                                   else
+                                                   {
+                                                       currentMenuData.ExpandIcon="mdi mdi-18px mdi-chevron-right";
+                                                   }
+                                       }'>
+                                    <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentMenuData.MenuData.Icon" aria-hidden="true" />
+                                    <span class="layout-theme-left-textColor">@currentMenuData.MenuData.Name</span>
+                                    <span class="layout-theme-left-textColor text-right @currentMenuData.ExpandIcon"></span>
+                                </div>
+                            </li>
+                            if (currentMenuData.IsExpand)
+                            {
+                                foreach (var itemSub in item.SubMenus)
+                                {
+                                    var currentSubMenuData = itemSub;
+                                    <li class="@currentSubMenuData.MenuClass nav-item px-4 submenu-item-offset noselect">
+                                        <div @onclick="async ()=> { await SubMenuDataClickedAsync(currentSubMenuData); }">
+                                            <span class="layout-theme-left-textColor mr-2 mdi mdi-18px @currentSubMenuData.MenuData.Icon" aria-hidden="true" />
+                                            <span class="layout-theme-left-textColor">@currentSubMenuData.MenuData.Name</span>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        }
+                    }
+                }
+            </ul>
+            <div class="menu-extend"></div>
+        }
+
+    </div>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCenterCssClass => collapseNavMenu ? "" : "";
+    List<MainMenu> mainMenus = new List<MainMenu>();
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                int menuRoleId = Convert.ToInt32(user
+                    .FindFirst(c => c.Type == MagicHelper.MenuRoleClaim)?.Value);
+                if (menuRoleId > 0)
+                {
+                    var foo = user
+                        .FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Role
+                        && c.Value == MagicHelper.開發者的角色聲明); // 確認這個使用者為系統管理者
+                    MenuHelper menuHelper = new MenuHelper(menuDataService, menuRoleId);
+                    mainMenus = await menuHelper.MakeMenuObjectAsync(foo == null ? false : true);
+                }
+                StateHasChanged();
+            }
+            else
+            {
+            }
+        }
+    }
+
+    async Task MenuDataClickedAsync(MainMenu currentMenuData)
+    {
+        foreach (var item in mainMenus)
+        {
+            item.IsClicked = false;
+            item.MenuClass = "";
+            foreach (var subItem in item.SubMenus)
+            {
+                subItem.IsClicked = false;
+                subItem.MenuClass = "";
+            }
+        }
+
+        currentMenuData.IsClicked = true;
+        currentMenuData.MenuClass = "clicked";
+        if (currentMenuData.IsSubMenu == false)
+        {
+            ToggleNavMenu();
+        }
+        //NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        if (currentMenuData.MenuData.NewTab == true)
+        {
+            // https://www.syncfusion.com/faq/blazor/general/can-blazor-open-a-url-in-a-new-tab-using-urihelper-navigateto
+            await JSRuntime.InvokeAsync<object>("open", currentMenuData.MenuData.CodeName, "_blank");
+        }
+        else
+        {
+            NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        }
+    }
+
+    async Task SubMenuDataClickedAsync(SubMenu currentMenuData)
+    {
+        foreach (var item in mainMenus)
+        {
+            item.IsClicked = false;
+            item.MenuClass = "";
+            foreach (var subItem in item.SubMenus)
+            {
+                subItem.IsClicked = false;
+                subItem.MenuClass = "";
+            }
+        }
+
+        currentMenuData.IsClicked = true;
+        currentMenuData.MenuClass = "clicked";
+        ToggleNavMenu();
+        if (currentMenuData.MenuData.NewTab == true)
+        {
+            // https://www.syncfusion.com/faq/blazor/general/can-blazor-open-a-url-in-a-new-tab-using-urihelper-navigateto
+            await JSRuntime.InvokeAsync<object>("open", currentMenuData.MenuData.CodeName, "_blank");
+        }
+        else
+        {
+            NavigationManager.NavigateTo(currentMenuData.MenuData.CodeName, currentMenuData.MenuData.ForceLoad);
+        }
+    }
+}

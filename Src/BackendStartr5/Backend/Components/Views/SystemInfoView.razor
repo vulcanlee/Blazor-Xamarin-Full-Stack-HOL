@@ -1,0 +1,191 @@
+﻿@using Microsoft.Extensions.Configuration;
+@using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks
+@using System.Threading
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Http
+@using Prism.Events
+@using Syncfusion.Blazor.Buttons
+
+@inject DatabaseInitService DatabaseInitService
+@inject BackendDBContext context
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IWebHostEnvironment env
+@inject IConfiguration configuration
+@inject IJSRuntime JSRuntime
+@inject BlazorAppContext BlazorAppContext
+@inject IHttpContextAccessor httpContextAccessor
+@inject IEventAggregator EventAggregator
+
+@implements IDisposable
+
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Hosting
+
+<h1>Backend 系統</h1>
+
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <span class="">專案版本資訊</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="">
+            @versionNumber
+        </div>
+        <div class="">
+            來源 IP : <span>@IP</span>
+        </div>
+        <div class="">
+            @env.EnvironmentName
+        </div>
+        <div class="">
+            緊急除錯狀態 : @EmergenceDebugMessage
+        </div>
+        <div class="">
+            <a href="/swagger/index.html" target="_blank">Web API</a>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <span class="">瀏覽器與伺服器 RTT 延遲量測</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <div>@latency ms</div>
+            <div>
+                <SfButton CssClass="e-dark"
+                        @onclick="MeasureRTT">
+                    開始量測
+                </SfButton>
+                <SfButton CssClass="e-dark"
+                        @onclick="StopMeasureRTT">
+                    結束量測
+                </SfButton>
+            </div>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-warning text-white">
+        <span class="">Material Deisgn Icon</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="text-md-left">
+            <a href="https://pictogrammers.github.io/@@mdi/font/5.8.55/" target="_blank"> Material Deisgn Icon </a>
+            <span>        使用範例    </span>
+        </div>
+        <div>
+            <span class="mdi mdi-coffee"></span>
+            <span class="mdi mdi-48px mdi-coffee"></span>
+            <span class="mdi mdi-48px mdi-spin mdi-coffee"></span>
+        </div>
+    </article>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <span class="">測試強制拋出例外異常</span>
+    </div>
+    <article class="card-body bg-light">
+        <div>
+            <SfButton CssClass="e-danger" @onclick="()=> { throw new Exception(); }">拋出例外異常</SfButton>
+        </div>
+    </article>
+</div>
+
+@code {
+    private bool VisibleProperty { get; set; } = false;
+    string authMessage = "";
+    string userId = "";
+    string versionNumber = "";
+    string EmergenceDebugMessage = "";
+    long latency = 0;
+    CancellationTokenSource cts;
+    string IP;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IP = httpContextAccessor.GetConnectionIP();
+            cts = new CancellationTokenSource();
+            bool EmergenceDebugStatus = Convert
+                .ToBoolean(configuration[AppSettingHelper.EmergenceDebug]);
+            EmergenceDebugMessage = EmergenceDebugStatus == true ? "啟用" : "停用";
+            Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+            versionNumber = version.ToString();
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                authMessage = $"現在登入的使用者為 {user.Identity.Name}";
+                IEnumerable<Claim> _claims = user.Claims;
+                userId =
+                $"該使用者在資料庫內的 Id 為: {user.FindFirst(c => c.Type == ClaimTypes.Sid)?.Value}";
+            }
+            else
+            {
+                authMessage = "沒有任何使用者登入";
+                userId = "";
+            }
+
+            #region 測試緊急除錯功能
+            if (EmergenceDebugStatus == true)
+            {
+                var users = await context.MyUser.ToListAsync();
+            }
+            #endregion
+            StateHasChanged();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Yield();
+    }
+    void StopMeasureRTT()
+    {
+        latency = 0;
+        cts.Cancel();
+    }
+    void MeasureRTT()
+    {
+        var stopwatch = new Stopwatch();
+        cts = new CancellationTokenSource();
+        Task.Run(async () =>
+        {
+            while (cts.Token.IsCancellationRequested == false)
+            {
+                stopwatch.Restart();
+                try
+                {
+                    latency = 0;
+                    await JSRuntime.InvokeVoidAsync("ping");
+                    latency = stopwatch.ElapsedMilliseconds;
+                }
+                catch (Exception)
+                {
+                }
+
+                await InvokeAsync(() =>
+                {
+                    StateHasChanged();
+                });
+                try
+                {
+                    await Task.Delay(1000, cts.Token);
+                }
+                catch { break; }
+            }
+        });
+    }
+    void IDisposable.Dispose()
+    {
+        if (cts != null)
+            cts.Cancel();
+    }
+}

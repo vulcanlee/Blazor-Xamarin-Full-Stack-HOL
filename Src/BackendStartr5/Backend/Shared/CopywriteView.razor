@@ -1,0 +1,18 @@
+﻿<div class="">
+    <span class="mr-4">Vulcan Lee</span>
+    <span class="m-1">@versionNumber</span>
+</div>
+
+@code{
+    string versionNumber = "";
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            versionNumber = " 版本: "+
+                System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,38 @@
+﻿@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Buttons
+
+<SfDialog @bind-Visible="@IsVisible" CssClass="message-box-width"
+          Height="@Height" Width="@Width" ShowCloseIcon="false" IsModal="true">
+    <DialogTemplates>
+        <Header>@Title</Header>
+        <Content>@Message</Content>
+        <FooterTemplate>
+            <SfButton @onclick="@OnOKBtnclick" CssClass='e-primary'>確定</SfButton>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
+
+<DialogBackground />
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; } = false;
+    [Parameter]
+    public string Height { get; set; } = "250px";
+    [Parameter]
+    public string Width { get; set; } = "435px";
+    [Parameter]
+    public string Title { get; set; } = "通知訊息";
+    [Parameter]
+    public string Message { get; set; } = "訊息內容";
+    [Parameter]
+    public EventCallback Callback { get; set; }
+
+    private async Task OnOKBtnclick()
+    {
+        if (Callback.HasDelegate)
+            await Callback.InvokeAsync(0);
+    }
+}

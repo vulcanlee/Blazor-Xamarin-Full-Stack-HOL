@@ -1,0 +1,15 @@
+﻿@page "/Broadcast"
+@attribute [Authorize(Roles = "Broadcast")]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.系統訊息廣播</div>
+    <BroadcastView />
+
+</div>
+
+@code {
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.系統訊息廣播);
+}

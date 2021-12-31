@@ -1,0 +1,14 @@
+﻿@page "/MenuRole"
+@attribute [Authorize(Roles = BAL.Helpers.MagicHelper.開發者的角色聲明)]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.功能表角色功能名稱</div>
+    <MenuRoleView PageSize="@MagicHelper.GridPageSize" />
+</div>
+
+@code{
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.功能表角色功能名稱);
+}

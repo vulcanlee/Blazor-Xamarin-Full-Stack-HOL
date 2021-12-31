@@ -1,0 +1,14 @@
+﻿@page "/SystemLog"
+@attribute [Authorize(Roles = BAL.Helpers.MagicHelper.開發者的角色聲明)]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.系統日誌功能名稱</div>
+    <SystemLogView PageSize="@MagicHelper.GridPageSize" />
+</div>
+
+@code{
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.系統日誌功能名稱);
+}

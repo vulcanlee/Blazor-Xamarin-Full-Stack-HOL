@@ -1,0 +1,51 @@
+﻿@using System.Threading.Tasks
+@using System.Threading
+@using Microsoft.AspNetCore.Http
+@using Prism.Events
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Buttons
+
+@inject IEventAggregator EventAggregator
+
+@using Microsoft.AspNetCore.Hosting
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <span class="h2">通知正在線上的使用者訊息</span>
+    </div>
+    <article class="card-body bg-light">
+        <div class="my-4">
+            <div class="form-row">
+                <div class="form-group col">
+                    <SfTextBox @bind-Value="BroadcastMessage"
+                               Multiline="true"
+                               Placeholder="請輸入廣播訊息文字" />
+                </div>
+            </div>
+            <div class="">
+                <SfButton CssClass="e-primary" @onclick="SendBroadcast">送出廣播</SfButton>
+            </div>
+        </div>
+    </article>
+</div>
+
+
+@code {
+    string BroadcastMessage = "";
+
+    async Task SendBroadcast()
+    {
+        EventAggregator.GetEvent<BroadcastEvent>().Publish(new BroadcastPayload()
+        {
+            Content = BroadcastMessage
+        });
+        await Task.Yield();
+        StateHasChanged();
+    }
+}

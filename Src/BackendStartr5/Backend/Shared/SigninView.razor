@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor httpContextAccessor
+
+<AuthorizeView>
+    <Authorized>
+        <span>
+            <b class="mr-2 layout-theme-top-textColor">你好, @context.User.Identity.Name &nbsp;&nbsp;</b>
+        </span>
+        <span class="mdi mdi-18px mdi-ip-network layout-theme-top-textColor">&nbsp; @IP</span>
+    </Authorized>
+    <NotAuthorized>
+        <a class="ml-md-auto btn btn-secondary"
+           href="/Login"
+           target="_top"><span class="mdi mdi-18px mdi-login layout-theme-top-textColor" /> 登入 </a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+        string IP;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IP = httpContextAccessor.GetConnectionIP();
+            StateHasChanged();
+        }
+    }
+}

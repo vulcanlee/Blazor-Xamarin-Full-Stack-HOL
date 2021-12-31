@@ -1,0 +1,15 @@
+﻿:root {
+    --layout-theme-top-background-color: #ffffff;
+    --layout-theme-top-textColor-color: #343a40;
+    --layout-theme-left-top-background-color: #0b5c10;
+    --layout-theme-left-top-textColor-color: #ffffff;
+    --layout-theme-left-background-color: #0b5c10;
+    --layout-theme-left-textColor-color: #bbfabf;
+    --layout-theme-main-background-color: #fafcfa;
+    --layout-theme-main-footer-background-color: #0b5c10;
+    --layout-theme-main-footer-text-color: #fafcfa;
+    --menu-clicked-color: #28bd28;
+    --menu-clicked-color-border-right: #fafcfa;
+    --menu-clicked-span-color: #fcfdff;
+    --fixSidebar-width: 250px;
+}

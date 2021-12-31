@@ -1,0 +1,15 @@
+﻿@page "/MailQueue"
+@attribute [Authorize(Roles = "MailQueue")]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.郵件寄送紀錄</div>
+    <MailQueueView PageSize="@MagicHelper.GridPageSize" />
+
+</div>
+
+@code{
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.郵件寄送紀錄);
+}

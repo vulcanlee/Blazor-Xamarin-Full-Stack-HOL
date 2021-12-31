@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace Backend.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/customMyColor.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/constantColor.css" rel="stylesheet" />
+    <link href="Backend.styles.css" rel="stylesheet" />
+    <link href="css/customSite.css" rel="stylesheet" />
+    <link href="css/bs4Forms.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/bootstrap5.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/bootstrap5-dark.css" />*@
+    <link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/material.css" />
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/material-dark.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/tailwind.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/tailwind-dark.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/fabric.css" />*@
+    @*<link rel="stylesheet" href="_content/Syncfusion.Blazor/styles/fabric-dark.css" />*@
+    <link rel="stylesheet" href="fonts/MaterialDesign/css/materialdesignicons.min.css">
+    <script src="JavaScript/ping.js"></script>
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    <environment include="Staging,Production">
+        <div id="components-reconnect-modal" class="my-reconnect-modal components-reconnect-hide">
+            <div class="show">
+                <p>
+                    <div class="card m-4">
+                        <div class="card-header bg-danger text-white">
+                            <span class="h1">警告訊息</span>
+                        </div>
+                        <article class="card-body bg-dark text-white">
+                            <div class="h2">
+                                因為網路不穩定，導致無法與遠端伺服器連線，請稍後，正在嘗試重新連線中
+                            </div>
+                        </article>
+                    </div>
+                </p>
+            </div>
+            <div class="failed">
+                <p>
+                    <div class="card m-4">
+                        <div class="card-header bg-danger text-white">
+                            <span class="h1">錯誤訊息</span>
+                        </div>
+                        <article class="card-body bg-light text-danger">
+                            <div class="h2">
+                                與遠端伺服器連線發生問題，連線失敗，請重新整理這個網頁
+                            </div>
+                        </article>
+                    </div>
+                </p>
+            </div>
+            <div class="rejected">
+                <p>
+                    <div class="card m-4">
+                        <div class="card-header bg-danger text-white">
+                            <span class="h1">錯誤訊息</span>
+                        </div>
+                        <article class="card-body bg-light text-danger">
+                            <div class="h2">
+                                與遠端伺服器連線發生問題，連線被拒絕，請重新整理這個網頁
+                            </div>
+                        </article>
+                    </div>
+                </p>
+            </div>
+        </div>
+    </environment>
+
+    @RenderBody()
+
+    <environment include="Staging,Production">
+        <div id="blazor-error-ui">
+            <environment include="Staging,Production">
+                @BAL.Helpers.MagicHelper.有錯誤發生要重新載入頁面
+            </environment>
+            <environment include="Development">
+                @BAL.Helpers.MagicHelper.有例外異常錯誤發生
+            </environment>
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
+    </environment>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>

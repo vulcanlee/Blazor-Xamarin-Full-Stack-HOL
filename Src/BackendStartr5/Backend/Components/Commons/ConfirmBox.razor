@@ -1,0 +1,47 @@
+﻿@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.Buttons
+
+<SfDialog @bind-Visible="@IsVisible" CssClass="confirm-box-width" 
+          Height="@Height" Width="@Width" ShowCloseIcon="false" IsModal="true">
+    <DialogTemplates>
+        <Header>@Title</Header>
+        <Content>@Message</Content>
+        <FooterTemplate>
+            <div>
+                <SfButton @onclick="@OnOKBtnclick" CssClass='e-danger'>確定</SfButton>
+                <SfButton @onclick="@OnCancelBtnclick" CssClass='e-primary'>取消</SfButton>
+            </div>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
+
+<DialogBackground />
+
+@code{
+    [Parameter]
+    public bool IsVisible { get; set; } = false;
+    [Parameter]
+    public string Height { get; set; } = "250px";
+    [Parameter]
+    public string Width { get; set; } = "435px";
+    [Parameter]
+    public string Title { get; set; } = "通知訊息";
+    [Parameter]
+    public string Message { get; set; } = "訊息內容";
+    [Parameter]
+    public EventCallback<bool> Callback { get; set; }
+    public async Task OnOKBtnclick()
+    {
+        await CallCallBack(true);
+    }
+    public async Task OnCancelBtnclick()
+    {
+        await CallCallBack(false);
+    }
+
+    public async Task CallCallBack(bool action)
+    {
+        if (Callback.HasDelegate)
+            await Callback.InvokeAsync(action);
+    }
+}

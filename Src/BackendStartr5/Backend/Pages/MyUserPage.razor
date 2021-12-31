@@ -1,0 +1,14 @@
+﻿@page "/MyUser"
+@attribute [Authorize(Roles = "MyUser")]
+
+<PageTitle>@Title</PageTitle>
+
+<div>
+    <div class="page-title">@BAL.Helpers.MagicHelper.帳號管理功能名稱</div>
+    <MyUserView PageSize="@MagicHelper.GridPageSize" />
+</div>
+
+@code{
+    public string Title { get; set; } = Backend.Helpers.HeaderBuilderHelper
+        .GetTitle(BAL.Helpers.MagicHelper.帳號管理功能名稱);
+}
