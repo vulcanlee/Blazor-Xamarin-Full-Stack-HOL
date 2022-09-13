@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 @inject IHttpContextAccessor httpContextAccessor
+@inject BlazorAppContext BlazorAppContext;
 
 <AuthorizeView>
     <Authorized>
@@ -17,14 +18,21 @@
 </AuthorizeView>
 
 @code {
-        string IP;
+    string IP;
 
+    protected override void OnInitialized()
+    {
+        //IP = httpContextAccessor.GetConnectionIP();
+        //IP = BlazorAppContext.GetCurrentIP(httpContextAccessor.GetConnectionIP());
+        IP = BlazorAppContext.CurrentUserIP;
+    }
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            IP = httpContextAccessor.GetConnectionIP();
-            StateHasChanged();
+            //IP = httpContextAccessor.GetConnectionIP();
+            //IP = BlazorAppContext.CurrentUserIP;
+            //StateHasChanged();
         }
     }
 }

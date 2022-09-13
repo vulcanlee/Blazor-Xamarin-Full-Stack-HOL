@@ -4,5 +4,10 @@
 @{
     Layout = "_Layout";
 }
+@using Backend.Helpers
 
-<component type="typeof(App)" render-mode="ServerPrerendered" />
+@{
+    // https://docs.microsoft.com/zh-tw/aspnet/core/blazor/security/server/additional-scenarios?view=aspnetcore-6.0
+    var ip = HttpContext?.GetRemoteIPAddress().ToString();
+}
+<component type="typeof(App)" param-SourceIP="@ip" render-mode="ServerPrerendered" />

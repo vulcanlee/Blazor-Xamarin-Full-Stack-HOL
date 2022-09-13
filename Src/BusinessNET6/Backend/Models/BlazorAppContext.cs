@@ -11,5 +11,18 @@ namespace Backend.Models
         /// The IP for the current session
         /// </summary>
         public string CurrentUserIP { get; set; } = "";
+
+        public string GetCurrentIP(string ip)
+        {
+            if(string.IsNullOrEmpty(ip))
+            {
+                return CurrentUserIP;
+            }
+            else
+            {
+                CurrentUserIP = ip;
+                return CurrentUserIP;
+            }
+        }
     }
 }

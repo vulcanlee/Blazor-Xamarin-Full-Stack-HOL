@@ -24,6 +24,7 @@ using System.Globalization;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
@@ -345,7 +346,14 @@ try
     #endregion
 
     #region 取得來源 IP
+    // https://www.coderperfect.com/how-do-i-get-client-ip-address-in-asp-net-core/
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });
+
     app.UseMyMiddleware();
+
     #endregion
 
     #region 自訂一個Middleware

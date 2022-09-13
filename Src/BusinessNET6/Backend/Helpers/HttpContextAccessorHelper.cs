@@ -10,9 +10,10 @@ namespace Backend.Helpers
     {
         public static string GetConnectionIP(this IHttpContextAccessor httpContextAccessor)
         {
-            var ip = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress.ToString();
+            //var ip = httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress.ToString();
+            var ip = httpContextAccessor?.HttpContext?.GetRemoteIPAddress().ToString();
 
-            if(ip==null)
+            if (ip==null)
             {
                 ip = "";
             }

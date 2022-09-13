@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@inject BlazorAppContext BlazorAppContext;
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
             <NotAuthorized>
@@ -16,4 +18,14 @@
         </CascadingAuthenticationState>
     </NotFound>
 </Router>
+
+@code{
+    [Parameter]
+    public string SourceIP { get; set; }
+
+    protected override void OnInitialized()
+    {
+        SourceIP = BlazorAppContext.GetCurrentIP(SourceIP);
+    }
+}
 

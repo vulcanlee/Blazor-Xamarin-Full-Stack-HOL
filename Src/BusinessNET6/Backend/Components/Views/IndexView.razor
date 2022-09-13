@@ -44,7 +44,8 @@
     {
         if (firstRender)
         {
-            IP = httpContextAccessor.GetConnectionIP();
+            //IP = httpContextAccessor.GetConnectionIP();
+            IP = BlazorAppContext.CurrentUserIP;
             Version version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
             versionNumber = version.ToString();
 

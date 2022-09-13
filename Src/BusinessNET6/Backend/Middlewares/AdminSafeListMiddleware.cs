@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Backend.Models;
+using Backend.Helpers;
 
 namespace Backend.Middlewares
 {
@@ -22,7 +23,15 @@ namespace Backend.Middlewares
 
         public async Task Invoke(HttpContext context, BlazorAppContext blazorAppContext)
         {
-            blazorAppContext.CurrentUserIP = context.Connection.RemoteIpAddress.ToString();
+            var ip = context.GetRemoteIPAddress().ToString();
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = "";
+            }
+            else
+            {
+                //blazorAppContext.CurrentUserIP = ip;
+            }
             await _next.Invoke(context);
         }
     }
