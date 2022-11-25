@@ -302,14 +302,14 @@ namespace Backend.Services
             #region 新增系統定義紀錄
             AccountPolicy AccountPolicy = new AccountPolicy()
             {
-                EnableLoginFailDetection = true,
+                EnableLoginFailDetection = false,
                 LoginFailMaxTimes = 3,
                 LoginFailTimesLockMinutes = 5,
                 MinimumPasswordLength = 3,
                 PasswordAge = 42,
                 PasswordComplexity = 3,  // PasswordStrength.Medium
                 PasswordHistory = 20,
-                EnableCheckPasswordAge = true,
+                EnableCheckPasswordAge = false,
             };
 
             context.AccountPolicy.Add(AccountPolicy);
