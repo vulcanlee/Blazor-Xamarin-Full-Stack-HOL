@@ -244,3 +244,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /SyncfusionLab/SyncfusionLab/Properties/PublishProfiles/ContosoSyncfusion - Web Deploy.pubxml
+/Src/BusinessNET6/Backend/ESO.db-shm
+/Src/BusinessNET6/Backend/ESO.db-wal
